@@ -2,6 +2,12 @@
 This is a selection of macros for Savage Worlds Players and GMs alike.
 In this repository you won't find any files for download in your Foundry (yet?), no module (yet?) and such, only macros in *.js files. In order to have them in your game you need to create a new macro (just click an empty space in your macro bar) and paste the macros code inside. **Important:** Set the type to be a script macro, otherwise it won't work.
 
+## License
+The Code of the macros is licensed under the GPU 3.0 License ([See License](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/LICENSE)).
+Some macros contain SWADE rulings in a way that the macros execute them and sometimes include short notices. They do not contain detailed information about the rulings. This is Licensed under the (Savage Worlds Fan License)[https://www.peginc.com/licensing/].
+(https://www.peginc.com/wp-content/uploads/2012/04/SW_Logo_FP-1-300x187.jpg)
+“This game references the Savage Worlds game system, available from Pinnacle Entertainment Group at www.peginc.com. Savage Worlds and all associated logos and trademarks are copyrights of Pinnacle Entertainment Group. Used with permission. Pinnacle makes no representation or warranty as to the quality, viability, or suitability for purpose of this product.”
+
 ## Help needed!
 Are you a creator of sound effects or art and want to contribute? This is great, I'd like to include some assets like macro icons and sound effects in here. Icons need to be square (or round), sound effects need to be short and easily recogniseable. If you want to include your work here I'll gladly give you full credit with links to your homepage for users to check out your other stuff.  
 You have nothing to offer? Oh you're so wrong. Please [create issues](https://github.com/SalieriC/SWADE-Immersive-Macros/issues/new) here on the GitHub to contribute as well. Tell me which macros or functionality you want to see and inform me about bugs this way and I'll see what I can do about it. No promises I can deliver though and please no hard feelings should I decline your request. Please check for [open issues](https://github.com/SalieriC/SWADE-Immersive-Macros/issues) before creating new ones though.  
@@ -43,7 +49,7 @@ The macro will use the Bennies of the selected token (needs a token selected to 
 - [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effect.
 
 **Immersion setting:** SFX.  
-**Suggested icon:** `assets/icons/SWADE status markers/0-Shaken.png`  
+**Suggested icon:** `data/modules/swim/assets/icons/status_markers/0-Shaken.png`  
 **Description:**  
 This macro will first check whether or not the selected token (needs a token to be selected) is marked as Shaken (checks for the checkbox on the sheet). If the token is *not* Shaken, it will mark it as Shaken (tick the checkbox). It it is Shaken, then it will prompt a system roll. After rolling it gives a chat message detailing the result. If the result is best it will remove Skaken and that's it. If the roll could've been better it opens a dialogue giving the user the option to spend a Benny to remove Shaken. If accepted a Benny is spent (if there are Bennies left) and removes Shaken. The user can also decline which just closes the dialogue. The dialogue will not appear if there are no more Bennies left (including GM Bennies if the user is a GM). It also tells the user how many Bennies are left in the dialogue.  
 Now here is the deal: The macro is aware of any core Edges and Special Abilities that can alter the unshake roll and *automatically* adjusts the roll. You can set up own ones as well by adding them to the `const edgeNames` object (inside the []); put them in '' and only use lower case. The macro requires you to set up Special Abilities like Undead as Edges though, so keep that in mind.  
@@ -51,3 +57,15 @@ The macro is also aware of Snake Eyes (Critical Failure) and offers no use of a 
 This macro comes in two variants: SWADE and SWD. I like the SWD rules regarding Shaken much better but the choice is yours. Here are the differences:  
 **SWD:** To act this turn you need a raise, success removes Shaken but you may only act *next* turn. While Shaken your Pace is halved.  
 **SWADE:** To act you'll only need a success.  
+
+### (Un-)Stun
+**Requirements:** Initial Setup.  
+**Compatibility:**  
+- [Dice So Nice](https://foundryvtt.com/packages/dice-so-nice/) for the Benny throw.
+- [SWADE Spices & Flavours](https://github.com/SalieriC/SWADE-Spices-Flavours) for configuring the Benny image.
+- [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effects.
+
+**Immersion setting:** SFX.  
+**Suggested icon:** `data/modules/swim/assets/icons/status_markers/2-Stunned.png`  
+**Description:**  
+This macro is very similar to the (Un-)Shake macro but handles Stunned. 
