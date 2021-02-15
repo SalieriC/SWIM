@@ -10,7 +10,6 @@ let injuryTable = "Injury Table ID";
 // Check if a token is selected.
 if (!token || canvas.tokens.controlled.length > 1) {
     ui.notifications.error("Please select a single token token first.");
-    return;
 }
 
 // Declairing variables and constants.
@@ -155,6 +154,9 @@ if (!token || canvas.tokens.controlled.length > 1) {
                             }
                         }
                         if (!game.user.isGM && setWounds > 0 && grit === true) {
+                            /*let injuryTable = game.settings.get(
+                                'swim', 'injuryTableID');
+                           if (injuryTable) {}*/
                             game.tables.get(`${injuryTable}`).draw();
                         }
                     }

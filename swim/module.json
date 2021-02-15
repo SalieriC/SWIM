@@ -20,6 +20,8 @@
 		}
 	],
 	"systems": ["swade"],
+	"esmodules": ["./scripts/init.js"],
+	"scripts": ["./scripts/settings-extender.js"],
 	"packs": [],
 	"url": "https://github.com/SalieriC/SWADE-Immersive-Macros",
 	"manifest": "",
