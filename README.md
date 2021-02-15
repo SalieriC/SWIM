@@ -72,7 +72,7 @@ This macro is very similar to the (Un-)Shake macro but handles Stunned. If the s
 ### Soak Damage
 **Requirements:**
 - [Health Estimate](https://foundryvtt.com/packages/healthEstimate/)
-- [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effects.
+- [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effects.  
 **Immersion setting:** SFX.  
 **Suggested icon:** `data/modules/swim/assets/icons/status_markers/3-Incapacitated.png`  
 **Description:**  
