@@ -1,6 +1,6 @@
 # SWADE Immersive Macros (SWIM)
 This is a selection of macros for Savage Worlds Players and GMs alike.
-In this repository you won't find any files for download in your Foundry (yet?), no module (yet?) and such, only macros in *.js files. In order to have them in your game you need to create a new macro (just click an empty space in your macro bar) and paste the macros code inside. **Important:** Set the type to be a script macro, otherwise it won't work.
+In this repository you won't find any files for download in your Foundry (yet), no module (yet) and such, only macros in *.js files. In order to have them in your game you need to create a new macro (just click an empty space in your macro bar) and paste the macros code inside. **Important:** Set the type to be a script macro, otherwise it won't work.
 
 ## License
 The Code of the macros is licensed under the GPU 3.0 License ([See License](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/LICENSE)).
@@ -15,7 +15,8 @@ You can reach me on Discord with general questions as well: SalieriC#8263
 
 ### Current Assets
 In this repository you can find a number of assets already.  
-- **SWADE status markers:** Most of them are created by `Mike deBoston (he)#4382`, but some are created by myself as well. Used with permission. Stock art: [Game-Icons.net](https://game-icons.net/).
+- **SWADE status markers:** Most of them are created by `Mike deBoston (he)#4382`, but some are created by myself as well. Used with permission. Stock art: [Game-Icons.net](https://game-icons.net/).  
+Assets are used in the macros. Once there is a release you'll be able to install a module and the macros will use these assets out of the box. In the meantime (and after that) you can change assets at the very top of each macro where you'll find variables declares (`let ...`) There you can change file paths. Mind the comments as they give instructions.
 
 ## Immersion settings
 Here you'll find the immersion settings and how to set them up.
@@ -61,11 +62,9 @@ This macro comes in two variants: SWADE and SWD. I like the SWD rules regarding 
 ### (Un-)Stun
 **Requirements:** Initial Setup.  
 **Compatibility:**  
-- [Dice So Nice](https://foundryvtt.com/packages/dice-so-nice/) for the Benny throw.
-- [SWADE Spices & Flavours](https://github.com/SalieriC/SWADE-Spices-Flavours) for configuring the Benny image.
 - [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effects.
 
 **Immersion setting:** SFX.  
 **Suggested icon:** `data/modules/swim/assets/icons/status_markers/2-Stunned.png`  
 **Description:**  
-This macro is very similar to the (Un-)Shake macro but handles Stunned. 
+This macro is very similar to the (Un-)Shake macro but handles Stunned. If the selected token (needs one selected) is not Stunned, it will be marked as such, including all the effects that come with it. Otherwise it will roll to unstun and adds/removes conditions according to the result. It is aware of Snake Eyes. It supports SFX on applying Stunned in the same way as (Un-)Shake.

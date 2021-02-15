@@ -1,3 +1,6 @@
+// Customise the benny image displayed in the chat message:
+let bennyImage = `systems/swade/assets/benny/benny-chip-front.png`;
+
 let bennies;
 let bv;
 
@@ -122,7 +125,7 @@ async function spendBenny() {
     //Chat Message to let the everyone know a benny was spent
     ChatMessage.create({
         user: game.user._id,
-        content: `<p><img src="worlds/savage-worlds-deadlands/resources/icons/Deadlands%20Benny%20Back.webp"" width="25" height="25" /> ${game.user.name} spent a Benny and ${token.name} may act normally now.</p>`,
+        content: `<p><img src="${bennyImage}"" width="25" height="25" /> ${game.user.name} spent a Benny and ${token.name} may act normally now.</p>`,
     });
 }
 

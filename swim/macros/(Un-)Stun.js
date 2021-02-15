@@ -1,3 +1,4 @@
+// Customise the prone status image:
 let proneIconPath = `data/modules/swim/assets/icons/status_markers/2-Prone.png`;
 
 async function rollUnstun() {
@@ -75,6 +76,7 @@ if (token.actor.data.data.status.isStunned === true) {
   };
   token.actor.update({ "data.status.isDistracted": true });
   token.actor.update({ "data.status.isVulnerable": true });
+  //AudioHelper.play({ src: "SFXURL" }, true);
 }
 
 // v.1.0.1 Made by SalieriC#8263 using original Code from Shteff.
