@@ -1,4 +1,4 @@
-# SWADE Immersive Macros
+# SWADE Immersive Macros (SWIM)
 This is a selection of macros for Savage Worlds Players and GMs alike.
 In this repository you won't find any files for download in your Foundry (yet?), no module (yet?) and such, only macros in *.js files. In order to have them in your game you need to create a new macro (just click an empty space in your macro bar) and paste the macros code inside. **Important:** Set the type to be a script macro, otherwise it won't work.
 
