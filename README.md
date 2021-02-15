@@ -5,6 +5,11 @@ In this repository you won't find any files for download in your Foundry (yet?),
 ## Help needed!
 Are you a creator of sound effects or art and want to contribute? This is great, I'd like to include some assets like macro icons and sound effects in here. Icons need to be square (or round), sound effects need to be short and easily recogniseable. If you want to include your work here I'll gladly give you full credit with links to your homepage for users to check out your other stuff.
 You have nothing to offer? Oh you're so wrong. Please [create issues](https://github.com/SalieriC/SWADE-Immersive-Macros/issues/new) here on the GitHub to contribute as well. Tell me which macros or functionality you want to see and inform me about bugs this way and I'll see what I can do about it. No promises I can deliver though and please no hard feelings should I decline your request. Please check for [open issues](https://github.com/SalieriC/SWADE-Immersive-Macros/issues) before creating new ones though.
+You can reach me on Discord with general questions as well: SalieriC#8263
+
+### Current Assets
+In this repository you can find a number of assets already. 
+- **SWADE status markers:** Most of them are created by `Mike deBoston (he)#4382`, but some are created by myself as well. Used with permission. Stock art: [Game-Icons.net](https://game-icons.net/).
 
 ## Immersion settings
 Here you'll find the immersion settings and how to set them up.
@@ -23,6 +28,7 @@ In the very last line all macros tell you their version number. Use it to check 
 - [Dice So Nice](https://foundryvtt.com/packages/dice-so-nice/) for the Benny throw.
 - [SWADE Spices & Flavours](https://github.com/SalieriC/SWADE-Spices-Flavours) for configuring the Benny image.
 **Immersion setting:** None.
+**Suggested icon:** `systems/swade/assets/benny/benny-chip-front.png`
 **Description:**
 This macro will basically just spend a Benny. It does use the animation from Dice So Nice if it is installed and activated but doesn't require DSN. With SWADE Spices & Flavours you can customise the look of the Benny.
 The macro will use the Bennies of the selected token (needs a token selected to function properly). If the user is a GM it will also use the GMs Bennies but will *always* spend token Bennies first and only touches GM Bennies once the token is out of Bennies. It also gives a warning if no more Bennies are left.
@@ -35,6 +41,7 @@ The macro will use the Bennies of the selected token (needs a token selected to 
 - [SWADE Spices & Flavours](https://github.com/SalieriC/SWADE-Spices-Flavours) for configuring the Benny image.
 - [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effect.
 **Immersion setting:** SFX.
+**Suggested icon:** `assets/icons/SWADE status markers/0-Shaken.png`
 **Description:**
 This macro will first check whether or not the selected token (needs a token to be selected) is marked as Shaken (checks for the checkbox on the sheet). If the token is *not* Shaken, it will mark it as Shaken (tick the checkbox). It it is Shaken, then it will prompt a system roll. After rolling it gives a chat message detailing the result. If the result is best it will remove Skaken and that's it. If the roll could've been better it opens a dialogue giving the user the option to spend a Benny to remove Shaken. If accepted a Benny is spent (if there are Bennies left) and removes Shaken. The user can also decline which just closes the dialogue. The dialogue will not appear if there are no more Bennies left (including GM Bennies if the user is a GM). It also tells the user how many Bennies are left in the dialogue.
 Now here is the deal: The macro is aware of any core Edges and Special Abilities that can alter the unshake roll and *automatically* adjusts the roll. You can set up own ones as well by adding them to the `const edgeNames` object (inside the []); put them in '' and only use lower case. The macro requires you to set up Special Abilities like Undead as Edges though, so keep that in mind.
