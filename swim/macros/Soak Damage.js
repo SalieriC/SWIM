@@ -15,7 +15,7 @@ let incapSFX = game.settings.get(
 // Injury Table for Gritty Damage
 let grit = false;
 let injuryTable = game.settings.get(
-    'swade-spices', 'injuryTableID');
+    'swade-spices', 'injuryTable');
     if (injuryTable) {
         grit = true;
     }
@@ -167,10 +167,7 @@ if (!token || canvas.tokens.controlled.length > 1) {
                             }
                         }
                         if (!game.user.isGM && setWounds > 0 && grit === true) {
-                            /*let injuryTable = game.settings.get(
-                                'swim', 'injuryTableID');
-                           if (injuryTable) {}*/
-                            game.tables.get(`${injuryTable}`).draw();
+                            game.tables.getName(`${injuryTable}`).draw({ roll });
                         }
                     }
                 }

@@ -1,10 +1,10 @@
 function register_settings() {
     // Gritty Damage Injury Table ID
-    game.settings.register('swim', 'injuryTableID', {
+    game.settings.register('swim', 'injuryTable', {
         name: game.i18n.localize("SWIM.injuryTableName"),
         hint: game.i18n.localize("SWIM.inmjuryTableHint"),
         type: String,
-        default: '',
+        default: 'Injury Table',
         scope: 'world',
         config: true,
         onChange: () => {

@@ -1,6 +1,6 @@
 {
   "SWIM.injuryTableName": "Injury Table:",
-  "SWIM.injuryTableHint": "Injury Table used for Gritty Damage. Gritt damage is not used if this is empty. You need to set up the ID of your Injury Table. The easiest way to get the ID is to drag and drop the table into an editable text field (i.e. a Journal Entry) and then taking whatever is inside the `[]` of the resulting link. Gritty damage is only used for non-GM accounts.",
+  "SWIM.injuryTableHint": "Injury Table used for Gritty Damage. Gritty damage is not used if this is empty. You need to set up the EXACT name of your Injury Table. Gritty damage is only used for non-GM accounts.",
   "SWIM.shakenSFXName": "Shaken SFX",
   "SWIM.shakenSFXHint": "Sound effect (SFX) to be played when a token becomes Shaken.",
   "SWIM.incapSFXName": "Incapacitation SFX",
