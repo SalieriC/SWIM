@@ -53,7 +53,7 @@ The macro will use the Bennies of the selected token (needs a token selected to 
 **Suggested icon:** `data/modules/swim/assets/icons/status_markers/0-Shaken.png`  
 **Description:**  
 This macro will first check whether or not the selected token (needs a token to be selected) is marked as Shaken (checks for the checkbox on the sheet). If the token is *not* Shaken, it will mark it as Shaken (tick the checkbox). It it is Shaken, then it will prompt a system roll. After rolling it gives a chat message detailing the result. If the result is best it will remove Skaken and that's it. If the roll could've been better it opens a dialogue giving the user the option to spend a Benny to remove Shaken. If accepted a Benny is spent (if there are Bennies left) and removes Shaken. The user can also decline which just closes the dialogue. The dialogue will not appear if there are no more Bennies left (including GM Bennies if the user is a GM). It also tells the user how many Bennies are left in the dialogue.  
-Now here is the deal: The macro is aware of any core Edges and Special Abilities that can alter the unshake roll and *automatically* adjusts the roll. You can set up own ones as well by adding them to the `const edgeNames` object (inside the []); put them in '' and only use lower case. The macro requires you to set up Special Abilities like Undead as Edges though, so keep that in mind.  
+Now here is the deal: The macro is aware of any core Edges and Special Abilities that can alter the unshake roll and *automatically* adjusts the roll. You can set up own ones as well by adding them to the `const edgeNames` object (inside the []); put them in '' and only use lower case. The macro requires you to set up Special Abilities like Undead as Edges though, so keep that in mind. Also the macro currently does not add a +2 on a reroll if the token has Elan.  
 The macro is also aware of Snake Eyes (Critical Failure) and offers no use of a Benny when Snake Eyes occur. It does *not* check for Snake Eyes on Extras though.  
 This macro comes in two variants: SWADE and SWD. I like the SWD rules regarding Shaken much better but the choice is yours. Here are the differences:  
 **SWD:** To act this turn you need a raise, success removes Shaken but you may only act *next* turn. While Shaken your Pace is halved.  
@@ -68,3 +68,14 @@ This macro comes in two variants: SWADE and SWD. I like the SWD rules regarding 
 **Suggested icon:** `data/modules/swim/assets/icons/status_markers/2-Stunned.png`  
 **Description:**  
 This macro is very similar to the (Un-)Shake macro but handles Stunned. If the selected token (needs one selected) is not Stunned, it will be marked as such, including all the effects that come with it. Otherwise it will roll to unstun and adds/removes conditions according to the result. It is aware of Snake Eyes. It supports SFX on applying Stunned in the same way as (Un-)Shake.
+
+### Soak Damage
+**Requirements:**
+- [Health Estimate](https://foundryvtt.com/packages/healthEstimate/)
+- [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effects.
+**Immersion setting:** SFX.  
+**Suggested icon:** `data/modules/swim/assets/icons/status_markers/3-Incapacitated.png`  
+**Description:**  
+One of the most complex macros I ever wrote. It soaks and applies Wounds. It tries to cover everything from SWADE core and guides the user through the process. It is aware of (Un)Holy Warrior and Elan. It follows the core rules and thus is aware of Critical Failures.  
+It also supports SFX again. You can configure a path to your desired SFX at the top of the macro. Please take special care of how to do this. Mimic the way the Benny image is set up.  
+You can also use the Gritty Damage setting rule by replacing `let grit = false;` with `let grit = true;`. Then you need to set up the ID of your Injury Table. The easiest way to get the ID is to drag and drop the table into an editable text field (i.e. a Journal Entry) and then taking whatever is inside the `[]` of the resulting link. **Gritty damage is only used for non-GM accounts.**
