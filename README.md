@@ -1,11 +1,11 @@
-# SWADE-Immersive-Macros
+# SWADE Immersive Macros (SWIM)
 This is a selection of macros for Savage Worlds Players and GMs alike.
 In this repository you won't find any files for download in your Foundry (yet?), no module (yet?) and such, only macros in *.js files. In order to have them in your game you need to create a new macro (just click an empty space in your macro bar) and paste the macros code inside. **Important:** Set the type to be a script macro, otherwise it won't work.
 
 ## License
 The Code of the macros is licensed under the GPU 3.0 License ([See License](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/LICENSE)).
-Some macros contain SWADE rulings in a way that the macros execute them and sometimes include short notices. They do not contain detailed information about the rulings. This is Licensed under the (Savage Worlds Fan License)[https://www.peginc.com/licensing/].
-(https://www.peginc.com/wp-content/uploads/2012/04/SW_Logo_FP-1-300x187.jpg)
+Some macros contain SWADE rulings in a way that the macros execute them and sometimes include short notices. They do not contain detailed information about the rulings. This is Licensed under the (Savage Worlds Fan License)[https://www.peginc.com/licensing/].  
+<p align="center"> <img src="https://www.peginc.com/wp-content/uploads/2012/04/SW_Logo_FP-1-300x187.jpg"> </p>  
 “This game references the Savage Worlds game system, available from Pinnacle Entertainment Group at www.peginc.com. Savage Worlds and all associated logos and trademarks are copyrights of Pinnacle Entertainment Group. Used with permission. Pinnacle makes no representation or warranty as to the quality, viability, or suitability for purpose of this product.”
 
 ## Help needed!
