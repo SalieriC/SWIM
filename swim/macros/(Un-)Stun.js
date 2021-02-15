@@ -1,5 +1,9 @@
-// Customise the prone status image:
-let proneIconPath = `data/modules/swim/assets/icons/status_markers/2-Prone.png`;
+// Setting up the prone condition image path
+let proneIconPath = game.settings.get(
+    'swim', 'proneIMG');
+// Setting up SFX path.
+let stunSFX = game.settings.get(
+    'swim', 'stunSFX');
 
 async function rollUnstun() {
   if (!token || canvas.tokens.controlled.length > 1) {
@@ -76,7 +80,9 @@ if (token.actor.data.data.status.isStunned === true) {
   };
   token.actor.update({ "data.status.isDistracted": true });
   token.actor.update({ "data.status.isVulnerable": true });
-  //AudioHelper.play({ src: "SFXURL" }, true);
+  if (stunSFX) {
+    AudioHelper.play({ src: `${stunSFX}` }, true);
+}
 }
 
-// v.1.0.1 Made by SalieriC#8263 using original Code from Shteff.
+// v.2.0.0 Made by SalieriC#8263 using original Code from Shteff.

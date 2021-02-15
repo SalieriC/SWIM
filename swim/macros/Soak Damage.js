@@ -1,11 +1,24 @@
-// Customise the benny image displayed in the chat message:
-let bennyImage = `systems/swade/assets/benny/benny-chip-front.png`;
-// Customise the SFX for being wounded and incapacitated. Do it in the same way as the Benny image above."
-let woundedSFX;
-let incapSFX;
-// Do you want Gritty damage?
+// Checking for SWADE Spices & Flavours and setting up the Benny image.
+let bennyImage = "systems/swade/assets/benny/benny-chip-front.png";
+if (game.modules.get("swade-spices").active) {
+    let benny_Back = game.settings.get(
+        'swade-spices', 'bennyBack');
+    if (benny_Back) {
+        bennyImage = benny_Back;
+    }
+}
+// Setting SFX
+let woundedSFX = game.settings.get(
+    'swim', 'woundedSFX');
+let incapSFX = game.settings.get(
+    'swim', 'incapSFX');
+// Injury Table for Gritty Damage
 let grit = false;
-let injuryTable = "Injury Table ID";
+let injuryTable = game.settings.get(
+    'swade-spices', 'injuryTableID');
+    if (injuryTable) {
+        grit = true;
+    }
 
 // Check if a token is selected.
 if (!token || canvas.tokens.controlled.length > 1) {
@@ -332,4 +345,4 @@ if (!token || canvas.tokens.controlled.length > 1) {
         }
     }
 
-// V1.3.0 Code by SalieriC#8263. Critical Failure awareness by Kekilla#7036 Testing and bug-chasing: javierrivera#4813.
+// V2.0.0 Code by SalieriC#8263. Critical Failure awareness by Kekilla#7036 Testing and bug-chasing: javierrivera#4813.

@@ -1,5 +1,15 @@
-// Customise the benny image displayed in the chat message:
-let bennyImage = `systems/swade/assets/benny/benny-chip-front.png`;
+// Checking for SWADE Spices & Flavours and setting up the Benny image.
+let bennyImage = "systems/swade/assets/benny/benny-chip-front.png";
+if (game.modules.get("swade-spices").active) {
+    let benny_Back = game.settings.get(
+        'swade-spices', 'bennyBack');
+    if (benny_Back) {
+        bennyImage = benny_Back;
+    }
+}
+// Setting up SFX path.
+let shakenSFX = game.settings.get(
+    'swim', 'shakenSFX');
 
 let bennies;
 let bv;
@@ -133,6 +143,8 @@ if (token.actor.data.data.status.isShaken === true) {
     rollUnshake()
 } else if (token) {
     token.actor.update({ "data.status.isShaken": true })
-    //AudioHelper.play({ src: "SFXURL" }, true);
+    if (shakenSFX) {
+        AudioHelper.play({ src: `${shakenSFX}` }, true);
+    }
 }
-/// v.2.0.1 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
+/// v.3.0.0 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
