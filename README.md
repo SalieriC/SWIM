@@ -9,7 +9,7 @@ You can reach me on Discord with general questions as well: SalieriC#8263
 
 ### Current Assets
 In this repository you can find a number of assets already.  
-- **SWADE status markers:** Most of them are created by `Mike deBoston (he)#4382`, but some are created by myself as well. Used with permission. Stock art: [Game-Icons.net](https://game-icons.net/).
+- **SWADE status markers:** Most of them are created by `Mike deBoston (he)#4382`, but some are created by myself as well. Used with permission. Stock art: [Game-Icons.net](https://game-icons.net/).  
 
 ## Immersion settings
 Here you'll find the immersion settings and how to set them up.
@@ -26,7 +26,7 @@ In the very last line all macros tell you their version number. Use it to check 
 **Requirements:** None.  
 **Compatibility:**  
 - [Dice So Nice](https://foundryvtt.com/packages/dice-so-nice/) for the Benny throw.
-- [SWADE Spices & Flavours](https://github.com/SalieriC/SWADE-Spices-Flavours) for configuring the Benny image.
+- [SWADE Spices & Flavours](https://github.com/SalieriC/SWADE-Spices-Flavours) for configuring the Benny image.  
 **Immersion setting:** None.  
 **Suggested icon:** `systems/swade/assets/benny/benny-chip-front.png`  
 **Description:**  
@@ -39,7 +39,7 @@ The macro will use the Bennies of the selected token (needs a token selected to 
 **Compatibility:**  
 - [Dice So Nice](https://foundryvtt.com/packages/dice-so-nice/) for the Benny throw.
 - [SWADE Spices & Flavours](https://github.com/SalieriC/SWADE-Spices-Flavours) for configuring the Benny image.
-- [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effect.
+- [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effect.  
 **Immersion setting:** SFX.  
 **Suggested icon:** `assets/icons/SWADE status markers/0-Shaken.png`  
 **Description:**  
