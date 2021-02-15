@@ -1,0 +1,27 @@
+{
+	"name": "swim",
+	"title": "SWADE Immersive Macros",
+	"description": "A simple module to configure some stuff in the SWADE System on Foundry VTT.",
+	"minimumCoreVersion": "0.7.4",
+	"compatibleCoreVersion": "0.7.9",
+	"version": "0.0.0",
+	"author": "SalieriC",
+	"dependencies": [
+		{
+		  "name": "swade",
+		  "type": "system"
+		}
+	],
+	"languages": [
+		{
+			"lang": "en",
+			"name": "English",
+			"path": "lang/en.json"
+		}
+	],
+	"systems": ["swade"],
+	"packs": [],
+	"url": "https://github.com/SalieriC/SWADE-Immersive-Macros",
+	"manifest": "",
+	"download": ""
+}

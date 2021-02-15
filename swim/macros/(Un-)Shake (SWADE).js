@@ -1,11 +1,9 @@
-if (canvas.tokens.controlled.length === 0)
-    return ui.notifications.error("Please select a token first");
-
 let bennies;
 let bv;
 
 async function rollUnshake() {
-    if (!token) {
+    if (!token || canvas.tokens.controlled.length > 1) {
+        ui.notifications.error("Please select a single token token first.");
         return;
     }
 
@@ -134,4 +132,4 @@ if (token.actor.data.data.status.isShaken === true) {
     token.actor.update({ "data.status.isShaken": true })
     //AudioHelper.play({ src: "SFXURL" }, true);
 }
-/// v.2.0.0 Original code by Shteff, altered by Forien and SalieriC, thanks to Spacemandev for the help as well. Fixed by hirumatto.
+/// v.2.0.1 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
