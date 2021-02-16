@@ -1,10 +1,22 @@
 function register_settings() {
-    // Gritty Damage Injury Table ID
+    // Gritty Damage Injury Table Name
     game.settings.register('swim', 'injuryTable', {
         name: game.i18n.localize("SWIM.injuryTableName"),
         hint: game.i18n.localize("SWIM.inmjuryTableHint"),
         type: String,
         default: 'Injury Table',
+        scope: 'world',
+        config: true,
+        onChange: () => {
+            window.location.reload();
+        }
+    });
+    // Fear Table Name
+    game.settings.register('swim', 'fearTable', {
+        name: game.i18n.localize("SWIM.fearTableName"),
+        hint: game.i18n.localize("SWIM.fearTableHint"),
+        type: String,
+        default: 'Fear Table',
         scope: 'world',
         config: true,
         onChange: () => {
@@ -63,6 +75,18 @@ function register_settings() {
     game.settings.register('swim', 'woundedSFX', {
         name: game.i18n.localize("SWIM.woundedSFXName"),
         hint: game.i18n.localize("SWIM.woundedSFXHint"),
+        type: window.Azzu.SettingsTypes.FilePickerAudio,
+        default: '',
+        scope: 'world',
+        config: true,
+        onChange: () => {
+            window.location.reload();
+        }
+    });
+    // Fear SFX
+    game.settings.register('swim', 'fearSFX', {
+        name: game.i18n.localize("SWIM.fearSFXName"),
+        hint: game.i18n.localize("SWIM.fearSFXHint"),
         type: window.Azzu.SettingsTypes.FilePickerAudio,
         default: '',
         scope: 'world',

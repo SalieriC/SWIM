@@ -1,14 +1,18 @@
 {
   "SWIM.injuryTableName": "Injury Table:",
-  "SWIM.injuryTableHint": "Injury Table used for Gritty Damage. Gritty damage is not used if this is empty. You need to set up the EXACT name of your Injury Table. Gritty damage is only used for non-GM accounts.",
+  "SWIM.injuryTableHint": "Injury table used for Gritty Damage. Gritty damage is not used if this is empty. You need to set up the EXACT name of your Injury Table. Gritty damage is only used for non-GM accounts.",
+  "SWIM.fearTableName": "Fear Table:",
+  "SWIM.fearTableHint": "Fear table used for the Fear table macro. Please make sure to enter the exact name of your Fear table in here.",
   "SWIM.shakenSFXName": "Shaken SFX",
   "SWIM.shakenSFXHint": "Sound effect (SFX) to be played when a token becomes Shaken.",
   "SWIM.incapSFXName": "Incapacitation SFX",
-  "SWIM.incapSFXHint": "Sound Effect to be played when a token becomes Incapacitated.",
+  "SWIM.incapSFXHint": "Sound effect to be played when a token becomes Incapacitated.",
   "SWIM.stunSFXName": "Stun SFX",
-  "SWIM.stunSFXHint": "Sound Effect to be played when a token becomes Stunned.",
+  "SWIM.stunSFXHint": "Sound effect to be played when a token becomes Stunned.",
   "SWIM.proneIMGName": "Prone image:",
   "SWIM.proneIMGHint": "Image for the prone condition. If you use CUB, this must be the same as the file path for Prone in CUB.",
   "SWIM.woundedSFXName": "Wounded SFX",
-  "SWIM.woundedSFXHint": "Sound Effect to be played when a token takes a Wound."
+  "SWIM.woundedSFXHint": "Sound effect to be played when a token takes a Wound.",
+  "SWIM.fearSFXName": "Fear table SFX",
+  "SWIM.fearSFXHint": "Sound effect to be played on a roll on the Fear table."
 }

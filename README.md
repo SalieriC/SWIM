@@ -50,7 +50,7 @@ The macro will use the Bennies of the selected token (needs a token selected to 
 - [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effect.
 
 **Immersion setting:** SFX.  
-**Suggested icon:** `data/modules/swim/assets/icons/status_markers/0-Shaken.png`  
+**Suggested icon:** `modules/swim/assets/icons/status_markers/0-Shaken.png`  
 **Description:**  
 This macro will first check whether or not the selected token (needs a token to be selected) is marked as Shaken (checks for the checkbox on the sheet). If the token is *not* Shaken, it will mark it as Shaken (tick the checkbox). It it is Shaken, then it will prompt a system roll. After rolling it gives a chat message detailing the result. If the result is best it will remove Skaken and that's it. If the roll could've been better it opens a dialogue giving the user the option to spend a Benny to remove Shaken. If accepted a Benny is spent (if there are Bennies left) and removes Shaken. The user can also decline which just closes the dialogue. The dialogue will not appear if there are no more Bennies left (including GM Bennies if the user is a GM). It also tells the user how many Bennies are left in the dialogue.  
 Now here is the deal: The macro is aware of any core Edges and Special Abilities that can alter the unshake roll and *automatically* adjusts the roll. You can set up own ones as well by adding them to the `const edgeNames` object (inside the []); put them in '' and only use lower case. The macro requires you to set up Special Abilities like Undead as Edges though, so keep that in mind. Also the macro currently does not add a +2 on a reroll if the token has Elan. *Keep in mind that only english Edge names are supported yet.*  
@@ -65,7 +65,7 @@ This macro comes in two variants: SWADE and SWD. I like the SWD rules regarding 
 - [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effects.
 
 **Immersion setting:** SFX.  
-**Suggested icon:** `data/modules/swim/assets/icons/status_markers/2-Stunned.png`  
+**Suggested icon:** `modules/swim/assets/icons/status_markers/2-Stunned.png`  
 **Description:**  
 This macro is very similar to the (Un-)Shake macro but handles Stunned. If the selected token (needs one selected) is not Stunned, it will be marked as such, including all the effects that come with it. Otherwise it will roll to unstun and adds/removes conditions according to the result. It is aware of Snake Eyes. It supports SFX on applying Stunned in the same way as (Un-)Shake.
 
@@ -75,8 +75,16 @@ This macro is very similar to the (Un-)Shake macro but handles Stunned. If the s
 - [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effects.  
 
 **Immersion setting:** SFX.  
-**Suggested icon:** `data/modules/swim/assets/icons/status_markers/3-Incapacitated.png`  
+**Suggested icon:** `modules/swim/assets/icons/status_markers/3-Incapacitated.png`  
 **Description:**  
 One of the most complex macros I ever wrote. It soaks and applies Wounds. It tries to cover everything from SWADE core and guides the user through the process. It is aware of (Un)Holy Warrior and Elan. It follows the core rules and thus is aware of Critical Failures.  
 It also supports SFX again. You can configure a path to your desired SFX in the modules configuration.  
 You can also use the Gritty Damage setting rule by adding the name of your Injury Table in the modules config. It must be the *exact* name of your Injury Table, best copy and paste it. **Gritty damage is only used for non-GM accounts.** Gritty damage will not be used when you have not set up an ID. So just leave this setting empty if you don't desire to use it.
+
+### Fear Table
+**Requirements:** None.
+**Immersion setting:** SFX.  
+**Suggested icon:** `modules/swim/assets/icons/status_markers/2c-Frightened.png`  
+**Description:**  
+This does mostly the same as the macro in the core rules module except you can manually set up the name of your Fear table and it has the option to play a SFX on execution.  
+This macro basically just opens a dialogue that asks for a fear modifier and then rolls on your Fear table with that modifier. Remember the rules on this: Negative fear modifiers become positive in the table, so do not enter negative numbers unless you know what you're doing.
