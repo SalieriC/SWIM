@@ -15,7 +15,7 @@ let incapSFX = game.settings.get(
 // Injury Table for Gritty Damage
 let grit = false;
 let injuryTable = game.settings.get(
-    'swade-spices', 'injuryTable');
+    'swim', 'injuryTable');
     if (injuryTable) {
         grit = true;
     }
