@@ -13,6 +13,8 @@
   "SWIM.proneIMGHint": "Image for the prone condition. If you use CUB, this must be the same as the file path for Prone in CUB.",
   "SWIM.woundedSFXName": "Wounded SFX",
   "SWIM.woundedSFXHint": "Sound effect to be played when a token takes a Wound.",
+  "SWIM.fatiguedSFXName": "Fatigued SFX",
+  "SWIM.fatiguedSFXHint": "Sound effect to be played when a token takes a level of Fatigue.",
   "SWIM.fearSFXName": "Fear table SFX",
   "SWIM.fearSFXHint": "Sound effect to be played on a roll on the Fear table."
 }

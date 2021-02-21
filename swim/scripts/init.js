@@ -76,7 +76,19 @@ function register_settings() {
         name: game.i18n.localize("SWIM.woundedSFXName"),
         hint: game.i18n.localize("SWIM.woundedSFXHint"),
         type: window.Azzu.SettingsTypes.FilePickerAudio,
-        default: '',
+        default: 'data/modules/swim/assets/sfx/Ripping-Flesh-altered-www.fesliyanstudios.com.ogg',
+        scope: 'world',
+        config: true,
+        onChange: () => {
+            window.location.reload();
+        }
+    });
+    // Fatigue SFX
+    game.settings.register('swim', 'fatiguedSFX', {
+        name: game.i18n.localize("SWIM.fatiguedSFXName"),
+        hint: game.i18n.localize("SWIM.fatiguedSFXHint"),
+        type: window.Azzu.SettingsTypes.FilePickerAudio,
+        default: 'data/modules/swim/assets/sfx/Hard-Breathing-Medium-Pace-altered-www.fesliyanstudios.com.ogg',
         scope: 'world',
         config: true,
         onChange: () => {
@@ -88,7 +100,7 @@ function register_settings() {
         name: game.i18n.localize("SWIM.fearSFXName"),
         hint: game.i18n.localize("SWIM.fearSFXHint"),
         type: window.Azzu.SettingsTypes.FilePickerAudio,
-        default: '',
+        default: 'data/modules/swim/assets/sfx/Suspense_Sound_Effect_altered_-_David_Fesliyan-www.FesliyanStudios.com.ogg',
         scope: 'world',
         config: true,
         onChange: () => {
