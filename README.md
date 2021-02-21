@@ -98,7 +98,7 @@ It also supports SFX again. You can configure a path to your desired SFX in the 
 You can also use the Gritty Damage setting rule by adding the name of your Injury Table in the modules config. It must be the *exact* name of your Injury Table, best copy and paste it. **Gritty damage is only used for non-GM accounts.** Gritty damage will not be used when you have not set up an ID. So just leave this setting empty if you don't desire to use it.
 
 ### Fear Table
-**Requirements:** None.
+**Requirements:** None.  
 **Immersion setting:** SFX.  
 **Suggested icon:** `modules/swim/assets/icons/status_markers/2c-Frightened.png`  
 **Description:**  
