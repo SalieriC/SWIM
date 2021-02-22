@@ -112,7 +112,7 @@ This macro basically just opens a dialogue that asks for a fear modifier and the
 
 **Immersion setting:** SFX.  
 **Description:**  
-This is a rather simple macro that marks a token as Incapacitated! and is mainly intended for NPC Extras. It requires CUB to toggle the Inc.! status and Health Estimate. If you don't use Health Estimate I suggest using the Soak Damage macro instead.  
+This is a rather simple macro that marks a token as Incapacitated! and is mainly intended for NPC Extras. It requires CUB to toggle the Inc.! status and Health Estimate.  
 The macro plays a sound effect on execution and will mark all selected as Inc.! It works both ways though and can uncheck Inc.! if needed.  
 
 ### Power Point Management  
