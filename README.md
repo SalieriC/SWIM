@@ -136,3 +136,4 @@ In terms of other SFX: The macro again uses the Incapacitation sfx and the wound
 **Description:**  
 This macro is more or less the opposite of the Soak Damage macro. It offers functionality to remove wounds in a generic way (i.e. due to the Healing Skill or Power) and also a way to roll on Natural Healing, interpreting the results, removing wounds, offerring rerolls and is aware of Snake Eyes (adds another Wound or Inc.!).  
 It uses the sfx for Wounds, Inc.! and Healing.  
+The macro is also capable of removing Fatigue using a given number, which also supports a unique SFX.  

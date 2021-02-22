@@ -14,6 +14,8 @@ let incapSFX = game.settings.get(
     'swim', 'incapSFX');
 let healSFX = game.settings.get(
     'swim', 'healSFX');
+let looseFatigueSFX = game.settings.get(
+    'swim', 'looseFatigueSFX');    
 
 // Check if a token is selected.
 if ((!token || canvas.tokens.controlled.length > 1) || (token && token.actor.data.data.wounds.value < 1)) {
@@ -331,6 +333,15 @@ function genericRemoveFatigue() {
                     let setFatigue = fv - genericHealFatigue;
                     token.actor.update({ "data.wounds.value": setFatigue });
                     ui.notifications.notify(`${genericHealFatigue} Level(s) of Fatigue cured.`);
+                    ChatMessage.create({
+                        speaker: {
+                            alias: token.name
+                        },
+                        content: `${token.name} lost ${genericHealFatigue} Level(s) of Fatigue.`
+                    })
+                    if (looseFatigueSFX) {
+                        AudioHelper.play({ src: `${looseFatigueSFX}` }, true);
+                    }
                 }
             }
         }
@@ -354,4 +365,4 @@ function applyWounds() {
     }
 }
 
-// v.1.0.0 By SalieriC#8263; fixing bugs supported by FloRad#2142.
+// v.2.0.0 By SalieriC#8263; fixing bugs supported by FloRad#2142.

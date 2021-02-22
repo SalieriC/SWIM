@@ -18,5 +18,7 @@
   "SWIM.fearSFXName": "Fear table SFX",
   "SWIM.fearSFXHint": "Sound effect to be played on a roll on the Fear table.",
   "SWIM.healSFXName": "Healing SFX",
-  "SWIM.healSFXHint": "Sound effect to be played when wounds are healed."
+  "SWIM.healSFXHint": "Sound effect to be played when wounds are healed.",
+  "SWIM.looseFatigueSFXName": "Curing Fatigue SFX",
+  "SWIM.looseFatigueSFXHint": "Sound effect to be played when Fatigue is cured or removed."
 }
