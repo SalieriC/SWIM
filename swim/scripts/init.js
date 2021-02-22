@@ -92,6 +92,15 @@ function register_settings() {
         scope: 'world',
         config: true,
     });
+    // Removing Fatigue SFX
+    game.settings.register('swim', 'looseFatigueSFX', {
+        name: game.i18n.localize("SWIM.looseFatigueSFXName"),
+        hint: game.i18n.localize("SWIM.looseFatigueSFXHint"),
+        type: window.Azzu.SettingsTypes.FilePickerAudio,
+        default: '',
+        scope: 'world',
+        config: true,
+    });
 }
 
 Hooks.on(`ready`, () => {
