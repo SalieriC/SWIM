@@ -294,6 +294,7 @@ if (!token || canvas.tokens.controlled.length > 1) {
     new Dialog({
         title: 'Soaking Wounds',
         content: `<form>
+        <p>You currently have <b>${wv}/${wm}</b> Wounds and <b>${bennies}</b> Bennies.</p>
     <div class="form-group">
         <label for="numWounds">Amount of Wounds: </label>
         <input id="numWounds" name="num" type="number" min="0" value="1"></input>

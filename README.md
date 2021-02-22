@@ -102,7 +102,7 @@ You can also use the Gritty Damage setting rule by adding the name of your Injur
 **Immersion setting:** SFX.  
 **Suggested icon:** `modules/swim/assets/icons/status_markers/2c-Frightened.png`  
 **Description:**  
-This does mostly the same as the macro in the core rules module except you can manually set up the name of your Fear table and it has the option to play a SFX on execution.  
+This does mostly the same as the macro in the core rules module except you can manually set up the name of your Fear table and it has the option to play a sfx on execution.  
 This macro basically just opens a dialogue that asks for a fear modifier and then rolls on your Fear table with that modifier. Remember the rules on this: Negative fear modifiers become positive in the table, so do not enter negative numbers unless you know what you're doing.
 
 ### Mark Death

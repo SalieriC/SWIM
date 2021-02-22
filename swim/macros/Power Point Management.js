@@ -381,6 +381,7 @@ for (let token of canvas.tokens.controlled) {
     new Dialog({
         title: 'Power Point Management',
         content: `<form>
+            <p>You currently have <b>${ppv}/${ppm}</b> Power Points.</p>
             <div class="form-group">
                 <label for="num">Amount of Power Points: </label>
                 <input id="num" name="num" type="number" min="0" value="5"></input>
@@ -394,4 +395,4 @@ for (let token of canvas.tokens.controlled) {
     }).render(true)
 }
 
-// v4.0.1 - Made by SalieriC#8263; with a ton of help from Kandashi (He/Him)#6698, thank you so much. =) Also thank you Enrahim#5273 and Freeze#2689 for helping me with the conditional buttons and Freeze again for the sound. Thx eXaminator#0079 for the option to have no sound.
+// v4.1.0 - Made by SalieriC#8263; with a ton of help from Kandashi (He/Him)#6698, thank you so much. =) Also thank you Enrahim#5273 and Freeze#2689 for helping me with the conditional buttons and Freeze again for the sound. Thx eXaminator#0079 for the option to have no sound.

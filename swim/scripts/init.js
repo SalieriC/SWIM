@@ -52,7 +52,7 @@ function register_settings() {
         name: game.i18n.localize("SWIM.stunSFXName"),
         hint: game.i18n.localize("SWIM.stunSFXHint"),
         type: window.Azzu.SettingsTypes.FilePickerAudio,
-        default: '',
+        default: 'modules/swim/assets/sfx/Body-Thud-altered-www.fesliyanstudios.com.ogg',
         scope: 'world',
         config: true,
         onChange: () => {
@@ -64,7 +64,7 @@ function register_settings() {
         name: game.i18n.localize("SWIM.proneIMGName"),
         hint: game.i18n.localize("SWIM.proneIMGHint"),
         type: window.Azzu.SettingsTypes.FilePickerImage,
-        default: 'data/modules/swim/assets/icons/status_markers/2-Prone.png',
+        default: 'modules/swim/assets/icons/status_markers/2-Prone.png',
         scope: 'world',
         config: true,
         onChange: () => {
@@ -76,7 +76,7 @@ function register_settings() {
         name: game.i18n.localize("SWIM.woundedSFXName"),
         hint: game.i18n.localize("SWIM.woundedSFXHint"),
         type: window.Azzu.SettingsTypes.FilePickerAudio,
-        default: 'data/modules/swim/assets/sfx/Ripping-Flesh-altered-www.fesliyanstudios.com.ogg',
+        default: 'modules/swim/assets/sfx/Ripping-Flesh-altered-www.fesliyanstudios.com.ogg',
         scope: 'world',
         config: true,
         onChange: () => {
@@ -88,7 +88,7 @@ function register_settings() {
         name: game.i18n.localize("SWIM.fatiguedSFXName"),
         hint: game.i18n.localize("SWIM.fatiguedSFXHint"),
         type: window.Azzu.SettingsTypes.FilePickerAudio,
-        default: 'data/modules/swim/assets/sfx/Hard-Breathing-Medium-Pace-altered-www.fesliyanstudios.com.ogg',
+        default: 'modules/swim/assets/sfx/Hard-Breathing-Medium-Pace-altered-www.fesliyanstudios.com.ogg',
         scope: 'world',
         config: true,
         onChange: () => {
@@ -100,7 +100,7 @@ function register_settings() {
         name: game.i18n.localize("SWIM.fearSFXName"),
         hint: game.i18n.localize("SWIM.fearSFXHint"),
         type: window.Azzu.SettingsTypes.FilePickerAudio,
-        default: 'data/modules/swim/assets/sfx/Suspense_Sound_Effect_altered_-_David_Fesliyan-www.FesliyanStudios.com.ogg',
+        default: 'modules/swim/assets/sfx/Suspense_Sound_Effect_altered_-_David_Fesliyan-www.FesliyanStudios.com.ogg',
         scope: 'world',
         config: true,
         onChange: () => {
