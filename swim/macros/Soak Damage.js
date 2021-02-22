@@ -167,7 +167,7 @@ if (!token || canvas.tokens.controlled.length > 1) {
                             }
                         }
                         if (!game.user.isGM && setWounds > 0 && grit === true) {
-                            game.tables.getName(`${injuryTable}`).draw({ roll });
+                            game.tables.getName(`${injuryTable}`).draw();
                         }
                     }
                 }

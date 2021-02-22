@@ -1,10 +1,7 @@
-// This macro offers the most common options to recharge Power Points in core SWADE and a way to spend them as well. It also 100% out of the box, you don't need to do anything at all in order to use it.
-// The input box is only needed for the first two buttons ("Spend PP" and "Recharge PP") and sets the amount to spend/recharge. the other buttons have set values and will always recharge 5 Power Points as per the rules.
-// Since v2.0 the macro now comes with Whateley Blood (Deadlands The Weird West) support but is completely vanilla friendly. You won't notice it unless you play Deadlands or look at the code.
-// This optional Version require CUB to be set up and to have Heath Estimate installed.
-// Version 3.0 now comes with Sound FX support. If you want to use Sounds you need to set up a playlist called "Magic Effects" and populate it.
-if (canvas.tokens.controlled.length === 0)
-    return ui.notifications.error("Please select a token first");
+// Check if a token is selected.
+if (!token || canvas.tokens.controlled.length > 1) {
+    ui.notifications.error("Please select a single token token first.");
+}
 
 for (let token of canvas.tokens.controlled) {
     let ppv = token.actor.data.data.powerPoints.value;
@@ -397,4 +394,4 @@ for (let token of canvas.tokens.controlled) {
     }).render(true)
 }
 
-// v4.0.0 - Made by SalieriC#8263; with a ton of help from Kandashi (He/Him)#6698, thank you so much. =) Also thank you Enrahim#5273 and Freeze#2689 for helping me with the conditional buttons and Freeze again for the sound. Thx eXaminator#0079 for the option to have no sound.
+// v4.0.1 - Made by SalieriC#8263; with a ton of help from Kandashi (He/Him)#6698, thank you so much. =) Also thank you Enrahim#5273 and Freeze#2689 for helping me with the conditional buttons and Freeze again for the sound. Thx eXaminator#0079 for the option to have no sound.
