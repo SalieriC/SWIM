@@ -120,7 +120,6 @@ The macro plays a sound effect on execution and will mark all selected as Inc.! 
 **Requirements:**
 - [Health Estimate](https://foundryvtt.com/packages/healthEstimate/)
 - [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effects.  
-- [The Furnace](https://foundryvtt.com/packages/furnace)
 
 **Immersion setting:** SFX.  
 **Description:**  
