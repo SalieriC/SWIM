@@ -22,7 +22,7 @@ let injuryTable = game.settings.get(
 
 // Check if a token is selected.
 if (!token || canvas.tokens.controlled.length > 1) {
-    ui.notifications.error("Please select a single token token first.");
+    ui.notifications.error("Please select a single token first.");
 }
 
 // Declairing variables and constants.
@@ -306,7 +306,6 @@ if (!token || canvas.tokens.controlled.length > 1) {
     // Dialog to be rendered if not all wounds were soaked in rollSoak.
     function dialogReroll() {
         bv = checkBennies();
-        console.log(`Bennies at reroll dialog: ${bv}`)
         if (bv > 0) {
             let currWounds = numberWounds - rounded;
             new Dialog({

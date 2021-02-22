@@ -7,7 +7,7 @@ let stunSFX = game.settings.get(
 
 async function rollUnstun() {
   if (!token || canvas.tokens.controlled.length > 1) {
-    ui.notifications.error("Please select a single token token first.");
+    ui.notifications.error("Please select a single token first.");
     return;
   }
 

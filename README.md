@@ -116,7 +116,7 @@ This is a rather simple macro that marks a token as Incapacitated! and is mainly
 The macro plays a sound effect on execution and will mark all selected as Inc.! It works both ways though and can uncheck Inc.! if needed.  
 
 ### Power Point Management  
-**Incompatibility:**  This macro is *not* compatible with the power point management offered by the SWADE system. Disable it if you want to use this macro.
+**Incompatibility:**  This macro is *not* compatible with the power point management offered by the SWADE system. Disable it if you want to use this macro.  
 **Requirements:**
 - [Health Estimate](https://foundryvtt.com/packages/healthEstimate/)
 - [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effects.  
@@ -126,3 +126,13 @@ The macro plays a sound effect on execution and will mark all selected as Inc.! 
 Oh boy, this one was a pain to create and a great way to learn. It tries to handle all core methods of recharging and spending Power Points and also supports Deadlands The Weird West in the sense of that it offers Whateley Blood. It handles Fatigue and Wounds and only shows the Soul Drain or Whateley Blood stuff if the Edge is found on the character (no language support yet). It will spend as many PP as you set up in the dialogue or recharge as many. It also offerst to recharge 5 by spending a Benny or said Edges.  
 SFX works differently here. You need to set up a Playlist called "Magic Effects" and the macro will get all the tracks in it and then plays the selected when PP are spent (not recharged). This offers more flexebility.  
 In terms of other SFX: The macro again uses the Incapacitation sfx and the wounded sfx but also a new one played on taking a level of Fatigue.  
+
+### Healing Wounds  
+**Requirements:**
+- [Health Estimate](https://foundryvtt.com/packages/healthEstimate/)
+- [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effects.  
+
+**Immersion setting:** SFX.  
+**Description:**  
+This macro is more or less the opposite of the Soak Damage macro. It offers functionality to remove wounds in a generic way (i.e. due to the Healing Skill or Power) and also a way to roll on Natural Healing, interpreting the results, removing wounds, offerring rerolls and is aware of Snake Eyes (adds another Wound or Inc.!).  
+It uses the sfx for Wounds, Inc.! and Healing.  

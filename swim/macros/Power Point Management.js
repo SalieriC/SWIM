@@ -1,6 +1,6 @@
 // Check if a token is selected.
 if (!token || canvas.tokens.controlled.length > 1) {
-    ui.notifications.error("Please select a single token token first.");
+    ui.notifications.error("Please select a single token first.");
 }
 
 for (let token of canvas.tokens.controlled) {

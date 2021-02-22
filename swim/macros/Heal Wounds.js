@@ -16,8 +16,8 @@ let healSFX = game.settings.get(
     'swim', 'healSFX');
 
 // Check if a token is selected.
-if (!token || canvas.tokens.controlled.length > 1) {
-    ui.notifications.error("Please select a single token token first.");
+if ((!token || canvas.tokens.controlled.length > 1) || (token && token.actor.data.data.wounds.value < 1)) {
+    ui.notifications.error("Please select a single token that is wounded first.");
 }
 
 // Declairing variables and constants.
@@ -37,6 +37,7 @@ let elanBonus;
 let newWounds;
 let currWounds;
 let setWounds;
+let genericHealWounds;
 
 // Check for Bennies
 function checkBennies() {
@@ -90,7 +91,7 @@ async function rollNatHeal() {
     // Checking for a Critical Failure.
     if (isSame_bool(r.dice) && isSame_numb(r.dice) === 1) {
         ui.notifications.notify("You've rolled a Critical Failure!");
-        let chatData = `${actorAlias} rolled a <span style="font-size:150%">Critical Failure!</span> and takes another Wound!`;
+        let chatData = `${actorAlias} rolled a <span style="font-size:150%">Critical Failure!</span> and takes another Wound! See the rules on Natural Healing for details.`;
         applyWounds();
         ChatMessage.create({ content: chatData });
     }
@@ -114,6 +115,7 @@ async function rollNatHeal() {
             };
         } else if ((rounded > 1 && rounded >= numberWounds && numberWounds < 3) || (rounded === 1 && numberWounds === 1)) {
             chatData += ` and heals all of his Wounds.`;
+            removeWounds();
         }
         chatData += ` ${edgeText}`;
 
@@ -185,7 +187,7 @@ function dialogReroll() {
                 two: {
                     label: "No",
                     callback: (html) => {
-                        ui.notifications.notify("Wounds will be removed now.");
+                        ui.notifications.notify("As you wish, Wounds will be removed now.");
                         removeWounds();
                     }
                 }
@@ -211,7 +213,14 @@ if (!fastHealer) {
             one: {
                 label: "Natural Healing",
                 callback: (html) => {
+                    numberWounds = wv;
                     rollNatHeal();
+                }
+            },
+            two: {
+                label: "Generic Healing",
+                callback: (html) => {
+                    genericRemoveWounds();
                 }
             }
         }
@@ -236,23 +245,59 @@ else {
 }
 
 function removeWounds() {
-    if (rounded === 1) {
-        setWounds = wv - 1;
-        if (setWounds < 0) {
-            setWounds = 0;
+    if (genericHealWounds) {
+        if (genericHealWounds > wv) {
+            genericHealWounds = wv;
+            ui.notifications.error(`You can't heal more wounds than you have, healing all Wounds instead now...`);
         }
+        setWounds = wv - genericHealWounds;
         token.actor.update({ "data.wounds.value": setWounds });
+        ui.notifications.notify(`${genericHealWounds} Wound(s) healed.`);
     }
-    if (rounded >= 2) {
-        setWounds = wv - 2;
-        if (setWounds < 0) {
-            setWounds = 0
+    else {
+        if (rounded === 1) {
+            setWounds = wv - 1;
+            if (setWounds < 0) {
+                setWounds = 0;
+            }
+            token.actor.update({ "data.wounds.value": setWounds });
+            ui.notifications.notify("One Wound healed.");
         }
-        token.actor.update({ "data.wounds.value": setWounds });
+        if (rounded >= 2) {
+            setWounds = wv - 2;
+            if (setWounds < 0) {
+                setWounds = 0
+            }
+            token.actor.update({ "data.wounds.value": setWounds });
+            ui.notifications.notify("Two Wounds healed.");
+        }
     }
     if (healSFX) {
         AudioHelper.play({ src: `${healSFX}` }, true);
     }
+}
+
+// Healing from a source other than Natural Healing
+function genericRemoveWounds() {
+    new Dialog({
+        title: 'Generic Healing',
+        content: `<form>
+        <p>You currently have <b>${wv}/${wm}</b> If you've been healed from a source other than Natural Healing, enter the amount of wounds below:</p>
+    <div class="form-group">
+        <label for="numWounds">Amount of Wounds: </label>
+        <input id="numWounds" name="num" type="number" min="0" value="1"></input>
+    </div>
+    </form>`,
+        buttons: {
+            one: {
+                label: "Heal Wounds",
+                callback: (html) => {
+                    genericHealWounds = Number(html.find("#numWounds")[0].value);
+                    removeWounds();
+                }
+            }
+        }
+    }).render(true);
 }
 
 function applyWounds() {
@@ -271,3 +316,5 @@ function applyWounds() {
         }
     }
 }
+
+// v.1.0.0 By SalieriC#8263; fixing bugs supported by FloRad#2142.

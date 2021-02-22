@@ -17,7 +17,7 @@ main();
 async function main() {
     // No Token is Selected
     if (!token || canvas.tokens.controlled.length > 1) {
-        ui.notifications.error("Please select a single token token first.");
+        ui.notifications.error("Please select a single token first.");
         return;
     }
 

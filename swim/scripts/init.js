@@ -7,9 +7,6 @@ function register_settings() {
         default: 'Injury Table',
         scope: 'world',
         config: true,
-        onChange: () => {
-            window.location.reload();
-        }
     });
     // Fear Table Name
     game.settings.register('swim', 'fearTable', {
@@ -19,9 +16,6 @@ function register_settings() {
         default: 'Fear Table',
         scope: 'world',
         config: true,
-        onChange: () => {
-            window.location.reload();
-        }
     });
     // Shaken SFX
     game.settings.register('swim', 'shakenSFX', {
@@ -31,9 +25,6 @@ function register_settings() {
         default: '',
         scope: 'world',
         config: true,
-        onChange: () => {
-            window.location.reload();
-        }
     });
     // Incapacitation SFX
     game.settings.register('swim', 'incapSFX', {
@@ -43,9 +34,6 @@ function register_settings() {
         default: '',
         scope: 'world',
         config: true,
-        onChange: () => {
-            window.location.reload();
-        }
     });
     // Stunned SFX
     game.settings.register('swim', 'stunSFX', {
@@ -55,9 +43,6 @@ function register_settings() {
         default: 'modules/swim/assets/sfx/Body-Thud-altered-www.fesliyanstudios.com.ogg',
         scope: 'world',
         config: true,
-        onChange: () => {
-            window.location.reload();
-        }
     });
     // Prone Image
     game.settings.register('swim', 'proneIMG', {
@@ -67,9 +52,9 @@ function register_settings() {
         default: 'modules/swim/assets/icons/status_markers/2-Prone.png',
         scope: 'world',
         config: true,
-        onChange: () => {
+        /*onChange: () => {
             window.location.reload();
-        }
+        }*/
     });
     // Wounded SFX
     game.settings.register('swim', 'woundedSFX', {
@@ -79,9 +64,6 @@ function register_settings() {
         default: 'modules/swim/assets/sfx/Ripping-Flesh-altered-www.fesliyanstudios.com.ogg',
         scope: 'world',
         config: true,
-        onChange: () => {
-            window.location.reload();
-        }
     });
     // Fatigue SFX
     game.settings.register('swim', 'fatiguedSFX', {
@@ -91,9 +73,6 @@ function register_settings() {
         default: 'modules/swim/assets/sfx/Hard-Breathing-Medium-Pace-altered-www.fesliyanstudios.com.ogg',
         scope: 'world',
         config: true,
-        onChange: () => {
-            window.location.reload();
-        }
     });
     // Fear SFX
     game.settings.register('swim', 'fearSFX', {
@@ -103,9 +82,15 @@ function register_settings() {
         default: 'modules/swim/assets/sfx/Suspense_Sound_Effect_altered_-_David_Fesliyan-www.FesliyanStudios.com.ogg',
         scope: 'world',
         config: true,
-        onChange: () => {
-            window.location.reload();
-        }
+    });
+    // Healing SFX
+    game.settings.register('swim', 'healSFX', {
+        name: game.i18n.localize("SWIM.healSFXName"),
+        hint: game.i18n.localize("SWIM.healSFXHint"),
+        type: window.Azzu.SettingsTypes.FilePickerAudio,
+        default: '',
+        scope: 'world',
+        config: true,
     });
 }
 
