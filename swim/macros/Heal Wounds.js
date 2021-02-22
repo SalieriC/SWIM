@@ -23,6 +23,8 @@ if ((!token || canvas.tokens.controlled.length > 1) || (token && token.actor.dat
 // Declairing variables and constants.
 const wv = token.actor.data.data.wounds.value;
 const wm = token.actor.data.data.wounds.max;
+const fv = token.actor.data.data.fatigue.value;
+const fm = token.actor.data.data.fatigue.max;
 const fastHealer = token.actor.data.items.find(function (item) {
     return ((item.name.toLowerCase() === "Fast Healer") && item.type === "edge");
 });
@@ -206,7 +208,7 @@ if (!fastHealer) {
     new Dialog({
         title: 'Healing Wounds',
         content: `<form>
-        <p>You currently have <b>${wv}/${wm}</b> Wounds and <b>${bennies}</b> Bennies.</p>
+        <p>You currently have <b>${wv}/${wm}</b> Wounds, <b>${fv}/${fm}</b> Fatigue and <b>${bennies}</b> Bennies.</p>
         <p>You may make a Natural Healing roll every <b>five days</b>.</p>
         </form>`,
         buttons: {
@@ -221,6 +223,12 @@ if (!fastHealer) {
                 label: "Generic Healing",
                 callback: (html) => {
                     genericRemoveWounds();
+                }
+            },
+            three: {
+                label: "Remove Fatigue",
+                callback: (html) => {
+                    genericRemoveFatigue();
                 }
             }
         }
@@ -294,6 +302,35 @@ function genericRemoveWounds() {
                 callback: (html) => {
                     genericHealWounds = Number(html.find("#numWounds")[0].value);
                     removeWounds();
+                }
+            }
+        }
+    }).render(true);
+}
+
+// Removing Fatigue
+function genericRemoveFatigue() {
+    new Dialog({
+        title: 'Remove Fatigue',
+        content: `<form>
+        <p>You currently have <b>${fv}/${fm}</b> If your Fatigue has been cured or expired, enter the amount of Fatigue below:</p>
+    <div class="form-group">
+        <label for="numWounds">Amount of Fatigue: </label>
+        <input id="numFatigue" name="num" type="number" min="0" value="1"></input>
+    </div>
+    </form>`,
+        buttons: {
+            one: {
+                label: "Cure Fatigue",
+                callback: (html) => {
+                    let genericHealFatigue = Number(html.find("#numFatigue")[0].value);
+                    if (genericHealFatigue > fv) {
+                        genericHealFatigue = fv;
+                        ui.notifications.error(`You can't cure more Fatigue than you have, curing all Fatigue instead now...`);
+                    }
+                    let setFatigue = fv - genericHealFatigue;
+                    token.actor.update({ "data.wounds.value": setFatigue });
+                    ui.notifications.notify(`${genericHealFatigue} Level(s) of Fatigue cured.`);
                 }
             }
         }
