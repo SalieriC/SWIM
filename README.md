@@ -96,6 +96,7 @@ This macro is very similar to the (Un-)Shake macro but handles Stunned. If the s
 One of the most complex macros I ever wrote. It soaks and applies Wounds. It tries to cover everything from SWADE core and guides the user through the process. It is aware of (Un)Holy Warrior and Elan. It follows the core rules and thus is aware of Critical Failures.  
 It also supports SFX again. You can configure a path to your desired SFX in the modules configuration.  
 You can also use the Gritty Damage setting rule by adding the name of your Injury Table in the modules config. It must be the *exact* name of your Injury Table, best copy and paste it. **Gritty damage is only used for non-GM accounts.** Gritty damage will not be used when you have not set up an ID. So just leave this setting empty if you don't desire to use it.
+<p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Soaking%20Wounds.jpg?raw=true"> </p>  
 
 ### Fear Table
 **Requirements:** None.  
@@ -126,6 +127,7 @@ The macro plays a sound effect on execution and will mark all selected as Inc.! 
 Oh boy, this one was a pain to create and a great way to learn. It tries to handle all core methods of recharging and spending Power Points and also supports Deadlands The Weird West in the sense of that it offers Whateley Blood. It handles Fatigue and Wounds and only shows the Soul Drain or Whateley Blood stuff if the Edge is found on the character (no language support yet). It will spend as many PP as you set up in the dialogue or recharge as many. It also offerst to recharge 5 by spending a Benny or said Edges.  
 SFX works differently here. You need to set up a Playlist called "Magic Effects" and the macro will get all the tracks in it and then plays the selected when PP are spent (not recharged). This offers more flexebility.  
 In terms of other SFX: The macro again uses the Incapacitation sfx and the wounded sfx but also a new one played on taking a level of Fatigue.  
+<p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Power%20Point%20Management.jpg?raw=true"> </p>  
 
 ### Personal Health Centre  
 **Requirements:**
@@ -138,3 +140,4 @@ This macro is more or less the opposite of the Soak Damage macro. It offers func
 It also supporst the Regeneration Special/Racial Ability but it must be set up as an Edge called "Fast Regeneration" or "Slow Regeneration". Then it adjusts the time that needs to be passed until a Natural Healing roll can be made. If your setting calls for longer or shorter periods of time until a Natural Healing roll can be made (Hellfrost comes to mind), then you can set this up in the modules settings.  
 It uses the sfx for Wounds, Inc.! and Healing.  
 The macro is also capable of removing Fatigue using a given number, which also supports a unique SFX.  
+<p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Personal%20Health%20Centre.jpg?raw=true"> </p>  
