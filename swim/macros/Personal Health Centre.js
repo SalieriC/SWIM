@@ -15,11 +15,11 @@ let incapSFX = game.settings.get(
 let healSFX = game.settings.get(
     'swim', 'healSFX');
 let looseFatigueSFX = game.settings.get(
-    'swim', 'looseFatigueSFX');    
+    'swim', 'looseFatigueSFX');
 
 // Check if a token is selected.
-if ((!token || canvas.tokens.controlled.length > 1) || (token && token.actor.data.data.wounds.value < 1)) {
-    ui.notifications.error("Please select a single token that is wounded first.");
+if ((!token || canvas.tokens.controlled.length > 1)) {
+    ui.notifications.error("Please select a single token first.");
 }
 
 // Declairing variables and constants.
@@ -27,14 +27,27 @@ const wv = token.actor.data.data.wounds.value;
 const wm = token.actor.data.data.wounds.max;
 const fv = token.actor.data.data.fatigue.value;
 const fm = token.actor.data.data.fatigue.max;
+//Checking for Edges (and Special/Racial Abilities)
+let natHeal_time = game.settings.get(
+    'swim', 'natHeal_time');
 const fastHealer = token.actor.data.items.find(function (item) {
-    return ((item.name.toLowerCase() === "Fast Healer") && item.type === "edge");
+    return ((item.name.toLowerCase() === "fast healer") && item.type === "edge");
 });
+if (fastHealer) { natHeal_time = "three days" };
+const reg_slow = token.actor.data.items.find(function (item) {
+    return ((item.name.toLowerCase() === "slow regeneration") && item.type === "edge");
+});
+if (reg_slow) { natHeal_time = "day" };
+const reg_fast = token.actor.data.items.find(function (item) {
+    return ((item.name.toLowerCase() === "fast regeneration") && item.type === "edge");
+});
+if (reg_fast) { natHeal_time = "round" };
 const elan = token.actor.data.items.find(function (item) {
     return item.name.toLowerCase() === "elan" && item.type === "edge";
 });
 let bennies = token.actor.data.data.bennies.value;
 let bv;
+bv = checkBennies();
 let numberWounds;
 let rounded;
 let elanBonus;
@@ -42,6 +55,48 @@ let newWounds;
 let currWounds;
 let setWounds;
 let genericHealWounds;
+let buttons_main;
+let md_text
+// Adjusting buttons and Main Dialogue text
+if (fv < 1 && wv < 1) {
+    md_text = `<form>
+    <p>You currently netiher have any Wounds nor Fatige. There is nothing for you to do here.</p>
+    </form>`;
+    buttons_main = {
+        one: {
+            label: "Nevermind...",
+            callback: (html) => { },
+        }
+    }
+}
+else {
+    md_text = `<form>
+    <p>You currently have <b>${wv}/${wm}</b> Wounds, <b>${fv}/${fm}</b> Fatigue and <b>${bv}</b> Bennies.</p>
+    <p>You may make a Natural Healing roll <b>every ${natHeal_time}</b> unless altered by setting specific circumstances.</p>
+    <p>You may also heal wounds directly (i.e. from the Healing Power) or cure Fatigue. What you you want to do?</p>
+    </form>`;
+    buttons_main = {
+        one: {
+            label: "Natural Healing",
+            callback: (html) => {
+                numberWounds = wv;
+                rollNatHeal();
+            }
+        },
+        two: {
+            label: "Direct Healing",
+            callback: (html) => {
+                genericRemoveWounds();
+            }
+        },
+        three: {
+            label: "Cure Fatigue",
+            callback: (html) => {
+                genericRemoveFatigue();
+            }
+        }
+    }
+}
 
 // Check for Bennies
 function checkBennies() {
@@ -174,8 +229,8 @@ function dialogReroll() {
         new Dialog({
             title: 'Reroll',
             content: `<form>
-                You've healed ${rounded} Wounds.
-                </br>Do you want to reroll your Natural Healing roll (you have ${bv} Bennies left)?
+                You've healed <b>${rounded} Wounds</b>.
+                </br>Do you want to reroll your Natural Healing roll (you have <b>${bv} Bennies</b> left)?
                 </form>`,
             buttons: {
                 one: {
@@ -206,53 +261,11 @@ function dialogReroll() {
 }
 
 // Main Dialogue
-if (!fastHealer) {
-    new Dialog({
-        title: 'Healing Wounds',
-        content: `<form>
-        <p>You currently have <b>${wv}/${wm}</b> Wounds, <b>${fv}/${fm}</b> Fatigue and <b>${bennies}</b> Bennies.</p>
-        <p>You may make a Natural Healing roll every <b>five days</b>.</p>
-        </form>`,
-        buttons: {
-            one: {
-                label: "Natural Healing",
-                callback: (html) => {
-                    numberWounds = wv;
-                    rollNatHeal();
-                }
-            },
-            two: {
-                label: "Generic Healing",
-                callback: (html) => {
-                    genericRemoveWounds();
-                }
-            },
-            three: {
-                label: "Remove Fatigue",
-                callback: (html) => {
-                    genericRemoveFatigue();
-                }
-            }
-        }
-    }).render(true);
-}
-else {
-    new Dialog({
-        title: 'Healing Wounds',
-        content: `<form>
-        <p>You currently have <b>${wv}/${wm}</b> Wounds and <b>${bennies}</b> Bennies.</p>
-        <p>You may make a Natural Healing roll every <b>three days</b>.</p>
-        </form>`,
-        buttons: {
-            one: {
-                label: "Natural Healing",
-                callback: (html) => {
-                    rollNatHeal();
-                }
-            }
-        }
-    }).render(true);
-}
+new Dialog({
+    title: 'Personal Health Centre',
+    content: md_text,
+    buttons: buttons_main,
+}).render(true);
 
 function removeWounds() {
     if (genericHealWounds) {
@@ -290,7 +303,7 @@ function removeWounds() {
 // Healing from a source other than Natural Healing
 function genericRemoveWounds() {
     new Dialog({
-        title: 'Generic Healing',
+        title: 'Direct Healing',
         content: `<form>
         <p>You currently have <b>${wv}/${wm}</b> If you've been healed from a source other than Natural Healing, enter the amount of wounds below:</p>
     <div class="form-group">
@@ -313,7 +326,7 @@ function genericRemoveWounds() {
 // Removing Fatigue
 function genericRemoveFatigue() {
     new Dialog({
-        title: 'Remove Fatigue',
+        title: 'Cure Fatigue',
         content: `<form>
         <p>You currently have <b>${fv}/${fm}</b> If your Fatigue has been cured or expired, enter the amount of Fatigue below:</p>
     <div class="form-group">
@@ -331,7 +344,7 @@ function genericRemoveFatigue() {
                         ui.notifications.error(`You can't cure more Fatigue than you have, curing all Fatigue instead now...`);
                     }
                     let setFatigue = fv - genericHealFatigue;
-                    token.actor.update({ "data.wounds.value": setFatigue });
+                    token.actor.update({ "data.fatigue.value": setFatigue });
                     ui.notifications.notify(`${genericHealFatigue} Level(s) of Fatigue cured.`);
                     ChatMessage.create({
                         speaker: {

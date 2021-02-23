@@ -127,13 +127,14 @@ Oh boy, this one was a pain to create and a great way to learn. It tries to hand
 SFX works differently here. You need to set up a Playlist called "Magic Effects" and the macro will get all the tracks in it and then plays the selected when PP are spent (not recharged). This offers more flexebility.  
 In terms of other SFX: The macro again uses the Incapacitation sfx and the wounded sfx but also a new one played on taking a level of Fatigue.  
 
-### Healing Wounds  
+### Personal Health Centre  
 **Requirements:**
 - [Health Estimate](https://foundryvtt.com/packages/healthEstimate/)
 - [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effects.  
 
 **Immersion setting:** SFX.  
 **Description:**  
-This macro is more or less the opposite of the Soak Damage macro. It offers functionality to remove wounds in a generic way (i.e. due to the Healing Skill or Power) and also a way to roll on Natural Healing, interpreting the results, removing wounds, offerring rerolls and is aware of Snake Eyes (adds another Wound or Inc.!).  
+This macro is more or less the opposite of the Soak Damage macro. It offers functionality to remove wounds in a generic way (i.e. due to the Healing Skill or Power) and also a way to roll on Natural Healing, interpreting the results, removing wounds, offerring rerolls and is aware of Snake Eyes (adds another Wound or Inc.!). It supports Fast Healer and (on rerolls) Elan as well.  
+It also supporst the Regeneration Special/Racial Ability but it must be set up as an Edge called "Fast Regeneration" or "Slow Regeneration". Then it adjusts the time that needs to be passed until a Natural Healing roll can be made. If your setting calls for longer or shorter periods of time until a Natural Healing roll can be made (Hellfrost comes to mind), then you can set this up in the modules settings.  
 It uses the sfx for Wounds, Inc.! and Healing.  
 The macro is also capable of removing Fatigue using a given number, which also supports a unique SFX.  

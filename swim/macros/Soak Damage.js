@@ -253,8 +253,8 @@ if (!token || canvas.tokens.controlled.length > 1) {
                 content: `<form>
             <div class="form-group">
                 <form>
-                You can spend a maximum of 4 Power Points to add a bonus to your Soaking Roll equal to the amount of Power Points used.
-                </br>You have ${ppv} Power Points left.
+                You can spend a <b>maximum of 4 Power Points</b> to add a bonus to your Soaking Roll equal to the amount of Power Points used.
+                </br>You have <b>${ppv} Power Points</b> left.
                 </form>
                 <label for="numPP">Power Points to spend: </label>
                 <input id="numPP" name="num" type="number" min="1" max="4" value="1"></input>
@@ -311,8 +311,8 @@ if (!token || canvas.tokens.controlled.length > 1) {
             new Dialog({
                 title: 'Reroll',
                 content: `<form>
-                    You've soaked ${rounded} Wounds; you will receive ${currWounds} Wounds.
-                    </br>Do you want to reroll your Soaking Roll (you have ${bv} Bennies left)?
+                    You've soaked <b>${rounded} Wounds</b>; you will <b>receive ${currWounds} Wounds</b>.
+                    </br>Do you want to reroll your Soaking Roll (you have <b>${bv} Bennies</b> left)?
                     </form>`,
                 buttons: {
                     one: {

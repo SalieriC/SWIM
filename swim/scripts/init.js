@@ -17,6 +17,15 @@ function register_settings() {
         scope: 'world',
         config: true,
     });
+    // Natural Healing time
+    game.settings.register('swim', 'natHeal_time', {
+        name: game.i18n.localize("SWIM.natHeal_TimeName"),
+        hint: game.i18n.localize("SWIM.natHeal_TimeHint"),
+        type: String,
+        default: 'five days',
+        scope: 'world',
+        config: true,
+    });
     // Shaken SFX
     game.settings.register('swim', 'shakenSFX', {
         name: game.i18n.localize("SWIM.shakenSFXName"),
