@@ -17,7 +17,7 @@ The macros are currently not accessible inside Foundry for development reasons. 
 ## License
 The Code of the macros and modules is licensed under the GPU 3.0 License ([see License](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/LICENSE)).
 The SFX is used with permission and may use another License (see Assets section below for details).
-Some macros contain SWADE rulings in a way that the macros execute them and sometimes include short notices. They do not contain detailed information about the rulings. This is Licensed under the (Savage Worlds Fan License)[https://www.peginc.com/licensing/].  
+Some macros contain SWADE rulings in a way that the macros execute them and sometimes include short notices. They do not contain detailed information about the rulings. This is Licensed under the [Savage Worlds Fan License](https://www.peginc.com/licensing/).  
 <p align="center"> <img src="https://www.peginc.com/wp-content/uploads/2012/04/SW_Logo_FP-1-300x187.jpg"> </p>  
 “This game references the Savage Worlds game system, available from Pinnacle Entertainment Group at www.peginc.com. Savage Worlds and all associated logos and trademarks are copyrights of Pinnacle Entertainment Group. Used with permission. Pinnacle makes no representation or warranty as to the quality, viability, or suitability for purpose of this product.”
 
