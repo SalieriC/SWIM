@@ -2,17 +2,9 @@
 This is a selection of macros for Savage Worlds Players and GMs alike.  
 **Warning:** This module is currently a pre-release. It is currently in the making, please read carefully on how to use it and expect bugs.
 
-## Pre-Release usage instructions
-The macros are currently not accessible inside Foundry for development reasons. For the pre-release you need to import the macros manually. To do so:
-1. Navigate to you Foundry data folder and find the module inside the modules folder, the folder is called `swim`.  
-2. Open the macros folder and find the macros you're interested in. (Or find the macros [here](https://github.com/SalieriC/SWADE-Immersive-Macros/tree/main/swim/macros) and skip 3.)  
-3. Open the macro using an IDE like Visual Studio Code or Notepad++.  
-4. Copy the entire code (CTRL+A and CTRL+C on Windows).
-5. In Foundry create a new macro and paste the code in (CTRL+V on Windows).  
-6. Set the macro to be a script macro (this is very important).  
-7. Configure the module to your liking (not all sound effects have assets yet, you need to find your own) and start experimenting.  
-8. If you find bugs or have other suggestions please read the `Help needed!` section below.  
-9. Repeat this process when the module gets updated.
+## Usage instructions
+You'll find all the macros in a new compendium delivered by the module. It contains all the macros. You can either import the macros or replace the code of your existing macros. Once that is done you can start using them although I strongly suggest taking a look at the module settings. There are quite a few which might be interesting for you.  
+**Important:** You might need to update the macros you've imported when you update the module. I hope to find a method to automate this in the future.  
 
 ## License
 The Code of the macros and modules is licensed under the GPU 3.0 License ([see License](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/LICENSE)).
@@ -76,14 +68,13 @@ This macro comes in two variants: SWADE and SWD. I like the SWD rules regarding 
 **SWADE:** To act you'll only need a success.  
 
 ### (Un-)Stun
-**Requirements:** None.  
-**Compatibility:**  
+**Requirements:**  
 - [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effects.
 
 **Immersion setting:** SFX.  
 **Suggested icon:** `modules/swim/assets/icons/status_markers/2-Stunned.png`  
 **Description:**  
-This macro is very similar to the (Un-)Shake macro but handles Stunned. If the selected token (needs one selected) is not Stunned, it will be marked as such, including all the effects that come with it. Otherwise it will roll to unstun and adds/removes conditions according to the result. It is aware of Snake Eyes. It supports SFX on applying Stunned in the same way as (Un-)Shake.
+This macro is very similar to the (Un-)Shake macro but handles Stunned. If the selected token (needs one selected) is not Stunned, it will be marked as such, including all the effects that come with it. Otherwise it will roll to unstun and adds/removes conditions according to the result. It is aware of Snake Eyes. It supports SFX on applying Stunned in the same way as (Un-)Shake. **Important:** Set up the path to your prone image to the exact same path as your prone image in the modules setting.
 
 ### Soak Damage
 **Requirements:**
@@ -141,3 +132,34 @@ It also supporst the Regeneration Special/Racial Ability but it must be set up a
 It uses the sfx for Wounds, Inc.! and Healing.  
 The macro is also capable of removing Fatigue using a given number, which also supports a unique SFX.  
 <p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Personal%20Health%20Centre.jpg?raw=true"> </p>  
+
+### Token Vision  
+**Requirements:** None.  
+**Immersion setting:** None yet.  
+**Description:**  
+This macro is based on a macro from [@Sky#9453](https://github.com/Sky-Captain-13/foundry) and supported DnD vision and lighting. I altered it to suit Savage Worlds. I have to say though, that information on vision and illumination is very lackluster in SWADE with regards to VTT software. It works fine on an actual tabletop but not with dynamic lighting on VTTs. I had to bring some personal taste in but I tried to stay as true to the rules as I could.  
+The macro works different for players and GMs. For players it only shows options to equip light sources (activates them in the token settings), GMs are alos able to update the tokens vision. All options work for *all* tokens that are selected. Here are the options explained:
+**Light Source:**  
+- No Change: Does not change the current settings.
+- None: Deactivates all emit light settings.
+- Candle: 2" radius of bright light.  
+- Lamp: 4" radius of bright light.  
+- Bullseye: 4" beam of bright light with an angle of 52.5 degree.(1)  
+- Torch: 4" radius of bright light.  
+- Flashlight: 10" beam of bright light in an angle of 52.2 degrees.(1)  
+**Vision Type:**  
+- No Change: Does not change the current settings.  
+- Pitch Darkness (0"): The token cannot see past itself.  
+- Dark (10"): Token has dim vision of 10".  
+- Dim: Token has dim vision of 1000" (the maximum allowed by Foundry).  
+- Low Light Vision: As dim.  
+- Infravision: As dim.  
+- Full Night Vision: Token has bright vision of 1000" (the maximum allowed by Foundry).  
+In general it is best to set up a universal/global light source instead of touching the vision type as that's what SWADE relies on. But the options are there in case the GM forgets to set it up and needs to act quickly.  
+(1) These options also lock the token rotation because the core rules uses portrait style tokens. If you use top-down view tokens instead you may want to change that in the macros code.  
+
+### Shuffle Action Deck  
+**Requirements:** None.  
+**Immersion setting:** System card deal sound.  
+**Description:**  
+A very basic macro that resets the roll table from which the action cards are drawn. It's mainly there to fix issues when the table doesn't reset during combat.  

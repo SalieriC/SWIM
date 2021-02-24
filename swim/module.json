@@ -22,7 +22,16 @@
 	"systems": ["swade"],
 	"esmodules": ["./scripts/init.js"],
 	"scripts": ["./scripts/settings-extender.js"],
-	"packs": [],
+	"packs": [
+        {
+            "name": "swade-immersive-macros",
+            "label": "SWADE Immersive Macros",
+			"system": "swade",
+            "path": "packs/swade-immersive-macros.db",
+            "module": "swim",
+            "entity": "Macro"
+        }
+	],
 	"url": "https://github.com/SalieriC/SWADE-Immersive-Macros",
 	"manifest": "https://raw.githubusercontent.com/SalieriC/SWADE-Immersive-Macros/main/swim/module.json",
 	"download": "https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/swim.zip?raw=true"

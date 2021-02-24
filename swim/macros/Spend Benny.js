@@ -2,16 +2,6 @@
 If the user is a GM, it will also spend GM bennies if he has some left but the token does not.
 If Dice So Nice is installed, it will also trigger the benny roll animation. */
 
-// Checking for SWADE Spices & Flavours and setting up the Benny image.
-let bennyImage = "systems/swade/assets/benny/benny-chip-front.png";
-if (game.modules.get("swade-spices").active) {
-    let benny_Back = game.settings.get(
-        'swade-spices', 'bennyBack');
-    if (benny_Back) {
-        bennyImage = benny_Back;
-    }
-}
-
 main();
 
 async function main() {
@@ -19,6 +9,16 @@ async function main() {
     if (!token || canvas.tokens.controlled.length > 1) {
         ui.notifications.error("Please select a single token first.");
         return;
+    }
+
+    // Checking for SWADE Spices & Flavours and setting up the Benny image.
+    let bennyImage = "icons/commodities/currency/coin-embossed-octopus-gold.webp";
+    if (game.modules.get("swade-spices").active) {
+        let benny_Back = game.settings.get(
+            'swade-spices', 'bennyBack');
+        if (benny_Back) {
+            bennyImage = benny_Back;
+        }
     }
 
     let bennies = token.actor.data.data.bennies.value;

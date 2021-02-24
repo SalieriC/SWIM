@@ -1,31 +1,39 @@
-// Checking for SWADE Spices & Flavours and setting up the Benny image.
-let bennyImage = "systems/swade/assets/benny/benny-chip-front.png";
-if (game.modules.get("swade-spices").active) {
-    let benny_Back = game.settings.get(
-        'swade-spices', 'bennyBack');
-    if (benny_Back) {
-        bennyImage = benny_Back;
+main();
+
+function main() {
+    // Checking if at least one token is defined.
+    if (canvas.tokens.controlled.length === 0) {
+        ui.notifications.error("Please select a token first");
+        return;
     }
-}
-// Setting SFX
-let woundedSFX = game.settings.get(
-    'swim', 'woundedSFX');
-let incapSFX = game.settings.get(
-    'swim', 'incapSFX');
-// Injury Table for Gritty Damage
-let grit = false;
-let injuryTable = game.settings.get(
-    'swim', 'injuryTable');
+    // Checking for SWADE Spices & Flavours and setting up the Benny image.
+    let bennyImage = "icons/commodities/currency/coin-embossed-octopus-gold.webp";
+    if (game.modules.get("swade-spices").active) {
+        let benny_Back = game.settings.get(
+            'swade-spices', 'bennyBack');
+        if (benny_Back) {
+            bennyImage = benny_Back;
+        }
+    }
+    // Setting SFX
+    let woundedSFX = game.settings.get(
+        'swim', 'woundedSFX');
+    let incapSFX = game.settings.get(
+        'swim', 'incapSFX');
+    // Injury Table for Gritty Damage
+    let grit = false;
+    let injuryTable = game.settings.get(
+        'swim', 'injuryTable');
     if (injuryTable) {
         grit = true;
     }
 
-// Check if a token is selected.
-if (!token || canvas.tokens.controlled.length > 1) {
-    ui.notifications.error("Please select a single token first.");
-}
+    // Check if a token is selected.
+    if (!token || canvas.tokens.controlled.length > 1) {
+        ui.notifications.error("Please select a single token first.");
+    }
 
-// Declairing variables and constants.
+    // Declairing variables and constants.
     const wv = token.actor.data.data.wounds.value;
     const wm = token.actor.data.data.wounds.max;
     const ppv = token.actor.data.data.powerPoints.value;
@@ -341,5 +349,6 @@ if (!token || canvas.tokens.controlled.length > 1) {
             applyWounds();
         }
     }
+}
 
-// V2.0.0 Code by SalieriC#8263. Critical Failure awareness by Kekilla#7036 Testing and bug-chasing: javierrivera#4813.
+// V2.0.1 Code by SalieriC#8263. Critical Failure awareness by Kekilla#7036 Testing and bug-chasing: javierrivera#4813.

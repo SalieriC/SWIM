@@ -8,34 +8,39 @@
 
 //Set up
 let incapSFX = game.settings.get(
-    'swim', 'incapSFX');
+  'swim', 'incapSFX');
 
-if (canvas.tokens.controlled.length === 0)
-  ui.notifications.error("Please select a token first");
+main();
 
-let hasAlive = false;
-for (let e of canvas.tokens.controlled) {
+function main() {
+  if (canvas.tokens.controlled.length === 0) {
+    ui.notifications.error("Please select a token first");
+    return;
+  }
+
+  let hasAlive = false;
+  for (let e of canvas.tokens.controlled) {
     if (!e.getFlag("healthEstimate", "dead")) {
-        hasAlive = true;
-        break
+      hasAlive = true;
+      break
     }
-}
-for (let e of canvas.tokens.controlled) {
+  }
+  for (let e of canvas.tokens.controlled) {
     e.setFlag("healthEstimate", "dead", hasAlive)
-    async function toggleCondition(condition, token, {warn = true}= {})
-    {
-      if(!condition || !token) return;
+    async function toggleCondition(condition, token, { warn = true } = {}) {
+      if (!condition || !token) return;
 
-      game.cub.hasCondition(condition, token, {warn})
-        ? await game.cub.removeCondition(condition, token, {warn})
-        : await game.cub.addCondition(condition, token, {warn});
-    
-      return game.cub.hasCondition(condition, token, {warn});
+      game.cub.hasCondition(condition, token, { warn })
+        ? await game.cub.removeCondition(condition, token, { warn })
+        : await game.cub.addCondition(condition, token, { warn });
+
+      return game.cub.hasCondition(condition, token, { warn });
     }
-    
-    toggleCondition(`Incapacitated`, e);
-}
-ui.notifications.info("Marked as dead/alive.");
-AudioHelper.play({ src: `${incapSFX}` }, true);
 
-// v.2.0.0
+    toggleCondition(`Incapacitated`, e);
+  }
+  ui.notifications.info("Marked as dead/alive.");
+  AudioHelper.play({ src: `${incapSFX}` }, true);
+}
+
+// v.2.0.1
