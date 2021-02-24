@@ -1,9 +1,9 @@
 # SWADE Immersive Macros (SWIM)
 This is a selection of macros for Savage Worlds Players and GMs alike.  
-**Warning:** This module is currently a pre-release. It is currently in the making, please read carefully on how to use it and expect bugs.
 
 ## Usage instructions
 You'll find all the macros in a new compendium delivered by the module. It contains all the macros. You can either import the macros or replace the code of your existing macros. Once that is done you can start using them although I strongly suggest taking a look at the module settings. There are quite a few which might be interesting for you.  
+**Please read this ReadMe in full, as it contains important instructions on how to use this module.**
 **Important:** You might need to update the macros you've imported when you update the module. I hope to find a method to automate this in the future.  
 
 ## License
