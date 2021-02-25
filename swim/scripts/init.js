@@ -13,7 +13,7 @@ function register_settings() {
         name: game.i18n.localize("SWIM.grittyDamageName"),
         hint: game.i18n.localize("SWIM.grittyDamageHint"),
         type: Boolean,
-        default: 'false',
+        default: false,
         scope: 'world',
         config: true,
     });
