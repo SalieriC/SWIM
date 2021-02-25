@@ -300,7 +300,12 @@ function main() {
                     two: {
                         label: "No",
                         callback: (html) => {
-                            ui.notifications.notify("As you wish, Wounds will be removed now.");
+                            if (rounded < 1) {
+                                ui.notifications.notify("As you wish.");
+                            }
+                            else {
+                                ui.notifications.notify("As you wish, Wounds will be removed now.");
+                            }
                             removeWounds();
                         }
                     }
@@ -349,7 +354,7 @@ function main() {
                 ui.notifications.notify("Two Wounds healed.");
             }
         }
-        if (healSFX) {
+        if (healSFX && genericHealWounds > 0 || healSFX && rounded > 0) {
             AudioHelper.play({ src: `${healSFX}` }, true);
         }
     }
@@ -406,7 +411,7 @@ function main() {
                             },
                             content: `${token.name} lost ${genericHealFatigue} Level(s) of Fatigue.`
                         })
-                        if (looseFatigueSFX) {
+                        if (looseFatigueSFX && genericHealFatigue > 0) {
                             AudioHelper.play({ src: `${looseFatigueSFX}` }, true);
                         }
                     }
@@ -433,4 +438,4 @@ function main() {
     }
 }
 
-// v.2.0.1 By SalieriC#8263; fixing bugs supported by FloRad#2142.
+// v.2.1.0 By SalieriC#8263; fixing bugs supported by FloRad#2142.

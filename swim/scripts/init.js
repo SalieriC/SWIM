@@ -8,6 +8,15 @@ function register_settings() {
         scope: 'world',
         config: true,
     });
+    // Gritty Damage Setting Rule
+    game.settings.register('swim', 'grittyDamage', {
+        name: game.i18n.localize("SWIM.grittyDamageName"),
+        hint: game.i18n.localize("SWIM.grittyDamageHint"),
+        type: Boolean,
+        default: 'false',
+        scope: 'world',
+        config: true,
+    });
     // Fear Table Name
     game.settings.register('swim', 'fearTable', {
         name: game.i18n.localize("SWIM.fearTableName"),
@@ -31,7 +40,7 @@ function register_settings() {
         name: game.i18n.localize("SWIM.shakenSFXName"),
         hint: game.i18n.localize("SWIM.shakenSFXHint"),
         type: window.Azzu.SettingsTypes.FilePickerAudio,
-        default: '',
+        default: 'modules/swim/assets/sfx/Pain-sound-effect-converted-Alexander-www.orangefreesounds.com.ogg',
         scope: 'world',
         config: true,
     });
@@ -40,7 +49,7 @@ function register_settings() {
         name: game.i18n.localize("SWIM.incapSFXName"),
         hint: game.i18n.localize("SWIM.incapSFXHint"),
         type: window.Azzu.SettingsTypes.FilePickerAudio,
-        default: '',
+        default: 'modules/swim/assets/sfx/HeartBeat-sound-effect-2-altered-Alexander-www.orangefreesounds.com.ogg',
         scope: 'world',
         config: true,
     });
@@ -97,7 +106,7 @@ function register_settings() {
         name: game.i18n.localize("SWIM.healSFXName"),
         hint: game.i18n.localize("SWIM.healSFXHint"),
         type: window.Azzu.SettingsTypes.FilePickerAudio,
-        default: '',
+        default: 'modules/swim/assets/sfx/Huh-converted-Alexander-www.orangefreesounds.com.ogg',
         scope: 'world',
         config: true,
     });
@@ -106,7 +115,7 @@ function register_settings() {
         name: game.i18n.localize("SWIM.looseFatigueSFXName"),
         hint: game.i18n.localize("SWIM.looseFatigueSFXHint"),
         type: window.Azzu.SettingsTypes.FilePickerAudio,
-        default: '',
+        default: 'modules/swim/assets/sfx/Huh-converted-Alexander-www.orangefreesounds.com.ogg',
         scope: 'world',
         config: true,
     });

@@ -1,8 +1,10 @@
 {
   "SWIM.injuryTableName": "Injury Table:",
-  "SWIM.injuryTableHint": "Injury table used for Gritty Damage. Gritty damage is not used if this is empty. You need to set up the EXACT name of your Injury Table. Gritty damage is only used for non-GM accounts.",
+  "SWIM.injuryTableHint": "Injury table used for Gritty Damage. You need to set up the EXACT name of your Injury Table. Gritty damage is only used for non-GM accounts.",
+  "SWIM.grittyDamageName": "Use Gritty Damage?",
+  "SWIM.grittyDamageHint": "Activate this if you want to use Gritty Damage.",
   "SWIM.fearTableName": "Fear Table:",
-  "SWIM.fearTableHint": "Fear table used for the Fear table macro. Please make sure to enter the exact name of your Fear table in here.",
+  "SWIM.fearTableHint": "Fear table used for the Fear table macro. Please make sure to enter the EXACT name of your Fear table in here.",
   "SWIM.natHeal_TimeName": "Natural Healing time:",
   "SWIM.natHeal_TimeHint": "Here you can set up the time it takes until a Natural Healing roll may be done. You may not need to change this unless your setting rules state another interval. Default: five days",
   "SWIM.shakenSFXName": "Shaken SFX",

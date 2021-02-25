@@ -21,12 +21,10 @@ function main() {
     let incapSFX = game.settings.get(
         'swim', 'incapSFX');
     // Injury Table for Gritty Damage
-    let grit = false;
+    let grit = game.settings.get(
+        'swim', 'grittyDamage');
     let injuryTable = game.settings.get(
         'swim', 'injuryTable');
-    if (injuryTable) {
-        grit = true;
-    }
 
     // Check if a token is selected.
     if (!token || canvas.tokens.controlled.length > 1) {
@@ -351,4 +349,4 @@ function main() {
     }
 }
 
-// V2.0.1 Code by SalieriC#8263. Critical Failure awareness by Kekilla#7036 Testing and bug-chasing: javierrivera#4813.
+// V2.1.0 Code by SalieriC#8263. Critical Failure awareness by Kekilla#7036 Testing and bug-chasing: javierrivera#4813.
