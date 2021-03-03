@@ -38,11 +38,11 @@ function main() {
     });
     if (fastHealer) { natHeal_time = "three days" };
     const reg_slow = token.actor.data.items.find(function (item) {
-        return ((item.name.toLowerCase() === "slow regeneration") && item.type === "edge");
+        return ((item.name.toLowerCase() === "slow regeneration") && item.type === "ability");
     });
     if (reg_slow) { natHeal_time = "day" };
     const reg_fast = token.actor.data.items.find(function (item) {
-        return ((item.name.toLowerCase() === "fast regeneration") && item.type === "edge");
+        return ((item.name.toLowerCase() === "fast regeneration") && item.type === "ability");
     });
     if (reg_fast) { natHeal_time = "round" };
     const elan = token.actor.data.items.find(function (item) {
@@ -177,13 +177,13 @@ function main() {
         // Roll Vigor and check for Fast Healer.
         const r = await token.actor.rollAttribute('vigor');
         const edges = token.actor.data.items.filter(function (item) {
-            return edgeNames.includes(item.name.toLowerCase()) && item.type === "edge";
+            return edgeNames.includes(item.name.toLowerCase()) && (item.type === "edge" || item.type === "ability");
         });
         let rollWithEdge = r.total;
         let edgeText = "";
         for (let edge of edges) {
             rollWithEdge += 2;
-            edgeText = `<br/><i>+ ${edge.name}</i>`;
+            edgeText += `<br/><i>+ ${edge.name}</i>`;
         }
 
         // Apply +2 if Elan is present and if it is a reroll.
@@ -438,4 +438,4 @@ function main() {
     }
 }
 
-// v.2.1.0 By SalieriC#8263; fixing bugs supported by FloRad#2142.
+// v.2.2.0 By SalieriC#8263; fixing bugs supported by FloRad#2142.

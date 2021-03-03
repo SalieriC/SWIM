@@ -34,13 +34,13 @@ async function main() {
     // ROLL VIGOR AND CHECK COMBAT REFLEXES
     const r = await token.actor.rollAttribute('vigor');
     const edges = token.actor.data.items.filter(function (item) {
-      return edgeNames.includes(item.name.toLowerCase()) && item.type === "edge";
+      return edgeNames.includes(item.name.toLowerCase()) && (item.type === "edge" || item.type === "ability");
     });
     let rollWithEdge = r.total;
     let edgeText = "";
     for (let edge of edges) {
       rollWithEdge += 2;
-      edgeText = `<br/><i>+ ${edge.name}</i>`;
+      edgeText += `<br/><i>+ ${edge.name}</i>`;
     }
 
     let chatData = `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge} </span>`;
@@ -174,4 +174,4 @@ async function main() {
   }
 }
 
-// v.3.0.0 Made by SalieriC#8263 using original Code from Shteff.
+// v.3.1.0 Made by SalieriC#8263 using original Code from Shteff.

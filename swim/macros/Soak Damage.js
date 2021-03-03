@@ -52,18 +52,18 @@ function main() {
     // This is the main function that handles the Vigor roll.
     async function rollSoak() {
 
-        const edgeNames = ['iron jaw'];
+        const edgeNames = ['iron jaw', 'thick fur'];
         const actorAlias = speaker.alias;
         // Roll Vigor and check for Iron Jaw.
         const r = await token.actor.rollAttribute('vigor');
         const edges = token.actor.data.items.filter(function (item) {
-            return edgeNames.includes(item.name.toLowerCase()) && item.type === "edge";
+            return edgeNames.includes(item.name.toLowerCase()) && (item.type === "edge" || item.type === "ability");
         });
         let rollWithEdge = r.total;
         let edgeText = "";
         for (let edge of edges) {
             rollWithEdge += 2;
-            edgeText = `<br/><i>+ ${edge.name}</i>`;
+            edgeText += `<br/><i>+ ${edge.name}</i>`;
         }
 
         // If Holy Warrior or Unholy Warrior is used: Include the amount of PPs used as a bonus to the roll.
@@ -349,4 +349,4 @@ function main() {
     }
 }
 
-// V2.1.0 Code by SalieriC#8263. Critical Failure awareness by Kekilla#7036 Testing and bug-chasing: javierrivera#4813.
+// V2.3.0 Code by SalieriC#8263. Critical Failure awareness by Kekilla#7036 Testing and bug-chasing: javierrivera#4813.

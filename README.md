@@ -62,7 +62,7 @@ The macro will use the Bennies of the selected token (needs a token selected to 
 **Suggested icon:** `modules/swim/assets/icons/status_markers/0-Shaken.png`  
 **Description:**  
 This macro will first check whether or not the selected token (needs a token to be selected) is marked as Shaken (checks for the checkbox on the sheet). If the token is *not* Shaken, it will mark it as Shaken (tick the checkbox). It it is Shaken, then it will prompt a system roll. After rolling it gives a chat message detailing the result. If the result is best it will remove Skaken and that's it. If the roll could've been better it opens a dialogue giving the user the option to spend a Benny to remove Shaken. If accepted a Benny is spent (if there are Bennies left) and removes Shaken. The user can also decline which just closes the dialogue. The dialogue will not appear if there are no more Bennies left (including GM Bennies if the user is a GM). It also tells the user how many Bennies are left in the dialogue.  
-Now here is the deal: The macro is aware of any core Edges and Special Abilities that can alter the unshake roll and *automatically* adjusts the roll. You can set up own ones as well by adding them to the `const edgeNames` object (inside the []); put them in '' and only use lower case. The macro requires you to set up Special Abilities like Undead as Edges though, so keep that in mind. Also the macro currently does not add a +2 on a reroll if the token has Elan. *Keep in mind that only english Edge names are supported yet.*  
+Now here is the deal: The macro is aware of any core Edges and Special Abilities that can alter the unshake roll and *automatically* adjusts the roll. You can set up own ones as well by adding them to the `const edgeNames` object (inside the []); put them in '' and only use lower case. The macro requires you to set up Special Abilities like Undead as Edges or Abilities though, so keep that in mind. Also the macro currently does not add a +2 on a reroll if the token has Elan. *Keep in mind that only english Edge names are supported yet.*  
 The macro is also aware of Snake Eyes (Critical Failure) and offers no use of a Benny when Snake Eyes occur. It does *not* check for Snake Eyes on Extras though.  
 This macro comes in two variants: SWADE and SWD. I like the SWD rules regarding Shaken much better but the choice is yours. Here are the differences:  
 **SWD:** To act this turn you need a raise, success removes Shaken but you may only act *next* turn. While Shaken your Pace is halved.  
@@ -129,7 +129,7 @@ In terms of other SFX: The macro again uses the Incapacitation sfx and the wound
 **Immersion setting:** SFX.  
 **Description:**  
 This macro is more or less the opposite of the Soak Damage macro. It offers functionality to remove wounds in a generic way (i.e. due to the Healing Skill or Power) and also a way to roll on Natural Healing, interpreting the results, removing wounds, offerring rerolls and is aware of Snake Eyes (adds another Wound or Inc.!). It supports Fast Healer and (on rerolls) Elan as well.  
-It also supporst the Regeneration Special/Racial Ability but it must be set up as an Edge called "Fast Regeneration" or "Slow Regeneration". Then it adjusts the time that needs to be passed until a Natural Healing roll can be made. If your setting calls for longer or shorter periods of time until a Natural Healing roll can be made (Hellfrost comes to mind), then you can set this up in the modules settings.  
+It also supporst the Regeneration Special/Racial Ability but it must be set up as an Edge or Ability called "Fast Regeneration" or "Slow Regeneration". Then it adjusts the time that needs to be passed until a Natural Healing roll can be made. If your setting calls for longer or shorter periods of time until a Natural Healing roll can be made (Hellfrost comes to mind), then you can set this up in the modules settings.  
 It uses the sfx for Wounds, Inc.! and Healing.  
 The macro is also capable of removing Fatigue using a given number, which also supports a unique SFX.  
 <p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Personal%20Health%20Centre.jpg?raw=true"> </p>  
@@ -164,3 +164,18 @@ In general it is best to set up a universal/global light source instead of touch
 **Immersion setting:** System card deal sound.  
 **Description:**  
 A very basic macro that resets the roll table from which the action cards are drawn. It's mainly there to fix issues when the table doesn't reset during combat.  
+
+### Ability Converter  
+**Requirements:** SWADE 0.17.0 and above.  
+**Immersion setting:** None.  
+**Description:**  
+**Use this at your own risk!**  
+This is a utility macro not intended to be used a) by the players and b) regularly. It's basically a one time thing. If you've already set up Special Abilities as Edges and Hindrances this will help you convert them:  
+1. **Crate a backup of your entire world.**  
+2. Create a folder containing all Special Abilities, nothing else and no sub-folders.  
+3. Run the macro.  
+4. Read the insctructions carefully and enter the folders name.  
+5. Click "Process." and Wait for the message stating the converter is done. (**Do not shut down/reload your world!** Best do nothing at all while the converter is doing its thing.)  
+6. Reload your World (F5 on PC).  
+This converts everything in the folder and all of those on your actors (world only, not in compendiums). And only those in the folder. You'll have to go through your actors and convert those Abilities manually that are not in your folder. This means it will not cover things like `Weakness (Fire)` unless you've set them all up. But it should still help you reduce your work by some degree.  
+**Warning:** This is a dangerous macro and might break your actors. I'm not kidding about the backup, **create one!** Seriously, do it. I had to restore my world multiple times during the testing, just make a damn backup please. (Which is why it isn't included in the compendium.) And don't blame anyone if the macro destroys something, neither I, nor `Kristian Serrano#5077` (the author of the macro) will take responsibility for any broken stuff, use at your own risk.  

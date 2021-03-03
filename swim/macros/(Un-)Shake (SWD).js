@@ -30,13 +30,13 @@ async function main() {
         // ROLL SPIRIT AND CHECK COMBAT REFLEXES
         const r = await token.actor.rollAttribute('spirit');
         const edges = token.actor.data.items.filter(function (item) {
-            return edgeNames.includes(item.name.toLowerCase()) && item.type === "edge";
+            return edgeNames.includes(item.name.toLowerCase()) && (item.type === "edge" || item.type === "ability");
         });
         let rollWithEdge = r.total;
         let edgeText = "";
         for (let edge of edges) {
             rollWithEdge += 2;
-            edgeText = `<br/><i>+ ${edge.name}</i>`;
+            edgeText += `<br/><i>+ ${edge.name}</i>`;
         }
 
         let chatData = `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge} </span>`;
@@ -156,4 +156,4 @@ async function main() {
         }
     }
 }
-/// v.3.0.1 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
+/// v.3.1.0 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
