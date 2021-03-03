@@ -6,6 +6,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2021-03-03
+### You need to update these macros:
+- (Un-)Shake (both versions)
+- (Un-)Stun
+- Personal Health Centre
+- Soak Damage
+### Added
+- Support for Special Abilities
+- Ability Converter macro (**read the ReadME!**)
+- Thick Fur (Saga of the Goblin Horde) for +2 Soak Rolls in the Soak Damage macro.
+### Fixed
+- Minor bug that caused some macros to not display all included Edges in the results chat message (thanks javierrivera#4813 for spotting that).
+
 ## [0.2.0] - 2021-02-26
 ### You need to update these macros:
 - Personal Health Centre.
