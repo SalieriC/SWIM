@@ -170,6 +170,9 @@ A very basic macro that resets the roll table from which the action cards are dr
 **Immersion setting:** None.  
 **Description:**  
 Two rather simple macros to calculate Raises inside Foundry. The first one offers a Dialogue and gives a Notification with your amount of Raises. The Dynamic one is more usable in my opinion. It changes the amount of Raises dynamically, depending on your input. Whenever you change and leave (click anywhere else) the result input box the text below is adjusted and will show you the amount of raises. It does not have a button because a button isn't needed. You could keep this one open at all times and change the values whenever you want.  
+Below are screenshots from the dynamic version:  
+<p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Raise%20Calculator%201.jpg?raw=true"> </p><p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Raise%20Calculator%201.jpg?raw=true"> </p>   
+<p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Raise%20Calculator%203.jpg?raw=true"> </p><p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Raise%20Calculator%204.jpg?raw=true"> </p>   
 
 ### Ability Converter  
 **Requirements:** SWADE 0.17.0 and above.  
