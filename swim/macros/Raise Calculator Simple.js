@@ -22,7 +22,7 @@ const template = `
             if (parseInt(target) > parseInt(result)) {
                 ui.notifications.notify(`Failure`);
             } 
-            else if (parseInt(target) === parseInt(result)) {
+            else if (parseInt(target) <= parseInt(result) && raises < 1) {
                 ui.notifications.notify(`Success`);
             }
             else {
@@ -34,4 +34,4 @@ const template = `
     default: "one",
 }).render(true);
 
-// v.1.0.0 By SalieriC#8263
+// v.1.0.1 By SalieriC#8263

@@ -26,7 +26,7 @@ new Dialog({
             if (parseInt(target) > parseInt(result)) {
                 calcResult.innerHTML = `<img style="border: 0;" src="modules/swim/assets/icons/misc/raise_red.svg" alt="" width="25" height="25" /> <b>Failure</b>`;
             }
-            else if (target === result) {
+            else if (parseInt(target) <= parseInt(result) && raises < 1) {
                 calcResult.innerHTML = `<img style="border: 0;" src="modules/swim/assets/icons/misc/raise_yellow.svg" alt="" width="25" height="25" /> <b>Success</b>`;
             }
             else {
@@ -36,4 +36,4 @@ new Dialog({
     },
 }).render(true);
 
-// v.1.0.0 By SalieriC#8263, with help from Rawny#2166.
+// v.1.0.1 By SalieriC#8263, with help from Rawny#2166.
