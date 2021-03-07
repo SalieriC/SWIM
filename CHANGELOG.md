@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Add the Dynamic Raise Calculator to the controls on the left side (preferably optional).  
 
 ## [0.4.0] - 2021-03-07
 ### You need to update these macros:
