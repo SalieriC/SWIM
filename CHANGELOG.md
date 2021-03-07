@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2021-03-07
+### You need to update these macros:
+None.  
+### Added
+- **Macro:** Raise Calculator
+- **Macro:** Raise Calculator (Dynamic)
+
 ## [0.3.0] - 2021-03-03
 ### You need to update these macros:
 - (Un-)Shake (both versions)
