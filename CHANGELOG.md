@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.5.0] - 2021-03-07
+## [0.5.0] - 2021-03-08
 ### You need to update these macros:
 - (Un-)Shake (both versions)
 - (Un-)Stun
