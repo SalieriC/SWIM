@@ -6,6 +6,12 @@ You'll find all the macros in a new compendium delivered by the module. It conta
 **Please read this ReadMe in full, as it contains important instructions on how to use this module.**
 **Important:** You might need to update the macros you've imported when you update the module. I hope to find a method to automate this in the future.  
 
+### Combat Utility Belt
+Note that some macros list [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) (CUB) as compatible or requirement. This is because CUB is a great module that allows me to do things better and enhances the gameplay if set up properly. Settung up CUB support isn't so difficult as it might seem. If you want to use CUB please see the [CUB Setup instructions](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/documentation/CUB%20Setup.md) for details on how to set up CUB properly.  
+
+### Health Estimate
+[Health Estimate](https://foundryvtt.com/packages/healthEstimate/) is a cool immersion module and thus works great with SWIM. I highly recomment it as it is so much more immersive to say and read "he is a bit beatin'" than to say/read "he has one Wound". Health Estimate should work fine out of the box once activated but you can easily set it up to your liking if you want.  
+
 ## License
 The Code of the macros and modules is licensed under the GPU 3.0 License ([see License](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/LICENSE)).
 The SFX is used with permission and may use another License (see Assets section below for details).
@@ -17,6 +23,7 @@ Some macros contain SWADE rulings in a way that the macros execute them and some
 Are you a creator of sound effects or art and want to contribute? This is great, I'd like to include some assets like macro icons and sound effects in here. Icons need to be square (or round), sound effects need to be short and easily recogniseable. If you want to include your work here I'll gladly give you full credit with links to your homepage for users to check out your other stuff.  
 You have nothing to offer? Oh you're so wrong. Please [create issues](https://github.com/SalieriC/SWADE-Immersive-Macros/issues/new) here on the GitHub to contribute as well. Tell me which macros or functionality you want to see and inform me about bugs this way and I'll see what I can do about it. No promises I can deliver though and please no hard feelings should I decline your request. Please check for [open issues](https://github.com/SalieriC/SWADE-Immersive-Macros/issues) before creating new ones though.  
 You can reach me on Discord with general questions as well: SalieriC#8263
+
 
 ### Current Assets
 In this repository you can find a number of assets already.  
@@ -37,7 +44,7 @@ You can set up one or more sound effects (SFX) for this macro. To do so go to th
 
 ## Description
 Below you'll find some descriptions on the macros. Some require other modules to work properly. Some are compatible with other modules though, well they should be compatible with mostly anything really so I won't give a full list. Instead I'll give you a list of modules that *enhance* the functionality of the macro.  
-In the very last line all macros tell you their version number. Use it to check whether or not you're using the latest version.
+In the very last line all macros tell you their version number. Use it to check whether or not you're using the latest version.  
 
 ### Spend Benny
 **Requirements:** None.  
@@ -51,7 +58,7 @@ In the very last line all macros tell you their version number. Use it to check 
 This macro will basically just spend a Benny. It does use the animation from Dice So Nice if it is installed and activated but doesn't require DSN. With SWADE Spices & Flavours you can customise the look of the Benny. This module will automatically find if you're using Spices & Flavours and uses the back image of the Benny if you've set one up.  
 The macro will use the Bennies of the selected token (needs a token selected to function). If the user is a GM it will also use the GMs Bennies but will *always* spend token Bennies first and only touches GM Bennies once the token is out of Bennies. It also gives a warning if no more Bennies are left.  
 *This macro is the basis for most of the other macros.* Whenever a macro uses a Benny, it will do so using the code from this macro and thus having all its features which I won't detail for other macros.  
-
+---
 ### (Un-)Shake
 **Requirements:** None.  
 **Compatibility:**  
@@ -68,16 +75,17 @@ The macro is also aware of Snake Eyes (Critical Failure) and offers no use of a 
 This macro comes in two variants: SWADE and SWD. I like the SWD rules regarding Shaken much better but the choice is yours. Here are the differences:  
 **SWD:** To act this turn you need a raise, success removes Shaken but you may only act *next* turn. While Shaken your Pace is halved.  
 **SWADE:** To act you'll only need a success.  
-
+---
 ### (Un-)Stun
-**Requirements:**  
-- [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effects.
+**Requirements:** None.  
+**Compatibility:**  
+- [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effects.  
 
 **Immersion setting:** SFX.  
 **Suggested icon:** `modules/swim/assets/icons/status_markers/2-Stunned.png`  
 **Description:**  
-This macro is very similar to the (Un-)Shake macro but handles Stunned. If the selected token (needs one selected) is not Stunned, it will be marked as such, including all the effects that come with it. Otherwise it will roll to unstun and adds/removes conditions according to the result. It is aware of Snake Eyes. It supports SFX on applying Stunned in the same way as (Un-)Shake. **Important:** Set up the path to your prone image to the exact same path as your prone image in the modules setting.
-
+This macro is very similar to the (Un-)Shake macro but handles Stunned. If the selected token (needs one selected) is not Stunned, it will be marked as such, including all the effects that come with it. Otherwise it will initiate a roll to unstun and adds/removes conditions according to the result. It is aware of Snake Eyes. It supports SFX on applying Stunned in the same way as (Un-)Shake. **Important:** Set up the path to your prone image to the exact same path as your prone image in the modules setting. This is not necessary if you have imported the CUB Contion Lab file (modules/swim/assets/imports/). If you use the system included status markers the path is: `systems/swade/assets/icons/status/status_prone.svg`.  
+---
 ### Soak Damage
 **Requirements:**
 - [Health Estimate](https://foundryvtt.com/packages/healthEstimate/)
@@ -98,7 +106,7 @@ You can also use the Gritty Damage setting rule by adding the name of your Injur
 **Description:**  
 This does mostly the same as the macro in the core rules module except you can manually set up the name of your Fear table and it has the option to play a sfx on execution.  
 This macro basically just opens a dialogue that asks for a fear modifier and then rolls on your Fear table with that modifier. Remember the rules on this: Negative fear modifiers become positive in the table, so do not enter negative numbers unless you know what you're doing.
-
+---
 ### Mark Death
 **Requirements:**  
 - [Health Estimate](https://foundryvtt.com/packages/healthEstimate/)
@@ -108,7 +116,7 @@ This macro basically just opens a dialogue that asks for a fear modifier and the
 **Description:**  
 This is a rather simple macro that marks a token as Incapacitated! and is mainly intended for NPC Extras. It requires CUB to toggle the Inc.! status and Health Estimate.  
 The macro plays a sound effect on execution and will mark all selected as Inc.! It works both ways though and can uncheck Inc.! if needed.  
-
+---
 ### Power Point Management  
 **Incompatibility:**  This macro is *not* compatible with the power point management offered by the SWADE system. Disable it if you want to use this macro.  
 **Requirements:**
@@ -159,22 +167,24 @@ The macro works different for players and GMs. For players it only shows options
 - Full Night Vision: Token has bright vision of 1000" (the maximum allowed by Foundry).  
 In general it is best to set up a universal/global light source instead of touching the vision type as that's what SWADE relies on. But the options are there in case the GM forgets to set it up and needs to act quickly.  
 (1) These options also lock the token rotation because the core rules uses portrait style tokens. If you use top-down view tokens instead you may want to change that in the macros code.  
-
+---
 ### Shuffle Action Deck  
 **Requirements:** None.  
 **Immersion setting:** System card deal sound.  
 **Description:**  
 A very basic macro that resets the roll table from which the action cards are drawn. It's mainly there to fix issues when the table doesn't reset during combat.  
-
+---
 ### Raise Calculator & Raise Calculator (Dynamic)  
 **Requirements:** None.  
 **Immersion setting:** None.  
 **Description:**  
-Two rather simple macros to calculate Raises inside Foundry. The first one offers a Dialogue and gives a Notification with your amount of Raises. The Dynamic one is more usable in my opinion. It changes the amount of Raises dynamically, depending on your input. Whenever you change and leave (click anywhere else) the result input box the text below is adjusted and will show you the amount of raises. It does not have a button because a button isn't needed. You could keep this one open at all times and change the values whenever you want.  
+Two rather simple macros to calculate Raises inside Foundry. The first one offers a Dialogue and gives a Notification with your amount of Raises. The Dynamic one is more usable in my opinion: It changes the amount of Raises dynamically, depending on your input while you type. Whenever you change the result input field the text below is adjusted and will show you the amount of raises. It does not have a button because a button isn't needed. You could keep this one open at all times and change the values whenever you want.  
 Below are screenshots from the dynamic version:  
 <p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Raise%20Calculator%201.jpg?raw=true"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Raise%20Calculator%202.jpg?raw=true"> </p>   
 <p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Raise%20Calculator%203.jpg?raw=true"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Raise%20Calculator%204.jpg?raw=true"> </p>   
 
+**Please note:** As of version 0.5.0 of SWIM you don't need this macro anymore. It can be easily accessed from the controls on the left side of the screen as long as you have a scene. It is the big plus button in the basic (token) controls.  
+---
 ### Ability Converter  
 **Requirements:** SWADE 0.17.0 and above.  
 **Immersion setting:** None.  

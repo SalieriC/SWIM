@@ -9,29 +9,32 @@ const template = `
         <input name="result" placeholder="0" type="text"/>
       </div>
     </form>`;
-    new Dialog({
-      title: 'Raise Calculator',
-      content: template,
-      buttons: {
-        one: {
-          label: 'Submit',
-          callback: html => {
-            let target = html.find('input[name="target"]').val();
-            let result = html.find('input[name="result"]').val();
-            const raises = Math.floor((parseInt(result) - parseInt(target)) / 4)
-            if (parseInt(target) > parseInt(result)) {
-                ui.notifications.notify(`Failure`);
-            } 
-            else if (parseInt(target) <= parseInt(result) && raises < 1) {
-                ui.notifications.notify(`Success`);
-            }
-            else {
-                ui.notifications.notify(`${raises} Raise(s)`);
-            }
-        },
+new Dialog({
+  title: 'Raise Calculator',
+  content: template,
+  buttons: {
+    one: {
+      label: 'Submit',
+      callback: html => {
+        let target = html.find('input[name="target"]').val();
+        let result = html.find('input[name="result"]').val();
+        const raises = Math.floor((parseInt(result) - parseInt(target)) / 4)
+        if (parseInt(target) > parseInt(result)) {
+          ui.notifications.notify(`Failure`);
+        }
+        else if (parseInt(target) <= parseInt(result) && raises < 1) {
+          ui.notifications.notify(`Success`);
+        }
+        else {
+          ui.notifications.notify(`${raises} Raise(s)`);
+        }
       },
     },
-    default: "one",
+  },
+  default: "one",
+  render: ([dialogContent]) => {
+    dialogContent.querySelector(`input[name="target"`).focus();
+  }
 }).render(true);
 
-// v.1.0.1 By SalieriC#8263
+// v.1.1.0 By SalieriC#8263, with help from Rawny#2166.

@@ -310,7 +310,7 @@ function main() {
                         }
                     }
                 },
-                default: "No"
+                default: "one"
             }).render(true);
         }
         else {
@@ -324,6 +324,7 @@ function main() {
         title: 'Personal Health Centre',
         content: md_text,
         buttons: buttons_main,
+        default: "one",
     }).render(true);
 
     function removeWounds() {
@@ -367,7 +368,7 @@ function main() {
         <p>You currently have <b>${wv}/${wm}</b> If you've been healed from a source other than Natural Healing, enter the amount of wounds below:</p>
     <div class="form-group">
         <label for="numWounds">Amount of Wounds: </label>
-        <input id="numWounds" name="num" type="number" min="0" value="1"></input>
+        <input id="numWounds" name="num" type="number" min="0" value="1" onClick="this.select();"></input>
     </div>
     </form>`,
             buttons: {
@@ -378,7 +379,12 @@ function main() {
                         removeWounds();
                     }
                 }
-            }
+            },
+            default: "one",
+            render: ([dialogContent]) => {
+                dialogContent.querySelector(`input[name="num"`).focus();
+                dialogContent.querySelector(`input[name="num"`).select();
+            },
         }).render(true);
     }
 
@@ -390,7 +396,7 @@ function main() {
         <p>You currently have <b>${fv}/${fm}</b> If your Fatigue has been cured or expired, enter the amount of Fatigue below:</p>
     <div class="form-group">
         <label for="numWounds">Amount of Fatigue: </label>
-        <input id="numFatigue" name="num" type="number" min="0" value="1"></input>
+        <input id="numFatigue" name="num" type="number" min="0" value="1" onClick="this.select();"></input>
     </div>
     </form>`,
             buttons: {
@@ -416,7 +422,12 @@ function main() {
                         }
                     }
                 }
-            }
+            },
+            default: "one",
+            render: ([dialogContent]) => {
+                dialogContent.querySelector(`input[name="num"`).focus();
+                dialogContent.querySelector(`input[name="num"`).select();
+            },
         }).render(true);
     }
 
@@ -438,4 +449,4 @@ function main() {
     }
 }
 
-// v.2.2.0 By SalieriC#8263; fixing bugs supported by FloRad#2142.
+// v.2.3.0 By SalieriC#8263; fixing bugs supported by FloRad#2142.

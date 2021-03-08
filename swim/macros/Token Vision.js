@@ -43,8 +43,7 @@ function main() {
       </div>
     </form>
 `;
-  }
-  else {
+  } else {
     dialogue_content = `
     <form>
       <div class="form-group">
@@ -81,7 +80,7 @@ function main() {
     close: html => {
       if (applyChanges) {
         for (let token of canvas.tokens.controlled) {
-          let visionType = html.find('[name="vision-type"]')[0].value || "none";
+          let visionType;
           let lightSource = html.find('[name="light-source"]')[0].value || "none";
           let dimSight = 0;
           let brightSight = 0;
@@ -90,6 +89,8 @@ function main() {
           let lightAngle = 360;
           let lockRotation = token.data.lockRotation;
           // Get Vision Type Values
+          if (game.user.isGM){
+            visionType = html.find('[name="vision-type"]')[0].value || "none";
           switch (visionType) {
             case "pDark":
               dimSight = 0;
@@ -169,8 +170,57 @@ function main() {
             lockRotation: lockRotation
           });
         }
+        else {
+          // Get Light Source Values
+          switch (lightSource) {
+            case "none":
+              dimLight = 0;
+              brightLight = 0;
+              break;
+            case "candle":
+              dimLight = 0;
+              brightLight = 2;
+              break;
+            case "lamp":
+              dimLight = 0;
+              brightLight = 4;
+              break;
+            case "bullseye":
+              dimLight = 0;
+              brightLight = 4;
+              lockRotation = true;
+              lightAngle = 52.5;
+              break;
+            case "torch":
+              dimLight = 0;
+              brightLight = 4;
+              break;
+            case "flLight":
+              dimLight = 0;
+              brightLight = 10;
+              lockRotation = true;
+              lightAngle = 52.5;
+              break;
+            case "nochange":
+            default:
+              dimLight = token.data.dimLight;
+              brightLight = token.data.brightLight;
+              lightAngle = token.data.lightAngle;
+              lockRotation = token.data.lockRotation;
+          }
+          // Update Token
+          console.log(token);
+          token.update({
+            vision: true,
+            dimLight: dimLight,
+            brightLight: brightLight,
+            lightAngle: lightAngle,
+            lockRotation: lockRotation
+          });
+        }
+        }
       }
     }
   }).render(true);
 }
-// v.2.0.2
+// v.2.0.3

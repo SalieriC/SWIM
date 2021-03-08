@@ -16,7 +16,8 @@ new Dialog({
       </form>`,
     buttons: {},
     render: ([dialogContent]) => {
-        dialogContent.querySelector(`input[name="result"`).addEventListener("change", (event) => {
+        dialogContent.querySelector(`input[name="target"`).focus();
+        dialogContent.querySelector(`input[name="result"`).addEventListener("input", (event) => {
             const textInput = event.target;
             const form = textInput.closest("form")
             const calcResult = form.querySelector(".calculation");
@@ -36,4 +37,4 @@ new Dialog({
     },
 }).render(true);
 
-// v.1.0.1 By SalieriC#8263, with help from Rawny#2166.
+// v.1.2.0 By SalieriC#8263, with help from Rawny#2166.

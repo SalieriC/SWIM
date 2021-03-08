@@ -24,5 +24,7 @@
   "SWIM.healSFXName": "Healing SFX",
   "SWIM.healSFXHint": "Sound effect to be played when wounds are healed.",
   "SWIM.looseFatigueSFXName": "Curing Fatigue SFX",
-  "SWIM.looseFatigueSFXHint": "Sound effect to be played when Fatigue is cured or removed."
+  "SWIM.looseFatigueSFXHint": "Sound effect to be played when Fatigue is cured or removed.",
+  "SWIM.openRaiseCalculatorName": "Raise Calculator",
+  "SWIM.openRaiseCalculatorHint": "Open Raise Calculator"
 }

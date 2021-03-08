@@ -388,7 +388,7 @@ function main() {
             <p>You currently have <b>${ppv}/${ppm}</b> Power Points.</p>
             <div class="form-group">
                 <label for="num">Amount of Power Points: </label>
-                <input id="num" name="num" type="number" min="0" value="5"></input>
+                <input id="num" name="num" type="number" min="0" value="5" onClick="this.select();"></input>
             </div>
             <div>
             <label for="sogname">Sound FX: </label>
@@ -396,8 +396,13 @@ function main() {
             </div>
         </form>`,
             buttons: buttons,
+            default: "one",
+            render: ([dialogContent]) => {
+                dialogContent.querySelector(`input[name="num"`).focus();
+                dialogContent.querySelector(`input[name="num"`).select();
+            },
         }).render(true)
     }
 }
 
-// v4.1.1 - Made by SalieriC#8263; with a ton of help from Kandashi (He/Him)#6698, thank you so much. =) Also thank you Enrahim#5273 and Freeze#2689 for helping me with the conditional buttons and Freeze again for the sound. Thx eXaminator#0079 for the option to have no sound.
+// v4.2.0 - Made by SalieriC#8263; with a ton of help from Kandashi (He/Him)#6698, thank you so much. =) Also thank you Enrahim#5273 and Freeze#2689 for helping me with the conditional buttons and Freeze again for the sound. Thx eXaminator#0079 for the option to have no sound.

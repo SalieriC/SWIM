@@ -5,7 +5,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- Add the Dynamic Raise Calculator to the controls on the left side (preferably optional).  
+
+## [0.5.0] - 2021-03-07
+### You need to update these macros:
+- (Un-)Shake (both versions)
+- (Un-)Stun
+- Fear Table
+- Personal Health Centre
+- Power Point Management
+- Soak Damage
+- Token Vision
+- Raise Calculator (both versions)
+### Added
+- Raise Calculator (Dynamic) now accessible from the basic controls on the left side.
+- Default Buttons to most dialogues (where it makes sense).
+- Added autofocus to input fields in dialogues (where it makes sense).
+- Added autoselection of input content when rendering a dialogue as well es on selecting the input to reduce the amount of mouse usage needed to operate the macros.
+- Documentation on how to set up CUB.
+### Changed
+- The Dynamic version of the Raise Calculator now changes the output on typing (even more dynamically), thus the Result input doesn't need to loose focus anymore.
+### Fixed
+- Token Vision Makro was not working for non GM users.
 
 ## [0.4.0] - 2021-03-07
 ### You need to update these macros:

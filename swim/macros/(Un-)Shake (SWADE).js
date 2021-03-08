@@ -95,7 +95,7 @@ async function main() {
                         callback: (html) => { return; },
                     }
                 },
-                default: "No."
+                default: "one"
             }).render(true)
         }
         else {
@@ -153,4 +153,4 @@ async function main() {
         }
     }
 }
-/// v.3.1.0 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
+/// v.3.2.0 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.

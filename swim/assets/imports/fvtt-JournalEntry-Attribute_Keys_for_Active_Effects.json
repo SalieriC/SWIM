@@ -1,0 +1,17 @@
+{
+  "name": "Attribute Keys for Active Effects",
+  "sort": 500000,
+  "flags": {
+    "core": {
+      "sourceId": "JournalEntry.3IwY4jhyCJtms0NH"
+    },
+    "exportSource": {
+      "world": "savage-worlds-hellfrost",
+      "system": "swade",
+      "coreVersion": "0.7.9",
+      "systemVersion": "0.17.2"
+    }
+  },
+  "content": "<h2>General</h2>\n<ul>\n<li><strong>Default Bennies:</strong> data.bennies.max</li>\n<li><strong>Current Bennies:</strong> data.bennies.value</li>\n<li><strong>Max Wounds:</strong>&nbsp;data.wounds.max</li>\n<li><strong>Current Wounds:</strong> data.wounds.value</li>\n<li><strong>Max Fatigue:</strong> data.fatigue.max</li>\n<li><strong>Current Fatigue:</strong> data.fatigue.value</li>\n<li><strong>Ignored Wounds:</strong> data.wounds.ignored</li>\n<li><strong>Running Die:</strong> data.stats.speed.runningDie</li>\n<li><strong>Running Modifier:</strong> data.stats.speed.runningMod</li>\n</ul>\n<h2>Initiative</h2>\n<ul>\n<li><strong>Level Headed:</strong> data.initiative.hasLevelHeaded</li>\n<li><strong>Improved Level Headed:</strong> data.initiative.hasImpLevelHeaded</li>\n<li><strong>Hesitant:</strong> data.initiative.hasHesitant</li>\n</ul>\n<h2>Attributes</h2>\n<ul>\n<li><strong>Die Type:</strong> data.attributes.&lt;attribute&gt;.die.sides</li>\n<li><strong>Modifier:</strong> data.attributes.&lt;attribute&gt;.die.modifier</li>\n<li><strong>Encumbrance die step modifier:</strong> data.attributes.strength.encumbranceSteps</li>\n<li><strong>Unshake bonus (currently not in use):</strong> data.attributes.spirit.unShakeBonus</li>\n<li><strong>Animal Smarts:</strong> data.attributes.smarts.animal</li>\n</ul>\n<h2>Skills (Requires SWADE Toolkit)</h2>\n<ul>\n<li><strong>Die type:</strong> d!Skillname</li>\n<li><strong>Modifier:</strong> m!Skillname</li>\n</ul>\n<h2>Derived Stats</h2>\n<ul>\n<li><strong>Size:</strong> data.stats.size</li>\n<li><strong>Pace:</strong> data.stats.speed.value</li>\n<li><strong>Parry:</strong> data.stats.parry.value</li>\n<li><strong>Toughness:</strong> data.stats.toughness.value</li>\n<li><strong>Armor:</strong> data.stats.toughness.armor</li>\n</ul>",
+  "_id": "CmXxdnJ5uzutVZNZ"
+}

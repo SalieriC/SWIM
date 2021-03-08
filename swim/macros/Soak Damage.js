@@ -178,7 +178,11 @@ function main() {
                     }
                 }
             },
-            default: "Apply Wounds"
+            default: "one",
+            render: ([dialogContent]) => {
+                dialogContent.querySelector(`input[name="num"`).focus();
+                dialogContent.querySelector(`input[name="num"`).select();
+            },
         }).render(true)
     }
 
@@ -290,7 +294,12 @@ function main() {
                                 }
                             }
                         }
-                    }
+                    },
+                    default: "one",
+                    render: ([dialogContent]) => {
+                        dialogContent.querySelector(`input[name="num"`).focus();
+                        dialogContent.querySelector(`input[name="num"`).select();
+                    },
                 }
             }).render(true);
         }
@@ -307,6 +316,11 @@ function main() {
     </div>
     </form>`,
         buttons: buttonsMain,
+        default: "one",
+        render: ([dialogContent]) => {
+            dialogContent.querySelector(`input[name="num"`).focus();
+            dialogContent.querySelector(`input[name="num"`).select();
+        },
     }).render(true);
 
     // Dialog to be rendered if not all wounds were soaked in rollSoak.
@@ -339,7 +353,7 @@ function main() {
                         }
                     }
                 },
-                default: "Apply Damage"
+                default: "one",
             }).render(true);
         }
         else {
@@ -349,4 +363,4 @@ function main() {
     }
 }
 
-// V2.3.0 Code by SalieriC#8263. Critical Failure awareness by Kekilla#7036 Testing and bug-chasing: javierrivera#4813.
+// V2.4.0 Code by SalieriC#8263. Critical Failure awareness by Kekilla#7036 Testing and bug-chasing: javierrivera#4813.

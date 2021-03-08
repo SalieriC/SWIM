@@ -31,6 +31,11 @@ const dialog = new Dialog({
             }
         }
     },
+    render: ([dialogContent]) => {
+        dialogContent.querySelector(`input[name="fearModifier"`).focus();
+    },
     default: "roll"
 });
 dialog.render(true);
+
+// v.1.1.0
