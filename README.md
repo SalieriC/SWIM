@@ -140,7 +140,8 @@ In terms of other SFX: The macro again uses the Incapacitation sfx and the wound
 This macro is more or less the opposite of the Soak Damage macro. It offers functionality to remove wounds in a generic way (i.e. due to the Healing Skill or Power) and also a way to roll on Natural Healing, interpreting the results, removing wounds, offerring rerolls and is aware of Snake Eyes (adds another Wound or Inc.!). It supports Fast Healer and (on rerolls) Elan as well.  
 It also supporst the Regeneration Special/Racial Ability but it must be set up as an Edge or Ability called "Fast Regeneration" or "Slow Regeneration". Then it adjusts the time that needs to be passed until a Natural Healing roll can be made. If your setting calls for longer or shorter periods of time until a Natural Healing roll can be made (Hellfrost comes to mind), then you can set this up in the modules settings.  
 It uses the sfx for Wounds, Inc.! and Healing.  
-The macro is also capable of removing Fatigue using a given number, which also supports a unique SFX.  
+The macro is also capable of removing Fatigue using a given number, which also supports a unique sfx.  
+Both, removing Fatigue and Wounds, does support using potions. For this you need to provide the potion names in the relevant game settings. Make sure that you enter the **exact** names (case sensitive) and seperate them by `, ` (comma + empty space). Drinking the potion also has a unique sfx and drinking a potion reduces the quatity by 1. If it was the last potion of this kind, it will be removed from the inventory.  
 <p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Personal%20Health%20Centre.jpg?raw=true"> </p>  
 
 ### Token Vision  
@@ -199,3 +200,8 @@ This is a utility macro not intended to be used a) by the players and b) regular
 6. Reload your World (F5 on PC).  
 This converts everything in the folder and all of those on your actors (world only, not in compendiums). And only those in the folder. You'll have to go through your actors and convert those Abilities manually that are not in your folder. This means it will not cover things like `Weakness (Fire)` unless you've set them all up. But it should still help you reduce your work by some degree.  
 **Warning:** This is a dangerous macro and might break your actors. I'm not kidding about the backup, **create one!** Seriously, do it. I had to restore my world multiple times during the testing, just make a damn backup please. (Which is why it isn't included in the compendium.) And don't blame anyone if the macro destroys something, neither I, nor `Kristian Serrano#5077` (the author of the macro) will take responsibility for any broken stuff, use at your own risk.  
+
+### RollTable Importer  
+**Immersion setting:** None.  
+**Description:**  
+Another utility macro that imports a RollTable from your clipboard. Each line (paragraph) in your clipboard is used as one result for the table. It should not contain any leading numbers (1.; 2); 3:; etc.). You can enter the name for the table and copy your tables contents while the dialogue is still open. The importer can only generate tables with weigh 1 and sets the dice formula to 1dx where x is the amount of results.  

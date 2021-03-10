@@ -6,6 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2021-03-10
+### You need to update these macros:
+- (Un-)Stunned
+- Personal Health Centre
+### Added
+- RollTable importer macro.
+- Cure Fatigue and Healing Potion options added to the Personal Health Centre macro.
+- - Drinking a potion reduces its quantity. If it was the last it gets removed.
+- - Drinking a potion has its own sfx (configurable in the settings).
+- - Potion names can be configures in the modules settings. Must be **exact** names (also case sensitive) and seperated by `, `.
+- Added a drinking sfx to the assets.
+### Fixed
+- Unstun chat message on spending a Benny was giving false information.
+
 ## [0.5.0] - 2021-03-08
 ### You need to update these macros:
 - (Un-)Shake (both versions)

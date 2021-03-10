@@ -152,7 +152,7 @@ async function main() {
     //Chat Message to let the everyone know a benny was spent
     ChatMessage.create({
       user: game.user._id,
-      content: `<p><img src="${bennyImage}"" width="25" height="25" /> ${game.user.name} spent a Benny and ${token.name} may act normally now.</p>`,
+      content: `<p><img src="${bennyImage}"" width="25" height="25" /> ${game.user.name} spent a Benny for ${token.name}.</p>`,
     });
   }
 

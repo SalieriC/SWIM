@@ -24,6 +24,8 @@ function main() {
         'swim', 'healSFX');
     let looseFatigueSFX = game.settings.get(
         'swim', 'looseFatigueSFX');
+    let potionSFX = game.settings.get(
+        'swim', 'potionSFX');
 
     // Declairing variables and constants.
     const wv = token.actor.data.data.wounds.value;
@@ -48,16 +50,45 @@ function main() {
     const elan = token.actor.data.items.find(function (item) {
         return item.name.toLowerCase() === "elan" && item.type === "edge";
     });
+    //Checking for Health Potions
+    const healthPotionOptions = game.settings.get(
+        'swim', 'healthPotionOptions');
+    const healthPotionsSplit = healthPotionOptions.split(', ');
+    const hasHealthPotion = token.actor.data.items.find(function (item) {
+        return (healthPotionsSplit.includes(item.name) && item.type === "gear" && item.data.quantity > 0)
+    });
+    //Find owned Health potions.
+    const ownedHealthPotions = healthPotionsSplit.filter(potion => token.actor.data.items.some(item => item.name === potion && item.type === "gear" && item.data.quantity > 0));
+    //Set up a list of Health Potions to choose from.
+    let healthPotionList;
+    for (let healthPotion of ownedHealthPotions) {
+        healthPotionList += `<option value="${healthPotion}">${healthPotion}</option>`;
+    }
+
+//Checking for Fatigue Potions
+const fatiguePotionOptions = game.settings.get(
+    'swim', 'fatiguePotionOptions');
+const fatiguePotionsSplit = fatiguePotionOptions.split(', ');
+const hasFatiguePotion = token.actor.data.items.find(function (item) {
+    return (fatiguePotionsSplit.includes(item.name) && item.type === "gear" && item.data.quantity > 0)
+});
+//Find owned Fatigue potions.
+const ownedFatiguePotions = fatiguePotionsSplit.filter(potion => token.actor.data.items.some(item => item.name === potion && item.type === "gear" && item.data.quantity > 0));
+//Set up a list of Fatigue Potions to choose from.
+let fatiguePotionList;
+for (let fatiguePotion of ownedFatiguePotions) {
+    fatiguePotionList += `<option value="${fatiguePotion}">${fatiguePotion}</option>`;
+}
+
     let bennies = token.actor.data.data.bennies.value;
     let bv;
     bv = checkBennies();
     let numberWounds;
     let rounded;
     let elanBonus;
-    let newWounds;
-    let currWounds;
     let setWounds;
     let genericHealWounds;
+    let genericHealFatigue;
     let buttons_main;
     let md_text
 
@@ -73,7 +104,7 @@ function main() {
             }
         }
     }
-    else if (fv > 0 && wv < 1) {
+    else if (fv > 0 && wv < 1 && !hasFatiguePotion) {
         md_text = `<form>
     <p>You currently have <b>no</b> Wounds and <b>${fv}/${fm}</b> Fatigue.</p>
     <p>In general you may remove a Level of Fatigue <b>every hour</b> when resting and the source of your Fatigue is absent. This can be altered depending on the source of Fatigue, so <b>ask your GM</b> if you're allowed to remove your Fatigue now.</p>
@@ -85,14 +116,32 @@ function main() {
                 callback: (html) => {
                     genericRemoveFatigue();
                 }
-            },
-            two: {
-                label: "Nevermind...",
-                callback: (html) => { },
             }
         }
     }
-    else if (fv < 1 && wv > 0) {
+    else if (fv > 0 && wv < 1 && hasFatiguePotion) {
+        md_text = `<form>
+    <p>You currently have <b>no</b> Wounds and <b>${fv}/${fm}</b> Fatigue.</p>
+    <p>In general you may remove a Level of Fatigue <b>every hour</b> when resting and the source of your Fatigue is absent. This can be altered depending on the source of Fatigue, so <b>ask your GM</b> if you're allowed to remove your Fatigue now.</p>
+    <p>You still have a <b>potion that cures Fatigue</b>, you might as well use it (but ask your GM, the source of your Fatigue might not allow it).</p>
+    <p>What you you want to do?</p>
+    </form>`;
+        buttons_main = {
+            one: {
+                label: "Cure Fatigue",
+                callback: (html) => {
+                    genericRemoveFatigue();
+                }
+            },
+            two: {
+                label: "Potion",
+                callback: (html) => {
+                    useFatiguePotion();
+                }
+            }
+        }
+    }
+    else if (fv < 1 && wv > 0 && !hasHealthPotion) {
         md_text = `<form>
     <p>You currently have <b>${wv}/${wm}</b> Wounds, <b>no</b> Fatigue and <b>${bv}</b> Bennies.</p>
     <p>You may make a Natural Healing roll <b>every ${natHeal_time}</b> unless altered by setting specific circumstances.</p>
@@ -111,17 +160,109 @@ function main() {
                 callback: (html) => {
                     genericRemoveWounds();
                 }
-            },
-            three: {
-                label: "Nevermind...",
-                callback: (html) => { },
             }
         }
     }
-    else {
+    else if (fv < 1 && wv > 0 && hasHealthPotion) {
+        md_text = `<form>
+    <p>You currently have <b>${wv}/${wm}</b> Wounds, <b>no</b> Fatigue and <b>${bv}</b> Bennies.</p>
+    <p>You may make a Natural Healing roll <b>every ${natHeal_time}</b> unless altered by setting specific circumstances.</p>
+    <p>You still have <b>Healing potions</b>, you might as well use one of these.</p>
+    <p>You may also heal wounds directly (i.e. from the Healing Power). What you you want to do?</p>
+    </form>`;
+        buttons_main = {
+            one: {
+                label: "Natural Healing",
+                callback: (html) => {
+                    numberWounds = wv;
+                    rollNatHeal();
+                }
+            },
+            two: {
+                label: "Direct Healing",
+                callback: (html) => {
+                    genericRemoveWounds();
+                }
+            },
+            three: {
+                label: "Potion",
+                callback: (html) => {
+                    useHealthPotion();
+                }
+            }
+        }
+    }
+    else if (wv > 0 && fv > 0 && !hasFatiguePotion && !hasHealthPotion) {
         md_text = `<form>
     <p>You currently have <b>${wv}/${wm}</b> Wounds, <b>${fv}/${fm}</b> Fatigue and <b>${bv}</b> Bennies.</p>
     <p>You may make a Natural Healing roll <b>every ${natHeal_time}</b> unless altered by setting specific circumstances.</p>
+    <p>You still have <b>Healing potions</b>, you might as well use one of these.</p>
+    <p>In general you may remove a Level of Fatigue <b>every hour</b> when resting and the source of your Fatigue is absent. This can be altered depending on the source of Fatigue, so <b>ask your GM</b> if you're allowed to remove your Fatigue now.</p>
+    <p>You may also heal wounds directly (i.e. from the Healing Power) or cure Fatigue. What you you want to do?</p>
+    </form>`;
+        buttons_main = {
+            one: {
+                label: "Natural Healing",
+                callback: (html) => {
+                    numberWounds = wv;
+                    rollNatHeal();
+                }
+            },
+            two: {
+                label: "Direct Healing",
+                callback: (html) => {
+                    genericRemoveWounds();
+                }
+            },
+            four: {
+                label: "Cure Fatigue",
+                callback: (html) => {
+                    genericRemoveFatigue();
+                }
+            }
+        }
+    }
+    else if (wv > 0 && fv > 0 && !hasFatiguePotion && hasHealthPotion) {
+        md_text = `<form>
+    <p>You currently have <b>${wv}/${wm}</b> Wounds, <b>${fv}/${fm}</b> Fatigue and <b>${bv}</b> Bennies.</p>
+    <p>You may make a Natural Healing roll <b>every ${natHeal_time}</b> unless altered by setting specific circumstances.</p>
+    <p>You still have <b>Healing potions</b>, you might as well use one of these.</p>
+    <p>In general you may remove a Level of Fatigue <b>every hour</b> when resting and the source of your Fatigue is absent. This can be altered depending on the source of Fatigue, so <b>ask your GM</b> if you're allowed to remove your Fatigue now.</p>
+    <p>You may also heal wounds directly (i.e. from the Healing Power) or cure Fatigue. What you you want to do?</p>
+    </form>`;
+        buttons_main = {
+            one: {
+                label: "Natural Healing",
+                callback: (html) => {
+                    numberWounds = wv;
+                    rollNatHeal();
+                }
+            },
+            two: {
+                label: "Direct Healing",
+                callback: (html) => {
+                    genericRemoveWounds();
+                }
+            },
+            three: {
+                label: "Potion (heal)",
+                callback: (html) => {
+                    useHealthPotion();
+                }
+            },
+            four: {
+                label: "Cure Fatigue",
+                callback: (html) => {
+                    genericRemoveFatigue();
+                }
+            },
+        }
+    }
+    else if (wv > 0 && fv > 0 && hasFatiguePotion && !hasHealthPotion) {
+        md_text = `<form>
+    <p>You currently have <b>${wv}/${wm}</b> Wounds, <b>${fv}/${fm}</b> Fatigue and <b>${bv}</b> Bennies.</p>
+    <p>You may make a Natural Healing roll <b>every ${natHeal_time}</b> unless altered by setting specific circumstances.</p>
+    <p>You still have <b>potions that cure Fatigue</b>, you might as well use one of these (but ask your GM, the source of your Fatigue might not allow it).</p>
     <p>In general you may remove a Level of Fatigue <b>every hour</b> when resting and the source of your Fatigue is absent. This can be altered depending on the source of Fatigue, so <b>ask your GM</b> if you're allowed to remove your Fatigue now.</p>
     <p>You may also heal wounds directly (i.e. from the Healing Power) or cure Fatigue. What you you want to do?</p>
     </form>`;
@@ -146,8 +287,52 @@ function main() {
                 }
             },
             four: {
-                label: "Nevermind...",
-                callback: (html) => { },
+                label: "Potion (Fatigue)",
+                callback: (html) => {
+                    useFatiguePotion();
+                }
+            },
+        }
+    }
+    else if (wv > 0 && fv > 0 && hasFatiguePotion && hasHealthPotion) {
+        md_text = `<form>
+    <p>You currently have <b>${wv}/${wm}</b> Wounds, <b>${fv}/${fm}</b> Fatigue and <b>${bv}</b> Bennies.</p>
+    <p>You may make a Natural Healing roll <b>every ${natHeal_time}</b> unless altered by setting specific circumstances.</p>
+    <p>You still have <b>Health Potions</b> and <b>potions that cure Fatigue</b>, you might as well use one of these (but ask your GM, the source of your Fatigue might not allow it).</p>
+    <p>In general you may remove a Level of Fatigue <b>every hour</b> when resting and the source of your Fatigue is absent. This can be altered depending on the source of Fatigue, so <b>ask your GM</b> if you're allowed to remove your Fatigue now.</p>
+    <p>You may also heal wounds directly (i.e. from the Healing Power) or cure Fatigue. What you you want to do?</p>
+    </form>`;
+        buttons_main = {
+            one: {
+                label: "Natural Healing",
+                callback: (html) => {
+                    numberWounds = wv;
+                    rollNatHeal();
+                }
+            },
+            two: {
+                label: "Direct Healing",
+                callback: (html) => {
+                    genericRemoveWounds();
+                }
+            },
+            three: {
+                label: "Potion (heal)",
+                callback: (html) => {
+                    useHealthPotion();
+                }
+            },
+            four: {
+                label: "Cure Fatigue",
+                callback: (html) => {
+                    genericRemoveFatigue();
+                }
+            },
+            five: {
+                label: "Potion (Fatigue)",
+                callback: (html) => {
+                    useFatiguePotion();
+                }
             }
         }
     }
@@ -365,7 +550,7 @@ function main() {
         new Dialog({
             title: 'Direct Healing',
             content: `<form>
-        <p>You currently have <b>${wv}/${wm}</b> If you've been healed from a source other than Natural Healing, enter the amount of wounds below:</p>
+        <p>You currently have <b>${wv}/${wm}</b>. If you've been healed from a source other than Natural Healing, enter the amount of Wounds below:</p>
     <div class="form-group">
         <label for="numWounds">Amount of Wounds: </label>
         <input id="numWounds" name="num" type="number" min="0" value="1" onClick="this.select();"></input>
@@ -377,6 +562,104 @@ function main() {
                     callback: (html) => {
                         genericHealWounds = Number(html.find("#numWounds")[0].value);
                         removeWounds();
+                    }
+                }
+            },
+            default: "one",
+            render: ([dialogContent]) => {
+                dialogContent.querySelector(`input[name="num"`).focus();
+                dialogContent.querySelector(`input[name="num"`).select();
+            },
+        }).render(true);
+    }
+
+    // Healing from a source other than Natural Healing
+    function useHealthPotion() {
+        new Dialog({
+            title: 'Healing Potion',
+            content: `<form>
+        <p>You currently have <b>${wv}/${wm}</b>. If you want to use a healing potion, enter the amount of Wounds it heals and select the desired potion below:</p>
+    <div class="form-group">
+        <label for="numWounds">Amount of Wounds: </label>
+        <input id="numWounds" name="num" type="number" min="0" value="1" onClick="this.select();"></input>
+    </div>
+    <div class="form-group">
+            <label for="potionName">Potion to use: </label>
+            <select name="potionName">${healthPotionList}</select>
+            </div>
+    </form>`,
+            buttons: {
+                one: {
+                    label: "Use Potion",
+                    callback: async(html) => {
+                        genericHealWounds = Number(html.find("#numWounds")[0].value);
+                        let selectedPotion = String(html.find("[name=potionName]")[0].value);
+                        let potion_to_update = token.actor.items.find(i => i.name === selectedPotion);
+                        let potion_icon = potion_to_update.data.img;
+                        await token.actor.updateOwnedItem({_id: potion_to_update.id, "data.quantity": potion_to_update.data.data.quantity - 1})
+                        if (potion_to_update.data.data.quantity < 1){
+                          potion_to_update.delete();
+                        }
+                        ChatMessage.create({
+                            speaker: {
+                                alias: token.name
+                            },
+                            content: `<img src="${potion_icon}" alt="" width="25" height="25" /> ${token.name} uses a ${selectedPotion} to heal ${genericHealWounds} wound(s).`
+                        })
+                        if (potionSFX) {
+                            let audioDuration = AudioHelper.play({ src: `${potionSFX}` }, true)._duration;
+                            await wait(audioDuration*1000);
+                        }
+                        removeWounds();
+                    }
+                }
+            },
+            default: "one",
+            render: ([dialogContent]) => {
+                dialogContent.querySelector(`input[name="num"`).focus();
+                dialogContent.querySelector(`input[name="num"`).select();
+            },
+        }).render(true);
+    }
+
+    // Healing from a source other than Natural Healing
+    function useFatiguePotion() {
+        new Dialog({
+            title: 'Potion to cure Fatigue',
+            content: `<form>
+        <p>You currently have <b>${fv}/${fm}</b>. If you want to use a potion that cures Fatigue, enter the amount of Fatigue it cures and select the desired potion below:</p>
+    <div class="form-group">
+        <label for="numFatigue">Amount of Fatigue: </label>
+        <input id="numFatigue" name="num" type="number" min="0" value="1" onClick="this.select();"></input>
+    </div>
+    <div class="form-group">
+            <label for="potionName">Potion to use: </label>
+            <select name="potionName">${fatiguePotionList}</select>
+            </div>
+    </form>`,
+            buttons: {
+                one: {
+                    label: "Use Potion",
+                    callback: async(html) => {
+                        genericHealFatigue = Number(html.find("#numFatigue")[0].value);
+                        let selectedPotion = String(html.find("[name=potionName]")[0].value);
+                        let potion_to_update = token.actor.items.find(i => i.name === selectedPotion);
+                        let potion_icon = potion_to_update.data.img;
+                        await token.actor.updateOwnedItem({_id: potion_to_update.id, "data.quantity": potion_to_update.data.data.quantity - 1})
+                        if (potion_to_update.data.data.quantity < 1){
+                          potion_to_update.delete();
+                        }
+                        ChatMessage.create({
+                            speaker: {
+                                alias: token.name
+                            },
+                            content: `<img src="${potion_icon}" alt="" width="25" height="25" /> ${token.name} uses a ${selectedPotion} to cure ${genericHealFatigue} level(s) of Fatigue.`
+                        })
+                        if (potionSFX) {
+                            let audioDuration = AudioHelper.play({ src: `${potionSFX}` }, true)._duration;
+                            await wait(audioDuration*1000);
+                        }
+                        RemoveFatigue();
                     }
                 }
             },
@@ -402,24 +685,15 @@ function main() {
             buttons: {
                 one: {
                     label: "Cure Fatigue",
-                    callback: (html) => {
-                        let genericHealFatigue = Number(html.find("#numFatigue")[0].value);
-                        if (genericHealFatigue > fv) {
-                            genericHealFatigue = fv;
-                            ui.notifications.error(`You can't cure more Fatigue than you have, curing all Fatigue instead now...`);
-                        }
-                        let setFatigue = fv - genericHealFatigue;
-                        token.actor.update({ "data.fatigue.value": setFatigue });
-                        ui.notifications.notify(`${genericHealFatigue} Level(s) of Fatigue cured.`);
-                        ChatMessage.create({
+                    callback: async(html) => {
+                        genericHealFatigue = Number(html.find("#numFatigue")[0].value);
+                        RemoveFatigue();
+                        await ChatMessage.create({
                             speaker: {
                                 alias: token.name
                             },
                             content: `${token.name} lost ${genericHealFatigue} Level(s) of Fatigue.`
                         })
-                        if (looseFatigueSFX && genericHealFatigue > 0) {
-                            AudioHelper.play({ src: `${looseFatigueSFX}` }, true);
-                        }
                     }
                 }
             },
@@ -429,6 +703,19 @@ function main() {
                 dialogContent.querySelector(`input[name="num"`).select();
             },
         }).render(true);
+    }
+
+    function RemoveFatigue() {
+        if (genericHealFatigue > fv) {
+            genericHealFatigue = fv;
+            ui.notifications.error(`You can't cure more Fatigue than you have, curing all Fatigue instead now...`);
+        }
+        let setFatigue = fv - genericHealFatigue;
+        token.actor.update({ "data.fatigue.value": setFatigue });
+        ui.notifications.notify(`${genericHealFatigue} Level(s) of Fatigue cured.`);
+        if (looseFatigueSFX && genericHealFatigue > 0) {
+            AudioHelper.play({ src: `${looseFatigueSFX}` }, true);
+        }
     }
 
     function applyWounds() {
@@ -447,6 +734,12 @@ function main() {
             }
         }
     }
+
+    async function wait(ms) {
+        return new Promise(resolve => {
+            setTimeout(resolve, ms);
+        });
+    }
 }
 
-// v.2.3.0 By SalieriC#8263; fixing bugs supported by FloRad#2142.
+// v.3.0.1 By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.

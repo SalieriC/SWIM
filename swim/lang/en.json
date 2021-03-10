@@ -5,6 +5,10 @@
   "SWIM.grittyDamageHint": "Activate this if you want to use Gritty Damage.",
   "SWIM.fearTableName": "Fear Table:",
   "SWIM.fearTableHint": "Fear table used for the Fear table macro. Please make sure to enter the EXACT name of your Fear table in here.",
+  "SWIM.healthPotionOptionsName": "Health Potion Names",
+  "SWIM.healthPotionOptionsHint": "A list of Health Potions common to your setting, seperated by a comma and space (', '). It must be EXACT names (it is also case sensitive), so check twice. Example: 'Health Potion, Minor Health Potion, Healing Potion'",
+  "SWIM.fatiguePotionOptionsName": "Potion of cure Fatigue Names",
+  "SWIM.fatiguePotionOptionsHint": "A list of Potions that cure Fatigue common to your setting, seperated by a comma and space (', '). It must be EXACT names (it is also case sensitive), so check twice. Example: 'Potion of Recreation, Minor Recreation Potion, Recreational Potion'",
   "SWIM.natHeal_TimeName": "Natural Healing time:",
   "SWIM.natHeal_TimeHint": "Here you can set up the time it takes until a Natural Healing roll may be done. You may not need to change this unless your setting rules state another interval. Default: five days",
   "SWIM.shakenSFXName": "Shaken SFX",
@@ -25,6 +29,8 @@
   "SWIM.healSFXHint": "Sound effect to be played when wounds are healed.",
   "SWIM.looseFatigueSFXName": "Curing Fatigue SFX",
   "SWIM.looseFatigueSFXHint": "Sound effect to be played when Fatigue is cured or removed.",
+  "SWIM.potionSFXName": "Drinking Potion SFX",
+  "SWIM.potionSFXHint": "Sound effect to be played when a potion is ingested.",
   "SWIM.openRaiseCalculatorName": "Raise Calculator",
   "SWIM.openRaiseCalculatorHint": "Open Raise Calculator"
 }

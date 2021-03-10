@@ -26,6 +26,24 @@ function register_settings() {
         scope: 'world',
         config: true,
     });
+    // Health Potion Names
+    game.settings.register('swim', 'healthPotionOptions', {
+        name: game.i18n.localize("SWIM.healthPotionOptionsName"),
+        hint: game.i18n.localize("SWIM.healthPotionOptionsHint"),
+        type: String,
+        default: 'Minor Health Potion, Health Potion, Greater Health Potion, Minor Healing Potion, Healing Potion, Greater Healing Potion',
+        scope: 'world',
+        config: true,
+    });
+    // Fatigue Potion Names
+    game.settings.register('swim', 'fatiguePotionOptions', {
+        name: game.i18n.localize("SWIM.fatiguePotionOptionsName"),
+        hint: game.i18n.localize("SWIM.fatiguePotionOptionsHint"),
+        type: String,
+        default: 'Minor Potion of Well-Being, Potion of Well-Being, Greater Potion of Well-Being, Minor Recreational Potion, Recreational Potion, Greater Recreational Potion',
+        scope: 'world',
+        config: true,
+    });
     // Natural Healing time
     game.settings.register('swim', 'natHeal_time', {
         name: game.i18n.localize("SWIM.natHeal_TimeName"),
@@ -116,6 +134,15 @@ function register_settings() {
         hint: game.i18n.localize("SWIM.looseFatigueSFXHint"),
         type: window.Azzu.SettingsTypes.FilePickerAudio,
         default: 'modules/swim/assets/sfx/Huh-converted-Alexander-www.orangefreesounds.com.ogg',
+        scope: 'world',
+        config: true,
+    });
+    // Potion SFX
+    game.settings.register('swim', 'potionSFX', {
+        name: game.i18n.localize("SWIM.potionSFXName"),
+        hint: game.i18n.localize("SWIM.potionSFXHint"),
+        type: window.Azzu.SettingsTypes.FilePickerAudio,
+        default: 'modules/swim/assets/sfx/Drinking-Water-altered-www.fesliyanstudios.com.ogg',
         scope: 'world',
         config: true,
     });
