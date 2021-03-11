@@ -95,7 +95,7 @@ for (let fatiguePotion of ownedFatiguePotions) {
     // Adjusting buttons and Main Dialogue text
     if (fv < 1 && wv < 1) {
         md_text = `<form>
-    <p>You currently netiher have any Wounds nor Fatige. There is nothing for you to do here.</p>
+    <p>You currently neither have any Wounds nor Fatigue. There is nothing for you to do here.</p>
     </form>`;
         buttons_main = {
             one: {
@@ -742,4 +742,4 @@ for (let fatiguePotion of ownedFatiguePotions) {
     }
 }
 
-// v.3.0.1 By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
+// v.3.0.2 By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
