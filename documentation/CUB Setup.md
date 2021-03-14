@@ -25,7 +25,7 @@ Repeat the steps above for all conditions. Remember to *always click save* when 
 Click save just to be sure and close the window.  You are almost done.
 
 ## Condition Lab Settings
-Navigate to the game settings (the gears icon in the right sidebar) and click on "Condition Lab". Here comes the easy part: Click on "import" at the top of the window. Choose the "cub-swade-condition-map.json" file in `modules/swim/assets/imports/` and import it. If you have the core rules activated before importing most conditions will be linked already. This is not required though, but highly recommended if you own the core rules module.  
+Navigate to the game settings (the gears icon in the right sidebar) and click on "Condition Lab". Here comes the easy part: Click on "import" at the top of the window. Choose the "cub-swade-condition-map.json" file in `modules/swim/assets/imports/` and import it (you can download it from this repo if you can't select the file on the server). If you have the core rules activated before importing most conditions will be linked already. This is not required though, but highly recommended if you own the core rules module.  
 Now the Condition Lab should look like this:  
 <p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/cub_setup/CUBConditionLab1.jpg?raw=true"> </p>  
 Now you need to set up the triggers. Remember the conditions from above? They are Shaken, Distracted, Vulnerable, Stunned, Entangled and Bound.  
@@ -38,8 +38,8 @@ Now click save and you are done.
 
 ## Optional: Active Effects  
 You can set up Active Effects to the conditions if you want. For This click on the hand symbol <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/cub_setup/CUBAEs1.jpg?raw=true"> next to an condition in the Condition lab.  
-The AE window opens. Click on "Effects" and click "+". Now you can set up an Active Effect. In the official Foundry discord server in the swade channel you can find a list of the most common effect keys in the pinned messages. You can also import my JournalEntry* to have them in your world.  
+The AE window opens. Click on "Effects" and click "+". Now you can set up an Active Effect. In the official Foundry discord server in the swade channel you can find a list of the most common effect keys (see the pinned messages). You can also import my JournalEntry* to have them in your world.  
 When you want to set up multiple AEs on CUB, there is a bug where on clicking + the currenty entry disappears and no second one is created. Just click + again and everything will be fine.  
-Do this for every condition you wish. I don't want and can give away more precise explanations as I obviously don't want to give away more rulings than necessary. But you'll fiogure it out by looking at the keys and the conditions rulings.
+Do this for every condition you wish. I can't give away more precise explanations as I obviously don't want to give away more rulings than necessary. But you'll fiogure it out by looking at the keys and the conditions rulings.
 
 *Go to the JournalEntry tab in the right sidebar, create a new JournalEntry (name doesn't matter) and once created right click on it, select import and choose this file: `modules/swim/assets/imports/fvtt-JournalEntry-Attribute_Keys_for_Active_Effects.json`.
