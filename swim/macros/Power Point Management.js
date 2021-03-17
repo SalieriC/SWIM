@@ -25,7 +25,7 @@ function main() {
 
         //Set up
         let bennyImage = "icons/commodities/currency/coin-embossed-octopus-gold.webp";
-        if (game.modules.get("swade-spices").active) {
+        if (game.modules.get("swade-spices")?.active) {
             let benny_Back = game.settings.get(
                 'swade-spices', 'bennyBack');
             if (benny_Back) {
@@ -117,7 +117,7 @@ function main() {
                                 speaker: {
                                     alias: token.name
                                 },
-                                content: `<p><img src="${bennyImage}"" width="25" height="25" /> ${token.name} recharges ${actualPP} Power Point(s) by spending a Benny and hits the maximum of ${ppm} (overflow prevented).</p>`
+                                content: `<p><img style="border: none;" src="${bennyImage}"" width="25" height="25" /> ${token.name} recharges ${actualPP} Power Point(s) by spending a Benny and hits the maximum of ${ppm} (overflow prevented).</p>`
                             })
                         }
                         else {
@@ -126,7 +126,7 @@ function main() {
                                 speaker: {
                                     alias: token.name
                                 },
-                                content: `<p><img src="${bennyImage}"" width="25" height="25" /> ${token.name} recharges 5 Power Point(s) using a Benny and now has ${newPP}.</p>`
+                                content: `<p><img style="border: none;" src="${bennyImage}"" width="25" height="25" /> ${token.name} recharges 5 Power Point(s) using a Benny and now has ${newPP}.</p>`
                             })
                         }
                         spendBenny();
@@ -405,4 +405,4 @@ function main() {
     }
 }
 
-// v4.2.0 - Made by SalieriC#8263; with a ton of help from Kandashi (He/Him)#6698, thank you so much. =) Also thank you Enrahim#5273 and Freeze#2689 for helping me with the conditional buttons and Freeze again for the sound. Thx eXaminator#0079 for the option to have no sound.
+// v4.3.1 - Made by SalieriC#8263; with a ton of help from Kandashi (He/Him)#6698, thank you so much. =) Also thank you Enrahim#5273 and Freeze#2689 for helping me with the conditional buttons and Freeze again for the sound. Thx eXaminator#0079 for the option to have no sound.

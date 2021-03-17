@@ -9,7 +9,7 @@ async function main() {
 
     // Checking for SWADE Spices & Flavours and setting up the Benny image.
     let bennyImage = "icons/commodities/currency/coin-embossed-octopus-gold.webp";
-    if (game.modules.get("swade-spices").active) {
+    if (game.modules.get("swade-spices")?.active) {
         let benny_Back = game.settings.get(
             'swade-spices', 'bennyBack');
         if (benny_Back) {
@@ -143,7 +143,7 @@ async function main() {
         //Chat Message to let the everyone know a benny was spent
         ChatMessage.create({
             user: game.user._id,
-            content: `<p><img src="${bennyImage}"" width="25" height="25" /> ${game.user.name} spent a Benny and ${token.name} may act normally now.</p>`,
+            content: `<p><img style="border: none;" src="${bennyImage}"" width="25" height="25" /> ${game.user.name} spent a Benny and ${token.name} may act normally now.</p>`,
         });
     }
 
@@ -156,4 +156,4 @@ async function main() {
         }
     }
 }
-/// v.3.2.0 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
+/// v.3.3.1 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.

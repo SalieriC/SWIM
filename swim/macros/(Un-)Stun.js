@@ -16,7 +16,7 @@ async function main() {
 
   // Checking for SWADE Spices & Flavours and setting up the Benny image.
   let bennyImage = "icons/commodities/currency/coin-embossed-octopus-gold.webp";
-  if (game.modules.get("swade-spices").active) {
+  if (game.modules.get("swade-spices")?.active) {
     let benny_Back = game.settings.get(
       'swade-spices', 'bennyBack');
     if (benny_Back) {
@@ -152,7 +152,7 @@ async function main() {
     //Chat Message to let the everyone know a benny was spent
     ChatMessage.create({
       user: game.user._id,
-      content: `<p><img src="${bennyImage}"" width="25" height="25" /> ${game.user.name} spent a Benny for ${token.name}.</p>`,
+      content: `<p><img style="border: none;" src="${bennyImage}"" width="25" height="25" /> ${game.user.name} spent a Benny for ${token.name}.</p>`,
     });
   }
 
@@ -174,4 +174,4 @@ async function main() {
   }
 }
 
-// v.3.1.0 Made by SalieriC#8263 using original Code from Shteff.
+// v.3.2.1 Made by SalieriC#8263 using original Code from Shteff.
