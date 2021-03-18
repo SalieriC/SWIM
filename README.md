@@ -1,6 +1,6 @@
 # SWADE Immersive Macros (SWIM)
 This is a selection of macros for Savage Worlds Players and GMs alike.  
-If you want to support me you can do so on my Ko-fi:
+If you want to support me you can do so on my Ko-fi:  
 [![Ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/salieric)  
 This is one way to show me that my module is actually used and well-received.  
 
