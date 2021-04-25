@@ -1,3 +1,5 @@
+// import { swimTab } from "./scripts/swimTab.js";
+
 function register_settings() {
     // Gritty Damage Injury Table Name
     game.settings.register('swim', 'injuryTable', {
@@ -205,3 +207,24 @@ Hooks.on(`ready`, () => {
     console.log('SWADE Immersive Macros | Ready');
     register_settings();
 });
+
+Hooks.on('renderSwadeItemSheet', add_swim_tab);
+
+async function add_swim_tab(sheet, html, data){
+    html.find('nav.tabs').append(`<a class="item" data-tab="swim-tab">SWIM</a>`);
+    html.find('main.sheet-body').append(`<div class="tab" data-group="primary" data-tab="swim-tab">
+        <p>Here you can set up sound effects (SFX) which are used in the macros later on.</p>
+        <div class="form-group">
+            <label for="shot_SFX">Shot SFX: </label>
+            <input id="shot_sfx" type="string" value="I do nothing yet, ignore me for now."></input>
+        </div>
+    </div>`);
+}
+
+/*
+Hooks.on('renderSwadeItemSheet', add_swim_tab);
+
+async function add_swim_tab(){
+    swimTab.bind(app, html, data);
+}
+*/

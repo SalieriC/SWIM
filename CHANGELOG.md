@@ -5,6 +5,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- !DOESN'T REROLL ON BENNY; USES UNSHAKE CODE INSTEAD!
+
+## [0.7.0] - Unreleased
+### You need to update these macros:
+- Soak Damage
+### Fixes
+- Small fix for the Soak Damage macro that not always removed shaken when all wounds where soaked.
+### Added
+- Ammo Management Macro
 
 ## [0.6.1] - 2021-03-10
 ### You need to update these macros:
