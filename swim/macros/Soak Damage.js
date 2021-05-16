@@ -114,7 +114,9 @@ function main() {
                 };
             } else if (rounded >= numberWounds) {
                 chatData += ` and soaks all of his Wounds.`;
-                token.actor.update({ "data.status.isShaken": false });
+                if (token.actor.data.data.status.isShaken === true) {
+                    token.actor.update({ "data.status.isShaken": false });
+                }
             }
             chatData += ` ${edgeText}`;
 
@@ -363,4 +365,4 @@ function main() {
     }
 }
 
-// V2.5.1 Code by SalieriC#8263. Critical Failure awareness by Kekilla#7036 Testing and bug-chasing: javierrivera#4813.
+// V2.5.3 Code by SalieriC#8263. Critical Failure awareness by Kekilla#7036 Testing and bug-chasing: javierrivera#4813.

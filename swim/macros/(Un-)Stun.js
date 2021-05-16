@@ -1,3 +1,4 @@
+//!DOESN'T REROLL ON BENNY; USES UNSHAKE CODE INSTEAD!
 main();
 
 async function main() {
@@ -60,6 +61,7 @@ async function main() {
         chatData += `, is no longer Stunned and looses Vulnerable after the turn.`;
         token.actor.update({ "data.status.isDistracted": false });
         token.actor.update({ "data.status.isStunned": false });
+        token.actor.update({ "data.status.isVulnerable": false });
         if (token.data.effects.includes(`${proneIconPath}`)) {
           token.toggleEffect(`${proneIconPath}`)
         };
