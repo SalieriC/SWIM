@@ -32,5 +32,6 @@
   "SWIM.potionSFXName": "Drinking Potion SFX",
   "SWIM.potionSFXHint": "Sound effect to be played when a potion is ingested.",
   "SWIM.openRaiseCalculatorName": "Raise Calculator",
-  "SWIM.openRaiseCalculatorHint": "Open Raise Calculator"
+  "SWIM.openRaiseCalculatorHint": "Open Raise Calculator",
+  "SWIM.TabSFX": "Here you can select sound effects (sfx) used by the macros."
 }
