@@ -13,7 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixes
 - Small fix for the Soak Damage macro that not always removed shaken when all wounds where soaked.
 ### Added
-- Ammo Management Macro
+- Ammo Management Macros
+- Deviation Macro
+- Roll for Loot Macro
+- Eat and Drink Macro
+- Radiation Centre Macro
 
 ## [0.6.1] - 2021-03-10
 ### You need to update these macros:

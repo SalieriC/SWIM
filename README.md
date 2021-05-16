@@ -208,3 +208,10 @@ This converts everything in the folder and all of those on your actors (world on
 **Immersion setting:** None.  
 **Description:**  
 Another utility macro that imports a RollTable from your clipboard. Each line (paragraph) in your clipboard is used as one result for the table. It should not contain any leading numbers (1.; 2); 3:; etc.). You can enter the name for the table and copy your tables contents while the dialogue is still open. The importer can only generate tables with weigh 1 and sets the dice formula to 1dx where x is the amount of results.  
+  
+### Shooting & Reloading  
+**Immersion setting:** SFX.  
+**Requirements:** None.  
+**Description:**  
+This is quite a beast which requires some setup and thus got its own documentation. **Read it before using the macro.**  
+Several versions are available, including one that integrates in [Better Rolls 2](https://github.com/javierriveracastro/betteroll-swade).  

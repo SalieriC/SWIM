@@ -1,4 +1,4 @@
-// import { swimTab } from "./scripts/swimTab.js";
+import { swimTab } from "./scripts/swimTab.js";
 
 function register_settings() {
     // Gritty Damage Injury Table Name
@@ -210,6 +210,7 @@ Hooks.on(`ready`, () => {
 
 Hooks.on('renderSwadeItemSheet', add_swim_tab);
 
+/*
 async function add_swim_tab(sheet, html, data){
     html.find('nav.tabs').append(`<a class="item" data-tab="swim-tab">SWIM</a>`);
     html.find('main.sheet-body').append(`<div class="tab" data-group="primary" data-tab="swim-tab">
@@ -220,11 +221,8 @@ async function add_swim_tab(sheet, html, data){
         </div>
     </div>`);
 }
-
-/*
-Hooks.on('renderSwadeItemSheet', add_swim_tab);
-
-async function add_swim_tab(){
-    swimTab.bind(app, html, data);
-}
 */
+
+Hooks.on(`renderItemSheet`, (app, html, data) => {
+    swimTab.bind(app, html, data);
+});
