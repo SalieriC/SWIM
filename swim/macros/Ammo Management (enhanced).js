@@ -80,10 +80,6 @@ async function weaponDialog() {
         <label for="ammo">Ammo: </label>
         <select id="ammo">${ammo.reduce((acc, val) => acc += `<option value="${val}">${val}</option>`, ``)}</select>
       </div>
-      <div class="form-group">
-        <label for="sil">Silenced</label>
-        <input id="sil" name="silenced" type="checkbox"></input>
-      </div>
     </form>
     `
   }
@@ -108,7 +104,7 @@ async function weaponDialog() {
     activeListeners();
   }
   async function shoot(html) {
-    let [shots, weapon, ammo, sil] = getValues(html);
+    let [shots, weapon, ammo] = getValues(html);
     let item_weapon = actor.items.get(weapon);
     let item_ammo = actor.items.get(ammo)
     // Getting the sfx from the selected weapon
@@ -124,6 +120,11 @@ async function weaponDialog() {
         sfx_shot_auto = sfx[2];
         sfx_silenced_auto = sfx[4];
         sfx_empty = sfx[5];
+    }
+    // Setting a boolean depending on whether or not a weapon is silenced
+    let sil = false;
+    if (item_weapon.data.data.additionalStats.silenced && item_weapon.data.data.additionalStats.silenced.value === true) {
+        sil = true;
     }
     // Getting Weapon image
     const weaponIMG = item_weapon.data.img;
@@ -201,7 +202,7 @@ async function weaponDialog() {
     // console.log("Shoot | ", shots, weapon, ammo, sil, item_weapon);
   }
   function reload(html) {
-    let [shots, weapon, ammo, sil] = getValues(html);
+    let [shots, weapon, ammo] = getValues(html);
     // If no ammo left throw an error message.
     if (!ammo){
       return ui.notifications.error("You have no ammo left to reload this weapon.");
@@ -314,7 +315,6 @@ async function weaponDialog() {
       html.find(`#shots`)[0].valueAsNumber,
       html.find(`#weapon`)[0].value,
       html.find(`#ammo`)[0].value,
-      html.find(`#sil`)[0].checked,
     ];
   }
 }
