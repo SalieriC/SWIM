@@ -41,8 +41,12 @@ async function shoot() {
         sfx_silenced_auto = sfx[4];
         sfx_empty = sfx[5];
     }
-    // Getting Weapon image
+    // Getting Weapon and loaded ammo
     const weaponIMG = item_weapon.data.img;
+    let currentAmmo
+    if (item_weapon.data.data.additionalStats.loadedAmmo) {
+    currentAmmo = item_weapon.data.data.additionalStats.loadedAmmo.value;
+    }
 
     // Calculating shots to expend
     const currentCharges = parseInt(item_weapon.data.data.currentShots);
@@ -93,7 +97,7 @@ async function shoot() {
             speaker: {
                 alias: token.name
             },
-            content: `<img src="${weaponIMG}" alt="" width="25" height="25" /><img src="${item_ammo.data.img}" alt="" width="25" height="25" /> ${token.name} fires ${shots} round(s) of ${item_ammo.name} from a ${item_weapon.name} and has ${newCharges} left.`
+            content: `<img src="${weaponIMG}" alt="" width="25" height="25" /><img src="${item_ammo.data.img}" alt="" width="25" height="25" /> ${token.name} fires <b>${shots} ${currentAmmo} round(s)</b> of ${item_ammo.name} from a ${item_weapon.name} and has <b>${newCharges} left</b>.`
         })
         // Play sound effects
         if (sil === true && sfx_silenced) {
