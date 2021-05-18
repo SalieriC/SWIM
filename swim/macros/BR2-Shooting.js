@@ -81,7 +81,7 @@ async function shoot() {
     // Check if enough bullets are in the weapon to fire the given amount of shots if this is not a consumable weapon.
     else if (currentCharges < shots) {
         ui.notifications.error("You have insufficient ammunition.");
-        if (sfx_empty && shots === 0) {
+        if (sfx_empty && currentCharges === 0) {
             AudioHelper.play({ src: `${sfx_empty}` }, true);
         }
         return;
