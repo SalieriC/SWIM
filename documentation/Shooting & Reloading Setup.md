@@ -50,4 +50,4 @@ If you're using [Better Rolls 2 (BR2)](https://foundryvtt.com/packages/betterrol
 For BR2 users there is also a neat integration, allowing you to use the Shooting macro by default when rolling from a weapon.  
 
 # Better Rolls 2 integration  
-If you're using Better Rolls 2, there is a way to fully automate the Shooting part of the macro. Each skill roll from the weapon will then execute the macro, play the sfx (if set up) and use the ammo properly. To set this up you need to set it as a [Global Action](https://github.com/javierriveracastro/betteroll-swade/blob/version_2/GLOBAL_ACTIONS.md) in Better Rolls 2. This is not so difficult as I provide you with everything you need.  
+If you're using Better Rolls 2, there is a way to fully automate the Shooting part of the macro. Each skill roll from the weapon will then execute the macro, play the sfx (if set up) and use the ammo properly. To set this up you need to set it as a "runSkillMacro" [Global Action](https://github.com/javierriveracastro/betteroll-swade/blob/version_2/GLOBAL_ACTIONS.md) in Better Rolls 2. This is not so difficult as I provide you with everything you need.  
