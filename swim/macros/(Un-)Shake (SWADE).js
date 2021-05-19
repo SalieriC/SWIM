@@ -48,8 +48,7 @@ async function main() {
         }
         else {
             if (rollWithEdge <= 3) {
-                chatData += ` and is no longer Shaken but cannot act this turn.`;
-                token.actor.update({ "data.status.isShaken": false });
+                chatData += ` and remains Shaken.`;
                 useBenny();
             } else if (rollWithEdge >= 4) {
                 chatData += `, is no longer Shaken and may act normally.`;
@@ -153,4 +152,4 @@ async function main() {
         }
     }
 }
-/// v.3.3.1 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
+/// v.3.3.2 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
