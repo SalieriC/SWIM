@@ -1,0 +1,9 @@
+{
+    "id": "swade-core-db.SWADE - Macros.6l8C1sPXuTAD2bTf",
+    "name": "SWIM: Ammo usage",
+    "button_name": "SWIM: Ammo usage",
+    "runSkillMacro": "SWIM: Ammo usage",
+    "selector_type": "skill",
+    "selector_value": "shooting",
+    "defaultChecked": "on"
+}
