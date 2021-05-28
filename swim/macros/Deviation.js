@@ -18,6 +18,9 @@ source: https://raw.githubusercontent.com/brunocalado/mestre-digital/master/Foun
 icon: icons/weapons/artillery/cannon-engraved-gold.webp
 */
 
+let coreRules = false;
+if (game.modules.get("swade-core-rules")?.active) {coreRules = true;}
+
 getRequirements();
 
 function getRequirements() {
@@ -70,13 +73,14 @@ function diceRoll(die, range) {
   let direction = new Roll('1d12').roll();
   let roll = new Roll(die).roll();
   let message = `<h2>Deviation</h2>`;
-  if (game.modules.get("swade-core-rules")?.active) {message = `<h2>@Compendium[swade-core-rules.swade-rules.xxEcWExtn36PPxg0]{Deviation}</h2>`;}
+  if (coreRules === true) {message = `<div class="swade-core"><h2>@Compendium[swade-core-rules.swade-rules.xxEcWExtn36PPxg0]{Deviation}</h2>`;}
   message += `<p>Move the blast <b>${roll.total*rangeMultiplier}"</b> to <b style="color:red">${direction.total}</b> O'Clock.</p>`;
   if (directionCheck(direction.total)) {
     message += `<p><b style="color:red">A weapon can never deviate more than half the distance to the original target (that keeps it from going behind the thrower).</b></p>`;
   }
   message += `<p style="text-align:center"><img style="vertical-align:middle; border: none;" src=${chatimage} width="200" height="200"><p>`;
-  
+  if (coreRules === true) {message += `</div>`}
+
   let tempChatData = {
     type: CHAT_MESSAGE_TYPES.ROLL,
     roll: roll,
@@ -106,4 +110,6 @@ function directionCheck(direction) {
   } else {
     return false
   } 
+  // v. 1.0.0 - Original code by brunocalado, modified by SalieriC#8263.
+  // Image source: https://freesvg.org/analogue-clock-vector-graphics
 }

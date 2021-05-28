@@ -44,6 +44,5 @@ new Dialog({
         dialogContent.querySelector(`input[name="name_of_table"`).focus();
         dialogContent.querySelector(`input[name="name_of_table"`).select();
     },
+    // v.2.0.1 Original by Tommycore#2125, v.2 by SalieriC#8263, with a little help from FloRad#2142.
 }).render(true)
-
-// v.2.0.0 Original by Tommycore#2125, v.2 by SalieriC#8263, with a little help from FloRad#2142.

@@ -247,6 +247,5 @@ function main() {
             applyFatigue();
         }
     }
+    // V1.0.2 Code by SalieriC#8263.
 }
-
-// V1.0.1 Code by SalieriC#8263.

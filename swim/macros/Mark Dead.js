@@ -41,6 +41,6 @@ function main() {
   }
   ui.notifications.info("Marked as dead/alive.");
   AudioHelper.play({ src: `${incapSFX}` }, true);
-}
 
-// v.2.0.1
+  // v.2.0.1
+}

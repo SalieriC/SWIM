@@ -1,6 +1,8 @@
 checkWeapon();
 
 async function checkWeapon() {
+    //Don't execute the macro on a reroll by checking if the old_rolls is empty:
+    if (message.data.flags['betterrolls-swade2'].render_data.trait_roll.old_rolls.length >= 1) { return; }
     //Check whether or not the weapon is suitable for the shooting macro
     if (
         (item.type === "weapon" &&
@@ -20,19 +22,38 @@ async function shoot() {
     //let [shots, weapon, ammo, sil] = getValues(html);
     let item_weapon = item;
     //Stop if the item is not a weapon:
-    if (!item_weapon.type === "weapon") { return; }
+    if (item_weapon.type != "weapon") { return; }
     //Get ammo loaded in the weapon and amount of shots provided by BR2 as well as a silenced state:
     let item_ammo;
     if (item_weapon.data.data.additionalStats.loadedAmmo) {
         let loaded_ammo = item_weapon.data.data.additionalStats.loadedAmmo.value;
         item_ammo = actor.items.getName(`${loaded_ammo}`);
     }
-    let shots /*= some code tbd by Javier*/;
+    //Setting the amount of shots based on RoF:
+    let traitDice = message.data.flags['betterrolls-swade2'].render_data.trait_roll.dice;
+    console.log(traitDice);
+    console.log(message.data.flags['betterrolls-swade2'].render_data);
+    let rate_of_fire = traitDice.length;
+    if (actor.data.data.wildcard === true) { rate_of_fire = rate_of_fire - 1; }
+    console.log(rate_of_fire);
+    let shots;
+    if (rate_of_fire === 1) { shots = 1; }
+    if (rate_of_fire === 2) { shots = 5; }
+    if (rate_of_fire === 3) { shots = 10; }
+    if (rate_of_fire === 4) { shots = 20; }
+    if (rate_of_fire === 5) { shots = 40; }
+    if (rate_of_fire === 6) { shots = 50; }
+
     let sil = false;
     if (item_weapon.data.data.additionalStats.silenced && item_weapon.data.data.additionalStats.silenced.value === true) {
         sil = true;
     }
     // Getting the sfx from the weapon provided by BR2:
+    let sfx_shot;
+    let sfx_silenced;
+    let sfx_shot_auto;
+    let sfx_silenced_auto;
+    let sfx_empty;
     if (item_weapon.data.data.additionalStats.sfx) {
         let sfx = item_weapon.data.data.additionalStats.sfx.value.split(`|`);
         sfx_shot = sfx[1];
@@ -45,7 +66,7 @@ async function shoot() {
     const weaponIMG = item_weapon.data.img;
     let currentAmmo
     if (item_weapon.data.data.additionalStats.loadedAmmo) {
-    currentAmmo = item_weapon.data.data.additionalStats.loadedAmmo.value;
+        currentAmmo = item_weapon.data.data.additionalStats.loadedAmmo.value;
     }
 
     // Calculating shots to expend
@@ -69,9 +90,9 @@ async function shoot() {
         // Creating the Chat message
         ChatMessage.create({
             speaker: {
-                alias: token.name
+                alias: actor.name
             },
-            content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${token.name} uses ${shots} ${item_weapon.name}(s) and has ${newQuantity} left.`
+            content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${actor.name} uses ${shots} ${item_weapon.name}(s) and has ${newQuantity} left.`
         })
         // Play sound effects
         if (sfx_shot) {
@@ -93,12 +114,21 @@ async function shoot() {
         // Updating the Weapon
         actor.updateOwnedItem(updates);
         // Creating the Chat message
-        ChatMessage.create({
-            speaker: {
-                alias: token.name
-            },
-            content: `<img src="${weaponIMG}" alt="" width="25" height="25" /><img src="${item_ammo.data.img}" alt="" width="25" height="25" /> ${token.name} fires <b>${shots} ${currentAmmo} round(s)</b> of ${item_ammo.name} from a ${item_weapon.name} and has <b>${newCharges} left</b>.`
-        })
+        if (!currentAmmo) {
+            ChatMessage.create({
+                speaker: {
+                    alias: actor.name
+                },
+                content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${actor.name} fires <b>${shots} round(s)</b> from a ${item_weapon.name} and has <b>${newCharges} left</b>.`
+            })
+        } else {
+            ChatMessage.create({
+                speaker: {
+                    alias: actor.name
+                },
+                content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${actor.name} fires <b>${shots} ${currentAmmo} round(s)</b> from a ${item_weapon.name} and has <b>${newCharges} left</b>.`
+            })
+        }
         // Play sound effects
         if (sil === true && sfx_silenced) {
             if (shots > 4 && sfx_silenced_auto) {
@@ -117,4 +147,5 @@ async function shoot() {
             }
         }
     }
+    //V. 1.0.0 by SalieriC#8263 with help from javierrivera#4813.
 }

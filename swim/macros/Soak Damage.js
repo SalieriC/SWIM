@@ -363,6 +363,5 @@ function main() {
             applyWounds();
         }
     }
+    // V2.5.4 Code by SalieriC#8263. Critical Failure awareness by Kekilla#7036 Testing and bug-chasing: javierrivera#4813.
 }
-
-// V2.5.3 Code by SalieriC#8263. Critical Failure awareness by Kekilla#7036 Testing and bug-chasing: javierrivera#4813.

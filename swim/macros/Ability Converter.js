@@ -43,6 +43,5 @@ new Dialog ({
             callback: (html) => {}
         }
     }
+    // v.2.0.1 by 'Kristian Serrano#5077', dialogue by SalieriC#8263
 }).render(true);
-
-// v.2.0.0 by 'Kristian Serrano#5077', dialogue by SalieriC#8263

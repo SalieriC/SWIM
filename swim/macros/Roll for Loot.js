@@ -24,6 +24,5 @@ new Dialog({
         dialogContent.querySelector(`input[name="amount"`).select();
     },
     default: "one"
+    // v.1.0.1 by SalieriC#8263.
 }).render(true)
-
-// v.1.0.0 by SalieriC#8263.

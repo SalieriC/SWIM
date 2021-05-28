@@ -174,6 +174,5 @@ async function main() {
       AudioHelper.play({ src: `${stunSFX}` }, true);
     }
   }
+  // v.3.2.3 Made by SalieriC#8263 using original Code from Shteff.
 }
-
-// v.3.2.1 Made by SalieriC#8263 using original Code from Shteff.

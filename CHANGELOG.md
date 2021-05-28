@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.1] - 2021-05-DD  
+### You need to update these macros:  
+- All of them.  
+### Fixed  
+- All Macros that became broken due to the Foundry Version 0.7.10
+- Fixed a bug in the Unshake (SWADE) macro that removed Shaken on a Failure.  
+### Added  
+- Reload and Reload (enhanced) macro.  
+- BR2 integration for Shooting action.  
+- Scale calculator macro, thanks @brunocalado.  
+- Deviation macro, thanks @brunocalado.  
+
 ## [0.6.1] - 2021-03-10
 ### You need to update these macros:
 - Spend Benny
@@ -16,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Soak Damage
 ### Fixed
 - Removed the border of images in chat messages.
-- Fixed a breaking bug that caused the module to not work if SWADE Spices & Flavours was not installed (thx @Khitan#9089 for bringing it to my attention).
+- Fixed a breaking bug that caused the module to not work if SWADE Spices & Flavours was not installed (thx @Khitan#9089 for bringing it to my attention). 
 
 ## [0.6.0] - 2021-03-10
 ### You need to update these macros:

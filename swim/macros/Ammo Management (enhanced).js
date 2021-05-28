@@ -112,25 +112,25 @@ async function weaponDialog() {
     let sfx_silenced/* = stuff*/;
     let sfx_shot_auto/* = stuff*/;
     let sfx_silenced_auto/* = stuff*/;
-    let sfx_empty
+    let sfx_empty;
     if (item_weapon.data.data.additionalStats.sfx) {
-        let sfx = item_weapon.data.data.additionalStats.sfx.value.split(`|`);
-        sfx_shot = sfx[1];
-        sfx_silenced = sfx[3];
-        sfx_shot_auto = sfx[2];
-        sfx_silenced_auto = sfx[4];
-        sfx_empty = sfx[5];
+      let sfx = item_weapon.data.data.additionalStats.sfx.value.split(`|`);
+      sfx_shot = sfx[1];
+      sfx_silenced = sfx[3];
+      sfx_shot_auto = sfx[2];
+      sfx_silenced_auto = sfx[4];
+      sfx_empty = sfx[5];
     }
     // Setting a boolean depending on whether or not a weapon is silenced
     let sil = false;
     if (item_weapon.data.data.additionalStats.silenced && item_weapon.data.data.additionalStats.silenced.value === true) {
-        sil = true;
+      sil = true;
     }
     // Getting Weapon and loaded ammo
     const weaponIMG = item_weapon.data.img;
     let currentAmmo
     if (item_weapon.data.data.additionalStats.loadedAmmo) {
-    currentAmmo = item_weapon.data.data.additionalStats.loadedAmmo.value;
+      currentAmmo = item_weapon.data.data.additionalStats.loadedAmmo.value;
     }
 
     // Calculating shots to expend
@@ -178,12 +178,21 @@ async function weaponDialog() {
       // Updating the Weapon
       actor.updateOwnedItem(updates);
       // Creating the Chat message
-      ChatMessage.create({
-        speaker: {
-          alias: token.name
-        },
-        content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${token.name} fires <b>${shots} ${currentAmmo} round(s)</b> from a ${item_weapon.name} and has <b>${newCharges} left</b>.`
-      })
+      if (!currentAmmo) {
+        ChatMessage.create({
+          speaker: {
+            alias: token.name
+          },
+          content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${token.name} fires <b>${shots} round(s)</b> from a ${item_weapon.name} and has <b>${newCharges} left</b>.`
+        })
+      } else {
+        ChatMessage.create({
+          speaker: {
+            alias: token.name
+          },
+          content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${token.name} fires <b>${shots} ${currentAmmo} round(s)</b> from a ${item_weapon.name} and has <b>${newCharges} left</b>.`
+        })
+      }
       // Play sound effects
       if (sil === true && sfx_silenced) {
         if (shots > 4 && sfx_silenced_auto) {
@@ -208,7 +217,7 @@ async function weaponDialog() {
   function reload(html) {
     let [shots, weapon, ammo] = getValues(html);
     // If no ammo left throw an error message.
-    if (!ammo){
+    if (!ammo) {
       return ui.notifications.error("You have no ammo left to reload this weapon.");
     }
     let item_weapon = actor.items.get(weapon);
@@ -234,8 +243,8 @@ async function weaponDialog() {
     // Getting the sfy from the selected weapon
     let sfx_reload/* = stuff*/;
     if (item_weapon.data.data.additionalStats.sfx) {
-        let sfx = item_weapon.data.data.additionalStats.sfx.value.split(`|`);
-        sfx_reload = sfx[0];
+      let sfx = item_weapon.data.data.additionalStats.sfx.value.split(`|`);
+      sfx_reload = sfx[0];
     }
     // Getting images from items
     const weaponIMG = item_weapon.data.img;
@@ -321,8 +330,7 @@ async function weaponDialog() {
       html.find(`#ammo`)[0].value,
     ];
   }
+  // V. 1.0.0 By SalieriC#8263. Dialogue Framework: Kekilla#7036
 }
 
 weaponDialog();
-
-// V.0.0.0 By SalieriC#8263. Dialogue Framework: Kekilla#7036

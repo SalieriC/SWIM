@@ -76,4 +76,9 @@ If you're using [Better Rolls 2 (BR2)](https://foundryvtt.com/packages/betterrol
 For BR2 users there is also a neat integration, allowing you to use the Shooting macro by default when rolling from a weapon.  
 
 # Better Rolls 2 integration  
-If you're using Better Rolls 2, there is a way to fully automate the Shooting part of the macro. Each skill roll from the weapon will then execute the macro, play the sfx (if set up) and use the ammo properly. To set this up you need to set it as a "runSkillMacro" [Global Action](https://github.com/javierriveracastro/betteroll-swade/blob/version_2/GLOBAL_ACTIONS.md) in Better Rolls 2. This is not so difficult as I provide you with everything you need.  
+If you're using Better Rolls 2, there is a way to fully automate the Shooting part of the macro. Each skill roll from the weapon will then execute the macro, play the sfx (if set up) and use the ammo properly. To set this up you need to set it as a "runSkillMacro" [Global Action](https://github.com/javierriveracastro/betteroll-swade/blob/version_2/GLOBAL_ACTIONS.md) in Better Rolls 2. This is not so difficult as you might think:  
+1. Head over to your module settings and click on "World Global actions" in the BR2 settings.  
+2. Click "New action".  
+3. Paste the code from [this file](https://raw.githubusercontent.com/SalieriC/SWADE-Immersive-Macros/main/swim/assets/imports/BR2-shooting-integration.json) into the text box.  
+4. Save.  
+That is all there is to it. Now, whenever a roll is initiated from a weapon card, the macro will execute if it detects circumstances which allow it to execute.  

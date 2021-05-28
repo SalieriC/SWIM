@@ -35,6 +35,5 @@ new Dialog({
             }
         });
     },
+    // v.1.2.1 By SalieriC#8263, with help from Rawny#2166.
 }).render(true);
-
-// v.1.2.0 By SalieriC#8263, with help from Rawny#2166.

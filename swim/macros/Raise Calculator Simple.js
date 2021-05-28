@@ -35,6 +35,5 @@ new Dialog({
   render: ([dialogContent]) => {
     dialogContent.querySelector(`input[name="target"`).focus();
   }
+  // v.1.1.1 By SalieriC#8263, with help from Rawny#2166.
 }).render(true);
-
-// v.1.1.0 By SalieriC#8263, with help from Rawny#2166.

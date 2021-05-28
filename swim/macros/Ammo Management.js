@@ -296,8 +296,7 @@ async function weaponDialog() {
       html.find(`#sil`)[0].checked,
     ];
   }
+  // V. 1.0.0 By SalieriC#8263. Dialogue Framework: Kekilla#7036
 }
 
 weaponDialog();
-
-// V.0.0.0 By SalieriC#8263. Dialogue Framework: Kekilla#7036

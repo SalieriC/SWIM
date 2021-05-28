@@ -48,6 +48,5 @@ async function main() {
         user: game.user._id,
         content: `<p><img style="border: none;" src="${bennyImage}"" width="25" height="25" /> ${game.user.name} spent a Benny for ${token.name}.</p>`,
     });
+    // Code by Spacemandev#6256, idea and fixing the code by SalieriC#8263, Dice So Nice benny roll by javierrivera#4813.
 }
-
-// Code by Spacemandev#6256, idea and fixing the code by SalieriC#8263, Dice So Nice benny roll by javierrivera#4813.

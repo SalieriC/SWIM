@@ -102,6 +102,14 @@ It also supports SFX again. You can configure a path to your desired SFX in the 
 You can also use the Gritty Damage setting rule by adding the name of your Injury Table in the modules config. It must be the *exact* name of your Injury Table, best copy and paste it. **Gritty damage is only used for non-GM accounts.** Gritty damage will not be used when you have not set up an ID. So just leave this setting empty if you don't desire to use it.
 <p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Soaking%20Wounds.jpg?raw=true"> </p>  
 
+### Ammo Management  
+**Immersion setting:** SFX (optional, user provided).  
+**Compatibility:**  
+- [Better Rolls 2 (BR2)](https://foundryvtt.com/packages/betterrolls-swade2)  
+**Description:**  
+A pretty complex macro. The simple one is pretty straight forward and will not be meintained any longer. The Enhanced version has got it's own documentation [here](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/documentation/Shooting%20%26%20Reloading%20Setup.md). Make sure to read it, it is mandatory to do so, otherwise the macro will not work.  
+It comes with optional BR2 integration for the shooting/using ammo part. How the integration works is documented in the above link as well.  
+
 ### Fear Table
 **Requirements:** None.  
 **Immersion setting:** SFX.  
@@ -208,3 +216,13 @@ This converts everything in the folder and all of those on your actors (world on
 **Immersion setting:** None.  
 **Description:**  
 Another utility macro that imports a RollTable from your clipboard. Each line (paragraph) in your clipboard is used as one result for the table. It should not contain any leading numbers (1.; 2); 3:; etc.). You can enter the name for the table and copy your tables contents while the dialogue is still open. The importer can only generate tables with weigh 1 and sets the dice formula to 1dx where x is the amount of results.  
+
+### Deviation  
+**Immersion setting:** None.  
+**Description:**  
+A utility macro made by [Bruno Calado](https://github.com/brunocalado) that calculates Deviation. Will ultimately become part of the Shooting (enhanced) macro. Image source: [freesvg.org](https://freesvg.org/analogue-clock-vector-graphics).  
+
+### Scale Calculator  
+**Immersion setting:** None.  
+**Description:**  
+A utility macro made by [Bruno Calado](https://github.com/brunocalado) that calculates Scale depending on Size and gives the appropriate malus/bonus. Requires a target to function.  

@@ -183,6 +183,5 @@ new Dialog({
         },
     },
     default: "one"
+    // Original by docg#2827; Dialogue and slight enhancement by SalieriC#8263.
 }).render(true)
-
-// Original by docg#2827; Dialogue and slight enhancement by SalieriC#8263.

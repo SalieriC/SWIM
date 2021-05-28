@@ -151,5 +151,5 @@ async function main() {
             AudioHelper.play({ src: `${shakenSFX}` }, true);
         }
     }
+    /// v.3.3.4 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
 }
-/// v.3.3.2 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
