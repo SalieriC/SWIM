@@ -76,17 +76,28 @@ If you're using [Better Rolls 2 (BR2)](https://foundryvtt.com/packages/betterrol
 For BR2 users there is also a neat integration, allowing you to use the Shooting macro by default when rolling from a weapon.  
 
 # Better Rolls 2 integration  
-If you're using Better Rolls 2, there is a way to fully automate the Shooting part of the macro. Each skill roll from the weapon will then execute the macro, play the sfx (if set up) and use the ammo properly. To set this up you need to set it as a "runSkillMacro" [Global Action](https://github.com/javierriveracastro/betteroll-swade/blob/version_2/GLOBAL_ACTIONS.md) in Better Rolls 2. This is not so difficult as you might think:  
-1. Head over to your module settings and click on "World Global actions" in the BR2 settings.  
-2. Click "New action".  
-3. Paste the code from [this file (Shooting)](https://raw.githubusercontent.com/SalieriC/SWADE-Immersive-Macros/main/swim/assets/imports/BR2-shooting-integration.json) into the text box.  
-4. Save.  
-5. Repeat steps 2-4 for the following skills if you wish:  
+If you're using Better Rolls 2, there is a way to fully automate the Shooting part of the macro. Each skill roll from the weapon will then execute the macro, play the sfx (if set up) and use the ammo properly. To set this up you need to set it as a "runSkillMacro" [Global Action](https://github.com/javierriveracastro/betteroll-swade/blob/version_2/GLOBAL_ACTIONS.md) in Better Rolls 2. Before using this though, *make sure to disable the ammo management by BR2* (see above). This is not so difficult as you might think:  
+1. Import the macro `SWIM: Ammo usage` from the compendium into your world.  
+2. Head over to your module settings and click on "World Global actions" in the BR2 settings.  
+3. Click "New action".  
+4. Paste the code from [this file (Shooting)](https://raw.githubusercontent.com/SalieriC/SWADE-Immersive-Macros/main/swim/assets/imports/BR2-shooting-integration.json) into the text box.  
+5. Save.  
+6. Repeat steps 3-5 for the following skills if you wish:  
 - [Fighting](https://raw.githubusercontent.com/SalieriC/SWADE-Immersive-Macros/main/swim/assets/imports/BR2-fighting-integration.json)  
 - [Athletics](https://raw.githubusercontent.com/SalieriC/SWADE-Immersive-Macros/main/swim/assets/imports/BR2-athletics-integration.json)  
 - [Untrained](https://raw.githubusercontent.com/SalieriC/SWADE-Immersive-Macros/main/swim/assets/imports/BR2-untrained-integration.json)  
 
 That is all there is to it. Now, whenever a *Shooting*, *Fighting*, *Athletics* or *Untrained* roll is initiated from a weapon card, the macro will execute and - if it detects circumstances which require it to do its thing - uses the ammo.  If you have no melee weapons which use ammo, don't use the integration for Fighting, it'll cause more harm than good then.
+
+## Disabling the BR2 integrated ammo management button  
+This is a bonus for any overachiever out there. This can't be done manually and requires a little bit of coding.  
+1. Locate your `betterrolls-swade2` folder in your foundry `data/modules` folder.  
+2. Open the `templates` folder and locate the `item_card.html`.  
+3. Open it with a decent text editor. Notepad++ works but any IDE (if you have one) works better.  
+4. Replace `{{# if ammo }}<div class="brws-attribute-buttons">` with `<!--{{# if ammo }}<div class="brws-attribute-buttons">`.  
+6. Replace `</div>{{/if}}` nine lines below with `</div>{{/if}}-->`.  
+
+This will disable the ammo management button from BR2 in the item cards, preventing your players from accidentally using it.  
 
 ## Current problems and limitations  
 Currently the macro just guesses the amount of ammo used based on the amount of trait dice. This is prone to errors of course as it will not get the correct amount of shots used for Burst Fire mode, Double Tap and Fanning the Hammer (Deadlands). In these cases I advice to disable the `SWIM: Ammo usage` action in the BR2 chat card before rolling. This issue will hopefully be resolved soon but depends on Better Rolls 2 as the chat card currently does not include the amount of shots the macro can use for proper calculations.  
