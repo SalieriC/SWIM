@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - BR2 integration for Shooting action.  
 - Scale calculator macro, thanks @brunocalado.  
 - Deviation macro, thanks @brunocalado.  
+- (Un-)Stun now also applies Elan bonus on rerolls if the selected token has that edge.  
 ## VERY IMPORTANT:  
 Most of these macros cannot be used as they are, reading the [ReadMe](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/README.md) is **mandatory**!  
 If you want to use the new Ammo Managemenet, make sure to read the [Documentation on Ammo Management](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/documentation/Ammo%20Management%20Setup.md) as well!  

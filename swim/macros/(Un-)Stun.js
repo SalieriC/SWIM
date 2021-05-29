@@ -25,8 +25,13 @@ async function main() {
     }
   }
 
+  //Checking for Elan
+  const elan = token.actor.data.items.find(function (item) {
+    return item.name.toLowerCase() === "elan" && item.type === "edge";
+  });
   let bennies;
   let bv;
+  let elanBonus;
 
   async function rollUnstun() {
 
@@ -42,6 +47,12 @@ async function main() {
     for (let edge of edges) {
       rollWithEdge += 2;
       edgeText += `<br/><i>+ ${edge.name}</i>`;
+    }
+
+    // Apply +2 if Elan is present and if it is a reroll.
+    if (typeof elanBonus === "number") {
+      rollWithEdge += 2;
+      edgeText = edgeText + `<br/><i>+ Elan</i>.`;
     }
 
     let chatData = `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge} </span>`;
@@ -64,7 +75,7 @@ async function main() {
         token.actor.update({ "data.status.isVulnerable": false });
         if (token.data.effects.includes(`${proneIconPath}`)) {
           token.toggleEffect(`${proneIconPath}`)
-        };
+        }
       } else {
         chatData += ` and remains Stunned.`;
         useBenny();
@@ -101,6 +112,9 @@ async function main() {
             label: "Yes.",
             callback: (html) => {
               spendBenny();
+              if (!!elan) {
+                elanBonus = 2;
+              }
               rollUnstun();
             }
           },
@@ -174,5 +188,5 @@ async function main() {
       AudioHelper.play({ src: `${stunSFX}` }, true);
     }
   }
-  // v.3.2.3 Made by SalieriC#8263 using original Code from Shteff.
+  // v.3.3.0 Made by SalieriC#8263 using original Code from Shteff.
 }
