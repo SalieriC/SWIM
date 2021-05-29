@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.6.1] - 2021-05-DD  
+## [0.7.0] - 2021-05-29  
 ### You need to update these macros:  
 - All of them.  
 ### Fixed  
@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - BR2 integration for Shooting action.  
 - Scale calculator macro, thanks @brunocalado.  
 - Deviation macro, thanks @brunocalado.  
+## VERY IMPORTANT:  
+Most of these macros cannot be used as they are, reading the [ReadMe](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/README.md) is **mandatory**!  
+If you want to use the new Ammo Managemenet, make sure to read the [Documentation on Ammo Management](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/documentation/Ammo%20Management%20Setup.md) as well!  
+I can't stress enough how important it is to do so. *Do not blame me, if something goes sideways if you haven't read and followed the steps outlined there!*  
 
 ## [0.6.1] - 2021-03-10
 ### You need to update these macros:
