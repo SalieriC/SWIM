@@ -16,7 +16,7 @@ In order to use one of these macros, you first need to do some initial setup. Th
 - - Remaining `Shots` on weapons are lost upon reloading with a `Charge Pack`.  
 - Support for `Consumable Weapons` (i.e. throwing knives, grenades, Spears, etc.).  
 - - The Macro will ignore current and maximum `Shots` on `Consumable Weapons` and instead uses their `Quantity` as a measurement of how many are left.  
-- - Using the last `Consumable Weapon` will delete the item from the inventory.  
+- - Using the last `Consumable Weapon` will delete the item from the inventory. (Disabled in BR2 integration because that breaks rerolls.)  
 - Extensive support for Sound Effects (sfx), the following sfx can be configured:  
 - - Reload sfx.  
 - - Shooting/using sfx.  

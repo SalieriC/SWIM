@@ -12,8 +12,9 @@ async function checkWeapon() {
         (item.type === "weapon" &&
             //i.data.data.range !== "0" && i.data.data.range !== "" &&
             item.data.data.additionalStats.isConsumable &&
-            item.data.data.additionalStats.isConsumable.value === true &&
-            item.data.data.quantity > 0)
+            item.data.data.additionalStats.isConsumable.value === true /*&&
+            //Ignore quantity to get a notification below for BR2 integration.
+            item.data.data.quantity > 0*/)
     ) { shoot(); }
     else { return; }
 }
@@ -83,10 +84,10 @@ async function shoot() {
         ];
         // Updating the consumable weapon
         await actor.updateOwnedItem(updates);
-        // Deleting the consumable weapon if it was the last
-        if (newQuantity <= 0) {
+        // Deleting the consumable weapon if it was the last (disabled because it breaks rerolls in BR2)
+        /*if (newQuantity <= 0) {
             item_weapon.delete();
-        }
+        }*/
         // Creating the Chat message
         ChatMessage.create({
             speaker: {
