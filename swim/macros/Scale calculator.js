@@ -1,4 +1,3 @@
-const version = 'v1.4';
 const chatimage = "icons/tools/hand/scale-balances-merchant-brown.webp";
 
 /* Size Scale p106 SWADE
