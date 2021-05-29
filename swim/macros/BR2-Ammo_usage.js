@@ -31,11 +31,11 @@ async function shoot() {
     }
     //Setting the amount of shots based on RoF:
     let traitDice = message.data.flags['betterrolls-swade2'].render_data.trait_roll.dice;
-    console.log(traitDice);
-    console.log(message.data.flags['betterrolls-swade2'].render_data);
+    //console.log(traitDice);
+    //console.log(message.data.flags['betterrolls-swade2'].render_data);
     let rate_of_fire = traitDice.length;
     if (actor.data.data.wildcard === true) { rate_of_fire = rate_of_fire - 1; }
-    console.log(rate_of_fire);
+    //console.log(rate_of_fire);
     let shots;
     if (rate_of_fire === 1) { shots = 1; }
     if (rate_of_fire === 2) { shots = 5; }

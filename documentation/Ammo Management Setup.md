@@ -79,6 +79,21 @@ For BR2 users there is also a neat integration, allowing you to use the Shooting
 If you're using Better Rolls 2, there is a way to fully automate the Shooting part of the macro. Each skill roll from the weapon will then execute the macro, play the sfx (if set up) and use the ammo properly. To set this up you need to set it as a "runSkillMacro" [Global Action](https://github.com/javierriveracastro/betteroll-swade/blob/version_2/GLOBAL_ACTIONS.md) in Better Rolls 2. This is not so difficult as you might think:  
 1. Head over to your module settings and click on "World Global actions" in the BR2 settings.  
 2. Click "New action".  
-3. Paste the code from [this file](https://raw.githubusercontent.com/SalieriC/SWADE-Immersive-Macros/main/swim/assets/imports/BR2-shooting-integration.json) into the text box.  
+3. Paste the code from [this file (Shooting)](https://raw.githubusercontent.com/SalieriC/SWADE-Immersive-Macros/main/swim/assets/imports/BR2-shooting-integration.json) into the text box.  
 4. Save.  
-That is all there is to it. Now, whenever a roll is initiated from a weapon card, the macro will execute if it detects circumstances which allow it to execute.  
+5. Repeat steps 2-4 for the following skills if you wish:  
+- [Fighting](https://raw.githubusercontent.com/SalieriC/SWADE-Immersive-Macros/main/swim/assets/imports/BR2-fighting-integration.json)  
+- [Athletics](https://raw.githubusercontent.com/SalieriC/SWADE-Immersive-Macros/main/swim/assets/imports/BR2-athletics-integration.json)  
+- [Untrained](https://raw.githubusercontent.com/SalieriC/SWADE-Immersive-Macros/main/swim/assets/imports/BR2-untrained-integration.json)  
+
+That is all there is to it. Now, whenever a *Shooting*, *Fighting*, *Athletics* or *Untrained* roll is initiated from a weapon card, the macro will execute and - if it detects circumstances which require it to do its thing - uses the ammo.  If you have no melee weapons which use ammo, don't use the integration for Fighting, it'll cause more harm than good then.
+
+## Current problems and limitations  
+Currently the macro just guesses the amount of ammo used based on the amount of trait dice. This is prone to errors of course as it will not get the correct amount of shots used for Burst Fire mode, Double Tap and Fanning the Hammer (Deadlands). In these cases I advice to disable the `SWIM: Ammo usage` action in the BR2 chat card before rolling. This issue will hopefully be resolved soon but depends on Better Rolls 2 as the chat card currently does not include the amount of shots the macro can use for proper calculations.  
+
+Due to current limitations the BR2 integration can also not yet detect wether or not a melee weapon was thrown. This means the macro will fire off all the time if a melee weapon is marked as a consumable weapon but used in melee combat. There are three workarounds, from best to worst:  
+1. Instruct your players to disable the `SWIM: Ammo usage` action in the BR2 chat card before rolling on these specific weapons.  
+2. Set up extra variants of these weapons for thrown purposes.  
+3. Don't use the BR2 integration for Fighting and Athletics (not so great).  
+
+I hope that this issue will be resolved as well once the BR2 chat card includes the amount of ammo used but I'm not sure. I do work on another solution but it seems out of reach anytime soon as well.  
