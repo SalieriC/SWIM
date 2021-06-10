@@ -33,7 +33,7 @@ If you don't know about additional stats, you can read about them [here](https:/
 
 ## Setup of Additional Stats  
 Head to the System Settings, click on the "Open Setting Configurator button and scroll down. You can create additional stats for items there. The screenshot below shows the stats you need to create. The "Stat Key", "Data Type" and "Has Max Value" must be set up exactly like in the Screenshot. Only the "Label" may be different.  
-  
+<p align="center"> <img src="https://raw.githubusercontent.com/SalieriC/SWADE-Immersive-Macros/main/img/BR2_integration/shooting_additional-stats.jpg"> </p>  
 Don't forget to save when you're done.  
 ## Explanation  
 Here is an explanation on what each of these do. Read it carefully as it will tell you on which items these need to be set up.  
