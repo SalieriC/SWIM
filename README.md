@@ -111,6 +111,7 @@ A pretty complex macro. The simple one is pretty straight forward and will not b
 It comes with optional BR2 integration for the shooting/using ammo part. How the integration works is documented in the above link as well.  
 **Wait, where do I get weapon sound effects?**  
 I can't include that many sfx right now. It is rather difficult to find good weapon sounds which I am allowed to include and I don't have the funds to buy them for this module. I'm not gonna recommend any particular way on how to get adequate sound effects, figuring that out is on you. Just know that there are many resources you should be able to use out there. As a general lead: Look for PC game modifications which alter the weapon sounds in that specific game. You may not be allowed to use the sfx from the game directly (depends on the game of course), but those from mods are usually not a problem but check that before you do take them. I cannot be held responsible for any breach of contract or copyright you commit it is on you to check whether or not you're allowed to use the sfx you find.  
+You may also want to take a look at [SoundFx Library](https://foundryvtt.com/packages/soundfxlibrary) by Cris. It comes with a few bow sounds which may be sufficient for your standard medieval fantasy settings.  
 
 ### Fear Table
 **Requirements:** None.  
