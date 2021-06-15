@@ -100,8 +100,51 @@ async function shoot() {
             AudioHelper.play({ src: `${sfx_shot}` }, true);
         }
     }
-    // Check if enough bullets are in the weapon to fire the given amount of shots if this is not a consumable weapon.
-    else if (currentCharges < shots) {
+    //Stuff for weapons with "doesn't require reload action" checked:
+    else if (item_weapon.data.data.autoReload === true) {
+        //Throw error if no ammo is left.
+        if (item_ammo && item_ammo.data.data.quantity <= 0) { return ui.notifications.error(`You don't have a ${item_weapon.name} left.`); }
+        //Failsafe in case no ammo is provided.
+        else if (!item_ammo) { return ui.notifications.error(`Please define your desired Ammo in "Loaded Ammo" first.`); }
+        else {
+            //Setting new constants to overwrite the old ones
+            const currentCharges = parseInt(item_ammo.data.data.quantity);
+            const newCharges = currentCharges - shots;
+            //Setting up the updates
+            const updates = [
+                { _id: item_ammo.id, "data.quantity": `${newCharges}` },
+            ];
+            // Updating the Weapon
+            actor.updateOwnedItem(updates);
+            //Creating the chat message
+            ChatMessage.create({
+                speaker: {
+                    alias: actor.name
+                },
+                content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${actor.name} fires <b>${shots} ${currentAmmo} round(s)</b> from a ${item_weapon.name} and has <b>${newCharges} left</b>.`
+            })
+            //Playing the SFX
+            // Play sound effects
+            if (sil === true && sfx_silenced) {
+                if (shots > 4 && sfx_silenced_auto) {
+                    AudioHelper.play({ src: `${sfx_silenced_auto}` }, true);
+                }
+                else {
+                    AudioHelper.play({ src: `${sfx_silenced}` }, true);
+                }
+            }
+            else {
+                if (shots > 4 && sfx_shot_auto) {
+                    AudioHelper.play({ src: `${sfx_shot_auto}` }, true);
+                }
+                else {
+                    AudioHelper.play({ src: `${sfx_shot}` }, true);
+                }
+            }
+        }
+    }
+    // Check if enough bullets are in the weapon to fire the given amount of shots if this is not a consumable weapon and does require loading action.
+    else if (currentCharges < shots && item_weapon.data.data.autoReload === false) {
         ui.notifications.error("You have insufficient ammunition.");
         if (sfx_empty && currentCharges === 0) {
             AudioHelper.play({ src: `${sfx_empty}` }, true);
@@ -148,5 +191,5 @@ async function shoot() {
             }
         }
     }
-    //V. 1.0.0 by SalieriC#8263 with help from javierrivera#4813.
+    //V. 2.0.0 by SalieriC#8263 with help from javierrivera#4813.
 }

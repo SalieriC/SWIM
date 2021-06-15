@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - Unreleased  
+### You need to update these macros:  
+- (Un-)Stun  
+- Ammo Management (enhanced)  
+- SWIM: Ammo Management  
+### Added  
+- Ammo Management now supports Weapons that do not require a reload action (i.e. bows).  
+- Ammo Management now offers a way to only reload a single bullet instead of reloading the entire weapon. This is especially useful for revolvers and such.  
+
 ## [0.7.0] - 2021-05-29  
 ### You need to update these macros:  
 - All of them.  

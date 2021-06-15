@@ -11,9 +11,17 @@ In order to use one of these macros, you first need to do some initial setup. Th
 - - Supports reloading the weapon with another kind of ammo at will (will give back the remaining ammo in the weapon).  
 - - Ammo must be set up as a `gear` type item.
 - - Using the last amount of the ammo item will **not** delete the item from the inventory because one might want to swap ammo later.  
+- - Offers a way to only load a single bullet instead of the entire weapon (i.e. for revolvers).  
+- Supports weapons that do not require a reload action (i.e. bows).  
+- - Such weapons must be marked (system offers this by default).
+- - Such weapon *must not* have Shots of anything other than `0`. So put `0` in both Shots fields on the weapon.  
+- - Such weapons use the ammo from the inventory instead of the one on the weapon.  
+- - The Ammo Management (enhanced) macro will always use the ammo given in the selection of the dialogue.  
+- - Since BR2 does not open the dialogue, the BR2 integration *requires* the user to set up the `Loaded Ammo` additional stat (see below). The macro will then always use the ammo which is present in this field. For changing ammo just use the reload option of the Ammo Management (enhanced) macro and it'll set up the chosen ammo in that field without doing anything else.  
 - Support for `Charge Packs` (i.e. batteries, gas tanks, ghost rock etc.):  
 - - One `Charge Pack` will reload all current `Shots` in a weapon.  
 - - Remaining `Shots` on weapons are lost upon reloading with a `Charge Pack`.  
+- - `Charge Pack` ammo will always overwrite the single bullet reload (see above) as they are intended to always reload the entire *magazine*.  
 - Support for `Consumable Weapons` (i.e. throwing knives, grenades, Spears, etc.).  
 - - The Macro will ignore current and maximum `Shots` on `Consumable Weapons` and instead uses their `Quantity` as a measurement of how many are left.  
 - - Using the last `Consumable Weapon` will delete the item from the inventory. (Disabled in BR2 integration because that breaks rerolls.)  

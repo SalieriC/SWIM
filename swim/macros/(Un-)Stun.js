@@ -1,4 +1,3 @@
-//!DOESN'T REROLL ON BENNY; USES UNSHAKE CODE INSTEAD!
 main();
 
 async function main() {

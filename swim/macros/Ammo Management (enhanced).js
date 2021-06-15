@@ -80,6 +80,10 @@ async function weaponDialog() {
         <label for="ammo">Ammo: </label>
         <select id="ammo">${ammo.reduce((acc, val) => acc += `<option value="${val}">${val}</option>`, ``)}</select>
       </div>
+      <div class="form-group">
+        <label for="singleReload">Can only reload one at a time: </label>
+        <input id="singleReload" name="Single Reload" type="checkbox"></input>
+      </div>
     </form>
     `
   }
@@ -106,7 +110,7 @@ async function weaponDialog() {
   async function shoot(html) {
     let [shots, weapon, ammo] = getValues(html);
     let item_weapon = actor.items.get(weapon);
-    let item_ammo = actor.items.get(ammo)
+    let item_ammo = actor.items.getName(`${ammo}`);
     // Getting the sfx from the selected weapon
     let sfx_shot/* = stuff*/;
     let sfx_silenced/* = stuff*/;
@@ -163,8 +167,50 @@ async function weaponDialog() {
         AudioHelper.play({ src: `${sfx_shot}` }, true);
       }
     }
-    // Check if enough bullets are in the weapon to fire the given amount of shots if this is not a consumable weapon.
-    else if (currentCharges < shots) {
+    //Stuff for weapons with "doesn't require reload action" checked:
+    else if (item_weapon.data.data.autoReload === true) {
+      //Throw error if no ammo is left.
+      console.log(item_ammo);
+      if (item_ammo.data.data.quantity <= 0) { return ui.notifications.error(`You don't have a ${item_ammo.name} left.`); }
+      else {
+        //Setting new constants to overwrite the old ones
+        const currentCharges = parseInt(item_ammo.data.data.quantity);
+        const newCharges = currentCharges - shots;
+        //Setting up the updates
+        const updates = [
+          { _id: item_ammo.id, "data.quantity": `${newCharges}` },
+        ];
+        // Updating the Weapon
+        actor.updateOwnedItem(updates);
+        //Creating the chat message
+        ChatMessage.create({
+          speaker: {
+            alias: actor.name
+          },
+          content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${actor.name} fires <b>${shots} ${currentAmmo} round(s)</b> from a ${item_weapon.name} and has <b>${newCharges} left</b>.`
+        })
+        //Playing the SFX
+        // Play sound effects
+        if (sil === true && sfx_silenced) {
+          if (shots > 4 && sfx_silenced_auto) {
+            AudioHelper.play({ src: `${sfx_silenced_auto}` }, true);
+          }
+          else {
+            AudioHelper.play({ src: `${sfx_silenced}` }, true);
+          }
+        }
+        else {
+          if (shots > 4 && sfx_shot_auto) {
+            AudioHelper.play({ src: `${sfx_shot_auto}` }, true);
+          }
+          else {
+            AudioHelper.play({ src: `${sfx_shot}` }, true);
+          }
+        }
+      }
+    }
+    // Check if enough bullets are in the weapon to fire the given amount of shots if this is not a consumable weapon and does require loading action.
+    else if (currentCharges < shots && item_weapon.data.data.autoReload === false) {
       ui.notifications.error("You have insufficient ammunition.")
       if (sfx_empty && currentCharges === 0) {
         AudioHelper.play({ src: `${sfx_empty}` }, true);
@@ -215,7 +261,7 @@ async function weaponDialog() {
     // console.log("Shoot | ", shots, weapon, ammo, sil, item_weapon);
   }
   function reload(html) {
-    let [shots, weapon, ammo] = getValues(html);
+    let [shots, weapon, ammo, singleReload] = getValues(html);
     // If no ammo left throw an error message.
     if (!ammo) {
       return ui.notifications.error("You have no ammo left to reload this weapon.");
@@ -240,7 +286,7 @@ async function weaponDialog() {
     if (item_oldAmmo != item_ammo) {
       chgType = true;
     }
-    // Getting the sfy from the selected weapon
+    // Getting the sfx from the selected weapon
     let sfx_reload/* = stuff*/;
     if (item_weapon.data.data.additionalStats.sfx) {
       let sfx = item_weapon.data.data.additionalStats.sfx.value.split(`|`);
@@ -271,6 +317,8 @@ async function weaponDialog() {
     else if (chgType === true) {
       // When changing Ammo type, remaining shots should not become the new Ammo Type.
       amountToRecharge = parseInt(item_weapon.data.data.shots);
+      //Change the amount to recharge to 1 if singleReload is checked.
+      if (singleReload === true) { amountToRecharge = 1; }
       newCharges = amountToRecharge;
       newAmmo = availableAmmo - amountToRecharge;
       oldAmmoRefill = oldAmmoQuantity + currentCharges;
@@ -278,6 +326,8 @@ async function weaponDialog() {
     else {
       // If the quantity of ammo is less than the amount required, use whatever is left.
       amountToRecharge = Math.min(availableAmmo, requiredCharges);
+      //Change the amount to recharge to 1 if singleReload is checked.
+      if (singleReload === true) { amountToRecharge = 1; }
       newCharges = currentCharges + amountToRecharge;
       newAmmo = availableAmmo - amountToRecharge;
     }
@@ -328,9 +378,10 @@ async function weaponDialog() {
       html.find(`#shots`)[0].valueAsNumber,
       html.find(`#weapon`)[0].value,
       html.find(`#ammo`)[0].value,
+      html.find(`#singleReload`)[0].checked,
     ];
   }
-  // V. 1.0.0 By SalieriC#8263. Dialogue Framework: Kekilla#7036
+  // V. 2.0.0 By SalieriC#8263. Dialogue Framework: Kekilla#7036
 }
 
 weaponDialog();
