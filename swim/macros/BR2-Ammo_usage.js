@@ -74,6 +74,13 @@ async function shoot() {
     const currentCharges = parseInt(item_weapon.data.data.currentShots);
     const newCharges = currentCharges - shots;
     if (item_weapon.data.data.additionalStats.isConsumable && item_weapon.data.data.additionalStats.isConsumable.value === true) {
+        //Get Skill from BR2. This returns as "Skill dx" so we need to filter that later...
+        let usedSkill = message.data.flags['betterrolls-swade2'].render_data.skill_title;
+        //We assume that all consumable weapons use "Athletics", "Athletics (Throwing)", "Athletics (Explosives)" or "Throwing" and only proceed if one of these skills was used. This is where we filter with .includes().
+        if (usedSkill.includes("Athletics") === false &&
+        usedSkill.includes("Athletics (Throwing)") === false &&
+        usedSkill.includes("Athletics (Explosives)") === false &&
+        usedSkill.includes("Throwing") === false) { return; }
         const currentQuantity = parseInt(item_weapon.data.data.quantity);
         if (currentQuantity <= 0) {
             return ui.notifications.error(`You don't have a ${item_weapon.name} left.`);
@@ -191,5 +198,5 @@ async function shoot() {
             }
         }
     }
-    //V. 2.0.0 by SalieriC#8263 with help from javierrivera#4813.
+    //V. 2.1.0 by SalieriC#8263 with help from javierrivera#4813.
 }
