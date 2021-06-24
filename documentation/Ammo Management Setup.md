@@ -24,7 +24,8 @@ In order to use one of these macros, you first need to do some initial setup. Th
 - - `Charge Pack` ammo will always overwrite the single bullet reload (see above) as they are intended to always reload the entire *magazine*.  
 - Support for `Consumable Weapons` (i.e. throwing knives, grenades, Spears, etc.).  
 - - The Macro will ignore current and maximum `Shots` on `Consumable Weapons` and instead uses their `Quantity` as a measurement of how many are left.  
-- - Using the last `Consumable Weapon` will delete the item from the inventory. (Disabled in BR2 integration because that breaks rerolls.)  
+- - Using the last `Consumable Weapon` will delete the item from the inventory. (Disabled in BR2 integration because that breaks rerolls.) 
+- - BR2 integration only: Also supports weapons which can be thrown but don't need to. Currently it checks for "Athletics", "Athletics (Throwing)", "Athletics (Explosives)" and  "Throwing" and assumes that consumable weapons always use either. If a consumable weapon does not use any of these skills, the macro stops. If an action is used in BR2 that initiates a roll with one of these skills, the macro continues as usual. 
 - Extensive support for Sound Effects (sfx), the following sfx can be configured:  
 - - Reload sfx.  
 - - Shooting/using sfx.  
