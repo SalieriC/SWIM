@@ -116,4 +116,4 @@ Due to current limitations the BR2 integration can also not yet detect wether or
 2. Set up extra variants of these weapons for thrown purposes.  
 3. Don't use the BR2 integration for Fighting and Athletics (not so great).  
 
-I hope that this issue will be resolved as well once the BR2 chat card includes the amount of ammo used but I'm not sure. I do work on another solution but it seems out of reach anytime soon as well. The [development version](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/swim/macros/BR2-Ammo_usage.js) of the macro already supports a workaround for this by filtering for the used skill. But that only works in english.  
+I hope that this issue will be resolved as well once the BR2 chat card includes the amount of ammo used but I'm not sure. I do work on another solution but it seems out of reach anytime soon as well. The [development version](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/swim/macros/BR2-Ammo_usage.js) of the macro already supports a workaround for this by filtering for the used skill.  
