@@ -25,7 +25,7 @@ In order to use one of these macros, you first need to do some initial setup. Th
 - Support for `Consumable Weapons` (i.e. throwing knives, grenades, Spears, etc.).  
 - - The Macro will ignore current and maximum `Shots` on `Consumable Weapons` and instead uses their `Quantity` as a measurement of how many are left.  
 - - Using the last `Consumable Weapon` will delete the item from the inventory. (Disabled in BR2 integration because that breaks rerolls.) 
-- - BR2 integration only: Also supports weapons which can be thrown but don't need to. Currently it checks for "Athletics", "Athletics (Throwing)", "Athletics (Explosives)" and  "Throwing" and assumes that consumable weapons always use either. If a consumable weapon does not use any of these skills, the macro stops. If an action is used in BR2 that initiates a roll with one of these skills, the macro continues as usual. 
+- - BR2 integration only: Also supports weapons which can be thrown but don't need to. Currently it checks for "Athletics", "Athletics (Throwing)", "Athletics (Explosives)" and  "Throwing" and assumes that consumable weapons always use either. If a consumable weapon does not use any of these skills, the macro stops. If an action is used in BR2 that initiates a roll with one of these skills, the macro continues as usual. This currently only works in the [development version](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/swim/macros/BR2-Ammo_usage.js) of the macro.  
 - Extensive support for Sound Effects (sfx), the following sfx can be configured:  
 - - Reload sfx.  
 - - Shooting/using sfx.  
@@ -116,4 +116,4 @@ Due to current limitations the BR2 integration can also not yet detect wether or
 2. Set up extra variants of these weapons for thrown purposes.  
 3. Don't use the BR2 integration for Fighting and Athletics (not so great).  
 
-I hope that this issue will be resolved as well once the BR2 chat card includes the amount of ammo used but I'm not sure. I do work on another solution but it seems out of reach anytime soon as well.  
+I hope that this issue will be resolved as well once the BR2 chat card includes the amount of ammo used but I'm not sure. I do work on another solution but it seems out of reach anytime soon as well. The [development version](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/swim/macros/BR2-Ammo_usage.js) of the macro already supports a workaround for this by filtering for the used skill. But that only works in english.  
