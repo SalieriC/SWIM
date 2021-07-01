@@ -12,8 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ammo Management (enhanced)  
 - SWIM: Ammo Management  
 ### Added  
-- Ammo Management now supports Weapons that do not require a reload action (i.e. bows).  
-- Ammo Management now offers a way to only reload a single bullet instead of reloading the entire weapon. This is especially useful for revolvers and such.  
+- Ammo Management: Now supports Weapons that do not require a reload action (i.e. bows).  
+- Ammo Management: Now offers a way to only reload a single bullet instead of reloading the entire weapon. This is especially useful for revolvers and such.  
+- Ammo Management: Charge Packs can now change the ammo type but old Charge Packs are only refilled if the weapons current shots are equal the maximum shots as there is no way to track remaining charges on a Charge Pack.
+- Ammo Management (BR2 integration only): Now supports weapons which *may* be thrown but don't need to. It filters for a set of Skills and only applies ammo usage if such skills are found. See the [documentation on Ammo Management](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/documentation/Ammo%20Management%20Setup.md) for further details.
 
 ## [0.7.0] - 2021-05-29  
 ### You need to update these macros:  
@@ -42,7 +44,7 @@ I can't stress enough how important it is to do so. *Do not blame me, if somethi
 - Soak Damage
 ### Fixed
 - Removed the border of images in chat messages.
-- Fixed a breaking bug that caused the module to not work if SWADE Spices & Flavours was not installed (thx @Khitan#9089 for bringing it to my attention). 
+- Fixed a breaking bug that caused the module to not work if SWADE Spices & Flavours was not installed (thx @Khitan#9089 for bringing it to my attention).
 
 ## [0.6.0] - 2021-03-10
 ### You need to update these macros:
