@@ -298,6 +298,7 @@ async function weaponDialog() {
 
     // Getting current numbers
     const currentCharges = parseInt(item_weapon.data.data.currentShots);
+    const maxCharges = parseInt(item_weapon.data.data.shots);
     const requiredCharges = parseInt(item_weapon.data.data.shots - currentCharges);
     const availableAmmo = parseInt(item_ammo.data.data.quantity);
     const oldAmmoQuantity = parseInt(item_oldAmmo.data.data.quantity);
@@ -306,14 +307,21 @@ async function weaponDialog() {
     let newCharges;
     let newAmmo;
     let oldAmmoRefill;
-    // Checking if the Ammo is a charge pack. If not or additionalStat is not present ignore it. Charge Packs cannot refill so refill chgType is ignored.
+    // Checking if the Ammo is a charge pack. If not or additionalStat is not present ignore it. Charge Packs can only refill if curr and max shots are equal.
     if (item_ammo.data.data.additionalStats.isPack && item_ammo.data.data.additionalStats.isPack.value === true) {
       // Charge Packs only use 1 Quantity to fully charge the weapon
       amountToRecharge = parseInt(item_weapon.data.data.shots);
       newCharges = amountToRecharge;
       newAmmo = availableAmmo - 1;
+      //Refill old Charge Pack if it is still full (current and max shots are equal)
+      if (chgType === true && currentCharges === maxCharges) {
+        oldAmmoRefill = oldAmmoQuantity + 1;
+      }
+      else if (chgType === true && currentCharges != maxCharges) {
+        oldAmmoRefill = oldAmmoQuantity;
+      }
     }
-    // Checking if user selected to change the ammo type. Charge Packs cannot refill so refill from chgType is ignored.
+    // Checking if user selected to change the ammo type. This is only relevant if not a Charge Pack, if it is, it's already handled above.
     else if (chgType === true) {
       // When changing Ammo type, remaining shots should not become the new Ammo Type.
       amountToRecharge = parseInt(item_weapon.data.data.shots);
@@ -381,7 +389,7 @@ async function weaponDialog() {
       html.find(`#singleReload`)[0].checked,
     ];
   }
-  // V. 2.0.0 By SalieriC#8263. Dialogue Framework: Kekilla#7036
+  // V. 2.1.0 By SalieriC#8263. Dialogue Framework: Kekilla#7036
 }
 
 weaponDialog();
