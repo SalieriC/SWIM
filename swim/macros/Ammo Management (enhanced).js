@@ -3,6 +3,12 @@
 
 let dialogID = "";
 
+async function wait(ms) {
+    return new Promise(resolve => {
+        setTimeout(resolve, ms);
+    });
+}
+
 async function weaponDialog() {
   if (!token) return ui.notifications.error("Please select a token first");
 
@@ -111,6 +117,9 @@ async function weaponDialog() {
     let [shots, weapon, ammo] = getValues(html);
     let item_weapon = actor.items.get(weapon);
     let item_ammo = actor.items.getName(`${ammo}`);
+    // Getting sfxDelay from game settings
+    let sfxDelay = game.settings.get(
+        'swim', 'sfxDelay');
     // Getting the sfx from the selected weapon
     let sfx_shot/* = stuff*/;
     let sfx_silenced/* = stuff*/;
@@ -192,7 +201,20 @@ async function weaponDialog() {
         //Playing the SFX
         // Play sound effects
         if (sil === true && sfx_silenced) {
-          if (shots > 4 && sfx_silenced_auto) {
+          if (shots === 2) {
+            AudioHelper.play({ src: `${sfx_silenced}` }, true);
+            await wait(`${sfxDelay}`);
+            AudioHelper.play({ src: `${sfx_silenced}` }, true);
+          }
+          else if (shots === 3) {
+            //console.log("I AM HERE!");
+            AudioHelper.play({ src: `${sfx_silenced}` }, true);
+            await wait(`${sfxDelay}`);
+            AudioHelper.play({ src: `${sfx_silenced}` }, true);
+            await wait(`${sfxDelay}`);
+            AudioHelper.play({ src: `${sfx_silenced}` }, true);
+          }
+          else if (shots > 3 && sfx_silenced_auto) {
             AudioHelper.play({ src: `${sfx_silenced_auto}` }, true);
           }
           else {
@@ -200,7 +222,20 @@ async function weaponDialog() {
           }
         }
         else {
-          if (shots > 4 && sfx_shot_auto) {
+          if (shots === 2) {
+            AudioHelper.play({ src: `${sfx_shot}` }, true);
+            await wait(`${sfxDelay}`);
+            AudioHelper.play({ src: `${sfx_shot}` }, true);
+          }
+          else if (shots === 3) {
+            //console.log("I AM HERE!");
+            AudioHelper.play({ src: `${sfx_shot}` }, true);
+            await wait(`${sfxDelay}`);
+            AudioHelper.play({ src: `${sfx_shot}` }, true);
+            await wait(`${sfxDelay}`);
+            AudioHelper.play({ src: `${sfx_shot}` }, true);
+          }
+          else if (shots > 3 && sfx_shot_auto) {
             AudioHelper.play({ src: `${sfx_shot_auto}` }, true);
           }
           else {
@@ -241,7 +276,20 @@ async function weaponDialog() {
       }
       // Play sound effects
       if (sil === true && sfx_silenced) {
-        if (shots > 4 && sfx_silenced_auto) {
+        if (shots === 2) {
+          AudioHelper.play({ src: `${sfx_silenced}` }, true);
+          await wait(`${sfxDelay}`);
+          AudioHelper.play({ src: `${sfx_silenced}` }, true);
+        }
+        else if (shots === 3) {
+          //console.log("I AM HERE!");
+          AudioHelper.play({ src: `${sfx_silenced}` }, true);
+          await wait(`${sfxDelay}`);
+          AudioHelper.play({ src: `${sfx_silenced}` }, true);
+          await wait(`${sfxDelay}`);
+          AudioHelper.play({ src: `${sfx_silenced}` }, true);
+        }
+        else if (shots > 3 && sfx_silenced_auto) {
           AudioHelper.play({ src: `${sfx_silenced_auto}` }, true);
         }
         else {
@@ -249,7 +297,20 @@ async function weaponDialog() {
         }
       }
       else {
-        if (shots > 4 && sfx_shot_auto) {
+        if (shots === 2) {
+          AudioHelper.play({ src: `${sfx_shot}` }, true);
+          await wait(`${sfxDelay}`);
+          AudioHelper.play({ src: `${sfx_shot}` }, true);
+        }
+        else if (shots === 3) {
+          //console.log("I AM HERE!");
+          AudioHelper.play({ src: `${sfx_shot}` }, true);
+          await wait(`${sfxDelay}`);
+          AudioHelper.play({ src: `${sfx_shot}` }, true);
+          await wait(`${sfxDelay}`);
+          AudioHelper.play({ src: `${sfx_shot}` }, true);
+        }
+        else if (shots > 3 && sfx_shot_auto) {
           AudioHelper.play({ src: `${sfx_shot_auto}` }, true);
         }
         else {
@@ -389,7 +450,7 @@ async function weaponDialog() {
       html.find(`#singleReload`)[0].checked,
     ];
   }
-  // V. 2.1.0 By SalieriC#8263. Dialogue Framework: Kekilla#7036
+  // V. 3.0.0 By SalieriC#8263. Dialogue Framework: Kekilla#7036
 }
 
 weaponDialog();

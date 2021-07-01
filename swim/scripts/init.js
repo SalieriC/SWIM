@@ -53,6 +53,15 @@ function register_settings() {
         scope: 'world',
         config: true,
     });
+    // SFX sfxDelay
+    game.settings.register('swim', 'sfxDelay', {
+        name: game.i18n.localize("SWIM.sfxDelayName"),
+        hint: game.i18n.localize("SWIM.sfxDelayHint"),
+        type: Number,
+        default: '110',
+        scope: 'world',
+        config: true,
+    });
     // Shaken SFX
     game.settings.register('swim', 'shakenSFX', {
         name: game.i18n.localize("SWIM.shakenSFXName"),
@@ -165,11 +174,11 @@ Hooks.on('getSceneControlButtons', function (hudButtons) {
                     content: `
                         <form>
                         <div class="form-group">
-                        <label><img src="modules/swim/assets/icons/misc/bullseye.svg" alt="" width="25" height="25" style="border: 0;" /> <b>Target Number:</b></label> 
+                        <label><img src="modules/swim/assets/icons/misc/bullseye.svg" alt="" width="25" height="25" style="border: 0;" /> <b>Target Number:</b></label>
                         <input name="target" placeholder="0" type="number" onClick="this.select();"/>
                         </div>
                         <div class="form-group">
-                        <label><img src="modules/swim/assets/icons/misc/rolling-dices.svg" alt="" border="0" width="25" height="25" style="border: 0;" /> <b>Result:</b></label> 
+                        <label><img src="modules/swim/assets/icons/misc/rolling-dices.svg" alt="" border="0" width="25" height="25" style="border: 0;" /> <b>Result:</b></label>
                         <input name="result" placeholder="0" type="number" onClick="this.select();"/>
                         </div>
                         <p class="calculation">${text}</p>

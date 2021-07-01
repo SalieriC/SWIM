@@ -4,7 +4,7 @@
 	"description": "<p><b>READ THE README!</b> Doing so is very important!</p><p>A simple module to configure some stuff in the SWADE System on Foundry VTT. <a href='https://ko-fi.com/salieric'>Please consider donating.</a> </p>",
 	"minimumCoreVersion": "0.7.4",
 	"compatibleCoreVersion": "0.7.10",
-	"version": "0.7.0",
+	"version": "0.8.0",
 	"author": "SalieriC",
 	"dependencies": [
 		{

@@ -1,5 +1,11 @@
 checkWeapon();
 
+async function wait(ms) {
+    return new Promise(resolve => {
+        setTimeout(resolve, ms);
+    });
+}
+
 async function checkWeapon() {
     //Don't execute the macro on a reroll by checking if the old_rolls is empty:
     if (message.data.flags['betterrolls-swade2'].render_data.trait_roll.old_rolls.length >= 1) { return; }
@@ -37,18 +43,24 @@ async function shoot() {
     let rate_of_fire = traitDice.length;
     if (actor.data.data.wildcard === true) { rate_of_fire = rate_of_fire - 1; }
     //console.log(rate_of_fire);
-    let shots;
-    if (rate_of_fire === 1) { shots = 1; }
-    if (rate_of_fire === 2) { shots = 5; }
-    if (rate_of_fire === 3) { shots = 10; }
-    if (rate_of_fire === 4) { shots = 20; }
-    if (rate_of_fire === 5) { shots = 40; }
-    if (rate_of_fire === 6) { shots = 50; }
+    let shots = message.data.flags['betterrolls-swade2'].render_data.used_shots;
+    //failsafe to guss amount of shots in case BR2 return zero or undefined:
+    if (shots === 0 || !shots) {
+      if (rate_of_fire === 1) { shots = 1; }
+      if (rate_of_fire === 2) { shots = 5; }
+      if (rate_of_fire === 3) { shots = 10; }
+      if (rate_of_fire === 4) { shots = 20; }
+      if (rate_of_fire === 5) { shots = 40; }
+      if (rate_of_fire === 6) { shots = 50; }
+    }
 
     let sil = false;
     if (item_weapon.data.data.additionalStats.silenced && item_weapon.data.data.additionalStats.silenced.value === true) {
         sil = true;
     }
+    // Getting sfxDelay from game settings
+    let sfxDelay = game.settings.get(
+        'swim', 'sfxDelay');
     // Getting the sfx from the weapon provided by BR2:
     let sfx_shot;
     let sfx_silenced;
@@ -133,7 +145,20 @@ async function shoot() {
             //Playing the SFX
             // Play sound effects
             if (sil === true && sfx_silenced) {
-                if (shots > 4 && sfx_silenced_auto) {
+                if (shots === 2) {
+                  AudioHelper.play({ src: `${sfx_silenced}` }, true);
+                  await wait(`${sfxDelay}`);
+                  AudioHelper.play({ src: `${sfx_silenced}` }, true);
+                }
+                else if (shots === 3) {
+                  //console.log("I AM HERE!");
+                  AudioHelper.play({ src: `${sfx_silenced}` }, true);
+                  await wait(`${sfxDelay}`);
+                  AudioHelper.play({ src: `${sfx_silenced}` }, true);
+                  await wait(`${sfxDelay}`);
+                  AudioHelper.play({ src: `${sfx_silenced}` }, true);
+                }
+                else if (shots > 3 && sfx_silenced_auto) {
                     AudioHelper.play({ src: `${sfx_silenced_auto}` }, true);
                 }
                 else {
@@ -141,7 +166,20 @@ async function shoot() {
                 }
             }
             else {
-                if (shots > 4 && sfx_shot_auto) {
+              if (shots === 2) {
+                AudioHelper.play({ src: `${sfx_shot}` }, true);
+                await wait(`${sfxDelay}`);
+                AudioHelper.play({ src: `${sfx_shot}` }, true);
+              }
+              else if (shots === 3) {
+                //console.log("I AM HERE!");
+                AudioHelper.play({ src: `${sfx_shot}` }, true);
+                await wait(`${sfxDelay}`);
+                AudioHelper.play({ src: `${sfx_shot}` }, true);
+                await wait(`${sfxDelay}`);
+                AudioHelper.play({ src: `${sfx_shot}` }, true);
+              }
+              else if (shots > 3 && sfx_shot_auto) {
                     AudioHelper.play({ src: `${sfx_shot_auto}` }, true);
                 }
                 else {
@@ -182,7 +220,20 @@ async function shoot() {
         }
         // Play sound effects
         if (sil === true && sfx_silenced) {
-            if (shots > 4 && sfx_silenced_auto) {
+          if (shots === 2) {
+            AudioHelper.play({ src: `${sfx_silenced}` }, true);
+            await wait(`${sfxDelay}`);
+            AudioHelper.play({ src: `${sfx_silenced}` }, true);
+          }
+          else if (shots === 3) {
+            //console.log("I AM HERE!");
+            AudioHelper.play({ src: `${sfx_silenced}` }, true);
+            await wait(`${sfxDelay}`);
+            AudioHelper.play({ src: `${sfx_silenced}` }, true);
+            await wait(`${sfxDelay}`);
+            AudioHelper.play({ src: `${sfx_silenced}` }, true);
+          }
+          else if (shots > 3 && sfx_silenced_auto) {
                 AudioHelper.play({ src: `${sfx_silenced_auto}` }, true);
             }
             else {
@@ -190,7 +241,20 @@ async function shoot() {
             }
         }
         else {
-            if (shots > 4 && sfx_shot_auto) {
+          if (shots === 2) {
+            AudioHelper.play({ src: `${sfx_shot}` }, true);
+            await wait(`${sfxDelay}`);
+            AudioHelper.play({ src: `${sfx_sshot}` }, true);
+          }
+          else if (shots === 3) {
+            //console.log("I AM HERE!");
+            AudioHelper.play({ src: `${sfx_shot}` }, true);
+            await wait(`${sfxDelay}`);
+            AudioHelper.play({ src: `${sfx_shot}` }, true);
+            await wait(`${sfxDelay}`);
+            AudioHelper.play({ src: `${sfx_shot}` }, true);
+          }
+          else if (shots > 3 && sfx_shot_auto) {
                 AudioHelper.play({ src: `${sfx_shot_auto}` }, true);
             }
             else {
@@ -198,5 +262,5 @@ async function shoot() {
             }
         }
     }
-    //V. 2.1.0 by SalieriC#8263 with help from javierrivera#4813.
+    //V. 3.0.0 by SalieriC#8263 with help from javierrivera#4813.
 }

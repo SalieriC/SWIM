@@ -26,7 +26,7 @@ In order to use one of these macros, you first need to do some initial setup. Th
 - Support for `Consumable Weapons` (i.e. throwing knives, grenades, Spears, etc.).  
 - - The Macro will ignore current and maximum `Shots` on `Consumable Weapons` and instead uses their `Quantity` as a measurement of how many are left.  
 - - Using the last `Consumable Weapon` will delete the item from the inventory. (Disabled in BR2 integration because that breaks rerolls.)
-- - BR2 integration only: Also supports weapons which can be thrown but don't need to. Currently it checks for "Athletics", "Athletics (Throwing)", "Athletics (Explosives)" and  "Throwing" and assumes that consumable weapons always use either. If a consumable weapon does not use any of these skills, the macro stops. If an action is used in BR2 that initiates a roll with one of these skills, the macro continues as usual. This currently only works in the [development version](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/swim/macros/BR2-Ammo_usage.js) of the macro.  
+- - BR2 integration only: Also supports weapons which can be thrown but don't need to. Currently it checks for "Athletics", "Athletics (Throwing)", "Athletics (Explosives)" and  "Throwing" and assumes that consumable weapons always use either. If a consumable weapon does not use any of these skills, the macro stops. If an action is used in BR2 that initiates a roll with one of these skills, the macro continues as usual.
 - Extensive support for Sound Effects (sfx), the following sfx can be configured:  
 - - Reload sfx.  
 - - Shooting/using sfx.  
@@ -110,11 +110,13 @@ This is a bonus for any overachiever out there. This can't be done manually and 
 This will disable the ammo management button from BR2 in the item cards, preventing your players from accidentally using it.  
 
 ## Current problems and limitations  
-Currently the macro just guesses the amount of ammo used based on the amount of trait dice. This is prone to errors of course as it will not get the correct amount of shots used for Burst Fire mode, Double Tap and Fanning the Hammer (Deadlands). In these cases I advice to disable the `SWIM: Ammo usage` action in the BR2 chat card before rolling. This issue will hopefully be resolved soon but depends on Better Rolls 2 as the chat card currently does not include the amount of shots the macro can use for proper calculations.  
+~~Currently the macro just guesses the amount of ammo used based on the amount of trait dice. This is prone to errors of course as it will not get the correct amount of shots used for Burst Fire mode, Double Tap and Fanning the Hammer (Deadlands). In these cases I advice to disable the `SWIM: Ammo usage` action in the BR2 chat card before rolling. This issue will hopefully be resolved soon but depends on Better Rolls 2 as the chat card currently does not include the amount of shots the macro can use for proper calculations.~~  
+Has been fixed with BR2 versions **above** 2.36.  
 
-Due to current limitations the BR2 integration can also not yet detect wether or not a melee weapon was thrown. This means the macro will fire off all the time if a melee weapon is marked as a consumable weapon but used in melee combat. There are three workarounds, from best to worst:  
+~~Due to current limitations the BR2 integration can also not yet detect wether or not a melee weapon was thrown. This means the macro will fire off all the time if a melee weapon is marked as a consumable weapon but used in melee combat. There are three workarounds, from best to worst:  
 1. Instruct your players to disable the `SWIM: Ammo usage` action in the BR2 chat card before rolling on these specific weapons.  
 2. Set up extra variants of these weapons for thrown purposes.  
 3. Don't use the BR2 integration for Fighting and Athletics (not so great).  
 
-I hope that this issue will be resolved as well once the BR2 chat card includes the amount of ammo used but I'm not sure. I do work on another solution but it seems out of reach anytime soon as well. The [development version](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/swim/macros/BR2-Ammo_usage.js) of the macro already supports a workaround for this by filtering for the used skill.  
+I hope that this issue will be resolved as well once the BR2 chat card includes the amount of ammo used but I'm not sure. I do work on another solution but it seems out of reach anytime soon as well.~~  
+The macro now supports a workaround for this by filtering for the used skill. Not a perfect solution but the best that is possible yet.  
