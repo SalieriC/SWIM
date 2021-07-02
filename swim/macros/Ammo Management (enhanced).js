@@ -149,7 +149,53 @@ async function weaponDialog() {
     // Calculating shots to expend
     const currentCharges = parseInt(item_weapon.data.data.currentShots);
     const newCharges = currentCharges - shots;
-    if (item_weapon.data.data.additionalStats.isConsumable && item_weapon.data.data.additionalStats.isConsumable.value === true) {
+    //If no ammo needed, only play SFX
+    if (item_weapon.data.data.ammo === "NONE" && item_weapon.data.data.additionalStats.sfx) {
+      // Play sound effects
+      if (sil === true && sfx_silenced) {
+          if (shots === 2) {
+            AudioHelper.play({ src: `${sfx_silenced}` }, true);
+            await wait(`${sfxDelay}`);
+            AudioHelper.play({ src: `${sfx_silenced}` }, true);
+          }
+          else if (shots === 3) {
+            //console.log("I AM HERE!");
+            AudioHelper.play({ src: `${sfx_silenced}` }, true);
+            await wait(`${sfxDelay}`);
+            AudioHelper.play({ src: `${sfx_silenced}` }, true);
+            await wait(`${sfxDelay}`);
+            AudioHelper.play({ src: `${sfx_silenced}` }, true);
+          }
+          else if (shots > 3 && sfx_silenced_auto) {
+            AudioHelper.play({ src: `${sfx_silenced_auto}` }, true);
+          }
+          else {
+            AudioHelper.play({ src: `${sfx_silenced}` }, true);
+          }
+        }
+        else {
+          if (shots === 2) {
+            AudioHelper.play({ src: `${sfx_shot}` }, true);
+            await wait(`${sfxDelay}`);
+            AudioHelper.play({ src: `${sfx_shot}` }, true);
+          }
+          else if (shots === 3) {
+            //console.log("I AM HERE!");
+            AudioHelper.play({ src: `${sfx_shot}` }, true);
+            await wait(`${sfxDelay}`);
+            AudioHelper.play({ src: `${sfx_shot}` }, true);
+            await wait(`${sfxDelay}`);
+            AudioHelper.play({ src: `${sfx_shot}` }, true);
+          }
+          else if (shots > 3 && sfx_shot_auto) {
+            AudioHelper.play({ src: `${sfx_shot_auto}` }, true);
+          }
+          else {
+            AudioHelper.play({ src: `${sfx_shot}` }, true);
+          }
+      }
+  }
+    else if (item_weapon.data.data.additionalStats.isConsumable && item_weapon.data.data.additionalStats.isConsumable.value === true) {
       const currentQuantity = parseInt(item_weapon.data.data.quantity);
       if (currentQuantity <= 0) {
         return ui.notifications.error(`You don't have a ${item_weapon.name} left.`);
