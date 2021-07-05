@@ -308,5 +308,5 @@ async function shoot() {
             }
         }
     }
-    //V. 3.0.0 by SalieriC#8263 with help from javierrivera#4813.
+    //V. 3.1.0 by SalieriC#8263 with help from javierrivera#4813.
 }

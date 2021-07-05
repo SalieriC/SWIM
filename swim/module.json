@@ -30,6 +30,14 @@
             "path": "packs/swade-immersive-macros.db",
             "module": "swim",
             "entity": "Macro"
+        },
+		{
+            "name": "chase-layouts",
+            "label": "Chase Layouts",
+			"system": "swade",
+            "path": "packs/chase-layouts.db",
+            "module": "swim",
+            "entity": "Scene"
         }
 	],
 	"url": "https://github.com/SalieriC/SWADE-Immersive-Macros",

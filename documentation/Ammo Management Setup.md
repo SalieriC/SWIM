@@ -37,6 +37,7 @@ In order to use one of these macros, you first need to do some initial setup. Th
 - - A sound effect for "burst" is planned but not yet done.  
 - Each sfx can be set up individually for each weapon.  
 - Optional integration for [Better Rolls 2 (BR2)](https://foundryvtt.com/packages/betterrolls-swade2).
+- Now also features the ability to play SFX only without the need for ammunition. For this just set the Ammo on the weapon to be `NONE` (exactly like this). This may be useful if you want SFX for melee weapons. It uses the same sfx path structure (see below), so you'll have the same sfx for melee and ranged attacks unfortunately.  
 
 # Additional Stats  
 If you don't know about additional stats, you can read about them [here](https://gitlab.com/peginc/swade/-/wikis/settings/setting-configurator).  

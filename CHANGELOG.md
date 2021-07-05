@@ -6,7 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.9.0] - Unreleased  
+## [0.9.0] - Unreleased 
+###
+### Added  
+- Now also features the ability to play SFX only without the need for ammunition. For this just set the Ammo on the weapon to be `NONE` (exactly like this). This may be useful if you want SFX for melee weapons. It uses the same sfx path structure (see below), so you'll have the same sfx for melee and ranged attacks unfortunately.   
+- Chase Setup macro for a quick setup that takes only a click. Also supports cleaning the table.  
+- Six chase layouts, one for foot/riding chases, one for (ground) vehicle chases and one for ship (watercraft, aircraft and spacecraft) chases/battles with regular and modern theme each. See the 
 
 ## [0.8.0] - 2021-07-01
 **Possibly** compatible with Foundry 0.8.x but I can't say for sure.  

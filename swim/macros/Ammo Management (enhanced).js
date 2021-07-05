@@ -67,6 +67,12 @@ async function weaponDialog() {
     if (rate_of_fire === 5) { defaultShots = 40; }
     if (rate_of_fire === 6) { defaultShots = 50; }
 
+    /*
+    let defaultSingleReload = false;
+    let isSingleReload = parseInt(weapons.find(w => w.id === selectedWeapon).data.name.includes("Revolver"));
+    if (isSingleReload === true){defaultSingleReload = true;}
+    */
+
     return `
     <form>
       <div>
@@ -92,6 +98,7 @@ async function weaponDialog() {
       </div>
     </form>
     `
+    //<input id="singleReload" name="Single Reload" type="checkbox" ${defaultSingleReload ? "checked" : ""}></input>
   }
   function getButtons() {
     return {
@@ -159,7 +166,6 @@ async function weaponDialog() {
             AudioHelper.play({ src: `${sfx_silenced}` }, true);
           }
           else if (shots === 3) {
-            //console.log("I AM HERE!");
             AudioHelper.play({ src: `${sfx_silenced}` }, true);
             await wait(`${sfxDelay}`);
             AudioHelper.play({ src: `${sfx_silenced}` }, true);
@@ -180,7 +186,6 @@ async function weaponDialog() {
             AudioHelper.play({ src: `${sfx_shot}` }, true);
           }
           else if (shots === 3) {
-            //console.log("I AM HERE!");
             AudioHelper.play({ src: `${sfx_shot}` }, true);
             await wait(`${sfxDelay}`);
             AudioHelper.play({ src: `${sfx_shot}` }, true);
@@ -225,7 +230,6 @@ async function weaponDialog() {
     //Stuff for weapons with "doesn't require reload action" checked:
     else if (item_weapon.data.data.autoReload === true) {
       //Throw error if no ammo is left.
-      console.log(item_ammo);
       if (item_ammo.data.data.quantity <= 0) { return ui.notifications.error(`You don't have a ${item_ammo.name} left.`); }
       else {
         //Setting new constants to overwrite the old ones
@@ -253,7 +257,6 @@ async function weaponDialog() {
             AudioHelper.play({ src: `${sfx_silenced}` }, true);
           }
           else if (shots === 3) {
-            //console.log("I AM HERE!");
             AudioHelper.play({ src: `${sfx_silenced}` }, true);
             await wait(`${sfxDelay}`);
             AudioHelper.play({ src: `${sfx_silenced}` }, true);
@@ -274,7 +277,6 @@ async function weaponDialog() {
             AudioHelper.play({ src: `${sfx_shot}` }, true);
           }
           else if (shots === 3) {
-            //console.log("I AM HERE!");
             AudioHelper.play({ src: `${sfx_shot}` }, true);
             await wait(`${sfxDelay}`);
             AudioHelper.play({ src: `${sfx_shot}` }, true);
@@ -328,7 +330,6 @@ async function weaponDialog() {
           AudioHelper.play({ src: `${sfx_silenced}` }, true);
         }
         else if (shots === 3) {
-          //console.log("I AM HERE!");
           AudioHelper.play({ src: `${sfx_silenced}` }, true);
           await wait(`${sfxDelay}`);
           AudioHelper.play({ src: `${sfx_silenced}` }, true);
@@ -349,7 +350,6 @@ async function weaponDialog() {
           AudioHelper.play({ src: `${sfx_shot}` }, true);
         }
         else if (shots === 3) {
-          //console.log("I AM HERE!");
           AudioHelper.play({ src: `${sfx_shot}` }, true);
           await wait(`${sfxDelay}`);
           AudioHelper.play({ src: `${sfx_shot}` }, true);
@@ -394,7 +394,7 @@ async function weaponDialog() {
       chgType = true;
     }
     // Getting the sfx from the selected weapon
-    let sfx_reload/* = stuff*/;
+    let sfx_reload;
     if (item_weapon.data.data.additionalStats.sfx) {
       let sfx = item_weapon.data.data.additionalStats.sfx.value.split(`|`);
       sfx_reload = sfx[0];
@@ -496,7 +496,7 @@ async function weaponDialog() {
       html.find(`#singleReload`)[0].checked,
     ];
   }
-  // V. 3.0.0 By SalieriC#8263. Dialogue Framework: Kekilla#7036
+  // V. 3.1.0 By SalieriC#8263. Dialogue Framework: Kekilla#7036
 }
 
 weaponDialog();

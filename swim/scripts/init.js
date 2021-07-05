@@ -1,4 +1,13 @@
 function register_settings() {
+    // Chase Deck Name
+    game.settings.register('swim', 'chaseDeck', {
+        name: game.i18n.localize("SWIM.chaseDeckName"),
+        hint: game.i18n.localize("SWIM.chaseDeckHint"),
+        type: String,
+        default: 'Chase Deck',
+        scope: 'world',
+        config: true,
+    });
     // Gritty Damage Injury Table Name
     game.settings.register('swim', 'injuryTable', {
         name: game.i18n.localize("SWIM.injuryTableName"),
