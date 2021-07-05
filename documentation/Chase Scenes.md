@@ -1,6 +1,7 @@
 # Chase Layouts  
 In SWIM included is a set of scenes for use with the Chase Setup macro. The macro will automatically place the cards on the correct position of the chase layout and can also shuffle them back in your card deck. Setting up a chase thus becomes a matter of seconds with only the click on a button inside the macro.  
 As with the Rest of the module these layouts are licensed under the [Savage Worlds Fan License](https://www.peginc.com/licensing/). But these scenes contain detailed information about specific rulings, thus I asked Shane Lacy Hensley for permission to publish these. I was given permission to do so under the Fan License. Please note that this permission may be revoked by PEG at any time. Should this happen I will remove these layouts from this module and replace them with generic ones that do not contain any rulings.  
+In the module settings you can set up a default deck of cards to draw from but you can still choose another deck if you like. The roll table must have the images of cards as Journal Entries in it. If you're now sure, just duplicate the action deck from the system and rename it to "Chase Deck".  
   
 ## Custom Fonts  
 The layouts use the following fonts:
@@ -23,5 +24,3 @@ You *must not* change these properties, otherwise the macro will be unable to pl
 
 ## Editing the layouts  
 You can edit these layouts manually by opening them in a image editor like GIMP. I can not and will not provide the original files but by adding your own background image in such an editor will avoid conflicts with changing scene dimensions.  
-
-## Known Bugs  

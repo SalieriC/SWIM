@@ -35,6 +35,7 @@ In this repository you can find a number of assets already.
 - **SFX:** (see their file name for origin)
 - - [Fesliyan Studios](www.fesliyanstudios.com), all used with explicit permission (thank you so much), [see their License here](https://www.fesliyanstudios.com/policy).  
 - - [Orange Free Sounds](https://orangefreesounds.com/), all used unter the [CC BY-NC 4.0 License](https://creativecommons.org/licenses/by-nc/4.0/), converted to *.ogg and possibly altered (see file name), Author is in the file names as well.  
+- **Six chase layouts**, one for foot/riding chases, one for (ground) vehicle chases and one for ship (watercraft, aircraft and spacecraft) chases/battles with regular and modern theme 
 
 Assets are used in the macros. You can also set up your own assets in the modules configuration. There you can change file paths.
 
@@ -113,6 +114,18 @@ It comes with optional BR2 integration for the shooting/using ammo part. How the
 I can't include that many sfx right now. It is rather difficult to find good weapon sounds which I am allowed to include and I don't have the funds to buy them for this module. I'm not gonna recommend any particular way on how to get adequate sound effects, figuring that out is on you. Just know that there are many resources you should be able to use out there. As a general lead: Look for PC game modifications which alter the weapon sounds in that specific game. You may not be allowed to use the sfx from the game directly (depends on the game of course), but those from mods are usually not a problem but check that before you do take them. I cannot be held responsible for any breach of contract or copyright you commit it is on you to check whether or not you're allowed to use the sfx you find.  
 You may also want to take a look at [SoundFx Library](https://foundryvtt.com/packages/soundfxlibrary) by Cris. It comes with a few bow sounds which may be sufficient for your standard medieval fantasy settings.  
 
+### Power Sounds  
+**Immersion setting:** SFX.  
+**Requirements:**  
+- [Better Rolls 2 (BR2)](https://foundryvtt.com/packages/betterrolls-swade2)  
+**Description:**  
+This does not manage your Power Points but it does automatically play SFX when using a power. For this you need to set up some World Global Actions in Better Rolls 2. Take a look at the BR2 integration section of the [Shooting & Reloading setup documentation](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/documentation/Shooting%20%26%20Reloading%20Setup.md) for a general idea how that works.  
+Put simply: Set up an additional stat called "sfx" in your world, activate it in a power and fill it with the relative path to the sfx. Then import the "SWIM: Powers SFX" macro in your world and copy-paste [this](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/swim/assets/imports/BR2-spellcasting-integration.json) in a new World Global action in the BR2 settings. You need to adjust all instances of "Spellcasting" with the Skill(s) used for using powers in your setting and set up a new World Global Action for each.  
+Again, see the Shooting & Reloading documentation linked above for more details on BR2 integration if you feel lost.  
+**Wait, where do I get weapon sound effects?**  
+I can't include that many sfx right now. It is rather difficult to find good magic sounds which I am allowed to include and I don't have the funds to buy them for this module. I'm not gonna recommend any particular way on how to get adequate sound effects, figuring that out is on you. Just know that there are many resources you should be able to use out there. As a general lead: Look for PC game modifications which alter the magic sounds in that specific game. You may not be allowed to use the sfx from the game directly (depends on the game of course), but those from mods are usually not a problem but check that before you do take them. I cannot be held responsible for any breach of contract or copyright you commit it is on you to check whether or not you're allowed to use the sfx you find.  
+You may also want to take a look at [SoundFx Library](https://foundryvtt.com/packages/soundfxlibrary) by Cris. It comes with a few bow sounds which may be sufficient for your standard medieval fantasy settings.  
+
 ### Fear Table
 **Requirements:** None.  
 **Immersion setting:** SFX.  
@@ -188,6 +201,13 @@ In general it is best to set up a universal/global light source instead of touch
 **Immersion setting:** System card deal sound.  
 **Description:**  
 A very basic macro that resets the roll table from which the action cards are drawn. It's mainly there to fix issues when the table doesn't reset during combat.  
+
+### Chase Setup  
+**Requirements:** Chase layouts/scenes (included in a compendium) and a roll table with card images.  
+**Immersion setting:** System card deal sound.  
+**Description:**  
+This macro can set up and clean your chase scenes with cards. It places the cards automatically in the correct position. See the [Chase Scenes documentation](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/documentation/Chase%20Scenes.md) for details.  
+*This requires the chase scenes that come in a compendium with this module.*  
 
 ### Raise Calculator & Raise Calculator (Dynamic)  
 **Requirements:** None.  

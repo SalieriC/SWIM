@@ -6,12 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.9.0] - Unreleased 
-###
+## [0.9.0] - 2021-07-05  
+**Possibly** compatible with Foundry 0.8.x but I can't say for sure.  
+### You need to update these macros:  
+- Ammo Management (enhanced)  
+- SWIM: Ammo Management  
 ### Added  
 - Now also features the ability to play SFX only without the need for ammunition. For this just set the Ammo on the weapon to be `NONE` (exactly like this). This may be useful if you want SFX for melee weapons. It uses the same sfx path structure (see below), so you'll have the same sfx for melee and ranged attacks unfortunately.   
 - Chase Setup macro for a quick setup that takes only a click. Also supports cleaning the table.  
-- Six chase layouts, one for foot/riding chases, one for (ground) vehicle chases and one for ship (watercraft, aircraft and spacecraft) chases/battles with regular and modern theme each. See the 
+- Six chase layouts, one for foot/riding chases, one for (ground) vehicle chases and one for ship (watercraft, aircraft and spacecraft) chases/battles with regular and modern theme each. See the [Chase Scenes documentation](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/documentation/Chase%20Scenes.md) for details.  
+- Immersion macro to play SFX when using powers in BR2. It does not manage Power Points, just plays a sound effect when using a power.  
 
 ## [0.8.0] - 2021-07-01
 **Possibly** compatible with Foundry 0.8.x but I can't say for sure.  
