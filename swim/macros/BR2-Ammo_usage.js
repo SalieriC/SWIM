@@ -290,7 +290,7 @@ async function shoot() {
           if (shots === 2) {
             AudioHelper.play({ src: `${sfx_shot}` }, true);
             await wait(`${sfxDelay}`);
-            AudioHelper.play({ src: `${sfx_sshot}` }, true);
+            AudioHelper.play({ src: `${sfx_shot}` }, true);
           }
           else if (shots === 3) {
             //console.log("I AM HERE!");
