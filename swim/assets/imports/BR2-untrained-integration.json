@@ -1,9 +1,0 @@
-{
-    "id": "swim.swade-immersive-macros.49TiCaAgArpHsAhz",
-    "name": "SWIM: Untrained ammo usage",
-    "button_name": "SWIM: Ammo usage",
-    "runSkillMacro": "SWIM: Ammo usage",
-    "selector_type": "skill",
-    "selector_value": "untrained",
-    "defaultChecked": "on"
-}

@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+**Possibly** compatible with Foundry 0.8.x but I can't say for sure.  
+### You need to update these macros:  
+- SWIM: Ammo Management  
+### Fixed  
+- Fixed a bug that sometimes prevented a second shot sfx to be played in the BR2 integration.  
 
 ## [0.9.0] - 2021-07-05  
 **Possibly** compatible with Foundry 0.8.x but I can't say for sure.  
@@ -16,6 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Chase Setup macro for a quick setup that takes only a click. Also supports cleaning the table.  
 - Six chase layouts, one for foot/riding chases, one for (ground) vehicle chases and one for ship (watercraft, aircraft and spacecraft) chases/battles with regular and modern theme each. See the [Chase Scenes documentation](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/documentation/Chase%20Scenes.md) for details.  
 - Immersion macro to play SFX when using powers in BR2. It does not manage Power Points, just plays a sound effect when using a power.  
+### Fixed  
+- Fixed the BR2 integration .json files. Now it isn't neccessary any longer to set up a World Global Action for each skill, the integration will trigger whenever a weapon or power is rolled on, no matter the skill, even untrained.  
 
 ## [0.8.0] - 2021-07-01
 **Possibly** compatible with Foundry 0.8.x but I can't say for sure.  

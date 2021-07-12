@@ -87,18 +87,15 @@ If you're using [Better Rolls 2 (BR2)](https://foundryvtt.com/packages/betterrol
 For BR2 users there is also a neat integration, allowing you to use the Shooting macro by default when rolling from a weapon.  
 
 # Better Rolls 2 integration  
-If you're using Better Rolls 2, there is a way to fully automate the Shooting part of the macro. Each skill roll from the weapon will then execute the macro, play the sfx (if set up) and use the ammo properly. To set this up you need to set it as a "runSkillMacro" [Global Action](https://github.com/javierriveracastro/betteroll-swade/blob/version_2/GLOBAL_ACTIONS.md) in Better Rolls 2. Before using this though, *make sure to disable the ammo management by BR2* (see above). This is not so difficult as you might think:  
+If you're using Better Rolls 2, there is a way to fully automate the Shooting part of the macro. Each skill roll from the weapon will then execute the macro, play the sfx (if set up) and use the ammo properly. To set this up you need to set it as a "runSkillMacro" [Global Action](https://github.com/javierriveracastro/betteroll-swade/blob/version_2/GLOBAL_ACTIONS.md) in Better Rolls 2. This is not so difficult as you might think:  
 1. Import the macro `SWIM: Ammo usage` from the compendium into your world.  
 2. Head over to your module settings and click on "World Global actions" in the BR2 settings.  
 3. Click "New action".  
-4. Paste the code from [this file (Shooting)](https://raw.githubusercontent.com/SalieriC/SWADE-Immersive-Macros/main/swim/assets/imports/BR2-shooting-integration.json) into the text box.  
-5. Save.  
-6. Repeat steps 3-5 for the following skills if you wish:  
-- [Fighting](https://raw.githubusercontent.com/SalieriC/SWADE-Immersive-Macros/main/swim/assets/imports/BR2-fighting-integration.json)  
-- [Athletics](https://raw.githubusercontent.com/SalieriC/SWADE-Immersive-Macros/main/swim/assets/imports/BR2-athletics-integration.json)  
-- [Untrained](https://raw.githubusercontent.com/SalieriC/SWADE-Immersive-Macros/main/swim/assets/imports/BR2-untrained-integration.json)  
+4. Paste the code from [this file](https://raw.githubusercontent.com/SalieriC/SWADE-Immersive-Macros/main/swim/assets/imports/BR2-shooting-integration.json) into the text box.  
+5. Save.   
 
-That is all there is to it. Now, whenever a *Shooting*, *Fighting*, *Athletics* or *Untrained* roll is initiated from a weapon card, the macro will execute and - if it detects circumstances which require it to do its thing - uses the ammo.  If you have no melee weapons which use ammo, don't use the integration for Fighting, it'll cause more harm than good then.
+Before using this though, *make sure to disable the ammo management by BR2* (see above).  
+That is all there is to it. Now, whenever a *Shooting*, *Fighting*, *Athletics* or *Untrained* roll is initiated from a weapon card, the macro will execute and - if it detects circumstances which require it to do its thing - uses the ammo.  
 
 ## Disabling the BR2 integrated ammo management button  
 This is a bonus for any overachiever out there. This can't be done manually and requires a little bit of coding.  

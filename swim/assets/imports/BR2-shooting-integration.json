@@ -1,9 +1,9 @@
 {
     "id": "swim.swade-immersive-macros.49TiCaAgArpHsAhz",
-    "name": "SWIM: Shooting ammo usage",
+    "name": "SWIM: Ammo usage",
     "button_name": "SWIM: Ammo usage",
     "runSkillMacro": "SWIM: Ammo usage",
-    "selector_type": "skill",
-    "selector_value": "shooting",
+    "selector_type": "item_type",
+    "selector_value": "weapon",
     "defaultChecked": "on"
 }

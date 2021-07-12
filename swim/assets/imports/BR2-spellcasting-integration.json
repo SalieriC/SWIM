@@ -1,9 +1,9 @@
 {
     "id": "swim.swade-immersive-macros.BiWnZrh3aitxEM4a",
-    "name": "SWIM: Spellcasting SFX",
+    "name": "SWIM: Power SFX",
     "button_name": "SWIM: Powers SFX",
     "runSkillMacro": "SWIM: Powers SFX",
-    "selector_type": "skill",
-    "selector_value": "spellcasting",
+    "selector_type": "item_type",
+    "selector_value": "power",
     "defaultChecked": "on"
 }
