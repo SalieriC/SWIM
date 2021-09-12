@@ -77,9 +77,7 @@ async function makeChase(html) {
     for (let i = 0; i < cardsToDraw; i++) {
         let xPosition = 500 + i % 9 * 200;
         let yPosition = (i > 8) ? 1500 : 1200;
-        /*if (i > 8) {
-            yStart = 1500;
-        }*/
+        
         const tileData = {
             img: cardDraws[i].data.img,
             width: _width,
@@ -97,13 +95,8 @@ async function resetChase(html) {
     const table = await game.tables.find((t) => t.data.name === tableName);
     table.reset();
     AudioHelper.play({ src: `systems/swade/assets/card-flip.wav` }, true);
-    /*const chaseCards = await canvas.scene.data.tiles.filter(t => t.flags?.swim?.isChaseCard === true);
-    if (chaseCards.length) {
-        for await (const card of chaseCards) {
-            await card.delete();
-        }*/
+
     const delete_ids = canvas.scene.data.tiles
-        //.filter(t => !!t.value?.data?.flags?.swim?.isChaseCard)
         .filter(t => !!t.getFlag('swim', 'isChaseCard') === true)
         .map(t => t.id);
 
