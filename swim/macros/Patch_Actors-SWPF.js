@@ -80,13 +80,18 @@ async function patchAllActors() {
                     }
                     let patchDesc = `<div class="swpf-core">${oldDesc}<hr />${newDesc}</div>`;
                     if (!oldDesc) { patchDesc = newDesc };
-                    await item.delete();
-                    await actor.createOwnedItem(patchedItem);
-                    /*await <patchedItem>.update({
+                    
+                    const createdItem = await actor.createOwnedItem(patchedItem);
+                    const newItem = actor.data.items.get(createdItem[0]._id);
+                    console.log(item);
+                    console.log(newItem);
+                    await KABAnewItem.update({
                         "name": originalName,
                         "data.description": patchDesc,
-                        "img": patchedItem.img
-                    })*/
+                        //"img": patchedItem.img,
+                        "_id": item._id
+                    });
+                    await item.delete();
                 }
             } else if (item.data.type == "edge") {
                 let searchID = (await game.packs.get("swpf-core-rules.swpf-edges").getIndex()).find(el => el.name == item.name)?._id;
