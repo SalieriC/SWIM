@@ -37,6 +37,7 @@ function main() {
           <option value="dark">Dark (10")</option>
           <option value="dim">Dim</option>
           <option value="lowLiVis">Low Light Vision</option>
+          <option value="DarkVis">Dark Vision (SWPF)</option>
           <option value="infrVis">Infravision</option>
           <option value="fullNiVis">Full Night Vision</option>
         </select>
@@ -108,9 +109,13 @@ function main() {
               dimSight = 1000;
               brightSight = 0;
               break;
+            case "DarkVis":
+              dimSight = 0;
+              brightSight = 10;
+              break;
             case "infrVis":
-              dimSight = 1000;
-              brightSight = 0;
+              dimSight = 0;
+              brightSight = 10;
               break;
             case "fullNiVis":
               dimSight = 0;
@@ -209,7 +214,7 @@ function main() {
               lockRotation = token.data.lockRotation;
           }
           // Update Token
-          console.log(token);
+          //console.log(token);
           token.update({
             vision: true,
             dimLight: dimLight,
@@ -222,5 +227,5 @@ function main() {
       }
     }
   }).render(true);
-  // v.2.0.4
+  // v.2.1.0
 }
