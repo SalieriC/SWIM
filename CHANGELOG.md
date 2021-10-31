@@ -5,9 +5,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-**Possibly** compatible with Foundry 0.8.x but I can't say for sure.  
+
+## [0.10.0] - 2021-10-31  
+**Note:** From my testing this is compatible with Foundry 0.8.x but - as usual with software development - problems may occur. Please report them on this repo as usual.  
+**Bounty Notice:** I have very limited time atm. Everyone who creates merge requests with (working) updates to the macros which respect changes from Foundry version 9 (and thus gets rid of the warnings in the console) will receive a reward in the form of a free, high quality Battle Map. You may choose from one of these settings: Medieval Fantasy, Western or Pirates. A merge request covering three or more macros (that have not yet been covered) will be rewarded with an export of the selected map, set up with walls, lights and everything. The first merge request that covers *all* macros and works will be rewarded with a custom made battle map made after *your* specifications (within a reasonable degree of detail).  
 ### You need to update these macros:  
 - SWIM: Ammo Management  
+- (Un-)Shake (both)  
+- (Un-)Stun  
+- Ammo Management (enhanced)  
+- Mark Dead  
+- Soak Damage  
+- Spend Benny
+### New Macros:  
+- Loot-o-Mat (see ReadMe)  
+### Added
+- Support for the *weaken undead* power (Hellfrost) in the Unshake (SWD) macro that disables the +2 bonus if the token is undead but has an active effect called "Undead" that is disabled.  
+- Support for actor specific shaken and unshake sfx.  
+- The macros now use the Benny image configured in the system.  
+- Ammo Management now supports attack sounds for regular, frenzy and improved frenzy attacks, this requires the Ammo field to contain "MELEE".  
 ### Fixed  
 - Fixed a bug that sometimes prevented a second shot sfx to be played in the BR2 integration.  
 

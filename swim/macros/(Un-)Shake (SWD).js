@@ -9,23 +9,32 @@ async function main() {
 
     // Checking for SWADE Spices & Flavours and setting up the Benny image.
     let bennyImage = "icons/commodities/currency/coin-embossed-octopus-gold.webp";
-    if (game.modules.get("swade-spices")?.active) {
-        let benny_Back = game.settings.get(
-            'swade-spices', 'bennyBack');
+        let benny_Back = game.settings.get('swade', 'bennyImage3DBack');
         if (benny_Back) {
             bennyImage = benny_Back;
         }
-    }
     // Setting up SFX path.
     let shakenSFX = game.settings.get(
         'swim', 'shakenSFX');
+    let unshakeSFX;
+    if (token.actor.data.data.additionalStats.sfx) {
+        let sfxSequence = token.actor.data.data.additionalStats.sfx.value.split("|");
+        shakenSFX = sfxSequence[0];
+        unshakeSFX = sfxSequence[2];
+    }
 
     let bennies;
     let bv;
 
     async function rollUnshake() {
 
-        const edgeNames = ['combat reflexes', 'demon', 'undead', 'construct', 'undead (harrowed)'];
+        const edgeNames = ['combat reflexes', 'demon', 'construct', 'undead (harrowed)'];
+        const undeadAE = token.actor.effects.find(ae => ae.data.label.toLowerCase() === "undead");
+        if (undeadAE && undeadAE.data.disabled === false) {
+            edgeNames.push('undead')
+        } else if (!undeadAE) {
+            edgeNames.push('undead')
+        }
         const actorAlias = speaker.alias;
         // ROLL SPIRIT AND CHECK COMBAT REFLEXES
         const r = await token.actor.rollAttribute('spirit');
@@ -50,10 +59,12 @@ async function main() {
             if (rollWithEdge > 3 && rollWithEdge <= 7) {
                 chatData += ` and is no longer Shaken but cannot act this turn.`;
                 token.actor.update({ "data.status.isShaken": false });
+                if (unshakeSFX) { AudioHelper.play({ src: `${unshakeSFX}` }, true); }
                 useBenny();
             } else if (rollWithEdge >= 8) {
                 chatData += `, is no longer Shaken and may act normally.`;
                 token.actor.update({ "data.status.isShaken": false });
+                if (unshakeSFX) { AudioHelper.play({ src: `${unshakeSFX}` }, true); }
             } else {
                 chatData += `, is still Shaken, may only move at half pace but may take free actions.`;
                 useBenny();
@@ -155,5 +166,5 @@ async function main() {
             AudioHelper.play({ src: `${shakenSFX}` }, true);
         }
     }
-    /// v.3.3.3 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
+    /// v.3.5.0 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
 }

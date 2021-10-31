@@ -9,6 +9,10 @@
 //Set up
 let incapSFX = game.settings.get(
   'swim', 'incapSFX');
+  if (token.actor.data.data.additionalStats.sfx) {
+    let sfxSequence = token.actor.data.data.additionalStats.sfx.value.split("|");
+    incapSFX = sfxSequence[2];
+  }
 
 main();
 
@@ -42,5 +46,5 @@ function main() {
   ui.notifications.info("Marked as dead/alive.");
   AudioHelper.play({ src: `${incapSFX}` }, true);
 
-  // v.2.0.1
+  // v.2.1.0
 }

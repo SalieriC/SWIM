@@ -8,13 +8,11 @@ function main() {
     }
     // Checking for SWADE Spices & Flavours and setting up the Benny image.
     let bennyImage = "icons/commodities/currency/coin-embossed-octopus-gold.webp";
-    if (game.modules.get("swade-spices")?.active) {
-        let benny_Back = game.settings.get(
-            'swade-spices', 'bennyBack');
+    let benny_Back = game.settings.get('swade', 'bennyImage3DBack');
         if (benny_Back) {
             bennyImage = benny_Back;
         }
-    }
+
     // Setting SFX
     let woundedSFX = game.settings.get(
         'swim', 'woundedSFX');
@@ -26,6 +24,13 @@ function main() {
         'swim', 'looseFatigueSFX');
     let potionSFX = game.settings.get(
         'swim', 'potionSFX');
+    if (token.actor.data.data.additionalStats.sfx) {
+        let sfxSequence = token.actor.data.data.additionalStats.sfx.value.split("|");
+        woundedSFX = sfxSequence[0];
+        incapSFX = sfxSequence[1];
+        healSFX = sfxSequence[2];
+        looseFatigueSFX = sfxSequence[2];
+    }
 
     // Declairing variables and constants.
     const wv = token.actor.data.data.wounds.value;
@@ -740,5 +745,5 @@ for (let fatiguePotion of ownedFatiguePotions) {
             setTimeout(resolve, ms);
         });
     }
-    // v.3.1.1 By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
+    // v.3.2.0 By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
 }

@@ -25,6 +25,13 @@ function main() {
         'swim', 'grittyDamage');
     let injuryTable = game.settings.get(
         'swim', 'injuryTable');
+    let soakSFX;
+    if (token.actor.data.data.additionalStats.sfx) {
+        let sfxSequence = token.actor.data.data.additionalStats.sfx.value.split("|");
+        woundedSFX = sfxSequence[0];
+        incapSFX = sfxSequence[1];
+        soakSFX = sfxSequence[3];
+    }
 
     // Check if a token is selected.
     if (!token || canvas.tokens.controlled.length > 1) {
@@ -106,6 +113,7 @@ function main() {
                 }
             } else if (rounded < numberWounds) {
                 chatData += ` and soaks ${rounded} of his Wounds.`;
+                if (soakSFX) { AudioHelper.play({ src: `${soakSFX}` }, true); }
                 if (bv < 1) {
                     applyWounds();
                 }
@@ -114,6 +122,7 @@ function main() {
                 };
             } else if (rounded >= numberWounds) {
                 chatData += ` and soaks all of his Wounds.`;
+                if (soakSFX) { AudioHelper.play({ src: `${soakSFX}` }, true); }
                 if (token.actor.data.data.status.isShaken === true) {
                     token.actor.update({ "data.status.isShaken": false });
                 }
@@ -363,5 +372,5 @@ function main() {
             applyWounds();
         }
     }
-    // V2.5.4 Code by SalieriC#8263. Critical Failure awareness by Kekilla#7036 Testing and bug-chasing: javierrivera#4813.
+    // V2.6.0 Code by SalieriC#8263. Critical Failure awareness by Kekilla#7036 Testing and bug-chasing: javierrivera#4813.
 }

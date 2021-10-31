@@ -70,6 +70,11 @@ I suggest to use this template and populate it with the relative file paths of y
 Note that currently no three round burst sfx is supported. Doing this would mean introducing two more variables (burst and burst for suppressed weapons). I thought this would be a bit too much. Let me know if you really need it.  
 One of the easiest things to do to get the relative file paths of your weapon sounds is adding them to playlists and then just copy the file path from there into the template.  
 
+### Using the macro for melee SFX  
+You can use the macro to play melee SFX as well. Set the SFX Additional Stat up as so:  
+`ATTACK|FREMZY|IMPROVED`  
+Then set Ammunitions to `MELEE`. This will play a sound effect on an attack and also different SFX for Frenzy attacks and improved Frenzy Attacks. Without BR2 integration (see below) this requires to set the Rate of Fire to `1`, `2` or `3` as well.  
+
 # Ammunition  
 The core system currently supports this stat on a weapon but unfortunately it is not shown until you activate the ammo management of the system. But we want to not use the systems default ammo management. I've created a request to also show it when ammo management is disabled. For now we need a workaround though. Fortunately, there is one:  
 

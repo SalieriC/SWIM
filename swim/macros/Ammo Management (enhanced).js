@@ -199,8 +199,15 @@ async function weaponDialog() {
             AudioHelper.play({ src: `${sfx_shot}` }, true);
           }
       }
-  }
-    else if (item_weapon.data.data.additionalStats.isConsumable && item_weapon.data.data.additionalStats.isConsumable.value === true) {
+  } else if (item_weapon.data.data.ammo === "MELEE" && item_weapon.data.data.additionalStats.sfx) {
+      let meleeSFX = item_weapon.data.data.additionalStats.sfx.value.split("|");
+      let attackSFX = meleeSFX[0];
+      let frenzySFX = meleeSFX[1];
+      let frenzyImpSFX = meleeSFX[2];
+      if (rate_of_fire === 1) { AudioHelper.play({ src: `${attackSFX}` }, true); }
+      else if (rate_of_fire === 2) { AudioHelper.play({ src: `${frenzySFX}` }, true); }
+      else if (rate_of_fire >= 3) { AudioHelper.play({ src: `${frenzyImpSFX}` }, true); }
+  } else if (item_weapon.data.data.additionalStats.isConsumable && item_weapon.data.data.additionalStats.isConsumable.value === true) {
       const currentQuantity = parseInt(item_weapon.data.data.quantity);
       if (currentQuantity <= 0) {
         return ui.notifications.error(`You don't have a ${item_weapon.name} left.`);
@@ -496,7 +503,7 @@ async function weaponDialog() {
       html.find(`#singleReload`)[0].checked,
     ];
   }
-  // V. 3.1.0 By SalieriC#8263. Dialogue Framework: Kekilla#7036
+  // V. 3.2.0 By SalieriC#8263. Dialogue Framework: Kekilla#7036
 }
 
 weaponDialog();

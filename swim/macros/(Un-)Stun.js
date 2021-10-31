@@ -14,15 +14,18 @@ async function main() {
   let stunSFX = game.settings.get(
     'swim', 'stunSFX');
 
+  let unshakeSFX;
+  if (token.actor.data.data.additionalStats.sfx) {
+    let sfxSequence = token.actor.data.data.additionalStats.sfx.value.split("|");
+    unshakeSFX = sfxSequence[2];
+  }
+
   // Checking for SWADE Spices & Flavours and setting up the Benny image.
   let bennyImage = "icons/commodities/currency/coin-embossed-octopus-gold.webp";
-  if (game.modules.get("swade-spices")?.active) {
-    let benny_Back = game.settings.get(
-      'swade-spices', 'bennyBack');
+    let benny_Back = game.settings.get('swade', 'bennyImage3DBack')
     if (benny_Back) {
       bennyImage = benny_Back;
     }
-  }
 
   //Checking for Elan
   const elan = token.actor.data.items.find(function (item) {
@@ -66,6 +69,7 @@ async function main() {
         chatData += ` and is no longer Stunned but remains Vulnerable until end of next turn.`;
         token.actor.update({ "data.status.isVulnerable": true });
         token.actor.update({ "data.status.isStunned": false });
+        if (unshakeSFX) { AudioHelper.play({ src: `${unshakeSFX}` }, true); }
         useBenny();
       } else if (rollWithEdge >= 8) {
         chatData += `, is no longer Stunned and looses Vulnerable after the turn.`;
@@ -75,6 +79,7 @@ async function main() {
         if (token.data.effects.includes(`${proneIconPath}`)) {
           token.toggleEffect(`${proneIconPath}`)
         }
+        if (unshakeSFX) { AudioHelper.play({ src: `${unshakeSFX}` }, true); }
       } else {
         chatData += ` and remains Stunned.`;
         useBenny();
@@ -187,5 +192,5 @@ async function main() {
       AudioHelper.play({ src: `${stunSFX}` }, true);
     }
   }
-  // v.3.3.0 Made by SalieriC#8263 using original Code from Shteff.
+  // v.3.4.0 Made by SalieriC#8263 using original Code from Shteff.
 }

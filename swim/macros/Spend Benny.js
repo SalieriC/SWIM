@@ -13,13 +13,10 @@ async function main() {
 
     // Checking for SWADE Spices & Flavours and setting up the Benny image.
     let bennyImage = "icons/commodities/currency/coin-embossed-octopus-gold.webp";
-    if (game.modules.get("swade-spices")?.active) {
-        let benny_Back = game.settings.get(
-            'swade-spices', 'bennyBack');
+    let benny_Back = game.settings.get('swade', 'bennyImage3DBack');
         if (benny_Back) {
             bennyImage = benny_Back;
         }
-    }
 
     let bennies = token.actor.data.data.bennies.value;
 

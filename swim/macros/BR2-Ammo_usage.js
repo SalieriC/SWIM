@@ -130,6 +130,14 @@ async function shoot() {
                     AudioHelper.play({ src: `${sfx_shot}` }, true);
                 }
         }
+    } else if (item_weapon.data.data.ammo === "MELEE" && item_weapon.data.data.additionalStats.sfx) {
+        let meleeSFX = item_weapon.data.data.additionalStats.sfx.value.split("|");
+        let attackSFX = meleeSFX[0];
+        let frenzySFX = meleeSFX[1];
+        let frenzyImpSFX = meleeSFX[2];
+        if (rate_of_fire === 1) { AudioHelper.play({ src: `${attackSFX}` }, true); }
+        else if (rate_of_fire === 2) { AudioHelper.play({ src: `${frenzySFX}` }, true); }
+        else if (rate_of_fire >= 3) { AudioHelper.play({ src: `${frenzyImpSFX}` }, true); }
     }
     else if (item_weapon.data.data.additionalStats.isConsumable && item_weapon.data.data.additionalStats.isConsumable.value === true) {
         //Get Skill from BR2. This returns as "Skill dx" so we need to filter that later...
@@ -308,5 +316,5 @@ async function shoot() {
             }
         }
     }
-    //V. 3.1.0 by SalieriC#8263 with help from javierrivera#4813.
+    //V. 3.2.0 by SalieriC#8263 with help from javierrivera#4813.
 }

@@ -249,3 +249,16 @@ A utility macro made by [Bruno Calado](https://github.com/brunocalado) that calc
 **Immersion setting:** None.  
 **Description:**  
 A utility macro made by [Bruno Calado](https://github.com/brunocalado) that calculates Scale depending on Size and gives the appropriate malus/bonus. Requires a target to function.  
+  
+### Loot-o-Mat  
+**Immersion setting:** None.  
+**Description:**  
+This macro relies on an Additional Stat set up on your actors: "treasure" (type string, no max value). Your bestiary needs this Additional Stat on the actors to function automatically (but there is another way of using it, see below).  
+Allowed treasure types are: "Meager", "Worthwhile", "Rich" and "Treasure Trove" which are common loot types i.e. in Hellfrost, 50 Fathoms or the Fantasy  Companion.  
+It is also common to these settings to state treasure per x opponents (i.e. "Meager, per 5 Orcs"). In this case set up the Additional Stat like this: "Meager, per x", "Meager per x" or "Meager/x" where x is the amount of enemies as a number *not* a word. These three options are covered by the macro, use no other format!  
+   
+**How does it work?**
+The macro searches all selected and targeted tokens (it won't use duplicates if targeted and selected tokens are the same, don't worry) for the additional stat "treasure" and makes a roll for loot, then it creates a chat message with the random loot amount.  
+Alternatively, you can use the macro with no tokens targeted/selected and a dialogue will appear that lets you enter the amount of enemies with their different loot types individually. This dialogue will also open when none of the selected and targeted tokens has the Additional Stat so you can safely use the macro without this.  
+If the loot type is set up with an amount of enemies like above (i.e. "Meager, per 5"), the number is used for division and the result is rounded to two decimals.  
+In Hellfrost this represents Silver Scields, in Settings which don't use a sub-currency (like 50f), just ignore or round off manually.  
