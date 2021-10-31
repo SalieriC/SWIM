@@ -38,7 +38,7 @@
  * which don't use a sub-currency (like 50f), just ignore
  * or round off manually.
  * 
- * v. 1.1.1 by SalieriC#8263
+ * v. 1.1.2 by SalieriC#8263
 *********************************************************/
 
 
@@ -54,6 +54,12 @@ const meagerIMG = "icons/commodities/currency/coins-assorted-mix-copper.webp";
 const worthwhileIMG = "icons/commodities/currency/coins-assorted-mix-silver.webp";
 const richIMG = "icons/commodities/currency/coins-plain-stack-gold.webp";
 const troveIMG = "icons/commodities/currency/coins-assorted-mix-platinum.webp";
+
+const meagerHeading = "Meager Treasure";
+const worthwhileHeading = "Worthwhile Treasure";
+const richHeading = "Rich Treasure";
+const troveHeading = "Treasure Trove";
+let heading = "Treasure";
 
 let dialogueFirstLine = "<p>Enter the amount of slain enemies per treasure type:</p>";
 
@@ -82,15 +88,15 @@ async function roll_loot() {
 
     let result = Math.round(roll.total * 100) / 100;
 
-    if (result >= 1000) {img = troveIMG;}
-    else if (result >= 100 && result < 1000) {img = richIMG;}
-    else if (result >= 10 && result < 100) {img = worthwhileIMG;}
-    else if (result < 10) {img = meagerIMG;}
+    if (result >= 1000) {img = troveIMG; heading = troveHeading}
+    else if (result >= 100 && result < 1000) {img = richIMG; heading = richHeading}
+    else if (result >= 10 && result < 100) {img = worthwhileIMG; heading = worthwhileHeading}
+    else if (result < 10) {img = meagerIMG; heading = meagerHeading}
 
     let treasure = `
 <div class="swade-core">
-<h2><img style="border: 0;" src=${img} width="25" height="25" /> Meager Treasure</h2>
-<p>You find <strong>${result} gs</strong> woth of treasure on ${name} or in the lair.</p>
+<h2><img style="border: 0;" src=${img} width="25" height="25" /> ${heading}</h2>
+<p>You find <strong>${result} $</strong> woth of treasure on ${name} or in the lair.</p>
 </div>
 `
 
