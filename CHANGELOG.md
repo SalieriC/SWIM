@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Mark Dead  
 - Soak Damage  
 - Spend Benny
+- Chase Setup  
 ### New Macros:  
 - Loot-o-Mat (see ReadMe)  
 ### Added
