@@ -21,7 +21,10 @@
 	],
 	"systems": ["swade"],
 	"esmodules": ["./scripts/init.js"],
-	"scripts": ["./scripts/settings-extender.js"],
+	"scripts": [
+		"./scripts/settings-extender.js",
+		"./scripts/swim-class.js"
+	],
 	"packs": [
         {
             "name": "swade-immersive-macros",
