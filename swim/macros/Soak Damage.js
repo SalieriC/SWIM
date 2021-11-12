@@ -18,8 +18,6 @@ function main() {
     // Setting SFX
     let woundedSFX = game.settings.get(
         'swim', 'woundedSFX');
-    let incapSFX = game.settings.get(
-        'swim', 'incapSFX');
     // Injury Table for Gritty Damage
     let grit = game.settings.get(
         'swim', 'grittyDamage');
@@ -29,7 +27,6 @@ function main() {
     if (token.actor.data.data.additionalStats.sfx) {
         let sfxSequence = token.actor.data.data.additionalStats.sfx.value.split("|");
         woundedSFX = sfxSequence[0];
-        incapSFX = sfxSequence[1];
         soakSFX = sfxSequence[3];
     }
 
@@ -178,10 +175,7 @@ function main() {
                         }
                         else {
                             token.actor.update({ "data.wounds.value": wm });
-                            game.cub.addCondition("Incapacitated");
-                            if (incapSFX) {
-                                AudioHelper.play({ src: `${incapSFX}` }, true);
-                            }
+                            swim.start_macro('[Script] Mark Dead');
                         }
                         if (!game.user.isGM && setWounds > 0 && grit === true) {
                             game.tables.getName(`${injuryTable}`).draw();

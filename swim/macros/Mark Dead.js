@@ -22,29 +22,23 @@ function main() {
     return;
   }
 
-  let hasAlive = false;
   for (let e of canvas.tokens.controlled) {
-    if (!e.getFlag("healthEstimate", "dead")) {
-      hasAlive = true;
-      break
-    }
-  }
-  for (let e of canvas.tokens.controlled) {
-    e.setFlag("healthEstimate", "dead", hasAlive)
+    let hasAlive = !e.document.getFlag("healthEstimate", "dead")
+    e.document.setFlag("healthEstimate", "dead", hasAlive)
     async function toggleCondition(condition, token, { warn = true } = {}) {
       if (!condition || !token) return;
-
+  
       game.cub.hasCondition(condition, token, { warn })
         ? await game.cub.removeCondition(condition, token, { warn })
         : await game.cub.addCondition(condition, token, { warn });
-
+  
       return game.cub.hasCondition(condition, token, { warn });
     }
-
+  
     toggleCondition(`Incapacitated`, e);
   }
-  ui.notifications.info("Marked as dead/alive.");
-  AudioHelper.play({ src: `${incapSFX}` }, true);
+    ui.notifications.info("Marked as dead/alive.");
+    AudioHelper.play({ src: `${incapSFX}` }, true);
 
-  // v.2.1.0
+  // v.3.0.0
 }

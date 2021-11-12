@@ -4,12 +4,17 @@
 	"description": "<p><b>READ THE README!</b> Doing so is very important!</p><p>A simple module to configure some stuff in the SWADE System on Foundry VTT. <a href='https://ko-fi.com/salieric'>Please consider donating.</a> </p>",
 	"minimumCoreVersion": "0.8.8",
 	"compatibleCoreVersion": "0.8.9",
-	"version": "0.10.0",
+	"version": "0.10.1",
 	"author": "SalieriC",
 	"dependencies": [
 		{
 		  "name": "swade",
 		  "type": "system"
+		},
+		{
+			"type": "module",
+			"name": "compendium-folders",
+			"manifest": "https://raw.githubusercontent.com/earlSt1/vtt-compendium-folders/master/module.json"
 		}
 	],
 	"languages": [
