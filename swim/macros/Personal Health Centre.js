@@ -58,12 +58,12 @@ function main() {
     //Checking for Health Potions
     const healthPotionOptions = game.settings.get(
         'swim', 'healthPotionOptions');
-    const healthPotionsSplit = healthPotionOptions.split(', ');
+    const healthPotionsSplit = healthPotionOptions.split('|');
     const hasHealthPotion = token.actor.data.items.find(function (item) {
-        return (healthPotionsSplit.includes(item.name) && item.type === "gear" && item.data.quantity > 0)
+        return (healthPotionsSplit.includes(item.name) && item.type === "gear" && item.data.data.quantity > 0)
     });
     //Find owned Health potions.
-    const ownedHealthPotions = healthPotionsSplit.filter(potion => token.actor.data.items.some(item => item.name === potion && item.type === "gear" && item.data.quantity > 0));
+    const ownedHealthPotions = healthPotionsSplit.filter(potion => token.actor.data.items.some(item => item.name === potion && item.type === "gear" && item.data.data.quantity > 0));
     //Set up a list of Health Potions to choose from.
     let healthPotionList;
     for (let healthPotion of ownedHealthPotions) {
@@ -73,12 +73,12 @@ function main() {
 //Checking for Fatigue Potions
 const fatiguePotionOptions = game.settings.get(
     'swim', 'fatiguePotionOptions');
-const fatiguePotionsSplit = fatiguePotionOptions.split(', ');
+const fatiguePotionsSplit = fatiguePotionOptions.split('|');
 const hasFatiguePotion = token.actor.data.items.find(function (item) {
-    return (fatiguePotionsSplit.includes(item.name) && item.type === "gear" && item.data.quantity > 0)
+    return (fatiguePotionsSplit.includes(item.name) && item.type === "gear" && item.data.data.quantity > 0)
 });
 //Find owned Fatigue potions.
-const ownedFatiguePotions = fatiguePotionsSplit.filter(potion => token.actor.data.items.some(item => item.name === potion && item.type === "gear" && item.data.quantity > 0));
+const ownedFatiguePotions = fatiguePotionsSplit.filter(potion => token.actor.data.items.some(item => item.name === potion && item.type === "gear" && item.data.data.quantity > 0));
 //Set up a list of Fatigue Potions to choose from.
 let fatiguePotionList;
 for (let fatiguePotion of ownedFatiguePotions) {
@@ -612,7 +612,7 @@ for (let fatiguePotion of ownedFatiguePotions) {
                             content: `<img style="border: none;" src="${potion_icon}" alt="" width="25" height="25" /> ${token.name} uses a ${selectedPotion} to heal ${genericHealWounds} wound(s).`
                         })
                         if (potionSFX) {
-                            let audioDuration = AudioHelper.play({ src: `${potionSFX}` }, true)._duration;
+                            let audioDuration = (await AudioHelper.play({ src:  `${potionSFX}` }, true)).duration
                             await wait(audioDuration*1000);
                         }
                         removeWounds();
@@ -661,7 +661,7 @@ for (let fatiguePotion of ownedFatiguePotions) {
                             content: `<img style="border: none;" src="${potion_icon}" alt="" width="25" height="25" /> ${token.name} uses a ${selectedPotion} to cure ${genericHealFatigue} level(s) of Fatigue.`
                         })
                         if (potionSFX) {
-                            let audioDuration = AudioHelper.play({ src: `${potionSFX}` }, true)._duration;
+                            let audioDuration = (await AudioHelper.play({ src:  `${potionSFX}` }, true)).duration
                             await wait(audioDuration*1000);
                         }
                         RemoveFatigue();
@@ -745,5 +745,5 @@ for (let fatiguePotion of ownedFatiguePotions) {
             setTimeout(resolve, ms);
         });
     }
-    // v.3.2.0 By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
+    // v.3.2.1 By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
 }

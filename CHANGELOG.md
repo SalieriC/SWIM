@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.10.2] - 2021-11-15  
+### You need to update these macros:  
+- None, unless you're still using the script macros (see previous releases notes).  
+### Fixed  
+- Fixed a bug in data structure resulting in not getting owned potions in the Personal Health Centre macro.  
+- Fixed a minor bug that resulted in not waiting for the drinking sound before the next sfx.  
+### Changed (**Breaking**)  
+- Changed the setup for Potion names from comma-space seperated (', ') to pipe seperated ('|'). You need to adjust the settings manually if you're already using SWIM, otherwise the macro will not find the potions. This was done to make comma useable in potion names for better sorting (i.e. `Healing Potion, lesser`). So a string like "Healing Potion, Greater Healing Potion" now needs to be changed to "Healing Potion|Greater Healing Potion".  
+
 ## [0.10.1] - 2021-11-11  
 ### You need to update these macros:  
 - **All of them.** (Now featuring: Automatic updates, see below.)  

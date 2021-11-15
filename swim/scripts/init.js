@@ -40,7 +40,7 @@ function register_settings() {
         name: game.i18n.localize("SWIM.healthPotionOptionsName"),
         hint: game.i18n.localize("SWIM.healthPotionOptionsHint"),
         type: String,
-        default: 'Minor Health Potion, Health Potion, Greater Health Potion, Minor Healing Potion, Healing Potion, Greater Healing Potion',
+        default: 'Minor Health Potion|Health Potion|Greater Health Potion|Minor Healing Potion|Healing Potion|Greater Healing Potion',
         scope: 'world',
         config: true,
     });
@@ -49,7 +49,7 @@ function register_settings() {
         name: game.i18n.localize("SWIM.fatiguePotionOptionsName"),
         hint: game.i18n.localize("SWIM.fatiguePotionOptionsHint"),
         type: String,
-        default: 'Minor Potion of Well-Being, Potion of Well-Being, Greater Potion of Well-Being, Minor Recreational Potion, Recreational Potion, Greater Recreational Potion',
+        default: 'Minor Potion of Well-Being|Potion of Well-Being|Greater Potion of Well-Being|Minor Recreational Potion|Recreational Potion|Greater Recreational Potion',
         scope: 'world',
         config: true,
     });
