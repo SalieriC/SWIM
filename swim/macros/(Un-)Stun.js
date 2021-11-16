@@ -20,7 +20,7 @@ async function main() {
     unshakeSFX = sfxSequence[2];
   }
 
-  // Checking for SWADE Spices & Flavours and setting up the Benny image.
+  // Checking for system Benny image.
   let bennyImage = "icons/commodities/currency/coin-embossed-octopus-gold.webp";
     let benny_Back = game.settings.get('swade', 'bennyImage3DBack')
     if (benny_Back) {
@@ -192,5 +192,5 @@ async function main() {
       AudioHelper.play({ src: `${stunSFX}` }, true);
     }
   }
-  // v.3.4.0 Made by SalieriC#8263 using original Code from Shteff.
+  // v.3.4.1 Made by SalieriC#8263 using original Code from Shteff.
 }

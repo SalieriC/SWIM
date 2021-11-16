@@ -6,15 +6,12 @@ function main() {
         ui.notifications.error("Please select a token first");
         return;
     }
-    // Checking for SWADE Spices & Flavours and setting up the Benny image.
+    // Checking for System Benny image.
     let bennyImage = "icons/commodities/currency/coin-embossed-octopus-gold.webp";
-    if (game.modules.get("swade-spices")?.active) {
-        let benny_Back = game.settings.get(
-            'swade-spices', 'bennyBack');
+        let benny_Back = game.settings.get('swade', 'bennyImage3DBack');
         if (benny_Back) {
             bennyImage = benny_Back;
         }
-    }
     // Setting SFX
     let woundedSFX = game.settings.get(
         'swim', 'woundedSFX');
@@ -67,7 +64,7 @@ function main() {
         let edgeText = "";
         for (let edge of edges) {
             rollWithEdge += 2;
-            edgeText += `<br/><i>+ ${edge.name}</i>`;
+            edgeText += `<br/><i>+ 2 <img src="${edge.img}" alt="" width="15" height="15" style="border:0" />${edge.name}</i>`;
         }
 
         // If Holy Warrior or Unholy Warrior is used: Include the amount of PPs used as a bonus to the roll.
@@ -366,5 +363,5 @@ function main() {
             applyWounds();
         }
     }
-    // V2.6.0 Code by SalieriC#8263. Critical Failure awareness by Kekilla#7036 Testing and bug-chasing: javierrivera#4813.
+    // V2.6.2 Code by SalieriC#8263. Critical Failure awareness by Kekilla#7036 Testing and bug-chasing: javierrivera#4813.
 }
