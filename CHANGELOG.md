@@ -6,13 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.10.3] - TBD  
+## [0.10.3] - 2021-11-16  
 ### You need to update these macros:  
-- None, unless you're still using the script macros (see releases notes to 0.10.1).  
+- None, unless you're still using the script macros ([see releases notes to 0.10.1](https://github.com/SalieriC/SWADE-Immersive-Macros/releases/tag/v.0.10.1)).  
 ### Fixed  
-- The chat message of Soak Wounds now shows the proper benny image.  
+- The chat message of Soak Wounds now shows the systems benny image.  
 ### Added  
 - The two Unshake macros now utilise the actors `data.attributes.spirit.unShakeBonus` data. As of yet, the system does not support this but the bonus is added in case a script changed it on an actor. It also checks all Active Effects on the actor for this and applies the modifier individually if the AE is active, making it finally possible to affect the Unschake macro with AEs (and thus items that use AEs to affect unshake).  
+**Warning:** Do *not* use an AE to set the `data.attributes.spirit.unShakeBonus` for Edges that are already covered by the Unshake macors, otherwise the bonus will be added twice.  
 
 ## [0.10.2] - 2021-11-15  
 ### You need to update these macros:  
