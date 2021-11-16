@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.10.3] - TBD  
 ### You need to update these macros:  
-- None, unless you're still using the script macros (see previous releases notes).  
+- None, unless you're still using the script macros (see releases notes to 0.10.1).  
 ### Fixed  
 - The chat message of Soak Wounds now shows the proper benny image.  
 ### Added  
