@@ -7,7 +7,7 @@ async function main() {
         return;
     }
 
-    // Checking for SWADE Spices & Flavours and setting up the Benny image.
+    // Checking for system Benny image.
     let bennyImage = "icons/commodities/currency/coin-embossed-octopus-gold.webp";
         let benny_Back = game.settings.get('swade', 'bennyImage3DBack')
         if (benny_Back) {
@@ -42,11 +42,46 @@ async function main() {
         const edges = token.actor.data.items.filter(function (item) {
             return edgeNames.includes(item.name.toLowerCase()) && (item.type === "edge" || item.type === "ability");
         });
+
         let rollWithEdge = r.total;
         let edgeText = "";
         for (let edge of edges) {
             rollWithEdge += 2;
-            edgeText += `<br/><i>+ ${edge.name}</i>`;
+            edgeText += `<br/><i>+ 2 <img src="${edge.img}" alt="" width="15" height="15" style="border:0" />${edge.name}</i>`;
+        }
+        //Get generic actor unshake bonus and check if it is from an AE:
+        const unShakeBonus = token.actor.data.data.attributes.spirit.unShakeBonus;
+        let effectName = [];
+        let effectIcon = [];
+        let effectValue = [];
+        if (unShakeBonus != 0 && token.actor.data.effects.size > 0) {
+            for (let effect of token.actor.data.effects) {
+                if (effect.data.disabled === false) { // only apply changes if effect is enabled
+                    for (let change of effect.data.changes) {
+                        if (change.key === "data.attributes.spirit.unShakeBonus") {
+                            //Building array of effect names and icons that affect the unShakeBonus
+                            effectName.push(effect.data.label);
+                            effectIcon.push(effect.data.icon);
+                            effectValue.push(change.value);
+                        }
+                    }
+                }
+            }
+            for (let i = 0; i < effectName.length; i++) {
+                // Apply mod using parseFloat() to make it a Number:
+                rollWithEdge += parseFloat(effectValue[i]);
+                // Change indicator in case the modifier from AE is negative:
+                let indicator = "+";
+                let effectMod = effectValue[i];
+                if (parseFloat(effectValue[i]) < 0) { 
+                    indicator = "-";
+                    effectMod = effectValue[i].replace("-","");
+                }
+                edgeText += `<br/><i>${indicator} ${effectMod} <img src="${effectIcon[i]}" alt="" width="15" height="15" style="border:0" />${effectName[i]}</i>`;
+            } //Finally, if the unShakeBonus does not come from an AE apply it generically (as of yet this is just a failsafe but makes the script future proof.)
+        } else if (unShakeBonus != 0) {
+            rollWithEdge += unShakeBonus;
+            edgeText += `<br/><i>+ ${unShakeBonus} other actor modifier</i>`;
         }
 
         let chatData = `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge} </span>`;
@@ -162,5 +197,5 @@ async function main() {
             AudioHelper.play({ src: `${shakenSFX}` }, true);
         }
     }
-    /// v.3.5.0 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
+    /// v.3.6.0 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
 }

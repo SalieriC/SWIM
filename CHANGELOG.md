@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.10.3] - TBD  
+### You need to update these macros:  
+- None, unless you're still using the script macros (see previous releases notes).  
+### Fixed  
+- The chat message of Soak Wounds now shows the proper benny image.  
+### Added  
+- The two Unshake macros now utilise the actors `data.attributes.spirit.unShakeBonus` data. As of yet, the system does not support this but the bonus is added in case a script changed it on an actor. It also checks all Active Effects on the actor for this and applies the modifier individually if the AE is active, making it finally possible to affect the Unschake macro with AEs (and thus items that use AEs to affect unshake).  
+
 ## [0.10.2] - 2021-11-15  
 ### You need to update these macros:  
 - None, unless you're still using the script macros (see previous releases notes).  
