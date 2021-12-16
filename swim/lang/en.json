@@ -23,6 +23,8 @@
   "SWIM.proneIMGHint": "Image for the prone condition. If you use CUB, this must be the same as the file path for Prone in CUB.",
   "SWIM.sfxDelayName": "Sound Effect Delay:",
   "SWIM.sfxDelayHint": "This is t delay between certain sound effects in the Ammo Management macro. It is used to delay shot sounds when the amount of shots is 2 or 3 to simulate burst fire and Double Tap without the need to set up extra sound effects for those modes. You may need to experiment a bit. Performance heavily depends on hardware and numbers too low (below about 110) occasionally glitch. You should always use .ogg audio files to increase performance.",
+  "SWIM.npcAmmoName": "NPCs use ammo from inventory:",
+  "SWIM.npcAmmoHint": "If enabled, NPCs require a fitting ammo item in their inventory in order to reload (or shoot weapons which do not require reload actions). If disabled NPCs have an infinite amount of ammo supply but still have a finite amount of shots in their weapon.",
   "SWIM.woundedSFXName": "Wounded SFX",
   "SWIM.woundedSFXHint": "Sound effect to be played when a token takes a Wound.",
   "SWIM.fatiguedSFXName": "Fatigued SFX",

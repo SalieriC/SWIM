@@ -6,7 +6,7 @@
 // Since return only works in functions, the sole purpose of the main() function is to stop the macro from executing if no token is selected.
 main();
 
-function main() {
+async function main() {
   // Checking if at least one token is defined.
   if (canvas.tokens.controlled.length === 0) {
     ui.notifications.error("Please select a token first");
@@ -78,7 +78,7 @@ function main() {
       },
     },
     default: "yes",
-    close: html => {
+    close: async(html) => {
       if (applyChanges) {
         for (let token of canvas.tokens.controlled) {
           let visionType;
@@ -164,8 +164,8 @@ function main() {
               lockRotation = token.data.lockRotation;
           }
           // Update Token
-          console.log(token);
-          token.update({
+          //console.log(token);
+          await token.document.update({
             vision: true,
             dimSight: dimSight,
             brightSight: brightSight,
@@ -215,7 +215,7 @@ function main() {
           }
           // Update Token
           //console.log(token);
-          token.update({
+          await token.document.update({
             vision: true,
             dimLight: dimLight,
             brightLight: brightLight,
@@ -227,5 +227,5 @@ function main() {
       }
     }
   }).render(true);
-  // v.2.1.0
+  // v.2.2.0
 }

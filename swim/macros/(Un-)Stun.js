@@ -6,10 +6,10 @@ async function main() {
     ui.notifications.error("Please select a single token first.");
     return;
   }
+  if (!game.cub.getCondition("Prone")) {
+    ui.notifications.error('You need "Prone" as a condition in Combat Utility Belt. Use the .json file of SWIM to import conditions for SWADE easily.')
+  }
 
-  // Setting up the prone condition image path
-  let proneIconPath = game.settings.get(
-    'swim', 'proneIMG');
   // Setting up SFX path.
   let stunSFX = game.settings.get(
     'swim', 'stunSFX');
@@ -76,8 +76,8 @@ async function main() {
         token.actor.update({ "data.status.isDistracted": false });
         token.actor.update({ "data.status.isStunned": false });
         token.actor.update({ "data.status.isVulnerable": false });
-        if (token.data.effects.includes(`${proneIconPath}`)) {
-          token.toggleEffect(`${proneIconPath}`)
+        if (game.cub.hasCondition("Prone", token)) {
+          game.cub.removeCondition("Prone", token)
         }
         if (unshakeSFX) { AudioHelper.play({ src: `${unshakeSFX}` }, true); }
       } else {
@@ -166,12 +166,12 @@ async function main() {
 
     //Show the Benny Flip
     if (game.dice3d) {
-      game.dice3d.showForRoll(new Roll("1dB").roll(), game.user, true, null, false);
+      game.dice3d.showForRoll(new Roll("1dB").evaluate({ async:false }), game.user, true, null, false);
     }
 
     //Chat Message to let the everyone know a benny was spent
     ChatMessage.create({
-      user: game.user._id,
+      user: game.user.id,
       content: `<p><img style="border: none;" src="${bennyImage}"" width="25" height="25" /> ${game.user.name} spent a Benny for ${token.name}.</p>`,
     });
   }
@@ -183,8 +183,8 @@ async function main() {
       token.actor.update({ "data.status.isStunned": true });
     };
 
-    if (!token.data.effects.includes(`${proneIconPath}`)) {
-      token.toggleEffect(`${proneIconPath}`)
+    if (!game.cub.hasCondition("Prone", token)) {
+      game.cub.addCondition("Prone", token)
     };
     token.actor.update({ "data.status.isDistracted": true });
     token.actor.update({ "data.status.isVulnerable": true });
@@ -192,5 +192,5 @@ async function main() {
       AudioHelper.play({ src: `${stunSFX}` }, true);
     }
   }
-  // v.3.4.1 Made by SalieriC#8263 using original Code from Shteff.
+  // v.3.5.0 Made by SalieriC#8263 using original Code from Shteff.
 }

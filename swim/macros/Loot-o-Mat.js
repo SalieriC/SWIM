@@ -38,7 +38,7 @@
  * which don't use a sub-currency (like 50f), just ignore
  * or round off manually.
  * 
- * v. 1.1.2 by SalieriC#8263
+ * v. 1.2.0 by SalieriC#8263
 *********************************************************/
 
 
@@ -84,7 +84,7 @@ async function main() {
 }
 
 async function roll_loot() {
-    let roll = new Roll(`(1d10*1*${meagerRolls})+(1d10*10*${worthwhileRolls})+(1d10*100*${richRolls})+(1d10*1000*${troveRolls})`).roll();
+    let roll = new Roll(`(1d10*1*${meagerRolls})+(1d10*10*${worthwhileRolls})+(1d10*100*${richRolls})+(1d10*1000*${troveRolls})`).evaluate({ async:false });
 
     let result = Math.round(roll.total * 100) / 100;
 
@@ -101,7 +101,7 @@ async function roll_loot() {
 `
 
     ChatMessage.create({
-        user: game.user._id,
+        user: game.user.id,
         speaker: ChatMessage.getSpeaker({ token: actor }),
         content: treasure
     });

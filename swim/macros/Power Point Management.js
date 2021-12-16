@@ -350,6 +350,13 @@ function main() {
         // Check for Bennies
         function checkBennies() {
             bennies = token.actor.data.data.bennies.value;
+            //Check for actor status and adjust bennies based on edges.
+            let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
+            let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
+            if ((token.actor.data.data.wildcard === false) && (actorGreatLuck === undefined)) {
+                if ((!(actorLuck === undefined)) && (bennies > 1) && ((actorGreatLuck === undefined))) { bennies = 1; }
+                else { bennies = 0; }
+            }
 
             // Non GM token has <1 bennie OR GM user AND selected token has <1 benny
             if ((!game.user.isGM && bennies < 1) || (game.user.isGM && bennies < 1 && game.user.getFlag("swade", "bennies") < 1)) {
@@ -367,6 +374,14 @@ function main() {
         // Spend Benny function
         async function spendBenny() {
             bennies = token.actor.data.data.bennies.value;
+            //Check for actor status and adjust bennies based on edges.
+            let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
+            let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
+            if ((token.actor.data.data.wildcard === false) && (actorGreatLuck === undefined)) {
+                if ((!(actorLuck === undefined)) && (bennies > 1) && ((actorGreatLuck === undefined))) { bennies = 1; }
+                else { bennies = 0; }
+            }
+
             //Subtract the spend, use GM benny if user is GM and token has no more bennies left or spend token benny if user is player and/or token has bennies left.
             if (game.user.isGM && bennies < 1) {
                 game.user.setFlag("swade", "bennies", game.user.getFlag("swade", "bennies") - 1)
@@ -378,7 +393,7 @@ function main() {
 
             //Show the Benny Flip
             if (game.dice3d) {
-                game.dice3d.showForRoll(new Roll("1dB").roll(), game.user, true, null, false);
+                game.dice3d.showForRoll(new Roll("1dB").evaluate({ async:false }), game.user, true, null, false);
             }
         }
 
@@ -403,5 +418,5 @@ function main() {
             },
         }).render(true)
     }
-    // v4.3.2 - Made by SalieriC#8263; with a ton of help from Kandashi (He/Him)#6698, thank you so much. =) Also thank you Enrahim#5273 and Freeze#2689 for helping me with the conditional buttons and Freeze again for the sound. Thx eXaminator#0079 for the option to have no sound.
+    // v4.4.0 - Made by SalieriC#8263; with a ton of help from Kandashi (He/Him)#6698, thank you so much. =) Also thank you Enrahim#5273 and Freeze#2689 for helping me with the conditional buttons and Freeze again for the sound. Thx eXaminator#0079 for the option to have no sound.
 }

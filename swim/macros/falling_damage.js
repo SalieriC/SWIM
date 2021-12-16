@@ -2,7 +2,7 @@
  * Falling Damage Macro.
  * This macro automatically calculates falling damage for all selected tokens.
  * It is capable of factoring in water and snow/soft surfaces as per the core rules.
- * v. 1.0.0 by SalieriC#8263, CSS of the dialogue by Kyane von Schnitzel#8654
+ * v. 1.1.0 by SalieriC#8263, CSS of the dialogue by Kyane von Schnitzel#8654
  * (Do not remove credits, even if editing.)
 *****/
 
@@ -20,10 +20,10 @@ if (game.modules.get("swpf-core-rules")?.active) {
 } else if (game.modules.get("deadlands-core-rules")?.active) {
     messageContent = `<div class="deadlands-core"><h2><img style="border: 0;" src=${this.data.img} width="35" height="35" /> @Compendium[swade-core-rules.swade-rules.KrNAAJXr91wkfxtY]{Damage from Falling}</h2>`;
     officialModule = true;
-} else if (game.modules.get("sprawl-core-rules")?.active) {
+}/* else if (game.modules.get("sprawl-core-rules")?.active) {
     messageContent = `<div class="sprawl-core"><h2><img style="border: 0;" src=${this.data.img} width="35" height="35" /> @Compendium[swade-core-rules.swade-rules.KrNAAJXr91wkfxtY]{Damage from Falling}</h2>`;
     officialModule = true;
-} else if (game.modules.get("swade-core-rules")?.active) {
+}*/ else if (game.modules.get("swade-core-rules")?.active) {
     messageContent = `<div class="swade-core"><h2><img style="border: 0;" src=${this.data.img} width="35" height="35" /> @Compendium[swade-core-rules.swade-rules.KrNAAJXr91wkfxtY]{Damage from Falling}</h2>`;
     officialModule = true;
 }
@@ -35,7 +35,7 @@ main();
 async function roll_damage(token, fallingDepth, snowDepth, waterSuccess) {
     let halvedDepth = Math.ceil(fallingDepth / 2); //damage per 2"
     let damageFormula = `(1d6+1)*${halvedDepth}`;
-    let rollDamage = await new Roll(`${damageFormula}`).roll();
+    let rollDamage = await new Roll(`${damageFormula}`).evaluate({ async:false });
     let damage = rollDamage.total;
     let waterRaise = false;
     if (snowDepth > 0) { 
@@ -130,7 +130,7 @@ content += `
                         messageContent += `</div>`;
                     }
                     ChatMessage.create({
-                        //user: game.user._id,
+                        //user: game.user.id,
                         speaker: ChatMessage.getSpeaker({ token: actor }),
                         content: messageContent
                     });

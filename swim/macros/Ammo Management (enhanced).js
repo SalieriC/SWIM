@@ -1,12 +1,16 @@
 // Preset for SFX of weapons (Without the //):
 //RELOAD|FIRE|AUTOFIRE|SILENCED|SILENCEDAUTOFIRE|EMPTY
 
+// Getting NPC ammo usage from game settings
+const npcAmmo = game.settings.get(
+  'swim', 'npcAmmo');
+
 let dialogID = "";
 
 async function wait(ms) {
-    return new Promise(resolve => {
-        setTimeout(resolve, ms);
-    });
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
 }
 
 async function weaponDialog() {
@@ -126,7 +130,7 @@ async function weaponDialog() {
     let item_ammo = actor.items.getName(`${ammo}`);
     // Getting sfxDelay from game settings
     let sfxDelay = game.settings.get(
-        'swim', 'sfxDelay');
+      'swim', 'sfxDelay');
     // Getting the sfx from the selected weapon
     let sfx_shot/* = stuff*/;
     let sfx_silenced/* = stuff*/;
@@ -159,47 +163,8 @@ async function weaponDialog() {
     //If no ammo needed, only play SFX
     if (item_weapon.data.data.ammo === "NONE" && item_weapon.data.data.additionalStats.sfx) {
       // Play sound effects
-      if (sil === true && sfx_silenced) {
-          if (shots === 2) {
-            AudioHelper.play({ src: `${sfx_silenced}` }, true);
-            await wait(`${sfxDelay}`);
-            AudioHelper.play({ src: `${sfx_silenced}` }, true);
-          }
-          else if (shots === 3) {
-            AudioHelper.play({ src: `${sfx_silenced}` }, true);
-            await wait(`${sfxDelay}`);
-            AudioHelper.play({ src: `${sfx_silenced}` }, true);
-            await wait(`${sfxDelay}`);
-            AudioHelper.play({ src: `${sfx_silenced}` }, true);
-          }
-          else if (shots > 3 && sfx_silenced_auto) {
-            AudioHelper.play({ src: `${sfx_silenced_auto}` }, true);
-          }
-          else {
-            AudioHelper.play({ src: `${sfx_silenced}` }, true);
-          }
-        }
-        else {
-          if (shots === 2) {
-            AudioHelper.play({ src: `${sfx_shot}` }, true);
-            await wait(`${sfxDelay}`);
-            AudioHelper.play({ src: `${sfx_shot}` }, true);
-          }
-          else if (shots === 3) {
-            AudioHelper.play({ src: `${sfx_shot}` }, true);
-            await wait(`${sfxDelay}`);
-            AudioHelper.play({ src: `${sfx_shot}` }, true);
-            await wait(`${sfxDelay}`);
-            AudioHelper.play({ src: `${sfx_shot}` }, true);
-          }
-          else if (shots > 3 && sfx_shot_auto) {
-            AudioHelper.play({ src: `${sfx_shot_auto}` }, true);
-          }
-          else {
-            AudioHelper.play({ src: `${sfx_shot}` }, true);
-          }
-      }
-  } else if (item_weapon.data.data.ammo === "MELEE" && item_weapon.data.data.additionalStats.sfx) {
+      await play_sfx(sil, sfx_silenced, shots, sfxDelay, sfx_silenced_auto, sfx_shot, sfx_shot_auto);
+    } else if (item_weapon.data.data.ammo === "MELEE" && item_weapon.data.data.additionalStats.sfx) {
       let meleeSFX = item_weapon.data.data.additionalStats.sfx.value.split("|");
       let attackSFX = meleeSFX[0];
       let frenzySFX = meleeSFX[1];
@@ -207,7 +172,7 @@ async function weaponDialog() {
       if (rate_of_fire === 1) { AudioHelper.play({ src: `${attackSFX}` }, true); }
       else if (rate_of_fire === 2) { AudioHelper.play({ src: `${frenzySFX}` }, true); }
       else if (rate_of_fire >= 3) { AudioHelper.play({ src: `${frenzyImpSFX}` }, true); }
-  } else if (item_weapon.data.data.additionalStats.isConsumable && item_weapon.data.data.additionalStats.isConsumable.value === true) {
+    } else if (item_weapon.data.data.additionalStats.isConsumable && item_weapon.data.data.additionalStats.isConsumable.value === true) {
       const currentQuantity = parseInt(item_weapon.data.data.quantity);
       if (currentQuantity <= 0) {
         return ui.notifications.error(`You don't have a ${item_weapon.name} left.`);
@@ -217,7 +182,7 @@ async function weaponDialog() {
         { _id: item_weapon.id, "data.quantity": `${newQuantity}` },
       ];
       // Updating the consumable weapon
-      await actor.updateOwnedItem(updates);
+      await actor.updateEmbeddedDocuments("Item", updates);
       // Deleting the consumable weapon if it was the last
       if (newQuantity <= 0) {
         item_weapon.delete();
@@ -237,68 +202,36 @@ async function weaponDialog() {
     //Stuff for weapons with "doesn't require reload action" checked:
     else if (item_weapon.data.data.autoReload === true) {
       //Throw error if no ammo is left.
-      if (item_ammo.data.data.quantity <= 0) { return ui.notifications.error(`You don't have a ${item_ammo.name} left.`); }
-      else {
-        //Setting new constants to overwrite the old ones
-        const currentCharges = parseInt(item_ammo.data.data.quantity);
-        const newCharges = currentCharges - shots;
-        //Setting up the updates
-        const updates = [
-          { _id: item_ammo.id, "data.quantity": `${newCharges}` },
-        ];
-        // Updating the Weapon
-        actor.updateOwnedItem(updates);
-        //Creating the chat message
+      if (actor.type != "character" && npcAmmo === false) {
         ChatMessage.create({
           speaker: {
             alias: actor.name
           },
-          content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${actor.name} fires <b>${shots} ${currentAmmo} round(s)</b> from a ${item_weapon.name} and has <b>${newCharges} left</b>.`
+          content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${actor.name} fires <b>${shots} ${currentAmmo}</b> from a ${item_weapon.name}.`
         })
+      } else if (!item_ammo && actor.type === "character" && npcAmmo === false || !item_ammo && npcAmmo === true) { return ui.notifications.error(`You don't have the required ammo in your inventory.`);
+      } else if (item_ammo.data.data.quantity <= 0 && actor.type === "character" && npcAmmo === false || item_ammo.data.data.quantity <= 0 && npcAmmo === true) { return ui.notifications.error(`You don't have a ${item_ammo.name} left.`); }
+      else {
+          //Setting new constants to overwrite the old ones
+          const currentCharges = parseInt(item_ammo.data.data.quantity);
+          const newCharges = currentCharges - shots;
+          //Setting up the updates
+          const updates = [
+            { _id: item_ammo.id, "data.quantity": `${newCharges}` },
+          ];
+          // Updating the Weapon
+          await actor.updateEmbeddedDocuments("Item", updates);;
+          //Creating the chat message
+          ChatMessage.create({
+            speaker: {
+              alias: actor.name
+            },
+            content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${actor.name} fires <b>${shots} ${currentAmmo}</b> from a ${item_weapon.name} and has <b>${newCharges} left</b>.`
+          })
+        }
         //Playing the SFX
-        // Play sound effects
-        if (sil === true && sfx_silenced) {
-          if (shots === 2) {
-            AudioHelper.play({ src: `${sfx_silenced}` }, true);
-            await wait(`${sfxDelay}`);
-            AudioHelper.play({ src: `${sfx_silenced}` }, true);
-          }
-          else if (shots === 3) {
-            AudioHelper.play({ src: `${sfx_silenced}` }, true);
-            await wait(`${sfxDelay}`);
-            AudioHelper.play({ src: `${sfx_silenced}` }, true);
-            await wait(`${sfxDelay}`);
-            AudioHelper.play({ src: `${sfx_silenced}` }, true);
-          }
-          else if (shots > 3 && sfx_silenced_auto) {
-            AudioHelper.play({ src: `${sfx_silenced_auto}` }, true);
-          }
-          else {
-            AudioHelper.play({ src: `${sfx_silenced}` }, true);
-          }
-        }
-        else {
-          if (shots === 2) {
-            AudioHelper.play({ src: `${sfx_shot}` }, true);
-            await wait(`${sfxDelay}`);
-            AudioHelper.play({ src: `${sfx_shot}` }, true);
-          }
-          else if (shots === 3) {
-            AudioHelper.play({ src: `${sfx_shot}` }, true);
-            await wait(`${sfxDelay}`);
-            AudioHelper.play({ src: `${sfx_shot}` }, true);
-            await wait(`${sfxDelay}`);
-            AudioHelper.play({ src: `${sfx_shot}` }, true);
-          }
-          else if (shots > 3 && sfx_shot_auto) {
-            AudioHelper.play({ src: `${sfx_shot_auto}` }, true);
-          }
-          else {
-            AudioHelper.play({ src: `${sfx_shot}` }, true);
-          }
-        }
+        await play_sfx(sil, sfx_silenced, shots, sfxDelay, sfx_silenced_auto, sfx_shot, sfx_shot_auto);
       }
-    }
     // Check if enough bullets are in the weapon to fire the given amount of shots if this is not a consumable weapon and does require loading action.
     else if (currentCharges < shots && item_weapon.data.data.autoReload === false) {
       ui.notifications.error("You have insufficient ammunition.")
@@ -312,7 +245,7 @@ async function weaponDialog() {
         { _id: item_weapon.id, "data.currentShots": `${newCharges}` },
       ];
       // Updating the Weapon
-      actor.updateOwnedItem(updates);
+      await actor.updateEmbeddedDocuments("Item", updates);
       // Creating the Chat message
       if (!currentAmmo) {
         ChatMessage.create({
@@ -329,165 +262,168 @@ async function weaponDialog() {
           content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${token.name} fires <b>${shots} ${currentAmmo} round(s)</b> from a ${item_weapon.name} and has <b>${newCharges} left</b>.`
         })
       }
-      // Play sound effects
-      if (sil === true && sfx_silenced) {
-        if (shots === 2) {
-          AudioHelper.play({ src: `${sfx_silenced}` }, true);
-          await wait(`${sfxDelay}`);
-          AudioHelper.play({ src: `${sfx_silenced}` }, true);
-        }
-        else if (shots === 3) {
-          AudioHelper.play({ src: `${sfx_silenced}` }, true);
-          await wait(`${sfxDelay}`);
-          AudioHelper.play({ src: `${sfx_silenced}` }, true);
-          await wait(`${sfxDelay}`);
-          AudioHelper.play({ src: `${sfx_silenced}` }, true);
-        }
-        else if (shots > 3 && sfx_silenced_auto) {
-          AudioHelper.play({ src: `${sfx_silenced_auto}` }, true);
-        }
-        else {
-          AudioHelper.play({ src: `${sfx_silenced}` }, true);
-        }
-      }
-      else {
-        if (shots === 2) {
-          AudioHelper.play({ src: `${sfx_shot}` }, true);
-          await wait(`${sfxDelay}`);
-          AudioHelper.play({ src: `${sfx_shot}` }, true);
-        }
-        else if (shots === 3) {
-          AudioHelper.play({ src: `${sfx_shot}` }, true);
-          await wait(`${sfxDelay}`);
-          AudioHelper.play({ src: `${sfx_shot}` }, true);
-          await wait(`${sfxDelay}`);
-          AudioHelper.play({ src: `${sfx_shot}` }, true);
-        }
-        else if (shots > 3 && sfx_shot_auto) {
-          AudioHelper.play({ src: `${sfx_shot_auto}` }, true);
-        }
-        else {
-          AudioHelper.play({ src: `${sfx_shot}` }, true);
-        }
-      }
+      //Play SFX
+      await play_sfx(sil, sfx_silenced, shots, sfxDelay, sfx_silenced_auto, sfx_shot, sfx_shot_auto);
     }
 
     // console.log("Shoot | ", shots, weapon, ammo, sil, item_weapon);
   }
-  function reload(html) {
+
+
+  async function reload(html) {
     let [shots, weapon, ammo, singleReload] = getValues(html);
     // If no ammo left throw an error message.
-    if (!ammo) {
+    if (!ammo && actor.type === 'character' && npcAmmo === false || !ammo && npcAmmo === true) {
       return ui.notifications.error("You have no ammo left to reload this weapon.");
     }
     let item_weapon = actor.items.get(weapon);
-    // Do not allow consumable weapons to be reloaded
-    if (item_weapon.data.data.additionalStats.isConsumable && item_weapon.data.data.additionalStats.isConsumable.value === true) {
-      return ui.notifications.error("You cannot reload consumable weapons, please use Shooting instead.");
-    }
-    let item_ammo = actor.items.getName(`${ammo}`);
-    //console.log(weapon, item_weapon, ammo, item_ammo);
-    const oldAmmo = item_weapon.data.data.additionalStats.loadedAmmo.value;
-    let item_oldAmmo;
-    if (!oldAmmo) {
-      item_oldAmmo = item_ammo;
-    }
-    else {
-      item_oldAmmo = actor.items.getName(`${oldAmmo}`);
-    }
-    // We suspect that the ammo to reload is the same as the previously loaded one. If not chgType will tell the code to swap the ammo.
-    let chgType = false;
-    if (item_oldAmmo != item_ammo) {
-      chgType = true;
-    }
-    // Getting the sfx from the selected weapon
-    let sfx_reload;
-    if (item_weapon.data.data.additionalStats.sfx) {
-      let sfx = item_weapon.data.data.additionalStats.sfx.value.split(`|`);
-      sfx_reload = sfx[0];
-    }
-    // Getting images from items
-    const weaponIMG = item_weapon.data.img;
-    const ammoIMG = item_ammo.data.img;
+    // Only do all the reloading stuff if NPCs use Ammo from Inventory.
+    if (actor.type === 'character' && npcAmmo === false || npcAmmo === true) {
+      // Do not allow consumable weapons to be reloaded
+      if (item_weapon.data.data.additionalStats.isConsumable && item_weapon.data.data.additionalStats.isConsumable.value === true) {
+        return ui.notifications.error("You cannot reload consumable weapons, please use Shooting instead.");
+      }
+      let item_ammo = actor.items.getName(`${ammo}`);
+      //console.log(weapon, item_weapon, ammo, item_ammo);
+      const oldAmmo = item_weapon.data.data.additionalStats.loadedAmmo.value;
+      let item_oldAmmo;
+      if (!oldAmmo) {
+        item_oldAmmo = item_ammo;
+      }
+      else {
+        item_oldAmmo = actor.items.getName(`${oldAmmo}`);
+      }
+      // We suspect that the ammo to reload is the same as the previously loaded one. If not chgType will tell the code to swap the ammo.
+      let chgType = false;
+      if (item_oldAmmo != item_ammo) {
+        chgType = true;
+      }
+      // Getting the sfx from the selected weapon
+      let sfx_reload;
+      if (item_weapon.data.data.additionalStats.sfx) {
+        let sfx = item_weapon.data.data.additionalStats.sfx.value.split(`|`);
+        sfx_reload = sfx[0];
+      }
+      // Getting images from items
+      const weaponIMG = item_weapon.data.img;
+      const ammoIMG = item_ammo.data.img;
 
-    // Getting current numbers
-    const currentCharges = parseInt(item_weapon.data.data.currentShots);
-    const maxCharges = parseInt(item_weapon.data.data.shots);
-    const requiredCharges = parseInt(item_weapon.data.data.shots - currentCharges);
-    const availableAmmo = parseInt(item_ammo.data.data.quantity);
-    const oldAmmoQuantity = parseInt(item_oldAmmo.data.data.quantity);
-    // Variables for recharging procedure
-    let amountToRecharge;
-    let newCharges;
-    let newAmmo;
-    let oldAmmoRefill;
-    // Checking if the Ammo is a charge pack. If not or additionalStat is not present ignore it. Charge Packs can only refill if curr and max shots are equal.
-    if (item_ammo.data.data.additionalStats.isPack && item_ammo.data.data.additionalStats.isPack.value === true) {
-      // Charge Packs only use 1 Quantity to fully charge the weapon
-      amountToRecharge = parseInt(item_weapon.data.data.shots);
-      newCharges = amountToRecharge;
-      newAmmo = availableAmmo - 1;
-      //Refill old Charge Pack if it is still full (current and max shots are equal)
-      if (chgType === true && currentCharges === maxCharges) {
-        oldAmmoRefill = oldAmmoQuantity + 1;
+      // Getting current numbers
+      const currentCharges = parseInt(item_weapon.data.data.currentShots);
+      const maxCharges = parseInt(item_weapon.data.data.shots);
+      const requiredCharges = parseInt(item_weapon.data.data.shots - currentCharges);
+      const availableAmmo = parseInt(item_ammo.data.data.quantity);
+      const oldAmmoQuantity = parseInt(item_oldAmmo.data.data.quantity);
+      // Variables for recharging procedure
+      let amountToRecharge;
+      let newCharges;
+      let newAmmo;
+      let oldAmmoRefill;
+      // Checking if the Ammo is a charge pack. If not or additionalStat is not present ignore it. Charge Packs can only refill if curr and max shots are equal.
+      if (item_ammo.data.data.additionalStats.isPack && item_ammo.data.data.additionalStats.isPack.value === true) {
+        // Charge Packs only use 1 Quantity to fully charge the weapon
+        amountToRecharge = parseInt(item_weapon.data.data.shots);
+        newCharges = amountToRecharge;
+        newAmmo = availableAmmo - 1;
+        //Refill old Charge Pack if it is still full (current and max shots are equal)
+        if (chgType === true && currentCharges === maxCharges) {
+          oldAmmoRefill = oldAmmoQuantity + 1;
+        }
+        else if (chgType === true && currentCharges != maxCharges) {
+          oldAmmoRefill = oldAmmoQuantity;
+        }
       }
-      else if (chgType === true && currentCharges != maxCharges) {
-        oldAmmoRefill = oldAmmoQuantity;
+      // Checking if user selected to change the ammo type. This is only relevant if not a Charge Pack, if it is, it's already handled above.
+      else if (chgType === true) {
+        // When changing Ammo type, remaining shots should not become the new Ammo Type.
+        amountToRecharge = parseInt(item_weapon.data.data.shots);
+        //Change the amount to recharge to 1 if singleReload is checked.
+        if (singleReload === true) { amountToRecharge = 1; }
+        newCharges = amountToRecharge;
+        newAmmo = availableAmmo - amountToRecharge;
+        oldAmmoRefill = oldAmmoQuantity + currentCharges;
       }
-    }
-    // Checking if user selected to change the ammo type. This is only relevant if not a Charge Pack, if it is, it's already handled above.
-    else if (chgType === true) {
-      // When changing Ammo type, remaining shots should not become the new Ammo Type.
-      amountToRecharge = parseInt(item_weapon.data.data.shots);
-      //Change the amount to recharge to 1 if singleReload is checked.
-      if (singleReload === true) { amountToRecharge = 1; }
-      newCharges = amountToRecharge;
-      newAmmo = availableAmmo - amountToRecharge;
-      oldAmmoRefill = oldAmmoQuantity + currentCharges;
-    }
-    else {
-      // If the quantity of ammo is less than the amount required, use whatever is left.
-      amountToRecharge = Math.min(availableAmmo, requiredCharges);
-      //Change the amount to recharge to 1 if singleReload is checked.
-      if (singleReload === true) { amountToRecharge = 1; }
-      newCharges = currentCharges + amountToRecharge;
-      newAmmo = availableAmmo - amountToRecharge;
-    }
-    // Check if there is ammo left to reload.
-    if (availableAmmo < 1) {
-      ui.notifications.notify("You are out of ammunition.")
-    }
-    else if (chgType === true) {
+      else {
+        // If the quantity of ammo is less than the amount required, use whatever is left.
+        amountToRecharge = Math.min(availableAmmo, requiredCharges);
+        //Change the amount to recharge to 1 if singleReload is checked.
+        if (singleReload === true) { amountToRecharge = 1; }
+        newCharges = currentCharges + amountToRecharge;
+        newAmmo = availableAmmo - amountToRecharge;
+      }
+      // Check if there is ammo left to reload.
+      if (availableAmmo < 1) {
+        ui.notifications.notify("You are out of ammunition.")
+      }
+      else if (chgType === true) {
+        const updates = [
+          { _id: item_weapon.id, "data.currentShots": `${newCharges}`, "data.additionalStats.loadedAmmo.value": `${ammo}` },
+          { _id: item_ammo.id, "data.quantity": `${newAmmo}` },
+          { _id: item_oldAmmo.id, "data.quantity": `${oldAmmoRefill}` },
+        ];
+
+        await actor.updateEmbeddedDocuments("Item", updates);
+        ChatMessage.create({
+          speaker: {
+            alias: token.name
+          },
+          content: `<img src="${weaponIMG}" alt="" width="25" height="25" /><img src="${ammoIMG}" alt="" width="25" height="25" /> ${token.name} reloads his/her ${item_weapon.name} with ${item_ammo.name}.`
+        })
+        if (sfx_reload) {
+          AudioHelper.play({ src: `${sfx_reload}` }, true)
+        }
+      }
+      else {
+        const updates = [
+          { _id: item_weapon.id, "data.currentShots": `${newCharges}`, "data.additionalStats.loadedAmmo.value": `${ammo}` },
+          { _id: item_ammo.id, "data.quantity": `${newAmmo}` },
+        ];
+
+        await actor.updateEmbeddedDocuments("Item", updates);
+        ChatMessage.create({
+          speaker: {
+            alias: token.name
+          },
+          content: `<img src="${weaponIMG}" alt="" width="25" height="25" /><img src="${ammoIMG}" alt="" width="25" height="25" /> ${token.name} reloads his/her ${item_weapon.name} with ${item_ammo.name}.`
+        })
+        if (sfx_reload) {
+          AudioHelper.play({ src: `${sfx_reload}` }, true)
+        }
+      }
+    } else {
+      // If NPCs don't use Ammo from inventory, just reload the weapon:
+      let newCharges;
+      const currentCharges = parseInt(item_weapon.data.data.currentShots);
+      const maxCharges = parseInt(item_weapon.data.data.shots);
+      if (item_weapon.data.data.additionalStats.isConsumable && item_weapon.data.data.additionalStats.isConsumable.value === true) {
+        return ui.notifications.error("You cannot reload consumable weapons, please use Shooting instead.");
+      } else if (item_weapon.data.data.autoReload === true) {
+        return ui.notifications.error("You cannot change ammo types on this weapon if NPCs don't use Ammo from their Inventory.");
+      } else if (currentCharges === maxCharges) {
+        return ui.notifications.error("The weapon is fully loaded already.");
+      }
+      if (singleReload === true) {
+        //Do single reload
+        newCharges = currentCharges + 1;
+      } else {
+        //Do full reload
+        newCharges = maxCharges;
+      }
       const updates = [
-        { _id: item_weapon.id, "data.currentShots": `${newCharges}`, "data.additionalStats.loadedAmmo.value": `${ammo}` },
-        { _id: item_ammo.id, "data.quantity": `${newAmmo}` },
-        { _id: item_oldAmmo.id, "data.quantity": `${oldAmmoRefill}` },
+        { _id: item_weapon.id, "data.currentShots": `${newCharges}`}
       ];
+      await actor.updateEmbeddedDocuments("Item", updates);
 
-      actor.updateOwnedItem(updates);
       ChatMessage.create({
         speaker: {
           alias: token.name
         },
-        content: `<img src="${weaponIMG}" alt="" width="25" height="25" /><img src="${ammoIMG}" alt="" width="25" height="25" /> ${token.name} reloads his/her ${item_weapon.name} with ${item_ammo.name}.`
+        content: `<img src="${item_weapon.img}" alt="" width="25" height="25" /> ${token.name} reloads his/her ${item_weapon.name}.`
       })
-      if (sfx_reload) {
-        AudioHelper.play({ src: `${sfx_reload}` }, true)
+      if (item_weapon.data.data.additionalStats.sfx) {
+        let sfx = item_weapon.data.data.additionalStats.sfx.value.split(`|`);
+        sfx_reload = sfx[0];
       }
-    }
-    else {
-      const updates = [
-        { _id: item_weapon.id, "data.currentShots": `${newCharges}`, "data.additionalStats.loadedAmmo.value": `${ammo}` },
-        { _id: item_ammo.id, "data.quantity": `${newAmmo}` },
-      ];
-
-      actor.updateOwnedItem(updates);
-      ChatMessage.create({
-        speaker: {
-          alias: token.name
-        },
-        content: `<img src="${weaponIMG}" alt="" width="25" height="25" /><img src="${ammoIMG}" alt="" width="25" height="25" /> ${token.name} reloads his/her ${item_weapon.name} with ${item_ammo.name}.`
-      })
       if (sfx_reload) {
         AudioHelper.play({ src: `${sfx_reload}` }, true)
       }
@@ -503,7 +439,52 @@ async function weaponDialog() {
       html.find(`#singleReload`)[0].checked,
     ];
   }
-  // V. 3.2.0 By SalieriC#8263. Dialogue Framework: Kekilla#7036
+
+  async function play_sfx(sil, sfx_silenced, shots, sfxDelay, sfx_silenced_auto, sfx_shot, sfx_shot_auto) {
+    // Play sound effects
+    if (sil === true && sfx_silenced) {
+      if (shots === 2) {
+        AudioHelper.play({ src: `${sfx_silenced}` }, true);
+        await wait(`${sfxDelay}`);
+        AudioHelper.play({ src: `${sfx_silenced}` }, true);
+      }
+      else if (shots === 3) {
+        AudioHelper.play({ src: `${sfx_silenced}` }, true);
+        await wait(`${sfxDelay}`);
+        AudioHelper.play({ src: `${sfx_silenced}` }, true);
+        await wait(`${sfxDelay}`);
+        AudioHelper.play({ src: `${sfx_silenced}` }, true);
+      }
+      else if (shots > 3 && sfx_silenced_auto) {
+        AudioHelper.play({ src: `${sfx_silenced_auto}` }, true);
+      }
+      else {
+        AudioHelper.play({ src: `${sfx_silenced}` }, true);
+      }
+    }
+    else {
+      if (shots === 2) {
+        AudioHelper.play({ src: `${sfx_shot}` }, true);
+        await wait(`${sfxDelay}`);
+        AudioHelper.play({ src: `${sfx_shot}` }, true);
+      }
+      else if (shots === 3) {
+        AudioHelper.play({ src: `${sfx_shot}` }, true);
+        await wait(`${sfxDelay}`);
+        AudioHelper.play({ src: `${sfx_shot}` }, true);
+        await wait(`${sfxDelay}`);
+        AudioHelper.play({ src: `${sfx_shot}` }, true);
+      }
+      else if (shots > 3 && sfx_shot_auto) {
+        AudioHelper.play({ src: `${sfx_shot_auto}` }, true);
+      }
+      else {
+        AudioHelper.play({ src: `${sfx_shot}` }, true);
+      }
+    }
+  }
+
+  // V. 4.0.0 By SalieriC#8263. Dialogue Framework: Kekilla#7036
 }
 
 weaponDialog();

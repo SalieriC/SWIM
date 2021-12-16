@@ -84,7 +84,7 @@ new Dialog({
                 let pcActorFolder = String(html.find("#name_of_pc_folder")[0].value);
                 cryptos = Number(html.find("#cryptos")[0].value);
                 karma = Number(html.find("#karma")[0].value);
-                pcActorFolderID = game.folders.getName(`${pcActorFolder}`).data._id;
+                pcActorFolderID = game.folders.getName(`${pcActorFolder}`).data.id;
                 calc();
             }
         },

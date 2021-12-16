@@ -71,6 +71,15 @@ function register_settings() {
         scope: 'world',
         config: true,
     });
+    // Ammo usage for NPCs
+    game.settings.register('swim', 'npcAmmo', {
+        name: game.i18n.localize("SWIM.npcAmmoName"),
+        hint: game.i18n.localize("SWIM.npcAmmoHint"),
+        type: Boolean,
+        default: false,
+        scope: 'world',
+        config: true,
+    });
     // Shaken SFX
     game.settings.register('swim', 'shakenSFX', {
         name: game.i18n.localize("SWIM.shakenSFXName"),
@@ -98,18 +107,7 @@ function register_settings() {
         scope: 'world',
         config: true,
     });
-    // Prone Image
-    game.settings.register('swim', 'proneIMG', {
-        name: game.i18n.localize("SWIM.proneIMGName"),
-        hint: game.i18n.localize("SWIM.proneIMGHint"),
-        type: window.Azzu.SettingsTypes.FilePickerImage,
-        default: 'modules/swim/assets/icons/status_markers/2-Prone.png',
-        scope: 'world',
-        config: true,
-        /*onChange: () => {
-            window.location.reload();
-        }*/
-    });
+    // Prone Image deprecated, as it is no longer needed with changes in CUB.
     // Wounded SFX
     game.settings.register('swim', 'woundedSFX', {
         name: game.i18n.localize("SWIM.woundedSFXName"),

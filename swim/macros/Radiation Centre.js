@@ -33,6 +33,13 @@ function main() {
         return item.name.toLowerCase() === "elan" && item.type === "edge";
     });
     let bennies = token.actor.data.data.bennies.value;
+    //Check for actor status and adjust bennies based on edges.
+    let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
+    let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
+    if ((token.actor.data.data.wildcard === false) && (actorGreatLuck === undefined)) {
+        if ((!(actorLuck === undefined)) && (bennies > 1) && ((actorGreatLuck === undefined))) { bennies = 1; }
+        else { bennies = 0; }
+    }
     let bv;
     let rounded;
     let elanBonus;
@@ -142,6 +149,13 @@ function main() {
     // Check for Bennies
     function checkBennies() {
         bennies = token.actor.data.data.bennies.value;
+        //Check for actor status and adjust bennies based on edges.
+        let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
+        let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
+        if ((token.actor.data.data.wildcard === false) && (actorGreatLuck === undefined)) {
+            if ((!(actorLuck === undefined)) && (bennies > 1) && ((actorGreatLuck === undefined))) { bennies = 1; }
+            else { bennies = 0; }
+        }
 
         // Non GM token has <1 bennie OR GM user AND selected token has <1 benny
         if ((!game.user.isGM && bennies < 1) || (game.user.isGM && bennies < 1 && game.user.getFlag("swade", "bennies") < 1)) {
@@ -170,12 +184,12 @@ function main() {
 
         //Show the Benny Flip
         if (game.dice3d) {
-            game.dice3d.showForRoll(new Roll("1dB").roll(), game.user, true, null, false);
+            game.dice3d.showForRoll(new Roll("1dB").evaluate({ async:false }), game.user, true, null, false);
         }
 
         //Chat Message to let the everyone know a benny was spent
         ChatMessage.create({
-            user: game.user._id,
+            user: game.user.id,
             content: `<p><img style="border: none;" src="${bennyImage}"" width="25" height="25" /> ${game.user.name} spent a Benny for ${token.name}.</p>`,
         });
     }
@@ -247,5 +261,5 @@ function main() {
             applyFatigue();
         }
     }
-    // V1.0.2 Code by SalieriC#8263.
+    // V1.1.0 Code by SalieriC#8263.
 }

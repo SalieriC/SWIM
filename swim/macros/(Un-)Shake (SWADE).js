@@ -168,6 +168,14 @@ async function main() {
     // Spend Benny function
     async function spendBenny() {
         bennies = token.actor.data.data.bennies.value;
+        //Check for actor status and adjust bennies based on edges.
+        let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
+        let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
+        if ((token.actor.data.data.wildcard === false) && (actorGreatLuck === undefined)) {
+            if ((!(actorLuck === undefined)) && (bennies > 1) && ((actorGreatLuck === undefined))) { bennies = 1; }
+            else { bennies = 0; }
+        
+        }
         //Subtract the spend, use GM benny if user is GM and token has no more bennies left or spend token benny if user is player and/or token has bennies left.
         if (game.user.isGM && bennies < 1) {
             game.user.setFlag("swade", "bennies", game.user.getFlag("swade", "bennies") - 1)
@@ -179,12 +187,12 @@ async function main() {
 
         //Show the Benny Flip
         if (game.dice3d) {
-            game.dice3d.showForRoll(new Roll("1dB").roll(), game.user, true, null, false);
+            game.dice3d.showForRoll(new Roll("1dB").evaluate({ async:false }), game.user, true, null, false);
         }
 
         //Chat Message to let the everyone know a benny was spent
         ChatMessage.create({
-            user: game.user._id,
+            user: game.user.id,
             content: `<p><img style="border: none;" src="${bennyImage}"" width="25" height="25" /> ${game.user.name} spent a Benny and ${token.name} may act normally now.</p>`,
         });
     }
@@ -197,5 +205,5 @@ async function main() {
             AudioHelper.play({ src: `${shakenSFX}` }, true);
         }
     }
-    /// v.3.6.0 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
+    /// v.3.7.0 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
 }

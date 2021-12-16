@@ -86,6 +86,13 @@ for (let fatiguePotion of ownedFatiguePotions) {
 }
 
     let bennies = token.actor.data.data.bennies.value;
+    //Check for actor status and adjust bennies based on edges.
+    let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
+    let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
+    if ((token.actor.data.data.wildcard === false) && (actorGreatLuck === undefined)) {
+        if ((!(actorLuck === undefined)) && (bennies > 1) && ((actorGreatLuck === undefined))) { bennies = 1; }
+        else { bennies = 0; }
+    }
     let bv;
     bv = checkBennies();
     let numberWounds;
@@ -345,6 +352,20 @@ for (let fatiguePotion of ownedFatiguePotions) {
     // Check for Bennies
     function checkBennies() {
         bennies = token.actor.data.data.bennies.value;
+        //Check for actor status and adjust bennies based on edges.
+        let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
+        let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
+        if ((token.actor.data.data.wildcard === false) && (actorGreatLuck === undefined)) {
+            if ((!(actorLuck === undefined)) && (bennies > 1) && ((actorGreatLuck === undefined))) { bennies = 1; }
+            else { bennies = 0; }
+        }
+        //Check for actor status and adjust bennies based on edges.
+        let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
+        let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
+        if ((token.actor.data.data.wildcard === false) && (actorGreatLuck === undefined)) {
+            if ((!(actorLuck === undefined)) && (bennies > 1) && ((actorGreatLuck === undefined))) { bennies = 1; }
+            else { bennies = 0; }
+        }
 
         // Non GM token has <1 bennie OR GM user AND selected token has <1 benny
         if ((!game.user.isGM && bennies < 1) || (game.user.isGM && bennies < 1 && game.user.getFlag("swade", "bennies") < 1)) {
@@ -456,12 +477,12 @@ for (let fatiguePotion of ownedFatiguePotions) {
 
         //Show the Benny Flip
         if (game.dice3d) {
-            game.dice3d.showForRoll(new Roll("1dB").roll(), game.user, true, null, false);
+            game.dice3d.showForRoll(new Roll("1dB").evaluate({ async:false }), game.user, true, null, false);
         }
 
         //Chat Message to let the everyone know a benny was spent
         ChatMessage.create({
-            user: game.user._id,
+            user: game.user.id,
             content: `<p><img style="border: none;" src="${bennyImage}"" width="25" height="25" /> ${game.user.name} spent a Benny for ${token.name}.</p>`,
         });
     }
@@ -601,7 +622,10 @@ for (let fatiguePotion of ownedFatiguePotions) {
                         let selectedPotion = String(html.find("[name=potionName]")[0].value);
                         let potion_to_update = token.actor.items.find(i => i.name === selectedPotion);
                         let potion_icon = potion_to_update.data.img;
-                        await token.actor.updateOwnedItem({_id: potion_to_update.id, "data.quantity": potion_to_update.data.data.quantity - 1})
+                        const updates = [
+                            {_id: potion_to_update.id, "data.quantity": potion_to_update.data.data.quantity - 1}
+                        ];
+                        await token.actor.updateEmbeddedDocuments("Item", updates);
                         if (potion_to_update.data.data.quantity < 1){
                           potion_to_update.delete();
                         }
@@ -650,7 +674,10 @@ for (let fatiguePotion of ownedFatiguePotions) {
                         let selectedPotion = String(html.find("[name=potionName]")[0].value);
                         let potion_to_update = token.actor.items.find(i => i.name === selectedPotion);
                         let potion_icon = potion_to_update.data.img;
-                        await token.actor.updateOwnedItem({_id: potion_to_update.id, "data.quantity": potion_to_update.data.data.quantity - 1})
+                        const updates = [
+                            {_id: potion_to_update.id, "data.quantity": potion_to_update.data.data.quantity - 1}
+                        ];
+                        await token.actor.updateEmbeddedEntity("Item", updates);
                         if (potion_to_update.data.data.quantity < 1){
                           potion_to_update.delete();
                         }
@@ -745,5 +772,5 @@ for (let fatiguePotion of ownedFatiguePotions) {
             setTimeout(resolve, ms);
         });
     }
-    // v.3.2.1 By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
+    // v.3.3.0 By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
 }

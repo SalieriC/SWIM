@@ -175,9 +175,9 @@ new Dialog({
                 let pcDroneFolder = String(html.find("#name_of_drone_folder")[0].value);
                 let pcVehicleFolder = String(html.find("#name_of_vehicle_folder")[0].value);
                 console.log(`${pcActorFolder}`);
-                pcActorFolderID = game.folders.getName(`${pcActorFolder}`).data._id;
-                pcDroneFolderID = game.folders.getName(`${pcDroneFolder}`).data._id;
-                pcVehicleFolderID = game.folders.getName(`${pcVehicleFolder}`).data._id;
+                pcActorFolderID = game.folders.getName(`${pcActorFolder}`).data.id;
+                pcDroneFolderID = game.folders.getName(`${pcDroneFolder}`).data.id;
+                pcVehicleFolderID = game.folders.getName(`${pcVehicleFolder}`).data.id;
                 calc();
             }
         },

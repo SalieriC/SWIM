@@ -1,7 +1,7 @@
 {
 	"name": "swim",
 	"title": "SWADE Immersive Macros",
-	"description": "<p><b>READ THE README!</b> Doing so is very important!</p><p>A simple module to configure some stuff in the SWADE System on Foundry VTT. <a href='https://ko-fi.com/salieric'>Please consider donating.</a> </p>",
+	"description": "<p><b>READ THE README!</b> Doing so is very important!</p><p>A module providing immersion friendly macros to ease play of the SWADE System on Foundry VTT. <a href='https://ko-fi.com/salieric'>Please consider donating.</a> </p>",
 	"minimumCoreVersion": "0.8.8",
 	"compatibleCoreVersion": "0.8.9",
 	"version": "0.11.0",

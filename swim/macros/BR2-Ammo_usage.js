@@ -1,3 +1,7 @@
+// Getting NPC ammo usage from game settings
+const npcAmmo = game.settings.get(
+    'swim', 'npcAmmo');
+
 checkWeapon();
 
 async function wait(ms) {
@@ -39,19 +43,19 @@ async function shoot() {
     //Setting the amount of shots based on RoF:
     let traitDice = message.data.flags['betterrolls-swade2'].render_data.trait_roll.dice;
     //console.log(traitDice);
-    //console.log(message.data.flags['betterrolls-swade2'].render_data);
+    console.log(message.data.flags['betterrolls-swade2'].render_data);
     let rate_of_fire = traitDice.length;
     if (actor.data.data.wildcard === true) { rate_of_fire = rate_of_fire - 1; }
     //console.log(rate_of_fire);
     let shots = message.data.flags['betterrolls-swade2'].render_data.used_shots;
     //failsafe to guss amount of shots in case BR2 return zero or undefined:
     if (shots === 0 || !shots) {
-      if (rate_of_fire === 1) { shots = 1; }
-      if (rate_of_fire === 2) { shots = 5; }
-      if (rate_of_fire === 3) { shots = 10; }
-      if (rate_of_fire === 4) { shots = 20; }
-      if (rate_of_fire === 5) { shots = 40; }
-      if (rate_of_fire === 6) { shots = 50; }
+        if (rate_of_fire === 1) { shots = 1; }
+        if (rate_of_fire === 2) { shots = 5; }
+        if (rate_of_fire === 3) { shots = 10; }
+        if (rate_of_fire === 4) { shots = 20; }
+        if (rate_of_fire === 5) { shots = 40; }
+        if (rate_of_fire === 6) { shots = 50; }
     }
 
     let sil = false;
@@ -88,48 +92,8 @@ async function shoot() {
     //If no ammo needed, only play SFX
     if (item_weapon.data.data.ammo === "NONE" && item_weapon.data.data.additionalStats.sfx) {
         // Play sound effects
-        if (sil === true && sfx_silenced) {
-                if (shots === 2) {
-                  AudioHelper.play({ src: `${sfx_silenced}` }, true);
-                  await wait(`${sfxDelay}`);
-                  AudioHelper.play({ src: `${sfx_silenced}` }, true);
-                }
-                else if (shots === 3) {
-                  //console.log("I AM HERE!");
-                  AudioHelper.play({ src: `${sfx_silenced}` }, true);
-                  await wait(`${sfxDelay}`);
-                  AudioHelper.play({ src: `${sfx_silenced}` }, true);
-                  await wait(`${sfxDelay}`);
-                  AudioHelper.play({ src: `${sfx_silenced}` }, true);
-                }
-                else if (shots > 3 && sfx_silenced_auto) {
-                    AudioHelper.play({ src: `${sfx_silenced_auto}` }, true);
-                }
-                else {
-                    AudioHelper.play({ src: `${sfx_silenced}` }, true);
-                }
-            }
-            else {
-              if (shots === 2) {
-                AudioHelper.play({ src: `${sfx_shot}` }, true);
-                await wait(`${sfxDelay}`);
-                AudioHelper.play({ src: `${sfx_shot}` }, true);
-              }
-              else if (shots === 3) {
-                //console.log("I AM HERE!");
-                AudioHelper.play({ src: `${sfx_shot}` }, true);
-                await wait(`${sfxDelay}`);
-                AudioHelper.play({ src: `${sfx_shot}` }, true);
-                await wait(`${sfxDelay}`);
-                AudioHelper.play({ src: `${sfx_shot}` }, true);
-              }
-              else if (shots > 3 && sfx_shot_auto) {
-                    AudioHelper.play({ src: `${sfx_shot_auto}` }, true);
-                }
-                else {
-                    AudioHelper.play({ src: `${sfx_shot}` }, true);
-                }
-        }
+        await play_sfx(sil, sfx_silenced, shots, sfxDelay, sfx_silenced_auto, sfx_shot, sfx_shot_auto);
+
     } else if (item_weapon.data.data.ammo === "MELEE" && item_weapon.data.data.additionalStats.sfx) {
         let meleeSFX = item_weapon.data.data.additionalStats.sfx.value.split("|");
         let attackSFX = meleeSFX[0];
@@ -144,9 +108,9 @@ async function shoot() {
         let usedSkill = message.data.flags['betterrolls-swade2'].render_data.skill_title;
         //We assume that all consumable weapons use "Athletics", "Athletics (Throwing)", "Athletics (Explosives)" or "Throwing" and only proceed if one of these skills was used. This is where we filter with .includes().
         if (usedSkill.includes("Athletics") === false &&
-        usedSkill.includes("Athletics (Throwing)") === false &&
-        usedSkill.includes("Athletics (Explosives)") === false &&
-        usedSkill.includes("Throwing") === false) { return; }
+            usedSkill.includes("Athletics (Throwing)") === false &&
+            usedSkill.includes("Athletics (Explosives)") === false &&
+            usedSkill.includes("Throwing") === false) { return; }
         const currentQuantity = parseInt(item_weapon.data.data.quantity);
         if (currentQuantity <= 0) {
             return ui.notifications.error(`You don't have a ${item_weapon.name} left.`);
@@ -156,7 +120,7 @@ async function shoot() {
             { _id: item_weapon.id, "data.quantity": `${newQuantity}` },
         ];
         // Updating the consumable weapon
-        await actor.updateOwnedItem(updates);
+        await actor.updateEmbeddedDocuments("Item", updates);
         // Deleting the consumable weapon if it was the last (disabled because it breaks rerolls in BR2)
         /*if (newQuantity <= 0) {
             item_weapon.delete();
@@ -176,9 +140,16 @@ async function shoot() {
     //Stuff for weapons with "doesn't require reload action" checked:
     else if (item_weapon.data.data.autoReload === true) {
         //Throw error if no ammo is left.
-        if (item_ammo && item_ammo.data.data.quantity <= 0) { return ui.notifications.error(`You don't have a ${item_weapon.name} left.`); }
-        //Failsafe in case no ammo is provided.
-        else if (!item_ammo) { return ui.notifications.error(`Please define your desired Ammo in "Loaded Ammo" first.`); }
+        if (actor.type != "character" && npcAmmo === false) {
+            ChatMessage.create({
+                speaker: {
+                    alias: actor.name
+                },
+                content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${actor.name} fires <b>${shots} ${currentAmmo}</b> from a ${item_weapon.name}.`
+            })
+        } else if (!item_ammo && actor.type === "character" && npcAmmo === false || !item_ammo && npcAmmo === true) {
+            return ui.notifications.error(`You don't have the required ammo in your inventory.`);
+        } else if (item_ammo.data.data.quantity <= 0 && actor.type === "character" && npcAmmo === false || item_ammo.data.data.quantity <= 0 && npcAmmo === true) { return ui.notifications.error(`You don't have a ${item_ammo.name} left.`); }
         else {
             //Setting new constants to overwrite the old ones
             const currentCharges = parseInt(item_ammo.data.data.quantity);
@@ -188,7 +159,7 @@ async function shoot() {
                 { _id: item_ammo.id, "data.quantity": `${newCharges}` },
             ];
             // Updating the Weapon
-            actor.updateOwnedItem(updates);
+            actor.updateEmbeddedDocuments("Item", updates);
             //Creating the chat message
             ChatMessage.create({
                 speaker: {
@@ -196,51 +167,10 @@ async function shoot() {
                 },
                 content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${actor.name} fires <b>${shots} ${currentAmmo} round(s)</b> from a ${item_weapon.name} and has <b>${newCharges} left</b>.`
             })
-            //Playing the SFX
-            // Play sound effects
-            if (sil === true && sfx_silenced) {
-                if (shots === 2) {
-                  AudioHelper.play({ src: `${sfx_silenced}` }, true);
-                  await wait(`${sfxDelay}`);
-                  AudioHelper.play({ src: `${sfx_silenced}` }, true);
-                }
-                else if (shots === 3) {
-                  //console.log("I AM HERE!");
-                  AudioHelper.play({ src: `${sfx_silenced}` }, true);
-                  await wait(`${sfxDelay}`);
-                  AudioHelper.play({ src: `${sfx_silenced}` }, true);
-                  await wait(`${sfxDelay}`);
-                  AudioHelper.play({ src: `${sfx_silenced}` }, true);
-                }
-                else if (shots > 3 && sfx_silenced_auto) {
-                    AudioHelper.play({ src: `${sfx_silenced_auto}` }, true);
-                }
-                else {
-                    AudioHelper.play({ src: `${sfx_silenced}` }, true);
-                }
-            }
-            else {
-              if (shots === 2) {
-                AudioHelper.play({ src: `${sfx_shot}` }, true);
-                await wait(`${sfxDelay}`);
-                AudioHelper.play({ src: `${sfx_shot}` }, true);
-              }
-              else if (shots === 3) {
-                //console.log("I AM HERE!");
-                AudioHelper.play({ src: `${sfx_shot}` }, true);
-                await wait(`${sfxDelay}`);
-                AudioHelper.play({ src: `${sfx_shot}` }, true);
-                await wait(`${sfxDelay}`);
-                AudioHelper.play({ src: `${sfx_shot}` }, true);
-              }
-              else if (shots > 3 && sfx_shot_auto) {
-                    AudioHelper.play({ src: `${sfx_shot_auto}` }, true);
-                }
-                else {
-                    AudioHelper.play({ src: `${sfx_shot}` }, true);
-                }
-            }
         }
+        //Playing the SFX
+        // Play sound effects
+        await play_sfx(sil, sfx_silenced, shots, sfxDelay, sfx_silenced_auto, sfx_shot, sfx_shot_auto);
     }
     // Check if enough bullets are in the weapon to fire the given amount of shots if this is not a consumable weapon and does require loading action.
     else if (currentCharges < shots && item_weapon.data.data.autoReload === false) {
@@ -255,7 +185,7 @@ async function shoot() {
             { _id: item_weapon.id, "data.currentShots": `${newCharges}` },
         ];
         // Updating the Weapon
-        actor.updateOwnedItem(updates);
+        actor.updateEmbeddedDocuments("Item", updates);
         // Creating the Chat message
         if (!currentAmmo) {
             ChatMessage.create({
@@ -273,21 +203,25 @@ async function shoot() {
             })
         }
         // Play sound effects
+        await play_sfx(sil, sfx_silenced, shots, sfxDelay, sfx_silenced_auto, sfx_shot, sfx_shot_auto);
+    }
+
+    async function play_sfx(sil, sfx_silenced, shots, sfxDelay, sfx_silenced_auto, sfx_shot, sfx_shot_auto) {
+        // Play sound effects
         if (sil === true && sfx_silenced) {
-          if (shots === 2) {
-            AudioHelper.play({ src: `${sfx_silenced}` }, true);
-            await wait(`${sfxDelay}`);
-            AudioHelper.play({ src: `${sfx_silenced}` }, true);
-          }
-          else if (shots === 3) {
-            //console.log("I AM HERE!");
-            AudioHelper.play({ src: `${sfx_silenced}` }, true);
-            await wait(`${sfxDelay}`);
-            AudioHelper.play({ src: `${sfx_silenced}` }, true);
-            await wait(`${sfxDelay}`);
-            AudioHelper.play({ src: `${sfx_silenced}` }, true);
-          }
-          else if (shots > 3 && sfx_silenced_auto) {
+            if (shots === 2) {
+                AudioHelper.play({ src: `${sfx_silenced}` }, true);
+                await wait(`${sfxDelay}`);
+                AudioHelper.play({ src: `${sfx_silenced}` }, true);
+            }
+            else if (shots === 3) {
+                AudioHelper.play({ src: `${sfx_silenced}` }, true);
+                await wait(`${sfxDelay}`);
+                AudioHelper.play({ src: `${sfx_silenced}` }, true);
+                await wait(`${sfxDelay}`);
+                AudioHelper.play({ src: `${sfx_silenced}` }, true);
+            }
+            else if (shots > 3 && sfx_silenced_auto) {
                 AudioHelper.play({ src: `${sfx_silenced_auto}` }, true);
             }
             else {
@@ -295,20 +229,19 @@ async function shoot() {
             }
         }
         else {
-          if (shots === 2) {
-            AudioHelper.play({ src: `${sfx_shot}` }, true);
-            await wait(`${sfxDelay}`);
-            AudioHelper.play({ src: `${sfx_shot}` }, true);
-          }
-          else if (shots === 3) {
-            //console.log("I AM HERE!");
-            AudioHelper.play({ src: `${sfx_shot}` }, true);
-            await wait(`${sfxDelay}`);
-            AudioHelper.play({ src: `${sfx_shot}` }, true);
-            await wait(`${sfxDelay}`);
-            AudioHelper.play({ src: `${sfx_shot}` }, true);
-          }
-          else if (shots > 3 && sfx_shot_auto) {
+            if (shots === 2) {
+                AudioHelper.play({ src: `${sfx_shot}` }, true);
+                await wait(`${sfxDelay}`);
+                AudioHelper.play({ src: `${sfx_shot}` }, true);
+            }
+            else if (shots === 3) {
+                AudioHelper.play({ src: `${sfx_shot}` }, true);
+                await wait(`${sfxDelay}`);
+                AudioHelper.play({ src: `${sfx_shot}` }, true);
+                await wait(`${sfxDelay}`);
+                AudioHelper.play({ src: `${sfx_shot}` }, true);
+            }
+            else if (shots > 3 && sfx_shot_auto) {
                 AudioHelper.play({ src: `${sfx_shot_auto}` }, true);
             }
             else {
@@ -316,5 +249,6 @@ async function shoot() {
             }
         }
     }
-    //V. 3.2.0 by SalieriC#8263 with help from javierrivera#4813.
+
+    //V. 4.0.0 by SalieriC#8263 with help from javierrivera#4813.
 }
