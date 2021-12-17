@@ -6,10 +6,13 @@ function main() {
         ui.notifications.error("Please select a token first");
         return;
     }
-    else if (!token.actor.data.data.additionalStats.radRes) {
+    if (!game.cub.getCondition("Irradiated")) {
+        ui.notifications.error('You need "Irradiated" as a condition in Combat Utility Belt. Use the .json file of SWIM to import conditions for SWADE easily.')
+    }
+    /*else if (!token.actor.data.data.additionalStats.radRes) {
         ui.notifications.error("Activate your Rad Resistance Additional Stat before using this macro.");
         return;
-    }
+    }*/
     // Checking for SWADE Spices & Flavours and setting up the Benny image.
     let bennyImage = "icons/commodities/currency/coin-embossed-octopus-gold.webp";
     if (game.modules.get("swade-spices")?.active) {
@@ -22,9 +25,7 @@ function main() {
     // Setting SFX
     let fatiguedSFX = game.settings.get(
         'swim', 'fatiguedSFX');
-    let incapSFX = game.settings.get(
-        'swim', 'incapSFX');
-    let radRes = token.actor.data.data.additionalStats.radRes.value;
+    let radRes = token.actor.data.data.additionalStats.radRes?.value;
 
     // Declairing variables and constants.
     const fv = token.actor.data.data.fatigue.value;
@@ -73,7 +74,7 @@ function main() {
         rollWithEdge += radRes;
         let radResVal = `${radRes}`;
         if (radRes >= 1) { radResVal = `+${radRes}`; }
-        edgeText = edgeText + `<br/><i>including ${radResVal} from current Rad Resistance</i>.`;
+        if (token.actor.data.data.additionalStats.radRes) {edgeText = edgeText + `<br/><i>including ${radResVal} from current Rad Resistance</i>.`;}
 
         // Roll Vigor
         let chatData = `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge} </span>`;
@@ -137,13 +138,15 @@ function main() {
         }
         else {
             token.actor.update({ "data.fatigue.value": fm });
-            game.cub.addCondition("Incapacitated");
+            /*game.cub.addCondition("Incapacitated");
             if (incapSFX) {
                 AudioHelper.play({ src: `${incapSFX}` }, true);
-            }
+            }*/
+            swim.start_macro(`[Script] Mark Dead`);
         }
-        if (!token.data.effects.includes(`worlds/savage-worlds-fallout/Resources/Icons/Status/Irradiated.png`)) {
-            game.cub.addCondition("Irradiated")}
+        if (!game.cub.hasCondition("Irradiated", token)) {
+            game.cub.addCondition("Irradiated"), token
+        }
     }
 
     // Check for Bennies
@@ -184,7 +187,7 @@ function main() {
 
         //Show the Benny Flip
         if (game.dice3d) {
-            game.dice3d.showForRoll(new Roll("1dB").evaluate({ async:false }), game.user, true, null, false);
+            game.dice3d.showForRoll(new Roll("1dB").evaluate({ async: false }), game.user, true, null, false);
         }
 
         //Chat Message to let the everyone know a benny was spent
@@ -261,5 +264,5 @@ function main() {
             applyFatigue();
         }
     }
-    // V1.1.0 Code by SalieriC#8263.
+    // V1.2.0 Code by SalieriC#8263.
 }
