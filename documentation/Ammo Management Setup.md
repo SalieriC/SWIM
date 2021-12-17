@@ -38,6 +38,7 @@ In order to use one of these macros, you first need to do some initial setup. Th
 - Each sfx can be set up individually for each weapon.  
 - Optional integration for [Better Rolls 2 (BR2)](https://foundryvtt.com/packages/betterrolls-swade2).
 - Now also features the ability to play SFX only without the need for ammunition. For this just set the Ammo on the weapon to be `NONE` (exactly like this). This may be useful if you want SFX for melee weapons. It uses the same sfx path structure (see below), so you'll have the same sfx for melee and ranged attacks unfortunately.  
+- Game setting, allowing GMs to rule that NPCs do not use Ammo items from inventory. NPCs will still use Ammo in the weapon (magazines, clips, etc.) but won't require an item to draw ammo from. Instead they will just reload the weapon to the maximum shots (or by 1 shot if "Single Reload" is checked) without using an item from the inventory. This is especially useful for official modules which do not populate actors with ammunition, making prep for SWIM compatibility a little easier.  
 
 # Additional Stats  
 If you don't know about additional stats, you can read about them [here](https://gitlab.com/peginc/swade/-/wikis/settings/setting-configurator).  
@@ -90,6 +91,10 @@ When you're done head back to the System Settings, click on the "Open Setting Co
 ## Using Better Rolls 2 as a workaround  
 If you're using [Better Rolls 2 (BR2)](https://foundryvtt.com/packages/betterrolls-swade2), you have another workaropund at your disposal: Leave the Ammunition Management enabled in the settings and disable the option "Subtrackt ammo by default" in the Better Rolls 2 module configuration. As long as the players don't use the systems default rolls you'll be fine.  
 For BR2 users there is also a neat integration, allowing you to use the Shooting macro by default when rolling from a weapon.  
+
+## Enabling NPC ammo item usage  
+As of version 0.12.0, the macro supports a way to allow NPCs to fully use the ammo management even if they don't have items representing their spare shots, magazines and the like. The NPCs will still use the ammo that is in the weapon but won't require said ammo item anymore. Weapons that don't require a reloading action (i.e. bows) will just fire infinitely, other wepons (i.e. all weapons with a magazine) will fire until their current shots are at 0 and then need to be reloaded using the Ammo Management macro as usual. But their ammo to reload is infinite.   
+This is now the default behaviour. To activate the former behaviour (NPCs need ammo items in their inventory), just head to the SWIM module settings and activate it.  
 
 # Better Rolls 2 integration  
 If you're using Better Rolls 2, there is a way to fully automate the Shooting part of the macro. Each skill roll from the weapon will then execute the macro, play the sfx (if set up) and use the ammo properly. To set this up you need to set it as a "runSkillMacro" [Global Action](https://github.com/javierriveracastro/betteroll-swade/blob/version_2/GLOBAL_ACTIONS.md) in Better Rolls 2. This is not so difficult as you might think:  
