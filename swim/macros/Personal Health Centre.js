@@ -359,13 +359,6 @@ for (let fatiguePotion of ownedFatiguePotions) {
             if ((!(actorLuck === undefined)) && (bennies > 1) && ((actorGreatLuck === undefined))) { bennies = 1; }
             else { bennies = 0; }
         }
-        //Check for actor status and adjust bennies based on edges.
-        let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
-        let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
-        if ((token.actor.data.data.wildcard === false) && (actorGreatLuck === undefined)) {
-            if ((!(actorLuck === undefined)) && (bennies > 1) && ((actorGreatLuck === undefined))) { bennies = 1; }
-            else { bennies = 0; }
-        }
 
         // Non GM token has <1 bennie OR GM user AND selected token has <1 benny
         if ((!game.user.isGM && bennies < 1) || (game.user.isGM && bennies < 1 && game.user.getFlag("swade", "bennies") < 1)) {
@@ -772,5 +765,5 @@ for (let fatiguePotion of ownedFatiguePotions) {
             setTimeout(resolve, ms);
         });
     }
-    // v.3.3.0 By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
+    // v.3.3.1 By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
 }
