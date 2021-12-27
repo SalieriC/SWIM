@@ -390,7 +390,8 @@ function main() {
         injuryData.icon = img;
         let injuryEffects;
         if (text.toLowerCase().includes("unmentionables")) {
-            //unmentionables; do nothing
+            //unmentionables; create dummy AE without actual effect
+            injuryData.label = 'Injury: Unmentionables';
         } else if (text.toLowerCase().includes("arm")) {
             //arm; create a dummy AE without actual effect
             injuryData.label = 'Injury: Arm unusable';
