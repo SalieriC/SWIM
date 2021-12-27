@@ -4,7 +4,7 @@
 	"description": "<p><b>READ THE README!</b> Doing so is very important!</p><p>A module providing immersion friendly macros to ease play of the SWADE System on Foundry VTT. <a href='https://ko-fi.com/salieric'>Please consider donating.</a> </p>",
 	"minimumCoreVersion": "0.8.8",
 	"compatibleCoreVersion": "9.235",
-	"version": "0.12.0",
+	"version": "0.12.1",
 	"author": "SalieriC",
 	"dependencies": [
 		{
