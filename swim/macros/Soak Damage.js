@@ -164,7 +164,7 @@ function main() {
             buttons: {
                 one: {
                     label: "Apply Wounds",
-                    callback: (html) => {
+                    callback: async (html) => {
                         let applWounds = Number(html.find("#applWounds")[0].value);
                         let setWounds = wv + applWounds;
                         if (setWounds <= wm && setWounds > 0) {
@@ -181,8 +181,8 @@ function main() {
                             token.actor.update({ "data.wounds.value": wm });
                             swim.start_macro('[Script] Mark Dead');
                         }
-                        if (!game.user.isGM && setWounds > 0 && grit === true) {
-                            game.tables.getName(`${injuryTable}`).draw();
+                        if (!game.user.isGM && setWounds > 0 && grit === true) { //disabling combat injuries for the DM
+                            await apply_injury();
                         }
                     }
                 }
@@ -377,5 +377,146 @@ function main() {
             applyWounds();
         }
     }
-    // V2.7.0 Code by SalieriC#8263. Critical Failure awareness by Kekilla#7036 Testing and bug-chasing: javierrivera#4813.
+
+    async function apply_injury() {
+        //roll on injury table:
+        let result = await game.tables.getName(`${injuryTable}`).draw();
+        let text = result.results[0].data.text;
+        const img = result.results[0].data.img;
+        let injuryData = { 
+            changes: [],
+            flags: { swim: { isCombatInjury: true } }
+        };
+        injuryData.icon = img;
+        let injuryEffects;
+        if (text.toLowerCase().includes("unmentionables")) {
+            //unmentionables; do nothing
+        } else if (text.toLowerCase().includes("arm")) {
+            //arm; create a dummy AE without actual effect
+            injuryData.label = 'Injury: Arm unusable';
+        } else if (text.toLowerCase().includes("leg")) {
+            //leg, create AE with appropriate value depending on whether or not the character is slow already
+            const slow = token.actor.data.items.find(function (item) {
+                return ((item.name.toLowerCase() === "slow") || (item.name.toLowerCase() === "slow")) && item.type === "hindrance";
+            });
+            if (!slow) {
+                //Actor isn't slow, create AE with minor slow effect = data.stats.speed.runningDie -2 && data.stats.speed.value -1
+                injuryData.label = 'Injury: Leg (Slow)';
+                if (token.actor.data.data.stats.speed.runningDie === 4) {
+                    //Running die is a d4 already, alter AE like so: data.stats.speed.runningDie.modifier -1 && data.stats.speed.value -1
+                    injuryEffects = {
+                        key: 'data.stats.speed.runningDie.modifier',
+                        mode: 2,
+                        value: -1
+                    }, {
+                        key: 'data.stats.speed.value',
+                        mode: 2,
+                        value: -1
+                    }
+                } else {
+                    //AE as above
+                    injuryEffects = {
+                        key: 'data.stats.speed.runningDie',
+                        mode: 2,
+                        value: -2
+                    }, {
+                        key: 'data.stats.speed.value',
+                        mode: 2,
+                        value: -1
+                    }
+                }
+            } else if (slow.data.data.major === false) {
+                //Actor is minor slow, create AE with major slow effect = data.stats.speed.runningDie -2 && data.stats.speed.value -2 && @Skill{Athletics}[data.die.modifier] -2
+                injuryData.label = 'Injury: Leg (Slow)';
+                if (token.actor.data.data.stats.speed.runningDie === 4) {
+                    //Running die is a d4 already, alter AE like so: data.stats.speed.runningDie.modifier -1 && data.stats.speed.value -2
+                    injuryEffects = {
+                        key: 'data.stats.speed.runningDie.modifier',
+                        mode: 2,
+                        value: -1
+                    }, {
+                        key: 'data.stats.speed.value',
+                        mode: 2,
+                        value: -2
+                    }, {
+                        key: '@Skill{Athletics}[data.die.modifier]',
+                        mode: 2,
+                        value: -2
+                    }
+                } else {
+                    //AE as above
+                    injuryEffects = {
+                        key: 'data.stats.speed.runningDie',
+                        mode: 2,
+                        value: -2
+                    }, {
+                        key: 'data.stats.speed.value',
+                        mode: 2,
+                        value: -2
+                    }, {
+                        key: '@Skill{Athletics}[data.die.modifier]',
+                        mode: 2,
+                        value: -2
+                    }
+                }
+                //Do nothing if actor is major slow already.
+            }
+        } else if (text.toLowerCase().includes("guts")) {
+            //evaluate all the guts:
+            if (text.toLowerCase().includes("broken")) {
+                //Guts broken, create AE with data.attributes.agility.die.sides -2
+                injuryData.label = 'Injury: Guts (broken)';
+                injuryEffects = {
+                    key: 'data.attributes.agility.die.sides',
+                    mode: 2,
+                    value: -2
+                }
+            } else if (text.toLowerCase().includes("battered")) {
+                //Guts battered, create AE with data.attributes.vigor.die.sides -2
+                injuryData.label = 'Injury: Guts (battered)';
+                injuryEffects = {
+                    key: 'data.attributes.vigor.die.sides',
+                    mode: 2,
+                    value: -2
+                }
+            } else if (text.toLowerCase().includes("busted")) {
+                //Guts busted, created AE with data.attributes.strength.die.sides -2
+                injuryData.label = 'Injury: Guts (busted)';
+                injuryEffects = {
+                    key: 'data.attributes.strength.die.sides',
+                    mode: 2,
+                    value: -2
+                }
+            }
+        } else if (text.toLowerCase().includes("head")) {
+            //evaluate all the head results:
+            if (text.toLowerCase().includes("hideous scar")) {
+                //hideous scar, create AE with @Skill{Persuasion}[data.die.modifier] -2
+                injuryData.label = 'Injury: Head (hideous scar)';
+                injuryEffects = {
+                    key: '@Skill{Persuasion}[data.die.modifier]',
+                    mode: 2,
+                    value: -2
+                }
+            } else if (text.toLowerCase().includes("blinded")) {
+                //Blinded, create dummy AE without actual effect
+                injuryData.label = 'Injury: Head (blinded)';
+            } else if (text.toLowerCase().includes("brain")) {
+                //Brain damage, create AE with data.attributes.smarts.die.sides -2
+                injuryData.label = 'Injury: Head (brain damage)';
+                injuryEffects = {
+                    key: 'data.attributes.smarts.die.sides',
+                    mode: 2,
+                    value: -2
+                }
+            }
+        }
+        //Create the AE:
+        if (injuryEffects) {
+            injuryData.changes.push(injuryEffects)
+        }
+        await actor.createEmbeddedDocuments('ActiveEffect', [injuryData]);
+    }
+
+    // V3.0.0 Code by SalieriC#8263. Critical Failure awareness by Kekilla#7036 Testing and bug-chasing: javierrivera#4813.
 }
