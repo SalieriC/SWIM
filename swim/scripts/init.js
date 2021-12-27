@@ -26,6 +26,15 @@ function register_settings() {
         scope: 'world',
         config: true,
     });
+    // Gritty Damage for NPCs
+    game.settings.register('swim', 'grittyDamageNPC', {
+        name: game.i18n.localize("SWIM.grittyDamageNPCName"),
+        hint: game.i18n.localize("SWIM.grittyDamageNPCHint"),
+        type: Boolean,
+        default: false,
+        scope: 'world',
+        config: true,
+    });
     // Fear Table Name
     game.settings.register('swim', 'fearTable', {
         name: game.i18n.localize("SWIM.fearTableName"),

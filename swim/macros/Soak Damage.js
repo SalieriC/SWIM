@@ -18,6 +18,8 @@ function main() {
     // Injury Table for Gritty Damage
     let grit = game.settings.get(
         'swim', 'grittyDamage');
+    let gritNPC = game.settings.get(
+        'swim', 'grittyDamageNPC');
     let injuryTable = game.settings.get(
         'swim', 'injuryTable');
     let soakSFX;
@@ -181,7 +183,7 @@ function main() {
                             token.actor.update({ "data.wounds.value": wm });
                             swim.start_macro('[Script] Mark Dead');
                         }
-                        if (!game.user.isGM && setWounds > 0 && grit === true) { //disabling combat injuries for the DM
+                        if (setWounds > 0 && grit === true && (token.actor.data.type === "character" || token.actor.data.type === "npc" && gritNPC === true)) {
                             await apply_injury();
                         }
                     }
@@ -519,5 +521,5 @@ function main() {
         await actor.createEmbeddedDocuments('ActiveEffect', [injuryData]);
     }
 
-    // V3.0.0 Code by SalieriC#8263. Critical Failure awareness by Kekilla#7036 Testing and bug-chasing: javierrivera#4813.
+    // V3.1.0 Code by SalieriC#8263. Critical Failure awareness by Kekilla#7036 Testing and bug-chasing: javierrivera#4813.
 }
