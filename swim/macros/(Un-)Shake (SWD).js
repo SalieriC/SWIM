@@ -28,7 +28,7 @@ async function main() {
 
     async function rollUnshake() {
 
-        const edgeNames = ['combat reflexes', 'demon', 'construct', 'undead (harrowed)'];
+        const edgeNames = ['combat reflexes', 'demon', 'construct', 'undead (harrowed)', 'amorphous'];
         const undeadAE = token.actor.effects.find(ae => ae.data.label.toLowerCase() === "undead");
         if (undeadAE && undeadAE.data.disabled === false) {
             edgeNames.push('undead')
@@ -208,5 +208,5 @@ async function main() {
             AudioHelper.play({ src: `${shakenSFX}` }, true);
         }
     }
-    /// v.3.7.0 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
+    /// v.3.7.1 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
 }
