@@ -4,7 +4,7 @@
 	"description": "<p><b>READ THE README!</b> Doing so is very important!</p><p>A module providing immersion friendly macros to ease play of the SWADE System on Foundry VTT. <a href='https://ko-fi.com/salieric'>Please consider donating.</a> </p>",
 	"minimumCoreVersion": "0.8.8",
 	"compatibleCoreVersion": "9.235",
-	"version": "0.12.1",
+	"version": "0.12.2",
 	"author": "SalieriC",
 	"dependencies": [
 		{
@@ -15,6 +15,16 @@
 			"type": "module",
 			"name": "compendium-folders",
 			"manifest": "https://raw.githubusercontent.com/earlSt1/vtt-compendium-folders/master/module.json"
+		},
+		{
+			"type": "module",
+			"name": "libWrapper",
+			"manifest": "https://github.com/ruipin/fvtt-lib-wrapper/releases/download/v1.11.4.0/module.json"
+		},
+		{
+			"type": "module",
+			"name": "settings-extender",
+			"manifest": "https://gitlab.com/foundry-azzurite/settings-extender/-/jobs/artifacts/master/raw/dist/settings-extender/module.json?job=build"
 		}
 	],
 	"languages": [

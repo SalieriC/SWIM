@@ -227,6 +227,17 @@ Hooks.on('getSceneControlButtons', function (hudButtons) {
 });
 
 Hooks.on(`ready`, () => {
+    if (!game.modules.get('settings-extender')?.active && game.user.isGM) {
+        let key = "install and activate";
+        if(game.modules.get('settings-extender')) key = "activate";
+        ui.notifications.error(`SWIM requires the 'settings-extender' module. Please ${key} it.`)
+    }
+    if (!game.modules.get('compendium-folders')?.active && game.user.isGM) {
+        let key = "install and activate";
+        if(game.modules.get('compendium-folders')) key = "activate";
+        ui.notifications.error(`SWIM requires the 'compendium-folders' module. Please ${key} it.`)
+    }
+
     console.log('SWADE Immersive Macros | Ready');
     register_settings();
 });

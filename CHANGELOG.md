@@ -5,8 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+  
+## [0.12.2] - 2022-01-15  
 ### Added
 - Added "Amorphous" (The After) to the (Un-)Shake macros.
+### Fixed
+- Added the dependencies to the manifest and added a warning to the init hook if they are not present.
+- Also added libWrapper, not required by SWIM itself but by compendium-folders so I stuck it in there because FVTT doesn't check dependencies of dependencies.
 
 ## [0.12.1] - 2021-12-27  
 ### You need to update these macros:  
