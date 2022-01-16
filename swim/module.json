@@ -18,7 +18,7 @@
 		},
 		{
 			"type": "module",
-			"name": "libWrapper",
+			"name": "lib-wrapper",
 			"manifest": "https://github.com/ruipin/fvtt-lib-wrapper/releases/download/v1.11.4.0/module.json"
 		},
 		{
