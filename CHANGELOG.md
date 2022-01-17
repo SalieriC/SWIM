@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Function to test for crit fails in the swim class, to make it centrally available for all macros.  
+### Fixed  
+- Fixes a bug with duplicate chat messages in the (Un-)Shake Macros.  
+- Fixed showing an npc as crit failing when it rolled a single 1.  
 
 ## [0.12.3] - 2022-01-16  
 ### Fixed  
