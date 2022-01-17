@@ -8,7 +8,7 @@ class swim {
   static async critFail_check(npc, r) {
     let critFail = false;
     if ((isSame_bool(r.dice) && isSame_numb(r.dice) === 1) && npc === true) {
-      const failCheck = await new Roll("1d6x[Test for Critical Failure]").evaluate({ async: false });
+      const failCheck = await new Roll("1d6x[Test for Critical Failure]").evaluate({ async: true });
       failCheck.toMessage()
       if (failCheck.dice[0].values[0] === 1) { critFail = true; }
     } else if (npc === false) {
