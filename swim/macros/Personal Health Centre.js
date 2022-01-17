@@ -362,7 +362,7 @@ for (let fatiguePotion of ownedFatiguePotions) {
 
         // Non GM token has <1 bennie OR GM user AND selected token has <1 benny
         if ((!game.user.isGM && bennies < 1) || (game.user.isGM && bennies < 1 && game.user.getFlag("swade", "bennies") < 1)) {
-            ui.notifications.error("You have no more bennies left. Wounds will be applied now...");
+            //ui.notifications.error("You have no more bennies left. Wounds will be applied now...");
         }
         if (game.user.isGM) {
             bv = bennies + game.user.getFlag("swade", "bennies");
@@ -765,5 +765,5 @@ for (let fatiguePotion of ownedFatiguePotions) {
             setTimeout(resolve, ms);
         });
     }
-    // v.3.3.1 By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
+    // v.3.3.2 By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
 }
