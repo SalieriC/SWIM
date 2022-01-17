@@ -5,13 +5,13 @@ class swim {
     await macro.execute();
   }
 
-  static async critFail_check(npc, r) {
+  static async critFail_check(wildCard, r) {
     let critFail = false;
-    if ((isSame_bool(r.dice) && isSame_numb(r.dice) === 1) && npc === true) {
+    if ((isSame_bool(r.dice) && isSame_numb(r.dice) === 1) && wildCard === false) {
       const failCheck = await new Roll("1d6x[Test for Critical Failure]").evaluate({ async: true });
       failCheck.toMessage()
       if (failCheck.dice[0].values[0] === 1) { critFail = true; }
-    } else if (npc === false) {
+    } else if (wildCard === true) {
       if (isSame_bool(r.dice) && isSame_numb(r.dice) === 1) { critFail = true }
     }
     // Functions to determine a critical failure. This one checks if all dice rolls are the same.

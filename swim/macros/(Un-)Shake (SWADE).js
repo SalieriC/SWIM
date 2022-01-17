@@ -86,9 +86,9 @@ async function main() {
 
         let chatData = `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge} </span>`;
         // Checking for a Critical Failure.
-        let npc = false;
-        if (token.actor.type === "npc") { npc = true }
-        let critFail = await swim.critFail_check(npc, r)
+        let wildCard = true;
+        if (token.actor.data.data.wildcard === false && token.actor.type === "npc") { wildCard = false }
+        let critFail = await swim.critFail_check(wildCard, r)
         if (critFail === true) {
             ui.notifications.notify("You've rolled a Critical Failure!");
             let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure! </span>`;
@@ -192,5 +192,5 @@ async function main() {
             AudioHelper.play({ src: `${shakenSFX}` }, true);
         }
     }
-    /// v.3.8.0 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
+    /// v.3.8.1 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
 }

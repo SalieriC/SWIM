@@ -85,9 +85,9 @@ async function main() {
 
         let chatData = `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge} </span>`;
         // Checking for a Critical Failure.
-        let npc = false;
-        if (token.actor.type === "npc") { npc = true }
-        let critFail = await swim.critFail_check(npc, r)
+        let wildCard = true;
+        if (token.actor.data.data.wildcard === false && token.actor.type === "npc") { wildCard = false }
+        let critFail = await swim.critFail_check(wildCard, r)
         if (critFail === true) {
             ui.notifications.notify("You've rolled a Critical Failure!");
             let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure! </span>`;
@@ -110,22 +110,6 @@ async function main() {
             chatData += ` ${edgeText}`;
             ChatMessage.create({ content: chatData });
         }
-    }
-
-    // Functions to determine a critical failure. This one checks if all dice rolls are the same.
-    function isSame_bool(d = []) {
-        return d.reduce((c, a, i) => {
-            if (i === 0) return true;
-            return c && a.total === d[i - 1].total;
-        }, true);
-    }
-
-    // Functions to determine a critical failure. This one checks what the number of the "same" was.
-    function isSame_numb(d = []) {
-        return d.reduce((c, a, i) => {
-            if (i === 0 || d[i - 1].total === a.total) return a.total;
-            return null;
-        }, 0);
     }
 
     function useBenny() {
@@ -211,5 +195,5 @@ async function main() {
             AudioHelper.play({ src: `${shakenSFX}` }, true);
         }
     }
-    /// v.3.8.0 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
+    /// v.3.8.1 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
 }
