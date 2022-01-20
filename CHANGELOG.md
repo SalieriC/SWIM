@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed  
 - Fixes a bug with duplicate chat messages in the (Un-)Shake Macros.  
 - Fixed showing an npc as crit failing when it rolled a single 1. 
+### Changed  
+- Set all compendiums from SWIM to be hidden from players by default.  
 ### Known Issues  
 - Shape Changer Macro does not update permissions on the duplicate actor. This currently cannot be changed due to limitations in Foundry core.  
 - Shape Changer Macro does not delete powers on the presets yet.  
