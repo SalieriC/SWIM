@@ -5,11 +5,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.13.0]
 ### Added
 - Function to test for crit fails in the swim class, to make it centrally available for all macros.  
+- Shape Changer Macro which does everything for you, you just need to set up some presets the players can shape shift into.  
 ### Fixed  
 - Fixes a bug with duplicate chat messages in the (Un-)Shake Macros.  
-- Fixed showing an npc as crit failing when it rolled a single 1.  
+- Fixed showing an npc as crit failing when it rolled a single 1. 
+### Known Issues  
+- Shape Changer Macro does not update permissions on the duplicate actor. This currently cannot be changed due to limitations in Foundry core.  
+- Shape Changer Macro does not delete powers on the presets yet.  
 
 ## [0.12.3] - 2022-01-16  
 ### Fixed  

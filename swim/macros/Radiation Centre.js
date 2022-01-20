@@ -86,7 +86,10 @@ function main() {
         }
 
         // Checking for a Critical Failure.
-        if (token.actor.data.data.wildcard === true && isSame_bool(r.dice) && isSame_numb(r.dice) === 1) {
+        let wildCard = true;
+        if (token.actor.data.data.wildcard === false && token.actor.type === "npc") { wildCard = false }
+        let critFail = await swim.critFail_check(wildCard, r)
+        if (critFail === true) {
             ui.notifications.notify("You've rolled a Critical Failure! Applying Fatigue from Radiation now...");
             let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure! </span>`;
             applyFatigue();
@@ -109,22 +112,6 @@ function main() {
 
             await ChatMessage.create({ content: chatData });
         }
-    }
-
-    // Functions to determine a critical failure. This one checks if all dice rolls are the same.
-    function isSame_bool(d = []) {
-        return d.reduce((c, a, i) => {
-            if (i === 0) return true;
-            return c && a.total === d[i - 1].total;
-        }, true);
-    }
-
-    // Functions to determine a critical failure. This one checks what the number of the "same" was.
-    function isSame_numb(d = []) {
-        return d.reduce((c, a, i) => {
-            if (i === 0 || d[i - 1].total === a.total) return a.total;
-            return null;
-        }, 0);
     }
 
     // Apply Fatigue
@@ -264,5 +251,5 @@ function main() {
             applyFatigue();
         }
     }
-    // V1.2.0 Code by SalieriC#8263.
+    // V1.2.1 Code by SalieriC#8263.
 }

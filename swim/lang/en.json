@@ -40,5 +40,9 @@
   "SWIM.potionSFXName": "Drinking Potion SFX",
   "SWIM.potionSFXHint": "Sound effect to be played when a potion is ingested.",
   "SWIM.openRaiseCalculatorName": "Raise Calculator",
-  "SWIM.openRaiseCalculatorHint": "Open Raise Calculator"
+  "SWIM.openRaiseCalculatorHint": "Open Raise Calculator",
+  "SWIM.shapeShiftSFXName": "Shape Change SFX:",
+  "SWIM.shapeShiftSFXHint": "The sound effect to be played when an actor shape changes.",
+  "SWIM.shapeShiftVFXName": "Shape Change VFX:",
+  "SWIM.shapeShiftVFXHint": "The visual effect to be played when an actor shape changes. I recommend Misty Step for everyone with access to the jb2a patreon module. Playing VFX requires Sequencer."
 }

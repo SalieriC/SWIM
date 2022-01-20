@@ -406,7 +406,10 @@ for (let fatiguePotion of ownedFatiguePotions) {
         }
 
         // Checking for a Critical Failure.
-        if (isSame_bool(r.dice) && isSame_numb(r.dice) === 1) {
+        let wildCard = true;
+        if (token.actor.data.data.wildcard === false && token.actor.type === "npc") { wildCard = false }
+        let critFail = await swim.critFail_check(wildCard, r)
+        if (critFail === true) {
             ui.notifications.notify("You've rolled a Critical Failure!");
             let chatData = `${actorAlias} rolled a <span style="font-size:150%">Critical Failure!</span> and takes another Wound! See the rules on Natural Healing for details.`;
             applyWounds();
@@ -438,22 +441,6 @@ for (let fatiguePotion of ownedFatiguePotions) {
 
             ChatMessage.create({ content: chatData });
         }
-    }
-
-    // Functions to determine a critical failure. This one checks if all dice rolls are the same.
-    function isSame_bool(d = []) {
-        return d.reduce((c, a, i) => {
-            if (i === 0) return true;
-            return c && a.total === d[i - 1].total;
-        }, true);
-    }
-
-    // Functions to determine a critical failure. This one checks what the number of the "same" was.
-    function isSame_numb(d = []) {
-        return d.reduce((c, a, i) => {
-            if (i === 0 || d[i - 1].total === a.total) return a.total;
-            return null;
-        }, 0);
     }
 
     // Spend Benny function
@@ -765,5 +752,5 @@ for (let fatiguePotion of ownedFatiguePotions) {
             setTimeout(resolve, ms);
         });
     }
-    // v.3.3.2 By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
+    // v.3.3.3 By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
 }

@@ -171,6 +171,24 @@ function register_settings() {
         scope: 'world',
         config: true,
     });
+    // Shape Shift SFX
+    game.settings.register('swim', 'shapeShiftSFX', {
+        name: game.i18n.localize("SWIM.shapeShiftSFXName"),
+        hint: game.i18n.localize("SWIM.shapeShiftSFXHint"),
+        type: window.Azzu.SettingsTypes.FilePickerAudio,
+        default: '',
+        scope: 'world',
+        config: true,
+    });
+    // Shape Shift VFX
+    game.settings.register('swim', 'shapeShiftVFX', {
+        name: game.i18n.localize("SWIM.shapeShiftVFXName"),
+        hint: game.i18n.localize("SWIM.shapeShiftVFXHint"),
+        type: window.Azzu.SettingsTypes.FilePickerVideo,
+        default: '',
+        scope: 'world',
+        config: true,
+    });
 }
 
 // Add Raise Calculator Button

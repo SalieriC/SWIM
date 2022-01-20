@@ -4,7 +4,7 @@
 	"description": "<p><b>READ THE README!</b> Doing so is very important!</p><p>A module providing immersion friendly macros to ease play of the SWADE System on Foundry VTT. <a href='https://ko-fi.com/salieric'>Please consider donating.</a> </p>",
 	"minimumCoreVersion": "0.8.8",
 	"compatibleCoreVersion": "9.242",
-	"version": "0.12.3",
+	"version": "0.13.0",
 	"author": "SalieriC",
 	"dependencies": [
 		{
@@ -47,7 +47,8 @@
 			"system": "swade",
             "path": "packs/swade-immersive-macros.db",
             "module": "swim",
-            "entity": "Macro"
+            "entity": "Macro",
+			"private": true
         },
 		{
             "name": "chase-layouts",
@@ -55,8 +56,18 @@
 			"system": "swade",
             "path": "packs/chase-layouts.db",
             "module": "swim",
-            "entity": "Scene"
-        }
+            "entity": "Scene",
+			"private": true
+        },
+		{
+		  "label": "SWIM Shape Change Folders",
+		  "name": "swim-shape-change-folders",
+		  "path": "packs/swim-shape-change-folders.db",
+		  "system": "swade",
+		  "module": "swim",
+		  "entity": "Actor",
+		  "private": true
+		}
 	],
 	"url": "https://github.com/SalieriC/SWADE-Immersive-Macros",
 	"manifest": "https://raw.githubusercontent.com/SalieriC/SWADE-Immersive-Macros/main/swim/module.json",

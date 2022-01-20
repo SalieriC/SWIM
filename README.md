@@ -262,3 +262,18 @@ The macro searches all selected and targeted tokens (it won't use duplicates if 
 Alternatively, you can use the macro with no tokens targeted/selected and a dialogue will appear that lets you enter the amount of enemies with their different loot types individually. This dialogue will also open when none of the selected and targeted tokens has the Additional Stat so you can safely use the macro without this.  
 If the loot type is set up with an amount of enemies like above (i.e. "Meager, per 5"), the number is used for division and the result is rounded to two decimals.  
 In Hellfrost this represents Silver Scields, in Settings which don't use a sub-currency (like 50f), just ignore or round off manually.  
+
+### Shape Changer    
+**Immersion setting:** SFX & VFX
+**Requirements:**  
+- [Warp Gate](https://github.com/trioderegion/warpgate)  
+**Compatibility:**
+- [Sequencer](https://foundryvtt.com/packages/sequencer) (Enabling VFX)
+**Description:**  
+The first macro in a lot of things. Writing it was challenging but it seems to work reasonably well. Please report any bugs as usual.  
+This macro allows players and GMs alike to shape change their characters into other creatures. It automatically shows those which are available and you can choose whether to change into a new form or back to your regular form. [Warp Gate](https://github.com/trioderegion/warpgate) by honeybadger is required to exchange the token on the canvas, so you can't access it without it. The macro will carry over every values that are required, including wounds, fatigue, conviction, power points, etc. Even on changing back all those values will be updated. The macro should relly take care of everything for you.  
+There is some setup to be done however: First head to the compendiums and locate the "SWIM Shape Change Folders" compendium. Open it and import the folder structure into your world. *Do not change the folders names!* Inside the folder structure you'll find sub-folders. You now need to populate these folders with the creatures a chape changer can change into. You don't need to edit any of their settings, the macro will take care of everything. It is recommended that you rename these to avoid confusion with other actors however. I recommend adding a simple "SC: " in front of their names, e.g. "SC: Wolf". Also you might want to delete all the powers the creature might have because as of version 0.13.0, the macro does not delete those (yet). *Make sure to set permission to owner for all players that are shape shifters!* (Due to limitations in core, setting permission automatically isn't possible atm.) And that is everything.
+   
+**How does it work?**
+The macro will search this folder structure for your presets and add them to the list of creatures a shape changer can change into. It then will create a duplicate of the selected actor and uses that duplicate for this specific player. It then will change the actor according to the rules. It will change the skills, attributes, token settings, wounds, fatigue, and much more. It even activates conviction if it was currently running on the shape changer.  
+*Why not creating the folder structure automatically on first starting the world?* - Shape Change isn't the most common power in my experience, thus I don't want to force it on GMs who have no need for it.  
