@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.13.0]
+## [0.13.0] - 2022-01-21  
 ### Added
 - Function to test for crit fails in the swim class, to make it centrally available for all macros.  
 - Shape Changer Macro which does everything for you, you just need to set up some presets the players can shape shift into.  
