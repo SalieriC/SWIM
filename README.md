@@ -277,3 +277,4 @@ There is some setup to be done however: First head to the compendiums and locate
 **How does it work?**
 The macro will search this folder structure for your presets and add them to the list of creatures a shape changer can change into. It then will create a duplicate of the selected actor and uses that duplicate for this specific player. It then will change the actor according to the rules. It will change the skills, attributes, token settings, wounds, fatigue, and much more. It even activates conviction if it was currently running on the shape changer.  
 *Why not creating the folder structure automatically on first starting the world?* - Shape Change isn't the most common power in my experience, thus I don't want to force it on GMs who have no need for it.  
+<p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/shape_changer_showcase.gif?raw=true"> </p>  
