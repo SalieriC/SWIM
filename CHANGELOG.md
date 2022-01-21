@@ -4,7 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [Unreleased]  
+### Added  
+### Fixed  
+- A bug in the shape changer macro that could cause issues when updating skills.  
+- A bug in the shape changer macro that caused players not showing all their options to shift into in creature form.
+### Changed  
+- Changed the way token size settings are applied in the shape changer macro to reduce load and thus improve performance.  
 
 ## [0.13.0] - 2022-01-21  
 ### Added

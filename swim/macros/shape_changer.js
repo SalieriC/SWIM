@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 1.1.0
+ * v. 1.1.1
  ******************************************************/
 
 if (!token || canvas.tokens.controlled.length > 1) {
@@ -54,41 +54,23 @@ let totalContent = folder.children.reduce((acc, subFolder) => {
 async function set_token_size(scCopy, scSize) {
     console.log("Hello World")
     if (scSize <= 2 && scSize >= 0) {
-        await scCopy.update({ "token.height": 1 });
-        await scCopy.update({ "token.width": 1 });
-        await scCopy.update({ "token.scale": 1 });
+        await scCopy.update({token: {height: 1, width: 1, scale: 1}})
     } else if (scSize <= 5 && scSize >= 3) {
-        await scCopy.update({ "token.height": 2 });
-        await scCopy.update({ "token.width": 2 });
-        await scCopy.update({ "token.scale": 1 });
+        await scCopy.update({token: {height: 2, width: 2, scale: 1}})
     } else if (scSize <= 8 && scSize >= 6) {
-        await scCopy.update({ "token.height": 4 });
-        await scCopy.update({ "token.width": 4 });
-        await scCopy.update({ "token.scale": 1 });
+        await scCopy.update({token: {height: 4, width: 4, scale: 1}})
     } else if (scSize <= 11 && scSize >= 9) {
-        await scCopy.update({ "token.height": 8 });
-        await scCopy.update({ "token.width": 8 });
-        await scCopy.update({ "token.scale": 1 });
+        await scCopy.update({token: {height: 8, width: 8, scale: 1}})
     } else if (scSize > 11) {
-        await scCopy.update({ "token.height": 16 });
-        await scCopy.update({ "token.width": 16 });
-        await scCopy.update({ "token.scale": 1 });
+        await scCopy.update({token: {height: 16, width: 16, scale: 1}})
     } else if (scSize === -1) {
-        await scCopy.update({ "token.height": 1 });
-        await scCopy.update({ "token.width": 1 });
-        await scCopy.update({ "token.scale": 0.85 });
+        await scCopy.update({token: {height: 1, width: 1, scale: 0.85}})
     } else if (scSize === -2) {
-        await scCopy.update({ "token.height": 1 });
-        await scCopy.update({ "token.width": 1 });
-        await scCopy.update({ "token.scale": 0.75 });
+        await scCopy.update({token: {height: 1, width: 1, scale: 0.75}})
     } else if (scSize === -3) {
-        await scCopy.update({ "token.height": 1 });
-        await scCopy.update({ "token.width": 1 });
-        await scCopy.update({ "token.scale": 0.6 });
+        await scCopy.update({token: {height: 1, width: 1, scale: 0.6}})
     } else if (scSize <= -4) {
-        await scCopy.update({ "token.height": 1 });
-        await scCopy.update({ "token.width": 1 });
-        await scCopy.update({ "token.scale": 0.5 });
+        await scCopy.update({token: {height: 1, width: 1, scale: 0.5}})
     }
 }
 
@@ -110,7 +92,8 @@ async function set_tokenSettings(scCopy, pcID) {
             "token.randomImg": carry.data.token.randomImg,
             "token.vision": carry.data.token.vision,
             "token.displayBars": carry.data.token.displayBars,
-            "token.displayName": carry.data.token.displayName
+            "token.displayName": carry.data.token.displayName,
+            "data.advances.value": carry.data.data.advances.value
         }
     } else {
         updateData = {
@@ -123,7 +106,8 @@ async function set_tokenSettings(scCopy, pcID) {
             "token.randomImg": pc.data.token.randomImg,
             "token.vision": pc.data.token.vision,
             "token.displayBars": pc.data.token.displayBars,
-            "token.displayName": pc.data.token.displayName
+            "token.displayName": pc.data.token.displayName,
+            "data.advances.value": pc.data.data.advances.value
         }
     }
     await scCopy.update(updateData)
@@ -195,7 +179,7 @@ async function update_preset(scCopy, scSize, raise, pcID) {
     for (let skill of scSkills) {
         let originalSkill = pcSkills.find(s => (s.data.name.toLowerCase() === skill.data.name.toLowerCase()));
         if (originalSkill) {
-            skill.update({
+            await skill.update({
                 "data.die.sides": originalSkill.data.data.die.sides
             })
             let index = skillsToCreate.indexOf(originalSkill);
