@@ -1,19 +1,7 @@
 const chatimage = "https://raw.githubusercontent.com/brunocalado/mestre-digital/master/Foundry%20VTT/Macros/Savage%20Worlds/icons/clock.webp";
 
-/* Deviation p99 SWADE
-If a blast template misses, it deviates 1d6″
-for thrown weapons (such as grenades) and
-2d6″ for fired projectiles. Multiply by 2 if the
-attack was made at Medium Range, 3 if Long,
-and 4 for Extreme.
-
-Next roll a d12 and read it like a clock
-facing to determine the direction the missile
-deviates. A weapon can never deviate more
-than half the distance to the original target
-(that keeps it from going behind the thrower).
-
-source: https://raw.githubusercontent.com/brunocalado/mestre-digital/master/Foundry%20VTT/Macros/Savage%20Worlds/Deviation.js; altered by SalieriC.
+/* 
+(c): brunocalado; altered by SalieriC.
 icon: icons/weapons/artillery/cannon-engraved-gold.webp
 */
 
@@ -67,10 +55,10 @@ function rollForIt(html) {
   }
 }
 
-function diceRoll(die, range) {
+async function diceRoll(die, range) {
   const rangeMultiplier = rangeCheck(range);
-  let direction = new Roll('1d12').roll();
-  let roll = new Roll(die).roll();
+  let direction = await new Roll('1d12').roll();
+  let roll = await new Roll(die).roll();
   let message = `<h2>Deviation</h2>`;
   if (coreRules === true) {message = `<div class="swade-core"><h2>@Compendium[swade-core-rules.swade-rules.xxEcWExtn36PPxg0]{Deviation}</h2>`;}
   message += `<p>Move the blast <b>${roll.total*rangeMultiplier}"</b> to <b style="color:red">${direction.total}</b> O'Clock.</p>`;
@@ -81,7 +69,7 @@ function diceRoll(die, range) {
   if (coreRules === true) {message += `</div>`}
 
   let tempChatData = {
-    type: CHAT_MESSAGE_TYPES.ROLL,
+    //type: CHAT_MESSAGE_TYPES.ROLL,
     roll: roll,
     rollMode: game.settings.get("core", "rollMode"),
     content: message
@@ -109,6 +97,6 @@ function directionCheck(direction) {
   } else {
     return false
   } 
-  // v. 1.0.0 - Original code by brunocalado, modified by SalieriC#8263.
+  // v. 1.1.0 - Original code by brunocalado, modified by SalieriC#8263.
   // Image source: https://freesvg.org/analogue-clock-vector-graphics
 }
