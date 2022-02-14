@@ -203,9 +203,9 @@ function register_settings() {
     });
 }
 
-// Add Raise Calculator Button
 Hooks.on('getSceneControlButtons', function (hudButtons) {
-    let hud = hudButtons.find(val => { return val.name == "token"; });
+    // Add Raise Calculator Button
+    let hud = hudButtons.find(val => { return val.name == "token"; })
     if (hud) {
         hud.tools.push({
             name: "SWIM.openRaiseCalculatorName",
@@ -254,6 +254,20 @@ Hooks.on('getSceneControlButtons', function (hudButtons) {
             }
         });
     }
+
+    // Hijack the systems chase setup:
+    let tilesButton = hudButtons.find(val => { return val.name == "tiles"; })
+    let chaseButtonIndex = tilesButton.tools.findIndex(object => { return object.name === "clear-chase-cards" })
+    if (chaseButtonIndex !== -1) {
+        tilesButton.tools.splice(chaseButtonIndex, 1)
+    }
+    tilesButton.tools.push({
+        name: 'chase-setup',
+        title: game.i18n.localize("SWIM.ChaseSetup"),
+        icon: "fas fa-shipping-fast",
+        button: true,
+        onClick: async () => { swim.start_macro(`[Script] Chase Setup`) }
+    })
 });
 
 Hooks.on(`ready`, () => {
