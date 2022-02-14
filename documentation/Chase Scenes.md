@@ -23,4 +23,7 @@ You can set up a custom background for these layouts by simply editing the scene
 You *must not* change these properties, otherwise the macro will be unable to place your cards in the correct position. Foundry VTT may change your Scene Dimensions on setting up another background image, so double check that the original values keep in place.  
 
 ## Editing the layouts  
-You can edit these layouts manually by opening them in a image editor like GIMP. I can not and will not provide the original files but by adding your own background image in such an editor will avoid conflicts with changing scene dimensions.  
+You can edit these layouts manually by opening them in an image editor like GIMP or PhotoPea. I can not and will not provide the original files but by adding your own background image in such an editor will avoid conflicts with changing scene dimensions.  
+
+## License information
+You may *not* - under any circumstances - redistribute these layouts, especially not in another module. I may decide to allow this on a case decision, please ask before. The layouts are thus not covered by the GPL-3.0 license the rest of the module falls under.  
