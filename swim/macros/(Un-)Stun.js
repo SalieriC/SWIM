@@ -6,9 +6,6 @@ async function main() {
     ui.notifications.error("Please select a single token first.");
     return;
   }
-  if (!game.cub.getCondition("Prone")) {
-    ui.notifications.error('You need "Prone" as a condition in Combat Utility Belt. Use the .json file of SWIM to import conditions for SWADE easily.')
-  }
 
   // Setting up SFX path.
   let stunSFX = game.settings.get(
@@ -78,9 +75,7 @@ async function main() {
         chatData += `, is no longer Stunned and looses Vulnerable after the turn.`;
         await succ.apply_status(token, 'distracted', false)
         await succ.apply_status(token, 'stunned', false)
-        if (game.cub.hasCondition("Prone", token)) {
-          game.cub.removeCondition("Prone", token)
-        }
+        await succ.apply_status(token, 'prone', false)
         if (unshakeSFX) { AudioHelper.play({ src: `${unshakeSFX}` }, true); }
       } else {
         chatData += ` and remains Stunned.`;
@@ -178,5 +173,5 @@ async function main() {
       AudioHelper.play({ src: `${stunSFX}` }, true);
     }
   }
-  // v.3.6.0 Made by SalieriC#8263 using original Code from Shteff.
+  // v.3.6.1 Made by SalieriC#8263 using original Code from Shteff.
 }
