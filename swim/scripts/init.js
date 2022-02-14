@@ -212,9 +212,9 @@ function register_settings() {
     });
 }
 
-Hooks.on('getCardsDirectoryEntryContext', function (stuff) {
+/*Hooks.on('getCardsDirectoryEntryContext', function (stuff) {
     console.log(stuff)
-})
+})*/
 
 Hooks.on('getSceneControlButtons', function (hudButtons) {
     // Add Raise Calculator Button
