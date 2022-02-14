@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed the way token size settings are applied in the shape changer macro to reduce load and thus improve performance.  
 - Changed the macros to use [SUCC](https://github.com/SalieriC/SUCC) rather than CUB for handling conditions.
 - Changed the check for the Irradiated condition in the radiation centre macro from CUB to SUCC and added a dialogue for GMs to activate it from the macro itself.
+- Changed the license of the chase layouts. They may *not* be redistributed under any circumstances.
 
 ## [0.13.0] - 2022-01-21  
 ### Added
