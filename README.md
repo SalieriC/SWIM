@@ -21,6 +21,7 @@ The SFX is used with permission and may use another License (see Assets section 
 Some macros contain SWADE rulings in a way that the macros execute them and sometimes include short notices. They do not contain detailed information about the rulings. This is Licensed under the [Savage Worlds Fan License](https://www.peginc.com/licensing/).  
 <p align="center"> <img src="https://peginc.com/wp-content/uploads/2019/01/SW_LOGO_FP_2018.png"> </p>  
 “This game references the Savage Worlds game system, available from Pinnacle Entertainment Group at www.peginc.com. Savage Worlds and all associated logos and trademarks are copyrights of Pinnacle Entertainment Group. Used with permission. Pinnacle makes no representation or warranty as to the quality, viability, or suitability for purpose of this product.”  
+
 The Chase Layouts hold game rules and are licensed under the fan license as well (see above), permission was granted by Shane. The Layouts may *not* be redistributed under any circumstances.
 
 ## Help needed!
