@@ -72,6 +72,24 @@
 		  "module": "swim",
 		  "entity": "Actor",
 		  "private": true
+		},
+		{
+		  "label": "SWIM Chase Cards",
+		  "name": "swim-chase-cards.db",
+		  "path": "packs/swim-chase-cards.db",
+		  "system": "swade",
+		  "module": "swim",
+		  "entity": "JournalEntry",
+		  "private": true
+		},
+		{
+		  "label": "SWIM Roll Tables",
+		  "name": "swim-roll-tables.db",
+		  "path": "packs/swim-roll-tables.db",
+		  "system": "swade",
+		  "module": "swim",
+		  "entity": "RollTable",
+		  "private": true
 		}
 	],
 	"url": "https://github.com/SalieriC/SWADE-Immersive-Macros",

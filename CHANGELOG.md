@@ -10,11 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added  
 - [SUCC](https://github.com/SalieriC/SUCC) dependency. SWADE v.1+ handles conditions inherently different from the way they were handled before, thus making CUB not viable any longer. Since CUB will likely take a long time until it is compatible with SWADE once again, I have teamed up with Javier again to create SUCC which works similar to CUBs Enhanced Conditions but it built for SWADE and thus requires less setup.
 - A new setting to register the Irradiated Condition.
+- Hijacked (or rather: replaced) the SWADE systems "Clear Chase" button and added the Chase Layout Manager instead. Make sure to only use it on one of the chase layout scenes. Nothing bad will happen otherwise but the macro may not place the cards as expected.
+- Added a compendium with a chase deck roll table and a compendium with the cards for that table since SWADE is going to remove the compendium with the images.
 ### Removed
 - CUB dependency. Please disable CUB in your world and use [SUCC](https://github.com/SalieriC/SUCC) instead to continue using SWIM.
 - All the condition icons as they are now in SUCC.
 - CUB imports as they are of no use now.
 - CUB setup documentation as it is not needed anymore.
+- Removed SWADE Systems chase button from the left scene controls.
 ### Fixed  
 - A bug in the shape changer macro that could cause issues when updating skills.  
 - A bug in the shape changer macro that caused players not showing all their options to shift into in creature form.
