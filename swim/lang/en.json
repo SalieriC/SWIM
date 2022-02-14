@@ -44,5 +44,7 @@
   "SWIM.shapeShiftSFXName": "Shape Change SFX:",
   "SWIM.shapeShiftSFXHint": "The sound effect to be played when an actor shape changes.",
   "SWIM.shapeShiftVFXName": "Shape Change VFX:",
-  "SWIM.shapeShiftVFXHint": "The visual effect to be played when an actor shape changes. I recommend Misty Step for everyone with access to the jb2a patreon module. Playing VFX requires Sequencer."
+  "SWIM.shapeShiftVFXHint": "The visual effect to be played when an actor shape changes. I recommend Misty Step for everyone with access to the jb2a patreon module. Playing VFX requires Sequencer.",
+  "SWIM.irradiationSettingName": "Irradiation Condition:",
+  "SWIM.irradiationSettingHint": "This enables the Irradiation condition, which is required if you want to use the Radiation Centre Macro."
 }

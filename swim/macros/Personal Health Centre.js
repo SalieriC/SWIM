@@ -730,7 +730,7 @@ for (let fatiguePotion of ownedFatiguePotions) {
         }
     }
 
-    function applyWounds() {
+    async function applyWounds() {
         setWounds = wv + 1
         if (setWounds <= wm) {
             token.actor.update({ "data.wounds.value": setWounds });
@@ -740,7 +740,7 @@ for (let fatiguePotion of ownedFatiguePotions) {
         }
         else {
             token.actor.update({ "data.wounds.value": wm });
-            game.cub.addCondition("Incapacitated");
+            await succ.apply_status(token, 'incapacitated', true)
             if (incapSFX) {
                 AudioHelper.play({ src: `${incapSFX}` }, true);
             }
@@ -752,5 +752,5 @@ for (let fatiguePotion of ownedFatiguePotions) {
             setTimeout(resolve, ms);
         });
     }
-    // v.3.3.3 By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
+    // v.3.4.0 By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
 }

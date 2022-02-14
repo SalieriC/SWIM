@@ -1,13 +1,35 @@
 main();
 
-function main() {
+async function main() {
     // Checking if at least one token is defined.
     if (!token || canvas.tokens.controlled.length > 1) {
         ui.notifications.error("Please select a token first");
         return;
     }
-    if (!game.cub.getCondition("Irradiated")) {
-        ui.notifications.error('You need "Irradiated" as a condition in Combat Utility Belt. Use the .json file of SWIM to import conditions for SWADE easily.')
+    if (!succ.get_condition('irradiated')) {
+        if (game.user.isGM) {
+            return new Dialog({
+                title: "Irradiated Condition missing",
+                content: `
+                <p>SWIM detected, that you have not set up the "Irradiated" condition.</p>
+                <p>This condition is required to use this macro. You can easily set it up by checking the checkbox in SWIMs configuration.</p>
+                <p>Do you want to set it up now (requires the world to be reloaded)?</p>
+                `,
+                buttons: {
+                    one: {
+                        label: "Yes please.",
+                        callback: async (_) => {
+                            await game.settings.set('swim', 'irradiationSetting', true)
+                            window.location.reload();
+                        }
+                    },
+                    two: {
+                        label: "No thanks.",
+                    }
+                }
+            }).render(true)
+        }
+        return ui.notifications.error('Your GM has not activated the Irradiation Condition. Ask your GM to do so and try again.')
     }
     /*else if (!token.actor.data.data.additionalStats.radRes) {
         ui.notifications.error("Activate your Rad Resistance Additional Stat before using this macro.");
@@ -131,8 +153,8 @@ function main() {
             }*/
             swim.start_macro(`[Script] Mark Dead`);
         }
-        if (!game.cub.hasCondition("Irradiated", token)) {
-            game.cub.addCondition("Irradiated"), token
+        if (await succ.check_status(token, 'irradiated') === false) {
+            await succ.apply_status(token, 'irradiated', true)
         }
     }
 
@@ -251,5 +273,5 @@ function main() {
             applyFatigue();
         }
     }
-    // V1.2.1 Code by SalieriC#8263.
+    // V1.3.1 Code by SalieriC#8263.
 }

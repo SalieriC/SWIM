@@ -70,15 +70,14 @@ async function main() {
     else {
       if (rollWithEdge > 3 && rollWithEdge <= 7) {
         chatData += ` and is no longer Stunned but remains Vulnerable until end of next turn.`;
-        token.actor.update({ "data.status.isVulnerable": true });
-        token.actor.update({ "data.status.isStunned": false });
+        await succ.apply_status(token, 'vulnerable', true)
+        await succ.apply_status(token, 'stunned', false)
         if (unshakeSFX) { AudioHelper.play({ src: `${unshakeSFX}` }, true); }
         useBenny();
       } else if (rollWithEdge >= 8) {
         chatData += `, is no longer Stunned and looses Vulnerable after the turn.`;
-        token.actor.update({ "data.status.isDistracted": false });
-        token.actor.update({ "data.status.isStunned": false });
-        token.actor.update({ "data.status.isVulnerable": false });
+        await succ.apply_status(token, 'distracted', false)
+        await succ.apply_status(token, 'stunned', false)
         if (game.cub.hasCondition("Prone", token)) {
           game.cub.removeCondition("Prone", token)
         }
@@ -163,21 +162,21 @@ async function main() {
     });
   }
 
-  if (token.actor.data.data.status.isStunned === true) {
+  if (await succ.check_status(token, 'stunned') === true) {
     rollUnstun()
   } else if (token) {
-    if (token.actor.data.data.status.isStunned === false) {
-      token.actor.update({ "data.status.isStunned": true });
+    if (await succ.check_status(token, 'stunned') === false) {
+      await succ.apply_status(token, 'stunned', true)
     };
 
-    if (!game.cub.hasCondition("Prone", token)) {
-      game.cub.addCondition("Prone", token)
+    if (await succ.check_status(token, 'prone') === false) {
+      await succ.apply_status(token, 'prone', true)
     };
-    token.actor.update({ "data.status.isDistracted": true });
-    token.actor.update({ "data.status.isVulnerable": true });
+    await succ.apply_status(token, 'distracted', true)
+    await succ.apply_status(token, 'vulnerable', true)
     if (stunSFX) {
       AudioHelper.play({ src: `${stunSFX}` }, true);
     }
   }
-  // v.3.5.1 Made by SalieriC#8263 using original Code from Shteff.
+  // v.3.6.0 Made by SalieriC#8263 using original Code from Shteff.
 }

@@ -16,7 +16,7 @@ let incapSFX = game.settings.get(
 
 main();
 
-function main() {
+async function main() {
   if (canvas.tokens.controlled.length === 0) {
     ui.notifications.error("Please select a token first");
     return;
@@ -25,20 +25,10 @@ function main() {
   for (let e of canvas.tokens.controlled) {
     let hasAlive = !e.document.getFlag("healthEstimate", "dead")
     e.document.setFlag("healthEstimate", "dead", hasAlive)
-    async function toggleCondition(condition, token, { warn = true } = {}) {
-      if (!condition || !token) return;
-  
-      game.cub.hasCondition(condition, token, { warn })
-        ? await game.cub.removeCondition(condition, token, { warn })
-        : await game.cub.addCondition(condition, token, { warn });
-  
-      return game.cub.hasCondition(condition, token, { warn });
-    }
-  
-    toggleCondition(`Incapacitated`, e);
+    await succ.toggle_status(e, 'incapacitated', true)
   }
     ui.notifications.info("Marked as dead/alive.");
     AudioHelper.play({ src: `${incapSFX}` }, true);
 
-  // v.3.0.0
+  // v.3.1.0
 }

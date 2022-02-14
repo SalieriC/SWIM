@@ -5,12 +5,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]  
+
+## [0.14.0] - 2022-MM-DD  
 ### Added  
+- [SUCC](https://github.com/SalieriC/SUCC) dependency. SWADE v.1+ handles conditions inherently different from the way they were handled before, thus making CUB not viable any longer. Since CUB will likely take a long time until it is compatible with SWADE once again, I have teamed up with Javier again to create SUCC which works similar to CUBs Enhanced Conditions but it built for SWADE and thus requires less setup.
+- A new setting to register the Irradiated Condition.
+### Removed
+- CUB dependency. Please disable CUB in your world and use [SUCC](https://github.com/SalieriC/SUCC) instead to continue using SWIM.
 ### Fixed  
 - A bug in the shape changer macro that could cause issues when updating skills.  
 - A bug in the shape changer macro that caused players not showing all their options to shift into in creature form.
 ### Changed  
 - Changed the way token size settings are applied in the shape changer macro to reduce load and thus improve performance.  
+- Changed the macros to use [SUCC](https://github.com/SalieriC/SUCC) rather than CUB for handling conditions.
+- Changed the check for the Irradiated condition in the radiation centre macro from CUB to SUCC and added a dialogue for GMs to activate it from the macro itself.
 
 ## [0.13.0] - 2022-01-21  
 ### Added

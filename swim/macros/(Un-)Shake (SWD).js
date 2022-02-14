@@ -96,12 +96,12 @@ async function main() {
         else {
             if (rollWithEdge > 3 && rollWithEdge <= 7) {
                 chatData += ` and is no longer Shaken but cannot act this turn.`;
-                token.actor.update({ "data.status.isShaken": false });
+                await succ.apply_status(token, 'shaken', false)
                 if (unshakeSFX) { AudioHelper.play({ src: `${unshakeSFX}` }, true); }
                 useBenny();
             } else if (rollWithEdge >= 8) {
                 chatData += `, is no longer Shaken and may act normally.`;
-                token.actor.update({ "data.status.isShaken": false });
+                await succ.apply_status(token, 'shaken', false)
                 if (unshakeSFX) { AudioHelper.play({ src: `${unshakeSFX}` }, true); }
             } else {
                 chatData += `, is still Shaken, may only move at half pace but may take free actions.`;
@@ -187,13 +187,13 @@ async function main() {
         });
     }
 
-    if (token.actor.data.data.status.isShaken === true) {
+    if (await succ.check_status(token, 'shaken') === true) {
         rollUnshake()
     } else if (token) {
-        token.actor.update({ "data.status.isShaken": true })
+        await succ.apply_status(token, 'shaken', true)
         if (shakenSFX) {
             AudioHelper.play({ src: `${shakenSFX}` }, true);
         }
     }
-    /// v.3.8.1 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
+    /// v.3.9.0 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
 }

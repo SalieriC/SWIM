@@ -189,6 +189,18 @@ function register_settings() {
         scope: 'world',
         config: true,
     });
+    // Irradiation Condition
+    game.settings.register('swim', 'irradiationSetting', {
+        name: game.i18n.localize("SWIM.irradiationSettingName"),
+        hint: game.i18n.localize("SWIM.irradiationSettingHint"),
+        type: Boolean,
+        default: false,
+        scope: 'world',
+        config: true,
+        onChange: () => {
+            window.location.reload();
+        }
+    });
 }
 
 // Add Raise Calculator Button
@@ -258,4 +270,7 @@ Hooks.on(`ready`, () => {
 
     console.log('SWADE Immersive Macros | Ready');
     register_settings();
+    if (game.settings.get('swim', 'irradiationSetting') === true) {
+        CONFIG.statusEffects.push({ id: "irradiated", label: "Irradiated", icon: "modules/succ/assets/icons/0-irradiated.svg" });
+    }
 });
