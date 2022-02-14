@@ -9,8 +9,8 @@ You'll find all the macros in a new compendium delivered by the module. It conta
 **Please read this ReadMe in full, as it contains important instructions on how to use this module.**
 **Important:** You might need to update the macros you've imported when you update the module. I hope to find a method to automate this in the future.  
 
-### Combat Utility Belt
-Note that some macros list [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) (CUB) as compatible or requirement. This is because CUB is a great module that allows me to do things better and enhances the gameplay if set up properly. Settung up CUB support isn't so difficult as it might seem. If you want to use CUB please see the [CUB Setup instructions](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/documentation/CUB%20Setup.md) for details on how to set up CUB properly.  
+### SUCC  
+[SUCC (SWADE Ultimate Condition Changer)](https://github.com/SalieriC/SUCC) is a module created by Javier Rivera Castro and myself and is a new dependency for SWIM. It is now completely replacing Combat Utility Belt (CUB) because since SWADE v.1+ the way how conditions are handled by the system changed dramatically. CUB will likely take a long time to be fully compatible with the SWADE system, if it ever will be again. This is why I decided to make a module to do what I need myself (after Javier convinced me). SUCC provides a native support for SWADE and thus is very light on the user configuration. No more complicated CUB setup required. It is required to use SWIM.
 
 ### Health Estimate
 [Health Estimate](https://foundryvtt.com/packages/healthEstimate/) is a cool immersion module and thus works great with SWIM. I highly recomment it as it is so much more immersive to say and read "he is a bit beatin'" than to say/read "he has one Wound". Health Estimate should work fine out of the box once activated but you can easily set it up to your liking if you want.  
@@ -30,8 +30,7 @@ You can reach me on Discord with general questions as well: SalieriC#8263
 
 ### Current Assets
 In this repository you can find a number of assets already.  
-- **SWADE status markers:** Most of them are created by `Mike deBoston (he)#4382`, but some are created by myself as well. Used with permission. Stock art: [Game-Icons.net](https://game-icons.net/).  
-- **Other Icons:** [Game-Icons.net](https://game-icons.net/).  
+- **Icons:** [Game-Icons.net](https://game-icons.net/).  
 - **SFX:** (see their file name for origin)
 - - [Fesliyan Studios](www.fesliyanstudios.com), all used with explicit permission (thank you so much), [see their License here](https://www.fesliyanstudios.com/policy).  
 - - [Orange Free Sounds](https://orangefreesounds.com/), all used unter the [CC BY-NC 4.0 License](https://creativecommons.org/licenses/by-nc/4.0/), converted to *.ogg and possibly altered (see file name), Author is in the file names as well.  
@@ -54,7 +53,6 @@ In the very last line all macros tell you their version number. Use it to check 
 **Requirements:** None.  
 **Compatibility:**  
 - [Dice So Nice](https://foundryvtt.com/packages/dice-so-nice/) for the Benny throw.
-- [SWADE Spices & Flavours](https://github.com/SalieriC/SWADE-Spices-Flavours) for configuring the Benny image.
 
 **Immersion setting:** None.  
 **Suggested icon:** `systems/swade/assets/benny/benny-chip-front.png`  
@@ -67,8 +65,6 @@ The macro will use the Bennies of the selected token (needs a token selected to 
 **Requirements:** None.  
 **Compatibility:**  
 - [Dice So Nice](https://foundryvtt.com/packages/dice-so-nice/) for the Benny throw.
-- [SWADE Spices & Flavours](https://github.com/SalieriC/SWADE-Spices-Flavours) for configuring the Benny image.
-- [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effect.
 
 **Immersion setting:** SFX.  
 **Suggested icon:** `modules/swim/assets/icons/status_markers/0-Shaken.png`  
@@ -82,9 +78,6 @@ This macro comes in two variants: SWADE and SWD. I like the SWD rules regarding 
 
 ### (Un-)Stun
 **Requirements:** None.  
-**Compatibility:**  
-- [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effects.  
-
 **Immersion setting:** SFX.  
 **Suggested icon:** `modules/swim/assets/icons/status_markers/2-Stunned.png`  
 **Description:**  
@@ -93,7 +86,6 @@ This macro is very similar to the (Un-)Shake macro but handles Stunned. If the s
 ### Soak Damage
 **Requirements:**
 - [Health Estimate](https://foundryvtt.com/packages/healthEstimate/)
-- [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effects.  
 
 **Immersion setting:** SFX.  
 **Suggested icon:** `modules/swim/assets/icons/status_markers/3-Incapacitated.png`  
@@ -137,7 +129,6 @@ This macro basically just opens a dialogue that asks for a fear modifier and the
 ### Mark Death
 **Requirements:**  
 - [Health Estimate](https://foundryvtt.com/packages/healthEstimate/)
-- [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effects.  
 
 **Immersion setting:** SFX.  
 **Description:**  
@@ -148,7 +139,6 @@ The macro plays a sound effect on execution and will mark all selected as Inc.! 
 **Incompatibility:**  This macro is *not* compatible with the power point management offered by the SWADE system. Disable it if you want to use this macro.  
 **Requirements:**
 - [Health Estimate](https://foundryvtt.com/packages/healthEstimate/)
-- [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effects.  
 
 **Immersion setting:** SFX.  
 **Description:**  
@@ -160,7 +150,6 @@ In terms of other SFX: The macro again uses the Incapacitation sfx and the wound
 ### Personal Health Centre  
 **Requirements:**
 - [Health Estimate](https://foundryvtt.com/packages/healthEstimate/)
-- [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt/) for the status effects.  
 
 **Immersion setting:** SFX.  
 **Description:**  
