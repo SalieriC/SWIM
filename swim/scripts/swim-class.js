@@ -31,4 +31,6 @@ class swim {
     }
     return critFail;
   }
+
+  //In the Check for Bennies function, don't forget Coup (50F) which always adds a Benny even if it is an Extra.
 }
