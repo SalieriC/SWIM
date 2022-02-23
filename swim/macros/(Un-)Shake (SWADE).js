@@ -119,7 +119,7 @@ async function main() {
                         label: "Yes.",
                         callback: (html) => {
                             spendBenny();
-                            token.actor.update({ "data.status.isShaken": false });
+                            await succ.apply_status(token, 'shaken', false)
                         }
                     },
                     two: {
@@ -192,5 +192,5 @@ async function main() {
             AudioHelper.play({ src: `${shakenSFX}` }, true);
         }
     }
-    /// v.3.9.0 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
+    /// v.3.9.1 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
 }

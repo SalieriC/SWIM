@@ -127,7 +127,7 @@ function main() {
                 chatData += ` and soaks all of his Wounds.`;
                 if (soakSFX) { AudioHelper.play({ src: `${soakSFX}` }, true); }
                 if (token.actor.data.data.status.isShaken === true) {
-                    token.actor.update({ "data.status.isShaken": false });
+                    await succ.apply_status(token, 'shaken', false)
                 }
             }
             chatData += ` ${edgeText}`;
@@ -171,13 +171,13 @@ function main() {
                         let setWounds = wv + applWounds;
                         if (setWounds <= wm && setWounds > 0) {
                             token.actor.update({ "data.wounds.value": setWounds });
-                            token.actor.update({ "data.status.isShaken": true })
+                            await succ.apply_status(token, 'shaken', true)
                             if (woundedSFX) {
                                 AudioHelper.play({ src: `${woundedSFX}` }, true);
                             }
                         }
                         else if (applWounds === 0) {
-                            token.actor.update({ "data.status.isShaken": true })
+                            await succ.apply_status(token, 'shaken', true)
                         }
                         else {
                             token.actor.update({ "data.wounds.value": wm });
@@ -521,5 +521,5 @@ function main() {
         await actor.createEmbeddedDocuments('ActiveEffect', [injuryData]);
     }
 
-    // V3.1.0 Code by SalieriC#8263. Critical Failure awareness by Kekilla#7036 Testing and bug-chasing: javierrivera#4813.
+    // V3.1.1 Code by SalieriC#8263. Critical Failure awareness by Kekilla#7036 Testing and bug-chasing: javierrivera#4813.
 }
