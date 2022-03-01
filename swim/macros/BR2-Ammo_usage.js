@@ -39,11 +39,13 @@ async function shoot() {
     if (item_weapon.data.data.additionalStats.loadedAmmo) {
         let loaded_ammo = item_weapon.data.data.additionalStats.loadedAmmo.value;
         item_ammo = actor.items.getName(`${loaded_ammo}`);
+    } else if (item_weapon.data.data.ammo) {
+        item_ammo = actor.items.getName(`${item_weapon.data.data.ammo}`);
     }
     //Setting the amount of shots based on RoF:
     let traitDice = message.data.flags['betterrolls-swade2'].render_data.trait_roll.dice;
     //console.log(traitDice);
-    console.log(message.data.flags['betterrolls-swade2'].render_data);
+    //console.log(message.data.flags['betterrolls-swade2'].render_data);
     let rate_of_fire = traitDice.length;
     if (actor.data.data.wildcard === true) { rate_of_fire = rate_of_fire - 1; }
     //console.log(rate_of_fire);
@@ -250,5 +252,5 @@ async function shoot() {
         }
     }
 
-    //V. 4.0.0 by SalieriC#8263 with help from javierrivera#4813.
+    //V. 4.0.1 by SalieriC#8263 with help from javierrivera#4813.
 }

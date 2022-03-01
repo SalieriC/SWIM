@@ -121,7 +121,7 @@ async function main() {
                 buttons: {
                     one: {
                         label: "Yes.",
-                        callback: (html) => {
+                        callback: async (html) => {
                             spendBenny();
                             await succ.apply_status(token, 'shaken', false)
                         }
@@ -195,5 +195,5 @@ async function main() {
             AudioHelper.play({ src: `${shakenSFX}` }, true);
         }
     }
-    /// v.3.9.1 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
+    /// v.3.9.2 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
 }
