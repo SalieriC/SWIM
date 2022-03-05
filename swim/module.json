@@ -75,7 +75,7 @@
 		},
 		{
 		  "label": "SWIM Chase Cards",
-		  "name": "swim-chase-cards.db",
+		  "name": "swim-chase-cards",
 		  "path": "packs/swim-chase-cards.db",
 		  "system": "swade",
 		  "module": "swim",
@@ -84,7 +84,7 @@
 		},
 		{
 		  "label": "SWIM Roll Tables",
-		  "name": "swim-roll-tables.db",
+		  "name": "swim-roll-tables",
 		  "path": "packs/swim-roll-tables.db",
 		  "system": "swade",
 		  "module": "swim",
