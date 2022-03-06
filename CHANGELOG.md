@@ -5,10 +5,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]  
+
+## [0.14.1] - 2022-03-06  
+### Added
+- Stealth added as a Skill for Consumable Weapons in the BR2 Ammo Management macro.  
 ### Fixed  
 - Fixed a bug in the (Un-)Shake and Soak Damage macros where they were still using the old way of toggling the status which caused the status to not be toggled properly.
 - Fixed a bug in the BR2 ammo usage macro that caused it to not get the ammo without te loaded ammo additional stat.
 - Fixed a bug that made the Unshake macro non-functional.
+- Fixed a bug that prevented installing the module.  
 
 ## [0.14.0] - 2022-02-15  
 ### Added  
