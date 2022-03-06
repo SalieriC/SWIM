@@ -112,7 +112,8 @@ async function shoot() {
         if (usedSkill.includes("Athletics") === false &&
             usedSkill.includes("Athletics (Throwing)") === false &&
             usedSkill.includes("Athletics (Explosives)") === false &&
-            usedSkill.includes("Throwing") === false) { return; }
+            usedSkill.includes("Throwing") === false &&
+            usedSkill.includes("Stealth") === false) { return; }
         const currentQuantity = parseInt(item_weapon.data.data.quantity);
         if (currentQuantity <= 0) {
             return ui.notifications.error(`You don't have a ${item_weapon.name} left.`);
@@ -252,5 +253,5 @@ async function shoot() {
         }
     }
 
-    //V. 4.0.1 by SalieriC#8263 with help from javierrivera#4813.
+    //V. 4.0.2 by SalieriC#8263 with help from javierrivera#4813.
 }
