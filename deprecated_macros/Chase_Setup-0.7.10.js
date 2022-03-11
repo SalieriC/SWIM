@@ -80,7 +80,6 @@ async function makeChase(html) {
         /*if (i > 8) {
             yStart = 1500;
         }*/
-
         await Tile.create({
             img: cardDraws[i].img,
             width: _width,
