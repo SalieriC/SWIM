@@ -5,7 +5,7 @@ import { swim } from 'modules/swim/scripts/swim-class.js';
  * version 3.9.2; Original code (an eternity ago) by Shteff, altered by Forien, edited and maintained by SalieriC#8263.
  ******************************************/
 
-export async function unshake_swd() {
+export async function unshake_swd_script() {
     // No Token is Selected
     if (!token || canvas.tokens.controlled.length > 1) {
         ui.notifications.error("Please select a single token first.");
@@ -208,7 +208,7 @@ export async function unshake_swd() {
  * version 3.9.2; Original code (an eternity ago) by Shteff, altered by Forien, edited and maintained by SalieriC#8263.
  ******************************************/
 
- export async function unshake_swade() {
+ export async function unshake_swade_script() {
      // No Token is Selected
      if (!token || canvas.tokens.controlled.length > 1) {
          ui.notifications.error("Please select a single token first.");

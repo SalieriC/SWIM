@@ -1,9 +1,9 @@
-import { unshake_swd, unshake_swade } from './swim_modules/unshake.js'
+import { unshake_swd_script, unshake_swade_script } from './swim_modules/unshake.js'
 
 export class swim {
   static async unshake(version) {
-    if (version === "SWD") { unshake_swd() }
-    else if (version === "SWADE") { unshake_swade() }
+    if (version === "SWD") { unshake_swd_script() }
+    else if (version === "SWADE") { unshake_swade_script() }
   }
 
   static async start_macro(macroName, compendiumName = 'swim.swade-immersive-macros') {
