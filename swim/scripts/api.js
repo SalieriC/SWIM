@@ -1,13 +1,24 @@
 import { unshake_swd_script, unshake_swade_script } from './swim_modules/unshake.js'
 import { unstun_script } from './swim_modules/unstun.js'
 
-export class swim {
-  static async unshake(version) {
+export class api {
+
+static globals() {
+  globalThis['swim'] = {
+    unshake : api._unshake,
+    unstun : api._unstun,
+    critFail_check: api._critFail_check
+  }
+}
+
+  // Unshake script
+  static async _unshake(version) {
     if (version === "SWD") { unshake_swd_script() }
     else if (version === "SWADE") { unshake_swade_script() }
   }
 
-  static async untun() {
+  // Unstun script
+  static async _unstun() {
     unstun_script()
   }
 
@@ -20,7 +31,7 @@ export class swim {
   */
 
   // Crit Fail check
-  static async critFail_check(wildCard, r) {
+  static async _critFail_check(wildCard, r) {
     let critFail = false;
     if ((isSame_bool(r.dice) && isSame_numb(r.dice) === 1) && wildCard === false) {
       const failCheck = await new Roll("1d6x[Test for Critical Failure]").evaluate({ async: true });
