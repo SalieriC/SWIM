@@ -10,7 +10,7 @@ Hooks.on('getSceneControlButtons', function (hudButtons) {
     swim_buttons(hudButtons)
 });
 
-Hooks.on('setup', api.RegisterFunctions)
+Hooks.on('setup', api.registerFunctions)
 
 Hooks.on(`ready`, () => {
     if (!game.modules.get('settings-extender')?.active && game.user.isGM) {
