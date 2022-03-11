@@ -3,7 +3,7 @@
 // Card related constants
 const MAX_CARDS=18;
 const CARDS_PER_ROW=9;
-const DEF_NUM_CARDS=CARDS_PER_ROW;
+const DEF_NUM_CARDS=MAX_CARDS;
 // Pixel related constants
 const DEF_GRID_PIXELS=50;
 const DEF_BORDER_HORIZ=0;
@@ -12,8 +12,8 @@ const DEF_BORDER_VERT=0;
 const DEF_CARD_HEIGHT=6;
 const DEF_CARD_WIDTH=4;
 // Deck origin in grid units
-const DEF_DECK_DOWN=2
-const DEF_DECK_RIGHT=2
+const DEF_DECK_DOWN=24
+const DEF_DECK_RIGHT=10
 
 getRequirements();
 
