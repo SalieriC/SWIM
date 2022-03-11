@@ -1,3 +1,5 @@
+import { swim } from './swim-class.js';
+
 function register_settings() {
     // Documentation Read
     game.settings.register('swim', 'docRead', {

@@ -42,8 +42,7 @@
 	"systems": ["swade"],
 	"esmodules": ["./scripts/init.js"],
 	"scripts": [
-		"./scripts/settings-extender.js",
-		"./scripts/swim-class.js"
+		"./scripts/settings-extender.js"
 	],
 	"packs": [
         {
