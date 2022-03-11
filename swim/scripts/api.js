@@ -3,6 +3,10 @@ import { unstun_script } from './swim_modules/unstun.js'
 
 export class api {
 
+static registerSettings() {
+  api.globals()
+}
+
 static globals() {
   globalThis['swim'] = {
     unshake : api._unshake,

@@ -1,4 +1,4 @@
-import { swim } from './swim-class.js';
+import { api } from './api.js';
 import { register_settings } from './settings.js'
 import { swim_buttons } from './buttons.js'
 
@@ -9,6 +9,8 @@ import { swim_buttons } from './buttons.js'
 Hooks.on('getSceneControlButtons', function (hudButtons) {
     swim_buttons(hudButtons)
 });
+
+Hooks.on('setup', api.RegisterFunctions)
 
 Hooks.on(`ready`, () => {
     if (!game.modules.get('settings-extender')?.active && game.user.isGM) {
