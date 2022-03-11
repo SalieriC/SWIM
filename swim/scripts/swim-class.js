@@ -11,12 +11,15 @@ export class swim {
     unstun_script()
   }
 
+  /* Call Macros (Deprecated as of version 0.15.0)
   static async start_macro(macroName, compendiumName = 'swim.swade-immersive-macros') {
     let pack = game.packs.get(compendiumName);
     let macro = (await pack.getDocuments()).find(i => (i.data.name == macroName));
     await macro.execute();
   }
+  */
 
+  // Crit Fail check
   static async critFail_check(wildCard, r) {
     let critFail = false;
     if ((isSame_bool(r.dice) && isSame_numb(r.dice) === 1) && wildCard === false) {

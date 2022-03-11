@@ -2,7 +2,8 @@ import { swim } from 'modules/swim/scripts/swim-class.js';
 
 /*******************************************
  * Unshake macro for SWD
- * version 3.9.2; Original code (an eternity ago) by Shteff, altered by Forien, edited and maintained by SalieriC#8263.
+ * version 3.9.2
+ * Original code (an eternity ago) by Shteff, altered by Forien, edited and maintained by SalieriC#8263.
  ******************************************/
 
 export async function unshake_swd_script() {
@@ -205,7 +206,8 @@ export async function unshake_swd_script() {
 
 /*******************************************
  * Unshake macro for SWADE
- * version 3.9.2; Original code (an eternity ago) by Shteff, altered by Forien, edited and maintained by SalieriC#8263.
+ * version 3.9.2
+ * Original code (an eternity ago) by Shteff, altered by Forien, edited and maintained by SalieriC#8263.
  ******************************************/
 
  export async function unshake_swade_script() {
