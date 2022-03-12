@@ -14,6 +14,7 @@ import { loot_o_mat_script } from './swim_modules/loot-o-mat.js'
 import { shape_changer_script } from './swim_modules/shape_changer.js'
 import { token_vision_script } from './swim_modules/token_vision.js'
 import { ammo_management_script } from './swim_modules/ammo_management.js'
+import { personal_health_centre_script } from './swim_modules/personal_health_centre.js'
 
 export class api {
 
@@ -40,6 +41,7 @@ export class api {
       fear_table: api._fear_table,
       loot_o_mat: api._loot_o_mat,
       mark_dead: api._mark_dead,
+      personal_health_centre: api._personal_health_centre,
       radiation_centre: api._radiation_centre,
       scale_calculator: api._scale_calculator,
       shape_changer: api._shape_changer,
@@ -168,6 +170,7 @@ export class api {
    * - Fear Table
    * - Loot-o-Mat
    * - Mark Dead
+   * - Personal Health Centre
    * - Scale Calculator
    * - Shape Changer
    * - Soak Damage
@@ -203,6 +206,10 @@ export class api {
   // Mark Dead
   static async _mark_dead() {
     mark_dead_script()
+  }
+  // Personal Health Centre
+  static async _personal_health_centre() {
+    personal_health_centre_script()
   }
   // Radiation Centre
   static async _radiation_centre() {
