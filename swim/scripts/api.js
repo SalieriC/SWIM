@@ -12,6 +12,7 @@ import { scale_calculator } from './swim_modules/scale_calculator.js'
 import { chase_setup_script } from './swim_modules/chase_setup.js'
 import { loot_o_mat_script } from './swim_modules/loot-o-mat.js'
 import { shape_changer_script } from './swim_modules/shape_changer.js'
+import { token_vision_script } from './swim_modules/token_vision.js'
 
 export class api {
 
@@ -41,6 +42,7 @@ export class api {
       scale_calculator: api._scale_calculator,
       shape_changer: api._shape_changer,
       soak_damage: api._soak_damage,
+      token_vision: api._token_vision,
       unshake: api._unshake,
       unstun: api._unstun
     }
@@ -209,6 +211,10 @@ export class api {
   // Soak Damage
   static async _soak_damage() {
     soak_damage_script()
+  }
+  // Token Vision
+  static async _token_vision() {
+    token_vision_script()
   }
   // Unshake script
   static async _unshake(version) {
