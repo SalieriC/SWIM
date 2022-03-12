@@ -1,6 +1,10 @@
 import { unshake_swd_script, unshake_swade_script } from './swim_modules/unshake.js'
 import { unstun_script } from './swim_modules/unstun.js'
 import { deviation_script } from './swim_modules/deviation.js'
+import { falling_damage_script } from './swim_modules/falling_damage.js'
+import { fear_table_script } from './swim_modules/fear_table.js'
+import { mark_dead_script } from './swim_modules/mark_dead.js'
+import { soak_damage_script } from './swim_modules/soak_damage.js'
 
 export class api {
 
@@ -19,8 +23,12 @@ export class api {
       spend_benny: api._spend_benny,
       // Convenience
       deviation: api._deviation,
+      falling_damage: api._falling_damage,
+      fear_table: api._fear_table,
+      mark_dead: api._mark_dead,
       unshake: api._unshake,
-      unstun: api._unstun
+      unstun: api._unstun,
+      soak_damage: api._soak_damage
     }
   }
 
@@ -135,24 +143,42 @@ export class api {
   /*******************************************
    * Convenience aka "automation" scripts
    * - Deviation
+   * - Falling Damage
+   * - Fear Table
+   * - Mark Dead
    * - (Un-)Shake
    * - (Un-)Stun
+   * - Soak Damage
    ******************************************/
 
   // Deviation
   static async _deviation() {
     deviation_script()
   }
-
+  // Falling Damage
+  static async _falling_damage() {
+    falling_damage_script()
+  }
+  // Fear Table
+  static async _fear_table() {
+    fear_table_script()
+  }
+  // Mark Dead
+  static async _mark_dead() {
+    mark_dead_script()
+  }
   // Unshake script
   static async _unshake(version) {
     if (version === "SWD") { unshake_swd_script() }
     else if (version === "SWADE") { unshake_swade_script() }
   }
-
   // Unstun script
   static async _unstun() {
     unstun_script()
+  }
+  // Soak Damage
+  static async _soak_damage() {
+    soak_damage_script()
   }
 
   /* Call Macros (Deprecated as of version 0.15.0)
