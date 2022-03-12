@@ -1,5 +1,3 @@
-import { swim } from './swim-class.js';
-
 export function swim_buttons(hudButtons) {
     // Add Raise Calculator Button
     let hud = hudButtons.find(val => { return val.name == "token"; })
@@ -63,6 +61,6 @@ export function swim_buttons(hudButtons) {
         title: game.i18n.localize("SWIM.ChaseSetup"),
         icon: "fas fa-shipping-fast",
         button: true,
-        onClick: async () => { swim.start_macro(`[Script] Chase Setup`) }
+        onClick: async () => { swim.chase_setup() }
     })
 }

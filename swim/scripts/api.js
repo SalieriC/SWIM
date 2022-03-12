@@ -7,14 +7,19 @@ import { falling_damage_script } from './swim_modules/falling_damage.js'
 import { fear_table_script } from './swim_modules/fear_table.js'
 import { mark_dead_script } from './swim_modules/mark_dead.js'
 import { soak_damage_script } from './swim_modules/soak_damage.js'
+import { radiation_centre_script } from './swim_modules/radiation_centre.js'
+import { scale_calculator } from './swim_modules/scale_calculator.js'
+import { chase_setup_script } from './swim_modules/chase_setup.js'
 
 export class api {
 
+  // Exposing the globnals.
   static registerFunctions() {
     console.log("SWIM API initialised.")
     api.globals()
   }
 
+  // Setting symbols globally exposed.
   static globals() {
     globalThis['swim'] = {
       // Utility
@@ -24,13 +29,16 @@ export class api {
       check_bennies: api._check_bennies,
       spend_benny: api._spend_benny,
       // Convenience
+      chase_setup: api._chase_setup,
       deviation: api._deviation,
       falling_damage: api._falling_damage,
       fear_table: api._fear_table,
       mark_dead: api._mark_dead,
       unshake: api._unshake,
       unstun: api._unstun,
-      soak_damage: api._soak_damage
+      scale_calculator: api._scale_calculator,
+      soak_damage: api._soak_damage,
+      radiation_centre: api._radiation_centre
     }
   }
 
@@ -41,6 +49,7 @@ export class api {
    * - Get Benny Image
    * - Check Bennies
    * - Spend Benny
+   * - Radiation Centre
    ******************************************/
 
   // Get Macro Variables
@@ -144,15 +153,21 @@ export class api {
 
   /*******************************************
    * Convenience aka "automation" scripts
+   * - Chase Setup
    * - Deviation
    * - Falling Damage
    * - Fear Table
    * - Mark Dead
    * - (Un-)Shake
    * - (Un-)Stun
+   * - Scale Calculator
    * - Soak Damage
    ******************************************/
 
+  // Chase Setup
+  static async _chase_setup() {
+    chase_setup_script()
+  }
   // Deviation
   static async _deviation() {
     deviation_script()
@@ -178,9 +193,17 @@ export class api {
   static async _unstun() {
     unstun_script()
   }
+  // Scale Calculator
+  static async _scale_calculator() {
+    scale_calculator()
+  }
   // Soak Damage
   static async _soak_damage() {
     soak_damage_script()
+  }
+  // Radiation Centre
+  static async _radiation_centre() {
+    radiation_centre_script()
   }
 
   /* Call Macros (Deprecated as of version 0.15.0)
