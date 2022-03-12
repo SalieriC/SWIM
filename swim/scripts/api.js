@@ -13,6 +13,7 @@ import { chase_setup_script } from './swim_modules/chase_setup.js'
 import { loot_o_mat_script } from './swim_modules/loot-o-mat.js'
 import { shape_changer_script } from './swim_modules/shape_changer.js'
 import { token_vision_script } from './swim_modules/token_vision.js'
+import { ammo_management_script } from './swim_modules/ammo_management.js'
 
 export class api {
 
@@ -32,6 +33,7 @@ export class api {
       check_bennies: api._check_bennies,
       spend_benny: api._spend_benny,
       // Convenience
+      ammo_management: api._ammo_management,
       chase_setup: api._chase_setup,
       deviation: api._deviation,
       falling_damage: api._falling_damage,
@@ -159,19 +161,25 @@ export class api {
 
   /*******************************************
    * Convenience aka "automation" scripts
+   * - Ammo Management
    * - Chase Setup
    * - Deviation
    * - Falling Damage
    * - Fear Table
    * - Loot-o-Mat
    * - Mark Dead
-   * - (Un-)Shake
-   * - (Un-)Stun
    * - Scale Calculator
    * - Shape Changer
    * - Soak Damage
+   * - Token Vision
+   * - (Un-)Shake
+   * - (Un-)Stun
    ******************************************/
 
+  // Ammo Management
+  static async _ammo_management() {
+    ammo_management_script()
+  }
   // Chase Setup
   static async _chase_setup() {
     chase_setup_script()
