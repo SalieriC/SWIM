@@ -10,6 +10,7 @@ import { soak_damage_script } from './swim_modules/soak_damage.js'
 import { radiation_centre_script } from './swim_modules/radiation_centre.js'
 import { scale_calculator } from './swim_modules/scale_calculator.js'
 import { chase_setup_script } from './swim_modules/chase_setup.js'
+import { loot_o_mat_script } from './swim_modules/loot-o-mat.js'
 
 export class api {
 
@@ -33,6 +34,7 @@ export class api {
       deviation: api._deviation,
       falling_damage: api._falling_damage,
       fear_table: api._fear_table,
+      loot_o_mat: api._loot_o_mat,
       mark_dead: api._mark_dead,
       unshake: api._unshake,
       unstun: api._unstun,
@@ -157,6 +159,7 @@ export class api {
    * - Deviation
    * - Falling Damage
    * - Fear Table
+   * - Loot-o-Mat
    * - Mark Dead
    * - (Un-)Shake
    * - (Un-)Stun
@@ -179,6 +182,10 @@ export class api {
   // Fear Table
   static async _fear_table() {
     fear_table_script()
+  }
+  // Loot-o-Mat
+  static async _loot_o_mat() {
+    loot_o_mat_script()
   }
   // Mark Dead
   static async _mark_dead() {
