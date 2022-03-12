@@ -11,6 +11,7 @@ import { radiation_centre_script } from './swim_modules/radiation_centre.js'
 import { scale_calculator } from './swim_modules/scale_calculator.js'
 import { chase_setup_script } from './swim_modules/chase_setup.js'
 import { loot_o_mat_script } from './swim_modules/loot-o-mat.js'
+import { shape_changer_script } from './swim_modules/shape_changer.js'
 
 export class api {
 
@@ -36,11 +37,12 @@ export class api {
       fear_table: api._fear_table,
       loot_o_mat: api._loot_o_mat,
       mark_dead: api._mark_dead,
-      unshake: api._unshake,
-      unstun: api._unstun,
+      radiation_centre: api._radiation_centre,
       scale_calculator: api._scale_calculator,
+      shape_changer: api._shape_changer,
       soak_damage: api._soak_damage,
-      radiation_centre: api._radiation_centre
+      unshake: api._unshake,
+      unstun: api._unstun
     }
   }
 
@@ -164,6 +166,7 @@ export class api {
    * - (Un-)Shake
    * - (Un-)Stun
    * - Scale Calculator
+   * - Shape Changer
    * - Soak Damage
    ******************************************/
 
@@ -191,6 +194,22 @@ export class api {
   static async _mark_dead() {
     mark_dead_script()
   }
+  // Radiation Centre
+  static async _radiation_centre() {
+    radiation_centre_script()
+  }
+  // Scale Calculator
+  static async _scale_calculator() {
+    scale_calculator()
+  }
+  // Shape Changer
+  static async _shape_changer() {
+    shape_changer_script()
+  }
+  // Soak Damage
+  static async _soak_damage() {
+    soak_damage_script()
+  }
   // Unshake script
   static async _unshake(version) {
     if (version === "SWD") { unshake_swd_script() }
@@ -200,18 +219,7 @@ export class api {
   static async _unstun() {
     unstun_script()
   }
-  // Scale Calculator
-  static async _scale_calculator() {
-    scale_calculator()
-  }
-  // Soak Damage
-  static async _soak_damage() {
-    soak_damage_script()
-  }
-  // Radiation Centre
-  static async _radiation_centre() {
-    radiation_centre_script()
-  }
+
 
   /* Call Macros (Deprecated as of version 0.15.0)
   static async start_macro(macroName, compendiumName = 'swim.swade-immersive-macros') {
