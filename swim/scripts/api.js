@@ -1,3 +1,5 @@
+// Many thanks to honeybadger#2614 for the support on setting up the API.
+
 import { unshake_swd_script, unshake_swade_script } from './swim_modules/unshake.js'
 import { unstun_script } from './swim_modules/unstun.js'
 import { deviation_script } from './swim_modules/deviation.js'
