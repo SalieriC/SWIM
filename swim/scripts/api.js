@@ -138,7 +138,10 @@ export class api {
     let { tokenBennies, gmBennies, totalBennies } = await swim.check_bennies(token)
     //Subtract the spend, use GM benny if user is GM and token has no more bennies left or spend token benny if user is player and/or token has bennies left.
     if (totalBennies < 1) {
+      /* This produces duplicate warnings. It's probably enough to have that warning in the check function.
       return ui.notifications.warn("You have no more bennies left.");
+      */
+      return
     } else if (game.user.isGM && tokenBennies < 1 && gmBennies >= 1) {
       await game.user.setFlag("swade", "bennies", game.user.getFlag("swade", "bennies") - 1)
     } else {
