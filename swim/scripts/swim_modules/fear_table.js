@@ -22,7 +22,13 @@ export async function fear_table_script() {
                     let fearTableName = game.settings.get(
                         'swim', 'fearTable');
                         if (fearTableName) {
-                            game.tables.getName(`${fearTableName}`).draw({ roll });
+                            let fearTable = game.tables.getName(`${fearTableName}`)
+                            if (!fearTable) {
+                                ui.notifications.error("Unable to locate '" + fearTableName + "'. Please import it into the world first.")
+                                return
+                            } else {
+                                fearTable.draw({ roll });
+                            }
                         }
                         else {
                             ui.notifications.error("Please set a Fear table name in the SWIM settings.");
