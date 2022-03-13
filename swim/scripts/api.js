@@ -13,7 +13,7 @@ import { chase_setup_script } from './swim_modules/chase_setup.js'
 import { loot_o_mat_script } from './swim_modules/loot-o-mat.js'
 import { shape_changer_script } from './swim_modules/shape_changer.js'
 import { token_vision_script } from './swim_modules/token_vision.js'
-import { ammo_management_script } from './swim_modules/ammo_management.js'
+import { ammo_management_script, br2_ammo_management_script } from './swim_modules/ammo_management.js'
 import { personal_health_centre_script } from './swim_modules/personal_health_centre.js'
 
 export class api {
@@ -35,6 +35,7 @@ export class api {
       spend_benny: api._spend_benny,
       // Convenience
       ammo_management: api._ammo_management,
+      br2_ammo_management: api._ammo_management_br2,
       chase_setup: api._chase_setup,
       deviation: api._deviation,
       falling_damage: api._falling_damage,
@@ -167,6 +168,7 @@ export class api {
   /*******************************************
    * Convenience aka "automation" scripts
    * - Ammo Management
+   * - Ammo Management for BR2
    * - Chase Setup
    * - Deviation
    * - Falling Damage
@@ -185,6 +187,9 @@ export class api {
   // Ammo Management
   static async _ammo_management() {
     ammo_management_script()
+  }
+  static async _ammo_management_br2(message, actor, item) {
+    br2_ammo_management_script(message, actor, item)
   }
   // Chase Setup
   static async _chase_setup() {
