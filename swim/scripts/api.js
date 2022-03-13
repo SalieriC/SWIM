@@ -1,20 +1,20 @@
 // Many thanks to honeybadger#2614 for the support on setting up the API.
 
-import { unshake_swd_script, unshake_swade_script } from './swim_modules/unshake.js'
-import { unstun_script } from './swim_modules/unstun.js'
+import { ammo_management_script, br2_ammo_management_script } from './swim_modules/ammo_management.js'
+import { chase_setup_script } from './swim_modules/chase_setup.js'
 import { deviation_script } from './swim_modules/deviation.js'
 import { falling_damage_script } from './swim_modules/falling_damage.js'
 import { fear_table_script } from './swim_modules/fear_table.js'
+import { loot_o_mat_script } from './swim_modules/loot-o-mat.js'
 import { mark_dead_script } from './swim_modules/mark_dead.js'
-import { soak_damage_script } from './swim_modules/soak_damage.js'
+import { personal_health_centre_script } from './swim_modules/personal_health_centre.js'
 import { radiation_centre_script } from './swim_modules/radiation_centre.js'
 import { scale_calculator } from './swim_modules/scale_calculator.js'
-import { chase_setup_script } from './swim_modules/chase_setup.js'
-import { loot_o_mat_script } from './swim_modules/loot-o-mat.js'
 import { shape_changer_script } from './swim_modules/shape_changer.js'
+import { soak_damage_script } from './swim_modules/soak_damage.js'
 import { token_vision_script } from './swim_modules/token_vision.js'
-import { ammo_management_script, br2_ammo_management_script } from './swim_modules/ammo_management.js'
-import { personal_health_centre_script } from './swim_modules/personal_health_centre.js'
+import { unshake_swd_script, unshake_swade_script } from './swim_modules/unshake.js'
+import { unstun_script } from './swim_modules/unstun.js'
 
 export class api {
 
