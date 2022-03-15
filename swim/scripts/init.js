@@ -1,6 +1,7 @@
 import { api } from './api.js';
 import { register_settings } from './settings.js'
 import { swim_buttons } from './buttons.js'
+import { gm_relay } from './gm_relay.js'
 
 /*Hooks.on('getCardsDirectoryEntryContext', function (stuff) {
     console.log(stuff)
@@ -13,6 +14,7 @@ Hooks.on('getSceneControlButtons', function (hudButtons) {
 Hooks.on('setup', api.registerFunctions)
 
 Hooks.on(`ready`, () => {
+    // Check Dependencies
     if (!game.modules.get('settings-extender')?.active && game.user.isGM) {
         let key = "install and activate";
         if(game.modules.get('settings-extender')) key = "activate";
@@ -23,13 +25,22 @@ Hooks.on(`ready`, () => {
         if(game.modules.get('compendium-folders')) key = "activate";
         ui.notifications.error(`SWIM requires the 'compendium-folders' module. Please ${key} it.`)
     }
+    if (!game.modules.get('warpgate')?.active && game.user.isGM) {
+        let key = "install and activate";
+        if(game.modules.get('warpgate')) key = "activate";
+        ui.notifications.error(`SWIM requires the 'warpgate' module. Please ${key} it.`)
+    }
 
+    // Ready stuff
     console.log('SWADE Immersive Macros | Ready');
     register_settings();
+
+    // Setting up new conditions
     if (game.settings.get('swim', 'irradiationSetting') === true) {
         CONFIG.statusEffects.push({ id: "irradiated", label: "Irradiated", icon: "modules/succ/assets/icons/0-irradiated.svg" });
     }
 
+    // First Login warning
     if (game.settings.get('swim', 'docRead') === false) {
         new Dialog({
             title: 'Welcome to SWIM',
@@ -61,4 +72,8 @@ Hooks.on(`ready`, () => {
             },
         }).render(true);
     }
+
+    // Warpgate Watches
+    warpgate.event.watch("SWIM.createActor", gm_relay.gmCreateActor, swim.is_first_gm)
+    warpgate.event.watch("SWIM.deleteActor", gm_relay.gmDeleteActor, swim.is_first_gm)
 });

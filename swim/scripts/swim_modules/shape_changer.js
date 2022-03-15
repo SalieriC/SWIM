@@ -54,7 +54,6 @@ export async function shape_changer_script() {
     }, content);
 
     async function set_token_size(scCopy, scSize) {
-        console.log("Hello World")
         if (scSize <= 2 && scSize >= 0) {
             await scCopy.update({ token: { height: 1, width: 1, scale: 1 } })
         } else if (scSize <= 5 && scSize >= 3) {
@@ -316,7 +315,8 @@ export async function shape_changer_script() {
                         let scPreset = totalContent.find(a => (a.id === scID)).toObject();
                         //Creating a copy of the preset:
                         scPreset.folder = mainFolder.id
-                        let scCopy = await Actor.create(scPreset);
+                        //let scCopy = await Actor.create(scPreset);
+                        let scCopy = await warpgate.event.notify("SWIM.createActor", scPreset)
 
                         //Saving the original actor ID to allow reverting.
                         let originalID = actor.getFlag('swim', 'scOwner');
@@ -338,7 +338,7 @@ export async function shape_changer_script() {
                         await update_preset(scCopy, scSize, raise, originalID);
                         await replace_token(scCopy);
                         if (originalID) {
-                            await actor.delete();
+                            await warpgate.event.notify("SWIM.deleteActor", actor)
                         }
                     }
                 },
@@ -349,7 +349,7 @@ export async function shape_changer_script() {
                         const ownerActor = game.actors.get(ownerActorID)
                         await update_pc(ownerActor);
                         await replace_token(ownerActor);
-                        await actor.delete();
+                        await warpgate.event.notify("SWIM.deleteActor", actor)
                     }
                 }
             },
