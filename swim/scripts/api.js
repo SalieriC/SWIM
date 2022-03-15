@@ -33,6 +33,7 @@ export class api {
       get_benny_image: api._get_benny_image,
       check_bennies: api._check_bennies,
       spend_benny: api._spend_benny,
+      is_first_gm: api._is_first_gm,
       // Convenience
       ammo_management: api._ammo_management,
       br2_ammo_management: api._ammo_management_br2,
@@ -163,6 +164,16 @@ export class api {
         content: `<p><img style="border: none;" src="${bennyImage}"" width="25" height="25" /> ${game.user.name} spent a Benny for ${token.name}.</p>`,
       });
     }
+  }
+  // First GM
+  static _first_gm() {
+    // Returns the ID of the first active GM
+    return game.users.find(u => u.isGM && u.active);
+  }
+  // Is First GM
+  static _is_first_gm() {
+    //Returns true if it is the first active GM, False if not.
+    return game.user.id === api._first_gm()?.id;
   }
 
   /*******************************************
