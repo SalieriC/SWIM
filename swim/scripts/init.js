@@ -2,6 +2,7 @@ import { api } from './api.js';
 import { register_settings } from './settings.js'
 import { swim_buttons } from './buttons.js'
 import { gm_relay } from './gm_relay.js'
+import { shape_changer_gm } from './swim_modules/shape_changer.js'
 
 /*Hooks.on('getCardsDirectoryEntryContext', function (stuff) {
     console.log(stuff)
@@ -74,6 +75,6 @@ Hooks.on(`ready`, () => {
     }
 
     // Warpgate Watches
-    warpgate.event.watch("SWIM.createActor", gm_relay.gmCreateActor, swim.is_first_gm)
+    warpgate.event.watch("SWIM.shapeChanger", shape_changer_gm, swim.is_first_gm)
     warpgate.event.watch("SWIM.deleteActor", gm_relay.gmDeleteActor, swim.is_first_gm)
 });

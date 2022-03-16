@@ -53,6 +53,133 @@ export async function shape_changer_script() {
         return acc;
     }, content);
 
+    async function main() {
+        //Pre-selecting shape change actors based on rank:
+        let scOptions;
+        for (let each of totalContent) {
+            let size = each.data.data.stats.size;
+            let maxSize = 0;
+            if (actor.data.data.advances?.value < 4) { maxSize = -1 }
+            else if (actor.data.data.advances?.value < 8) { maxSize = 0 }
+            else if (actor.data.data.advances?.value < 12) { maxSize = 2 }
+            else if (actor.data.data.advances?.value < 16) { maxSize = 4 }
+            else if (actor.data.data.advances?.value >= 16) { maxSize = 10 }
+            //Selection for all shape change presets:
+            if (size <= maxSize) {
+                scOptions = scOptions + `<option value="${each.id}">${each.data.name}</option>`;
+            }
+        }
+
+        new Dialog({
+            title: 'Shape Change',
+            content: `${officialClass}
+            <p>Are you shape changing into another creature or are you reverting back to your normal form?</p>
+            <p>If you are shape changing please select a creature to change into:</p>
+            <div class="form-group">
+                <label for="selected_sc">Target form: </label>
+                <select id="selected_sc">${scOptions}</select>
+            </div>
+            <div class="form-group">
+                <label for="raise">Cast with a raise: </label>
+                <input id="raise" name="raiseBox" type="checkbox"></input>
+            </div>
+        </div>`,
+            buttons: {
+                one: {
+                    label: `<i class="fas fa-paw"></i>Shape Change`,
+                    callback: async (html) => {
+                        //Get actor based on provided ID:
+                        const scID = html.find(`#selected_sc`)[0].value;
+                        //Fetching raise:
+                        const raise = html.find(`#raise`)[0].checked;
+
+                        // Can't send documents (like actors) via the event system, so send the IDs instead, getting the documents in the GM code.
+                        let data = {
+                            type: "change", //or "revert"
+                            raise: raise,
+                            actorID: actor.id,
+                            scID: scID,
+                            mainFolder: mainFolder,
+                            tokenID: token.id
+                        }
+                        warpgate.event.notify("SWIM.shapeChanger", data)
+                    }
+                },
+                two: {
+                    label: `<i class="fas fa-user-alt"></i>Revert form`,
+                    callback: async () => {
+                        const ownerActorID = actor.getFlag('swim', 'scOwner')
+                        let data = {
+                            type: "revert", //or "change"
+                            actorID: actor.id,
+                            mainFolder: mainFolder,
+                            tokenID: token.id,
+                            ownerActorID: ownerActorID,
+                        }
+                        warpgate.event.notify("SWIM.shapeChanger", data)
+                    }
+                }
+            },
+            default: "one",
+        }).render(true);
+    }
+    main();
+}
+
+export async function shape_changer_gm(data) {
+    const tokenID = data.tokenID
+    const token = canvas.tokens.get(tokenID)
+    const actor = token.actor
+    const mainFolder = data.mainFolder
+
+    let folder = game.folders.getName("Shape Change Presets");
+    let content = folder.content;
+    let totalContent = folder.children.reduce((acc, subFolder) => {
+        acc = acc.concat(subFolder.content);
+        return acc;
+    }, content);
+
+    async function main() {
+        if (data.type === "change") {
+            const raise = data.raise
+            const scID = data.scID
+            let scPreset = totalContent.find(a => (a.id === scID)).toObject();
+            //Creating a copy of the preset:
+            scPreset.folder = mainFolder.id
+            let scCopy = await Actor.create(scPreset)
+
+            //Saving the original actor ID to allow reverting.
+            let originalID = actor.getFlag('swim', 'scOwner');
+
+            //Failsafe to prevent setting the wrong actor ID in case of shape changing from one creature into another:
+            if (originalID) {
+                scCopy.setFlag('swim', 'scOwner', originalID);
+                //pcID = originalID;
+            } else {
+                scCopy.setFlag('swim', 'scOwner', actor.id);
+                originalID = false;
+            }
+
+            const scSize = scCopy.data.data.stats.size;
+
+            await set_token_size(scCopy, scSize);
+            await set_tokenSettings(scCopy, originalID);
+            await update_preset(scCopy, scSize, raise, originalID);
+            await replace_token(scCopy);
+            if (originalID) {
+                actor.delete()
+            }
+        } else if (data.type === "revert") {
+            const ownerActorID = data.ownerActorID
+            const ownerActor = game.actors.get(ownerActorID)
+            await update_pc(ownerActor);
+            await replace_token(ownerActor);
+            await actor.delete();
+        } else {
+            console.error("Invalid shape change request from player.")
+        }
+    }
+
     async function set_token_size(scCopy, scSize) {
         if (scSize <= 2 && scSize >= 0) {
             await scCopy.update({ token: { height: 1, width: 1, scale: 1 } })
@@ -237,7 +364,7 @@ export async function shape_changer_script() {
                 .atLocation(tokenD)
                 .scale(1)
             sequence.play();
-            await wait(`800`);
+            await swim.wait(`800`);
         }
         //Replacing the token using WardGate:
         let newTokenID = await warpgate.spawnAt(token.center, scCopy.data.name)
@@ -246,12 +373,6 @@ export async function shape_changer_script() {
             await update_combat(newTokenID, oldCombatData)
         }
         await warpgate.dismiss(token.id)
-    }
-
-    async function wait(ms) {
-        return new Promise(resolve => {
-            setTimeout(resolve, ms);
-        });
     }
 
     async function update_combat(newTokenID, oldCombatData) {
@@ -275,88 +396,5 @@ export async function shape_changer_script() {
         })
     }
 
-    async function main() {
-        //Pre-selecting shape change actors based on rank:
-        let scOptions;
-        for (let each of totalContent) {
-            let size = each.data.data.stats.size;
-            let maxSize = 0;
-            if (actor.data.data.advances?.value < 4) { maxSize = -1 }
-            else if (actor.data.data.advances?.value < 8) { maxSize = 0 }
-            else if (actor.data.data.advances?.value < 12) { maxSize = 2 }
-            else if (actor.data.data.advances?.value < 16) { maxSize = 4 }
-            else if (actor.data.data.advances?.value >= 16) { maxSize = 10 }
-            //Selection for all shape change presets:
-            if (size <= maxSize) {
-                scOptions = scOptions + `<option value="${each.id}">${each.data.name}</option>`;
-            }
-        }
-
-        new Dialog({
-            title: 'Shape Change',
-            content: `${officialClass}
-            <p>Are you shape changing into another creature or are you reverting back to your normal form?</p>
-            <p>If you are shape changing please select a creature to change into:</p>
-            <div class="form-group">
-                <label for="selected_sc">Target form: </label>
-                <select id="selected_sc">${scOptions}</select>
-            </div>
-            <div class="form-group">
-                <label for="raise">Cast with a raise: </label>
-                <input id="raise" name="raiseBox" type="checkbox"></input>
-            </div>
-        </div>`,
-            buttons: {
-                one: {
-                    label: `<i class="fas fa-paw"></i>Shape Change`,
-                    callback: async (html) => {
-                        //Get actor based on provided ID:
-                        const scID = html.find(`#selected_sc`)[0].value;
-                        let scPreset = totalContent.find(a => (a.id === scID)).toObject();
-                        //Creating a copy of the preset:
-                        scPreset.folder = mainFolder.id
-                        //let scCopy = await Actor.create(scPreset);
-                        let scCopy = await warpgate.event.notify("SWIM.createActor", scPreset)
-
-                        //Saving the original actor ID to allow reverting.
-                        let originalID = actor.getFlag('swim', 'scOwner');
-                        //Failsafe to prevent setting the wrong actor ID in case of shape changing from one creature into another:
-                        if (originalID) {
-                            scCopy.setFlag('swim', 'scOwner', originalID);
-                            //pcID = originalID;
-                        } else {
-                            scCopy.setFlag('swim', 'scOwner', actor.id);
-                            originalID = false;
-                        }
-
-                        //Fetching raise and size:
-                        const raise = html.find(`#raise`)[0].checked;
-                        const scSize = scCopy.data.data.stats.size;
-
-                        await set_token_size(scCopy, scSize);
-                        await set_tokenSettings(scCopy, originalID);
-                        await update_preset(scCopy, scSize, raise, originalID);
-                        await replace_token(scCopy);
-                        if (originalID) {
-                            await warpgate.event.notify("SWIM.deleteActor", actor)
-                        }
-                    }
-                },
-                two: {
-                    label: `<i class="fas fa-user-alt"></i>Revert form`,
-                    callback: async () => {
-                        const ownerActorID = actor.getFlag('swim', 'scOwner')
-                        const ownerActor = game.actors.get(ownerActorID)
-                        await update_pc(ownerActor);
-                        await replace_token(ownerActor);
-                        await warpgate.event.notify("SWIM.deleteActor", actor)
-                    }
-                }
-            },
-            default: "one",
-        }).render(true);
-    }
-
-    main();
-
+    main()
 }
