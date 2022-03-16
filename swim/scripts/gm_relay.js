@@ -1,5 +1,6 @@
 export class gm_relay {
-    static async gmDeleteActor (actorPreset) {
-        await actorPreset.delete()
+    static async gmDeleteActor (actorID) {
+        let actor = game.actors.get(actorID)
+        await actor.delete()
     }
 }
