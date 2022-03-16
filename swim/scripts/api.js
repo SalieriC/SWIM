@@ -34,6 +34,7 @@ export class api {
       check_bennies: api._check_bennies,
       spend_benny: api._spend_benny,
       is_first_gm: api._is_first_gm,
+      wait: api._wait,
       // Convenience
       ammo_management: api._ammo_management,
       br2_ammo_management: api._ammo_management_br2,
@@ -165,7 +166,7 @@ export class api {
       });
     }
   }
-  // First GM
+  // First GM (not exposed)
   static _first_gm() {
     // Returns the ID of the first active GM
     return game.users.find(u => u.isGM && u.active);
@@ -174,6 +175,12 @@ export class api {
   static _is_first_gm() {
     //Returns true if it is the first active GM, False if not.
     return game.user.id === api._first_gm()?.id;
+  }
+  // Wait
+  static _wait(ms) {
+    return new Promise(resolve => {
+      setTimeout(resolve, ms);
+    });
   }
 
   /*******************************************
