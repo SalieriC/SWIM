@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Players were unable to execute the macros due to permission enforcement changes in FVTT core. This is fixed via the aboce change.  
 - Players are now able to use the Shape Changer macro. Before it was GM only because of permission issues. Now it relays the script to the GM.  
+### Removed
+- Deprecated all the standard macros. They are still available for reference on the repo but won't be maintained anymore. The core features are integrated into the module now and others may follow.  
 
 ## [0.14.1] - 2022-03-06  
 ### Added
