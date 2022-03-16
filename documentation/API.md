@@ -1,5 +1,6 @@
 # SWIM API
 As of version 0.15.0 SWIM features an ever expanding API which allows users to make use of some of its functions. Especially worth mentioning being all the (former) macros SWIM had. These are now backed into the module directly and their functions are exposed, meaning you can access them in macros and your own module directly.  
+All functions are asynchronous.  
 
 ## Helper Functions
 Especially useful for macro and module devs may be the following helper functions:
@@ -45,7 +46,7 @@ Checks whether or not the player in question is the first GM that is logged in a
 This is especially useful for developers who want to relay some code to GMs to execute code that cannot be executed by player accounts (i.e. to alter actors the player does not own). The function effectively prevents execution of the code multiple times if more than one GM is logged in.  
 
 ### Wait
-Wait a specified amount of *mili*seconds to wait before executing the rest of the script. Especially useful for sound and video effects to not play at the same time.  
+Wait a specified amount of *mili*seconds to wait before executing the rest of the script. Especially useful for sound and video effects to not play at the same time. It *needs* to be awaited.  
 `swim.wait(ms)`  
 - `ms` {number}: The amount of time to pause script execution in miliseconds.  
 This is basically a planned delay in script execution. Use it responsibly, too large numbers can make one think your script is laggy.  
