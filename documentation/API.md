@@ -54,3 +54,5 @@ This is basically a planned delay in script execution. Use it responsibly, too l
 ## Feature Functions
 The following functions present the core features of SWIM. They are probably less useful for macro and module devs but presented here anyway in case you want to utilise them.  
 Note that all of them except the BR2 ones get the macro variables (see above) first, so they really only work on selected token(s). The BR2 ones need the BR2 variables passed to function.  
+
+TBD.  
