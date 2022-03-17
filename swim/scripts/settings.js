@@ -1,4 +1,4 @@
-/* globals game */
+/* globals game, FormApplication, $ */
 
 export const settingVariables = [
     {id: 'grittyDamage', config_type: Boolean, tab: "Setting Rules", default: false},
@@ -48,6 +48,12 @@ export function register_settings() {
         scope: 'user',
         config: true,
     });
+    game.settings.registerMenu('swim', 'custom-config', {
+        name: "SWIM.ConfigMenu",
+        label: "SWIM.ConfigMenu",
+        hint: "SWIM.ConfigMenuHint",
+        type: CustomConfigForm
+    });
     for (let setting of settingVariables) {
         game.settings.register('swim', setting.id, {
             name: game.i18n.localize(`SWIM.${setting.id}Name`),
@@ -55,7 +61,63 @@ export function register_settings() {
             type: setting.config_type,
             default: setting.default,
             scope: 'world',
-            config: true
+            config: false
         });
+    }
+}
+
+class CustomConfigForm extends FormApplication {
+    static get defaultOptions() {
+        let options = super.defaultOptions;
+        options.id = 'swim-custom-config';
+        options.template = "/modules/swim/templates/customConfig.hbs";
+        options.width = 630;
+        options.height = 600;
+        return options;
+    }
+
+    activateListeners(html) {
+        html.find('.swim-tab-header').on('click', this.change_tab);
+        return super.activateListeners(html);
+    }
+
+    change_tab(event) {
+        const tab_name = event.currentTarget.dataset.tab;
+        $('.swim-tab').each((_, tab) => {
+            if (tab.dataset.tab === tab_name) {
+                $(tab).addClass('active');
+            } else {
+                $(tab).removeClass('active');
+            }
+        });
+    }
+
+    getData() {
+        let tabs = {};
+        for (let setting of settingVariables) {
+            if (! tabs.hasOwnProperty(setting.tab)) {
+                tabs[setting.tab] = [];
+            }
+            tabs[setting.tab].push(
+                {id: setting.id,
+                 is_boolen: setting.config_type === Boolean,
+                 use_audio_picker: setting.config_type === window.Azzu.SettingsTypes.FilePickerAudio,
+                 use_video_picker: setting.config_type === window.Azzu.SettingsTypes.FilePickerVideo,
+                 value: game.settings.get('swim', setting.id),
+                 name: game.i18n.localize(`SWIM.${setting.id}Name`),
+                 hint: game.i18n.localize(`SWIM.${setting.id}Hint`)});
+        }
+        return {tabs: tabs};
+    }
+
+    async _updateObject(_, formData) {
+        for (let id in formData) {
+            if (formData[id]) {
+                await game.settings.set('swim', id, formData[id]);
+            } else {
+                await game.settings.set('swim', id, '');
+            }
+        }
+        window.location.reload();
     }
 }
