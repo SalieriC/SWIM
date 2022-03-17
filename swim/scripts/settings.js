@@ -1,3 +1,26 @@
+export const settingVariables = [
+    {id: 'grittyDamage', config_type: "Boolean", tab: "Setting Rules"},
+    {id: 'grittyDamageNPC', config_type: "Boolean", tab: "Setting Rules"},
+    {id: 'natHeal_time', config_type: "String", tab: "Setting Rules"},
+    {id: 'npcAmmo', config_type: "Boolean", tab: "Setting Rules"},
+    {id: 'healthPotionOptions', config_type: "String", tab: "Item Options"},
+    {id: 'fatiguePotionOptions', config_type: "String", tab: "Item Options"},
+    {id: 'injuryTable', config_type: "String", tab: "Roll Tables"},
+    {id: 'fearTable', config_type: "String", tab: "Roll Tables"},
+    {id: 'chaseDeck', config_type: "String", tab: "Roll Tables"},
+    {id: 'sfxDelay', config_type: "Number", tab: "SFX & VFX Options"},
+    {id: 'shakenSFX', config_type: "FilePickerAudio", tab: "SFX & VFX Options"},
+    {id: 'incapSFX', config_type: "FilePickerAudio", tab: "SFX & VFX Options"},
+    {id: 'stunSFX', config_type: "FilePickerAudio", tab: "SFX & VFX Options"},
+    {id: 'woundedSFX', config_type: "FilePickerAudio", tab: "SFX & VFX Options"},
+    {id: 'fatiguedSFX', config_type: "FilePickerAudio", tab: "SFX & VFX Options"},
+    {id: 'fearSFX', config_type: "FilePickerAudio", tab: "SFX & VFX Options"},
+    {id: 'healSFX', config_type: "FilePickerAudio", tab: "SFX & VFX Options"},
+    {id: 'looseFatigueSFX', config_type: "FilePickerAudio", tab: "SFX & VFX Options"},
+    {id: 'shapeShiftVFX', config_type: "FilePickerAudio", tab: "SFX & VFX Options"},
+    {id: 'irradiationSetting', config_type: "Boolean", tab: "Additional Conditions"},
+];
+
 export function register_settings() {
     // Documentation Read
     game.settings.register('swim', 'docRead', {
