@@ -1,24 +1,41 @@
+/* globals game, FormApplication, $ */
+
 export const settingVariables = [
-    {id: 'grittyDamage', config_type: "Boolean", tab: "Setting Rules"},
-    {id: 'grittyDamageNPC', config_type: "Boolean", tab: "Setting Rules"},
-    {id: 'natHeal_time', config_type: "String", tab: "Setting Rules"},
-    {id: 'npcAmmo', config_type: "Boolean", tab: "Setting Rules"},
-    {id: 'healthPotionOptions', config_type: "String", tab: "Item Options"},
-    {id: 'fatiguePotionOptions', config_type: "String", tab: "Item Options"},
-    {id: 'injuryTable', config_type: "String", tab: "Roll Tables"},
-    {id: 'fearTable', config_type: "String", tab: "Roll Tables"},
-    {id: 'chaseDeck', config_type: "String", tab: "Roll Tables"},
-    {id: 'sfxDelay', config_type: "Number", tab: "SFX & VFX Options"},
-    {id: 'shakenSFX', config_type: "FilePickerAudio", tab: "SFX & VFX Options"},
-    {id: 'incapSFX', config_type: "FilePickerAudio", tab: "SFX & VFX Options"},
-    {id: 'stunSFX', config_type: "FilePickerAudio", tab: "SFX & VFX Options"},
-    {id: 'woundedSFX', config_type: "FilePickerAudio", tab: "SFX & VFX Options"},
-    {id: 'fatiguedSFX', config_type: "FilePickerAudio", tab: "SFX & VFX Options"},
-    {id: 'fearSFX', config_type: "FilePickerAudio", tab: "SFX & VFX Options"},
-    {id: 'healSFX', config_type: "FilePickerAudio", tab: "SFX & VFX Options"},
-    {id: 'looseFatigueSFX', config_type: "FilePickerAudio", tab: "SFX & VFX Options"},
-    {id: 'shapeShiftVFX', config_type: "FilePickerAudio", tab: "SFX & VFX Options"},
-    {id: 'irradiationSetting', config_type: "Boolean", tab: "Additional Conditions"},
+    {id: 'grittyDamage', config_type: Boolean, tab: "Setting Rules", default: false},
+    {id: 'grittyDamageNPC', config_type: Boolean, tab: "Setting Rules", default: false},
+    {id: 'natHeal_time', config_type: String, tab: "Setting Rules", default: 'five days'},
+    {id: 'npcAmmo', config_type: Boolean, tab: "Setting Rules",  default: false},
+    {id: 'healthPotionOptions', config_type: String, tab: "Item Options",
+        default: 'Minor Health Potion|Health Potion|Greater Health Potion|Minor Healing Potion|Healing Potion|Greater Healing Potion'},
+    {id: 'fatiguePotionOptions', config_type: String, tab: "Item Options",
+        default: 'Minor Potion of Well-Being|Potion of Well-Being|Greater Potion of Well-Being|Minor Recreational Potion|Recreational Potion|Greater Recreational Potion'},
+    {id: 'injuryTable', config_type: String, tab: "Roll Tables", default: 'Injury Table'},
+    {id: 'fearTable', config_type: String, tab: "Roll Tables", default: 'Fear Table'},
+    {id: 'chaseDeck', config_type: String, tab: "Roll Tables", default: 'Chase Deck'},
+    {id: 'sfxDelay', config_type: Number, tab: "SFX & VFX Options", default: '110'},
+    {id: 'shakenSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",
+        default: 'modules/swim/assets/sfx/Pain-sound-effect-converted-Alexander-www.orangefreesounds.com.ogg'},
+    {id: 'incapSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",
+        default: 'modules/swim/assets/sfx/HeartBeat-sound-effect-2-altered-Alexander-www.orangefreesounds.com.ogg'},
+    {id: 'stunSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",
+        default: 'modules/swim/assets/sfx/Body-Thud-altered-www.fesliyanstudios.com.ogg'},
+    {id: 'woundedSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",
+        default: 'modules/swim/assets/sfx/Ripping-Flesh-altered-www.fesliyanstudios.com.ogg'},
+    {id: 'fatiguedSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",
+        default: 'modules/swim/assets/sfx/Hard-Breathing-Medium-Pace-altered-www.fesliyanstudios.com.ogg'},
+    {id: 'fearSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",
+        default: 'modules/swim/assets/sfx/Suspense_Sound_Effect_altered_-_David_Fesliyan-www.FesliyanStudios.com.ogg'},
+    {id: 'healSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",
+        default: 'modules/swim/assets/sfx/Huh-converted-Alexander-www.orangefreesounds.com.ogg'},
+    {id: 'looseFatigueSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",
+        default: 'modules/swim/assets/sfx/Huh-converted-Alexander-www.orangefreesounds.com.ogg'},
+    {id:  'potionSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",
+        default: 'modules/swim/assets/sfx/Drinking-Water-altered-www.fesliyanstudios.com.ogg'},
+    {id: 'shapeShiftSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",
+        default: ''},
+    {id: 'shapeShiftVFX', config_type: window.Azzu.SettingsTypes.FilePickerVideo, tab: "SFX & VFX Options",
+        default: ''},
+    {id: 'irradiationSetting', config_type: Boolean, tab: "Additional Conditions", default: false},
 ];
 
 export function register_settings() {
@@ -31,206 +48,76 @@ export function register_settings() {
         scope: 'user',
         config: true,
     });
-    // Chase Deck Name
-    game.settings.register('swim', 'chaseDeck', {
-        name: game.i18n.localize("SWIM.chaseDeckName"),
-        hint: game.i18n.localize("SWIM.chaseDeckHint"),
-        type: String,
-        default: 'Chase Deck',
-        scope: 'world',
-        config: true,
+    game.settings.registerMenu('swim', 'custom-config', {
+        name: "SWIM.ConfigMenu",
+        label: "SWIM.ConfigMenu",
+        hint: "SWIM.ConfigMenuHint",
+        type: CustomConfigForm
     });
-    // Gritty Damage Injury Table Name
-    game.settings.register('swim', 'injuryTable', {
-        name: game.i18n.localize("SWIM.injuryTableName"),
-        hint: game.i18n.localize("SWIM.injuryTableHint"),
-        type: String,
-        default: 'Injury Table',
-        scope: 'world',
-        config: true,
-    });
-    // Gritty Damage Setting Rule
-    game.settings.register('swim', 'grittyDamage', {
-        name: game.i18n.localize("SWIM.grittyDamageName"),
-        hint: game.i18n.localize("SWIM.grittyDamageHint"),
-        type: Boolean,
-        default: false,
-        scope: 'world',
-        config: true,
-    });
-    // Gritty Damage for NPCs
-    game.settings.register('swim', 'grittyDamageNPC', {
-        name: game.i18n.localize("SWIM.grittyDamageNPCName"),
-        hint: game.i18n.localize("SWIM.grittyDamageNPCHint"),
-        type: Boolean,
-        default: false,
-        scope: 'world',
-        config: true,
-    });
-    // Fear Table Name
-    game.settings.register('swim', 'fearTable', {
-        name: game.i18n.localize("SWIM.fearTableName"),
-        hint: game.i18n.localize("SWIM.fearTableHint"),
-        type: String,
-        default: 'Fear Table',
-        scope: 'world',
-        config: true,
-    });
-    // Health Potion Names
-    game.settings.register('swim', 'healthPotionOptions', {
-        name: game.i18n.localize("SWIM.healthPotionOptionsName"),
-        hint: game.i18n.localize("SWIM.healthPotionOptionsHint"),
-        type: String,
-        default: 'Minor Health Potion|Health Potion|Greater Health Potion|Minor Healing Potion|Healing Potion|Greater Healing Potion',
-        scope: 'world',
-        config: true,
-    });
-    // Fatigue Potion Names
-    game.settings.register('swim', 'fatiguePotionOptions', {
-        name: game.i18n.localize("SWIM.fatiguePotionOptionsName"),
-        hint: game.i18n.localize("SWIM.fatiguePotionOptionsHint"),
-        type: String,
-        default: 'Minor Potion of Well-Being|Potion of Well-Being|Greater Potion of Well-Being|Minor Recreational Potion|Recreational Potion|Greater Recreational Potion',
-        scope: 'world',
-        config: true,
-    });
-    // Natural Healing time
-    game.settings.register('swim', 'natHeal_time', {
-        name: game.i18n.localize("SWIM.natHeal_TimeName"),
-        hint: game.i18n.localize("SWIM.natHeal_TimeHint"),
-        type: String,
-        default: 'five days',
-        scope: 'world',
-        config: true,
-    });
-    // SFX sfxDelay
-    game.settings.register('swim', 'sfxDelay', {
-        name: game.i18n.localize("SWIM.sfxDelayName"),
-        hint: game.i18n.localize("SWIM.sfxDelayHint"),
-        type: Number,
-        default: '110',
-        scope: 'world',
-        config: true,
-    });
-    // Ammo usage for NPCs
-    game.settings.register('swim', 'npcAmmo', {
-        name: game.i18n.localize("SWIM.npcAmmoName"),
-        hint: game.i18n.localize("SWIM.npcAmmoHint"),
-        type: Boolean,
-        default: false,
-        scope: 'world',
-        config: true,
-    });
-    // Shaken SFX
-    game.settings.register('swim', 'shakenSFX', {
-        name: game.i18n.localize("SWIM.shakenSFXName"),
-        hint: game.i18n.localize("SWIM.shakenSFXHint"),
-        type: window.Azzu.SettingsTypes.FilePickerAudio,
-        default: 'modules/swim/assets/sfx/Pain-sound-effect-converted-Alexander-www.orangefreesounds.com.ogg',
-        scope: 'world',
-        config: true,
-    });
-    // Incapacitation SFX
-    game.settings.register('swim', 'incapSFX', {
-        name: game.i18n.localize("SWIM.incapSFXName"),
-        hint: game.i18n.localize("SWIM.incapSFXHint"),
-        type: window.Azzu.SettingsTypes.FilePickerAudio,
-        default: 'modules/swim/assets/sfx/HeartBeat-sound-effect-2-altered-Alexander-www.orangefreesounds.com.ogg',
-        scope: 'world',
-        config: true,
-    });
-    // Stunned SFX
-    game.settings.register('swim', 'stunSFX', {
-        name: game.i18n.localize("SWIM.stunSFXName"),
-        hint: game.i18n.localize("SWIM.stunSFXHint"),
-        type: window.Azzu.SettingsTypes.FilePickerAudio,
-        default: 'modules/swim/assets/sfx/Body-Thud-altered-www.fesliyanstudios.com.ogg',
-        scope: 'world',
-        config: true,
-    });
-    // Prone Image deprecated, as it is no longer needed with changes in CUB.
-    // Wounded SFX
-    game.settings.register('swim', 'woundedSFX', {
-        name: game.i18n.localize("SWIM.woundedSFXName"),
-        hint: game.i18n.localize("SWIM.woundedSFXHint"),
-        type: window.Azzu.SettingsTypes.FilePickerAudio,
-        default: 'modules/swim/assets/sfx/Ripping-Flesh-altered-www.fesliyanstudios.com.ogg',
-        scope: 'world',
-        config: true,
-    });
-    // Fatigue SFX
-    game.settings.register('swim', 'fatiguedSFX', {
-        name: game.i18n.localize("SWIM.fatiguedSFXName"),
-        hint: game.i18n.localize("SWIM.fatiguedSFXHint"),
-        type: window.Azzu.SettingsTypes.FilePickerAudio,
-        default: 'modules/swim/assets/sfx/Hard-Breathing-Medium-Pace-altered-www.fesliyanstudios.com.ogg',
-        scope: 'world',
-        config: true,
-    });
-    // Fear SFX
-    game.settings.register('swim', 'fearSFX', {
-        name: game.i18n.localize("SWIM.fearSFXName"),
-        hint: game.i18n.localize("SWIM.fearSFXHint"),
-        type: window.Azzu.SettingsTypes.FilePickerAudio,
-        default: 'modules/swim/assets/sfx/Suspense_Sound_Effect_altered_-_David_Fesliyan-www.FesliyanStudios.com.ogg',
-        scope: 'world',
-        config: true,
-    });
-    // Healing SFX
-    game.settings.register('swim', 'healSFX', {
-        name: game.i18n.localize("SWIM.healSFXName"),
-        hint: game.i18n.localize("SWIM.healSFXHint"),
-        type: window.Azzu.SettingsTypes.FilePickerAudio,
-        default: 'modules/swim/assets/sfx/Huh-converted-Alexander-www.orangefreesounds.com.ogg',
-        scope: 'world',
-        config: true,
-    });
-    // Removing Fatigue SFX
-    game.settings.register('swim', 'looseFatigueSFX', {
-        name: game.i18n.localize("SWIM.looseFatigueSFXName"),
-        hint: game.i18n.localize("SWIM.looseFatigueSFXHint"),
-        type: window.Azzu.SettingsTypes.FilePickerAudio,
-        default: 'modules/swim/assets/sfx/Huh-converted-Alexander-www.orangefreesounds.com.ogg',
-        scope: 'world',
-        config: true,
-    });
-    // Potion SFX
-    game.settings.register('swim', 'potionSFX', {
-        name: game.i18n.localize("SWIM.potionSFXName"),
-        hint: game.i18n.localize("SWIM.potionSFXHint"),
-        type: window.Azzu.SettingsTypes.FilePickerAudio,
-        default: 'modules/swim/assets/sfx/Drinking-Water-altered-www.fesliyanstudios.com.ogg',
-        scope: 'world',
-        config: true,
-    });
-    // Shape Shift SFX
-    game.settings.register('swim', 'shapeShiftSFX', {
-        name: game.i18n.localize("SWIM.shapeShiftSFXName"),
-        hint: game.i18n.localize("SWIM.shapeShiftSFXHint"),
-        type: window.Azzu.SettingsTypes.FilePickerAudio,
-        default: '',
-        scope: 'world',
-        config: true,
-    });
-    // Shape Shift VFX
-    game.settings.register('swim', 'shapeShiftVFX', {
-        name: game.i18n.localize("SWIM.shapeShiftVFXName"),
-        hint: game.i18n.localize("SWIM.shapeShiftVFXHint"),
-        type: window.Azzu.SettingsTypes.FilePickerVideo,
-        default: '',
-        scope: 'world',
-        config: true,
-    });
-    // Irradiation Condition
-    game.settings.register('swim', 'irradiationSetting', {
-        name: game.i18n.localize("SWIM.irradiationSettingName"),
-        hint: game.i18n.localize("SWIM.irradiationSettingHint"),
-        type: Boolean,
-        default: false,
-        scope: 'world',
-        config: true,
-        onChange: () => {
-            window.location.reload();
+    for (let setting of settingVariables) {
+        game.settings.register('swim', setting.id, {
+            name: game.i18n.localize(`SWIM.${setting.id}Name`),
+            hint: game.i18n.localize(`SWIM.${setting.id}Hint`),
+            type: setting.config_type,
+            default: setting.default,
+            scope: 'world',
+            config: false
+        });
+    }
+}
+
+class CustomConfigForm extends FormApplication {
+    static get defaultOptions() {
+        let options = super.defaultOptions;
+        options.id = 'swim-custom-config';
+        options.template = "/modules/swim/templates/customConfig.hbs";
+        options.width = 630;
+        options.height = 600;
+        return options;
+    }
+
+    activateListeners(html) {
+        html.find('.swim-tab-header').on('click', this.change_tab);
+        return super.activateListeners(html);
+    }
+
+    change_tab(event) {
+        const tab_name = event.currentTarget.dataset.tab;
+        $('.swim-tab').each((_, tab) => {
+            if (tab.dataset.tab === tab_name) {
+                $(tab).addClass('active');
+            } else {
+                $(tab).removeClass('active');
+            }
+        });
+    }
+
+    getData() {
+        let tabs = {};
+        for (let setting of settingVariables) {
+            if (! tabs.hasOwnProperty(setting.tab)) {
+                tabs[setting.tab] = [];
+            }
+            tabs[setting.tab].push(
+                {id: setting.id,
+                 is_boolen: setting.config_type === Boolean,
+                 use_audio_picker: setting.config_type === window.Azzu.SettingsTypes.FilePickerAudio,
+                 use_video_picker: setting.config_type === window.Azzu.SettingsTypes.FilePickerVideo,
+                 value: game.settings.get('swim', setting.id),
+                 name: game.i18n.localize(`SWIM.${setting.id}Name`),
+                 hint: game.i18n.localize(`SWIM.${setting.id}Hint`)});
         }
-    });
+        return {tabs: tabs};
+    }
+
+    async _updateObject(_, formData) {
+        for (let id in formData) {
+            if (formData[id]) {
+                await game.settings.set('swim', id, formData[id]);
+            } else {
+                await game.settings.set('swim', id, '');
+            }
+        }
+        window.location.reload();
+    }
 }

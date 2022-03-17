@@ -1,0 +1,32 @@
+<form id="swim-custom-config">
+    <h2>{{ localize "SWIM.ConfigMenu" }}</h2>
+    <nav class="sheet-tabs tabs" data-group="spicy-settings-tabs">
+        {{#each tabs}}
+            <a class="item swim-tab-header" data-tab="{{@key}}">{{@key}}</a>
+        {{/each}}
+    </nav>
+    <section class="content">
+        {{#each tabs}}
+            <div class="tab swim-tab {{# unless @index}}active{{/unless}}" data-tab="{{@key}}" data-group="spicy-settings-tabs">
+                {{# each this }}
+                    <div class="form-group">
+                        <label>{{ this.name }}</label>
+                        <div class="form-fields">
+                            {{#if this.is_boolen}}
+                                <input type="checkbox" name="{{ this.id }}" {{#if this.value }}checked=""{{/if}}>
+                            {{else}}
+                                <input type="text" name="{{ this.id }}" value="{{ this.value }}">
+                                {{# if this.use_audio_picker }}{{ filePicker type="audio" target=this.id }}{{/if}}
+                                {{# if this.use_video_picker }}{{ filePicker type="video" target=this.id }}{{/if}}
+                            {{/if}}
+                        </div>
+                        <p class="notes">{{ this.hint }}</p>
+                    </div>
+                {{/each}}
+            </div>
+        {{/each}}
+    </section>
+    <footer class="sheet-footer flexrow">
+        <button type="submit"><i class="far fa-save"></i>{{localize "SWIM.Save"}}</button>
+    </footer>
+</form>
