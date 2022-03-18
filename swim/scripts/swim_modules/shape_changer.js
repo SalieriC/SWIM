@@ -40,11 +40,7 @@ export async function shape_changer_script() {
     }
 
     //Set div class based on enabled official module:
-    let officialClass = '<div>'
-    if (game.modules.get("swpf-core-rules")?.active) { officialClass = '<div class="swade-core">' }
-    else if (game.modules.get("deadlands-core-rules")?.active) { officialClass = '<div class="swade-core">' }
-    else if (game.modules.get("sprawl-core-rules")?.active) { officialClass = '<div class="sprawl-core">' }
-    else if (game.modules.get("swade-core-rules")?.active) { officialClass = '<div class="swade-core">' }
+    const officialClass = swim.get_official_class()
 
     let folder = game.folders.getName("Shape Change Presets");
     let content = folder.content;
