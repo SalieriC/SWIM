@@ -49,9 +49,10 @@ export function register_settings() {
         config: true,
     });
     game.settings.registerMenu('swim', 'custom-config', {
-        name: "SWIM.ConfigMenu",
-        label: "SWIM.ConfigMenu",
-        hint: "SWIM.ConfigMenuHint",
+        name: game.i18n.localize("SWIM.ConfigMenuName"),
+        label: game.i18n.localize("SWIM.ConfigMenuLabel"),
+        icon: 'fas fa-fish',
+        hint: game.i18n.localize("SWIM.ConfigMenuHint"),
         type: CustomConfigForm
     });
     for (let setting of settingVariables) {

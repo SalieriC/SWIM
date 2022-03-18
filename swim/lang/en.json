@@ -50,7 +50,8 @@
   "SWIM.irradiationSettingName": "Irradiation Condition:",
   "SWIM.irradiationSettingHint": "This enables the Irradiation condition, which is required if you want to use the Radiation Centre Macro.",
   "SWIM.ChaseSetup": "Chase Layout Manager",
-  "SWIM.ConfigMenu": "SWIM Config Menu",
-  "SWIM.ConfigMenuHint": "Click here for all the configuration options",
+  "SWIM.ConfigMenuName": "SWIM Configuration Menu",
+  "SWIM.ConfigMenuLabel": "Start SWIM(ming)!",
+  "SWIM.ConfigMenuHint": "Click here for all the configuration options available in SWIM.",
   "SWIM.Save": "Save Changes"
 }
