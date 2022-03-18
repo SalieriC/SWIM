@@ -3,8 +3,8 @@
 	"title": "SWADE Immersive Macros",
 	"description": "<p><b>READ THE README!</b> Doing so is very important!</p><p>A module providing immersion friendly macros to ease play of the SWADE System on Foundry VTT. <a href='https://ko-fi.com/salieric'>Please consider donating.</a> </p>",
 	"minimumCoreVersion": "9.249",
-	"compatibleCoreVersion": "9.249",
-	"version": "0.14.1",
+	"compatibleCoreVersion": "9.255",
+	"version": "0.15.0",
 	"author": "SalieriC",
 	"dependencies": [
 		{
@@ -30,6 +30,11 @@
 			"type": "module",
 			"name": "succ",
 			"manifest": "https://raw.githubusercontent.com/SalieriC/SUCC/main/succ/module.json"
+		},
+		{
+			"type": "module",
+			"name": "warpgate",
+			"manifest": "https://raw.githubusercontent.com/trioderegion/warpgate/master/module.json"
 		}
 	],
 	"languages": [
@@ -42,8 +47,7 @@
 	"systems": ["swade"],
 	"esmodules": ["./scripts/init.js"],
 	"scripts": [
-		"./scripts/settings-extender.js",
-		"./scripts/swim-class.js"
+		"./scripts/settings-extender.js"
 	],
 	"packs": [
         {
