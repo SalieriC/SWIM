@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Default options for the chase setup.
 ### Changed
 - **BREAKING:** Due to changes in Foundry VTT core all script macros had to be pulled out of the compendium and are now maintained as .js files in the module itself. As a Result, *all auto-update macros became unusable*. You need to import the new auto-update macros in your world (and delete the old ones), then you'll be set up for the future. This time for good (hopefully).  
-- More options on laying out cards for other chase scenes (by pmoore603).  
+- More options on laying out cards for other chase scenes (made by @pmoore603).  
 - Shape Changer now adds the new token (the target of the shape shift) up in the combat tracker.  
 ### Fixed
 - Players were unable to execute the macros due to permission enforcement changes in FVTT core. This is fixed via the aboce change.  
