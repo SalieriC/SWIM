@@ -51,6 +51,11 @@ Wait a specified amount of *mili*seconds to wait before executing the rest of th
 - `ms` {number}: The amount of time to pause script execution in miliseconds.  
 This is basically a planned delay in script execution. Use it responsibly, too large numbers can make one think your script is laggy.  
 
+### Get official class
+This returns the proper html div tag for the installed an active rules compendium module.  
+`swim.get_official_class()`  
+It currently supports the Savage Worlds Pathfinder, Deadlands, Sprawlrunners and SWADE Core modules in this priority order. This means that the divider will be used whichever is first in the aformentioned list if multiple are activated. So if you were to use Deadlands and SWADE Core in your world, the function would return the Deadlands class.  
+
 ## Feature Functions
 The following functions present the core features of SWIM. They are probably less useful for macro and module devs but presented here anyway in case you want to utilise them.  
 Note that all of them except the BR2 ones get the macro variables (see above) first, so they really only work on selected token(s). The BR2 ones need the BR2 variables passed to function.  

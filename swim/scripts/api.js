@@ -35,6 +35,7 @@ export class api {
       spend_benny: api._spend_benny,
       is_first_gm: api._is_first_gm,
       wait: api._wait,
+      get_official_class: api._get_official_class,
       // Convenience
       ammo_management: api._ammo_management,
       br2_ammo_management: api._ammo_management_br2,
@@ -181,6 +182,15 @@ export class api {
     return new Promise(resolve => {
       setTimeout(resolve, ms);
     });
+  }
+  // Get official Class for HTML
+  static _get_official_class() {
+    let officialClass = '<div>'
+    if (game.modules.get("swpf-core-rules")?.active) { officialClass = '<div class="swade-core">' }
+    else if (game.modules.get("deadlands-core-rules")?.active) { officialClass = '<div class="swade-core">' }
+    else if (game.modules.get("sprawl-core-rules")?.active) { officialClass = '<div class="sprawl-core">' }
+    else if (game.modules.get("swade-core-rules")?.active) { officialClass = '<div class="swade-core">' }
+    return officialClass
   }
 
   /*******************************************
