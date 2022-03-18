@@ -61,7 +61,7 @@ export function register_settings() {
     game.settings.registerMenu('swim', 'custom-config', {
         name: game.i18n.localize("SWIM.ConfigMenuName"),
         label: game.i18n.localize("SWIM.ConfigMenuLabel"),
-        icon: 'fas fa-fish',
+        icon: 'fas fa-swimmer',
         hint: game.i18n.localize("SWIM.ConfigMenuHint"),
         type: CustomConfigForm
     });
