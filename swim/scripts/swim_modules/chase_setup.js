@@ -8,19 +8,19 @@
  ******************************************/
 export async function chase_setup_script() {
 // Card related constants
-const MAX_CARDS=18;
-const CARDS_PER_ROW=9;
-const DEF_NUM_CARDS=MAX_CARDS;
+const MAX_CARDS=game.settings.get('swim', 'chaseDeck-MaxCards') // Default: 18
+const CARDS_PER_ROW=game.settings.get('swim', 'chaseDeck-CardsPerRow') // Default: 9
+const DEF_NUM_CARDS=game.settings.get('swim', 'chaseDeck-CardsToDraw') // Default: 18
 // Pixel related constants
-const DEF_GRID_PIXELS=50;
-const DEF_BORDER_HORIZ=0;
-const DEF_BORDER_VERT=0;
+const DEF_GRID_PIXELS=game.settings.get('swim', 'chaseDeck-GridWithPixels') // Default: 50
+const DEF_BORDER_HORIZ=game.settings.get('swim', 'chaseDeck-BorderHorizontal') // Default: 0
+const DEF_BORDER_VERT=game.settings.get('swim', 'chaseDeck-BorderVertical') // Default: 0
 // Card dimensions in grid units
-const DEF_CARD_HEIGHT=6;
-const DEF_CARD_WIDTH=4;
+const DEF_CARD_HEIGHT=game.settings.get('swim', 'chaseDeck-CardHeight') // Default: 6
+const DEF_CARD_WIDTH=game.settings.get('swim', 'chaseDeck-CardWidth') // Default: 4
 // Deck origin in grid units
-const DEF_DECK_DOWN=24
-const DEF_DECK_RIGHT=10
+const DEF_DECK_DOWN=game.settings.get('swim', 'chaseDeck-DeckDown') // Default: 24
+const DEF_DECK_RIGHT=game.settings.get('swim', 'chaseDeck-DeckRight') // Default: 10
 
 getRequirements();
 

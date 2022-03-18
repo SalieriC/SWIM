@@ -12,6 +12,16 @@ export const settingVariables = [
     {id: 'injuryTable', config_type: String, tab: "Roll Tables", default: 'Injury Table'},
     {id: 'fearTable', config_type: String, tab: "Roll Tables", default: 'Fear Table'},
     {id: 'chaseDeck', config_type: String, tab: "Roll Tables", default: 'Chase Deck'},
+    {id: 'chaseDeck-MaxCards', config_type: Number, tab: "Chase Layout", default: '18'},
+    {id: 'chaseDeck-CardsPerRow', config_type: Number, tab: "Chase Layout", default: '9'},
+    {id: 'chaseDeck-CardsToDraw', config_type: Number, tab: "Chase Layout", default: '18'},
+    {id: 'chaseDeck-GridWithPixels', config_type: Number, tab: "Chase Layout", default: '50'},
+    {id: 'chaseDeck-BorderHorizontal', config_type: Number, tab: "Chase Layout", default: '0'},
+    {id: 'chaseDeck-BorderVertical', config_type: Number, tab: "Chase Layout", default: '0'},
+    {id: 'chaseDeck-CardHeight', config_type: Number, tab: "Chase Layout", default: '6'},
+    {id: 'chaseDeck-CardWidth', config_type: Number, tab: "Chase Layout", default: '4'},
+    {id: 'chaseDeck-DeckDown', config_type: Number, tab: "Chase Layout", default: '24'},
+    {id: 'chaseDeck-DeckRight', config_type: Number, tab: "Chase Layout", default: '10'},
     {id: 'sfxDelay', config_type: Number, tab: "SFX & VFX Options", default: '110'},
     {id: 'shakenSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",
         default: 'modules/swim/assets/sfx/Pain-sound-effect-converted-Alexander-www.orangefreesounds.com.ogg'},
@@ -72,7 +82,7 @@ class CustomConfigForm extends FormApplication {
         let options = super.defaultOptions;
         options.id = 'swim-custom-config';
         options.template = "/modules/swim/templates/customConfig.hbs";
-        options.width = 630;
+        options.width = 660;
         options.height = 600;
         return options;
     }
