@@ -279,6 +279,7 @@ export class api {
   static async _mark_dead() {
     mark_dead_script()
   }
+  // Mighty Summoner
   static async _mighty_summoner() {
     summoner_script()
   }
