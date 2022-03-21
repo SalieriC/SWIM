@@ -21,8 +21,6 @@
  ******************************************************/
  export async function summoner_script() {
     const { speaker, _, __, token } = await swim.get_macro_variables()
-    const actor = token.actor;
-    const range = actor.data.data.attributes.smarts.die.sides
 
     if (!game.modules.get("warpgate")?.active) {
         ui.notifications.error("Please install and activate Warp Gate to use this macro. See the console for more details.");
@@ -41,6 +39,8 @@
         ui.notifications.error("Please select a single token first.");
         return;
     }
+    const actor = token.actor;
+    const range = actor.data.data.attributes.smarts.die.sides
 
     //Set div class based on enabled official module:
     const officialClass = swim.get_official_class()
@@ -100,7 +100,7 @@
                                 },
                             }
                         }
-                        let spawnData = await warpgate.spawn("Scamp (summoned)", updates)
+                        let spawnData = await warpgate.spawn(scActor.name, updates)
                         await play_sfx(spawnData)
 
                         const data = {
@@ -123,7 +123,7 @@
             'swim', 'shapeShiftSFX');
         let spawnVFX = game.settings.get(
             'swim', 'shapeShiftVFX');
-        if (spawnSFX) { swim.play_sfx(spawnSFX, 1) }
+        if (spawnSFX) { swim.play_sfx(spawnSFX) }
         if (game.modules.get("sequencer")?.active && spawnVFX) {
             let tokenD = canvas.tokens.get(spawnData[0])
             let sequence = new Sequence()
