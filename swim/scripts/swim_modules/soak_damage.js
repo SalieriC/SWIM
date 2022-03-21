@@ -5,6 +5,7 @@
  *******************************************/
 export async function soak_damage_script() {
     const { speaker, _, __, token } = await swim.get_macro_variables()
+    const actor = token.actor
     if (!game.modules.get("healthEstimate")?.active) {
         ui.notifications.error("Please install and activate Health Estimate to use this macro.");
         return;
@@ -50,6 +51,7 @@ export async function soak_damage_script() {
     let rounded;
     let elanBonus;
     let newWounds;
+    let { ___, ____, totalBennies } = await swim.check_bennies(token)
 
     // This is the main function that handles the Vigor roll.
     async function rollSoak() {
@@ -260,7 +262,7 @@ export async function soak_damage_script() {
     new Dialog({
         title: 'Soaking Wounds',
         content: `<form>
-         <p>You currently have <b>${wv}/${wm}</b> Wounds and <b>${bennies}</b> Bennies.</p>
+         <p>You currently have <b>${wv}/${wm}</b> Wounds and <b>${totalBennies}</b> Bennies.</p>
      <div class="form-group">
          <label for="numWounds">Amount of Wounds: </label>
          <input id="numWounds" name="num" type="number" min="0" value="1"></input>
