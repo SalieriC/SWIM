@@ -1,6 +1,6 @@
 /*******************************************
  * Unstun macro for SWADE
- * version v.4.0.0
+ * version v.4.0.1
  * Made and maintained by SalieriC#8263 using original Code from Shteff.
  ******************************************/
 
@@ -34,7 +34,7 @@ export async function unstun_script() {
 
     async function rollUnstun() {
 
-        const edgeNames = ['combat reflexes'];
+        const edgeNames = [game.i18n.localize("SWIM.edge-combatReflexes").toLowerCase()];
         const actorAlias = speaker.alias;
         // ROLL VIGOR AND CHECK COMBAT REFLEXES
         const r = await token.actor.rollAttribute('vigor');

@@ -1,10 +1,14 @@
 /*******************************************
  * Soak Damage
- * v. 4.0.0
+ * v. 4.0.1
  * Code by SalieriC#8263.
  *******************************************/
 export async function soak_damage_script() {
     const { speaker, _, __, token } = await swim.get_macro_variables()
+    if (!game.modules.get("healthEstimate")?.active) {
+        ui.notifications.error("Please install and activate Health Estimate to use this macro.");
+        return;
+    }
     // Checking if at least one token is defined.
     if (!token || canvas.tokens.controlled.length > 1) {
         ui.notifications.error("Please select a single token first");
@@ -35,19 +39,12 @@ export async function soak_damage_script() {
     const wm = token.actor.data.data.wounds.max;
     const ppv = token.actor.data.data.powerPoints.value;
     const holyWarr = token.actor.data.items.find(function (item) {
-        return ((item.name.toLowerCase() === "holy warrior") || (item.name.toLowerCase() === "unholy warrior")) && item.type === "edge";
+        return ((item.name.toLowerCase() === game.i18n.localize("SWIM.edge-holyWarrior").toLowerCase()) || (item.name.toLowerCase() === game.i18n.localize("SWIM.edge-unholyWarrior").toLowerCase())) && item.type === "edge";
     });
     const elan = token.actor.data.items.find(function (item) {
-        return item.name.toLowerCase() === "elan" && item.type === "edge";
+        return item.name.toLowerCase() === game.i18n.localize("SWIM.edge-elan").toLowerCase() && item.type === "edge";
     });
-    let bennies = token.actor.data.data.bennies.value;
-    //Check for actor status and adjust bennies based on edges.
-    let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
-    let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
-    if ((token.actor.data.data.wildcard === false) && (actorGreatLuck === undefined)) {
-        if ((!(actorLuck === undefined)) && (bennies > 1) && ((actorGreatLuck === undefined))) { bennies = 1; }
-        else { bennies = 0; }
-    }
+
     let numberWounds;
     let numberPP;
     let rounded;
@@ -57,7 +54,10 @@ export async function soak_damage_script() {
     // This is the main function that handles the Vigor roll.
     async function rollSoak() {
 
-        const edgeNames = ['iron jaw', 'thick fur'];
+        const edgeNames = [
+            game.i18n.localize("SWIM.edge-ironJaw").toLowerCase(), 
+            game.i18n.localize("SWIM.ability-thickFur-sagaOfTheGoblinHorde").toLowerCase()
+        ];
         const actorAlias = speaker.alias;
         // Roll Vigor and check for Iron Jaw.
         const r = await token.actor.rollAttribute('vigor');

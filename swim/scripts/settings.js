@@ -23,6 +23,7 @@ export const settingVariables = [
     {id: 'chaseDeck-DeckDown', config_type: Number, tab: "Chase Layout", default: '24'},
     {id: 'chaseDeck-DeckRight', config_type: Number, tab: "Chase Layout", default: '10'},
     {id: 'sfxDelay', config_type: Number, tab: "SFX & VFX Options", default: '110'},
+    {id: 'defaultVolume', config_type: Number, tab: "SFX & VFX Options", default: '1' },
     {id: 'shakenSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",
         default: 'modules/swim/assets/sfx/Pain-sound-effect-converted-Alexander-www.orangefreesounds.com.ogg'},
     {id: 'incapSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",

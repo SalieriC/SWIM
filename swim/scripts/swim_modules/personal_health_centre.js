@@ -1,10 +1,14 @@
 /*******************************************
  * Personal Health Centre
- * // v.4.0.0
+ * // v.4.0.1
  * By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
  ******************************************/
 export async function personal_health_centre_script() {
     const { speaker, _, __, token } = await swim.get_macro_variables()
+    if (!game.modules.get("healthEstimate")?.active) {
+        ui.notifications.error("Please install and activate Health Estimate to use this macro.");
+        return;
+    }
     // Check if a token is selected.
     if ((!token || canvas.tokens.controlled.length > 1)) {
         ui.notifications.error("Please select a single token first.");
@@ -41,19 +45,19 @@ export async function personal_health_centre_script() {
     let natHeal_time = game.settings.get(
         'swim', 'natHeal_time');
     const fastHealer = token.actor.data.items.find(function (item) {
-        return ((item.name.toLowerCase() === "fast healer") && item.type === "edge");
+        return ((item.name.toLowerCase() === game.i18n.localize("SWIM.edge-fastHealer").toLowerCase()) && item.type === "edge");
     });
     if (fastHealer) { natHeal_time = "three days" };
     const reg_slow = token.actor.data.items.find(function (item) {
-        return ((item.name.toLowerCase() === "slow regeneration") && item.type === "ability");
+        return ((item.name.toLowerCase() === game.i18n.localize("SWIM.ability-slowRegeneration").toLowerCase()) && item.type === "ability");
     });
     if (reg_slow) { natHeal_time = "day" };
     const reg_fast = token.actor.data.items.find(function (item) {
-        return ((item.name.toLowerCase() === "fast regeneration") && item.type === "ability");
+        return ((item.name.toLowerCase() === game.i18n.localize("SWIM.ability-fastRegeneration").toLowerCase()) && item.type === "ability");
     });
     if (reg_fast) { natHeal_time = "round" };
     const elan = token.actor.data.items.find(function (item) {
-        return item.name.toLowerCase() === "elan" && item.type === "edge";
+        return item.name.toLowerCase() === game.i18n.localize("SWIM.edge-elan").toLowerCase() && item.type === "edge";
     });
     //Checking for Health Potions
     const healthPotionOptions = game.settings.get(
@@ -85,14 +89,6 @@ export async function personal_health_centre_script() {
         fatiguePotionList += `<option value="${fatiguePotion}">${fatiguePotion}</option>`;
     }
 
-    let bennies = token.actor.data.data.bennies.value;
-    //Check for actor status and adjust bennies based on edges.
-    let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
-    let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
-    if ((token.actor.data.data.wildcard === false) && (actorGreatLuck === undefined)) {
-        if ((!(actorLuck === undefined)) && (bennies > 1) && ((actorGreatLuck === undefined))) { bennies = 1; }
-        else { bennies = 0; }
-    }
     let numberWounds;
     let rounded;
     let elanBonus;

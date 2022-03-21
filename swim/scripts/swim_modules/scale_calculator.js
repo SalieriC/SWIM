@@ -1,6 +1,6 @@
 /*******************************************
  * Unstun macro for SWADE
- * version v.2.0.0
+ * version v.2.0.1
  * Original code by brunocalado, modified by SalieriC#8263.
  ******************************************/
 export async function scale_calculator() {
@@ -22,10 +22,10 @@ export async function scale_calculator() {
         ui.notifications.warn("You must select a token and target another one!");
     } else {
         const actorSwat = token.actor.data.items.find(function (item) {
-            return ((item.name.toLowerCase() === "swat") && item.type === "ability");
+            return ((item.name.toLowerCase() === game.i18n.localize("SWIM.ability-swat").toLowerCase()) && item.type === "ability");
         });
         const targetSwat = tokenTarget.actor.data.items.find(function (item) {
-            return ((item.name.toLowerCase() === "swat") && item.type === "ability");
+            return ((item.name.toLowerCase() === game.i18n.localize("SWIM.ability-swat").toLowerCase()) && item.type === "ability");
         });
         rollForIt();
 

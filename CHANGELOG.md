@@ -5,6 +5,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]  
+### Added
+- Free Reroll to the Radiation Centre macro if the Soldier Edge is found.
+- Added warnings to some functions to install Helath Estimate if it is not installed.
+- Localisation for Edges and Abilities.  
+- Added Coup (50 Fathoms) to the benny checker.
+- Added SFX to execute when BR2 sends the unshake hook.
+- Added SFX player to the API.
+- Added default volume option to the settings.
+- Mighty Summoner macro that summons a creature selected by the user.  
+### Fixed
+- Radiation Centre will now inform about Benny use.
+- Small update fix in shape changer that will hopefully update the combat.
 
 ## [0.15.0] - 2022-03-18
 ### Added  

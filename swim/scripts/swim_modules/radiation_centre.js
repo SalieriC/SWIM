@@ -1,7 +1,7 @@
 /*******************************************
  * Radiation Centre Macro
  * Requires the Irradiated condition.
- * version 2.0.0
+ * version 2.1.0
  * By SalieriC#8263.
  ******************************************/
 export async function radiation_centre_script() {
@@ -53,6 +53,9 @@ export async function radiation_centre_script() {
     const elan = token.actor.data.items.find(function (item) {
         return item.name.toLowerCase() === "elan" && item.type === "edge";
     });
+    const soldier = token.actor.data.items.find(function (item) {
+        return item.name.toLowerCase() === game.i18n.localize("SWIM.edge-soldier").toLowerCase() && item.type === "edge";
+    });
     //Check for actor status and adjust bennies based on edges.
     let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
     let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
@@ -63,6 +66,7 @@ export async function radiation_centre_script() {
     let rounded;
     let elanBonus;
     let newFatigue;
+    let soldierSwitch = false
 
     // This is the main function that handles the Vigor roll.
     async function rollVigor() {
@@ -117,7 +121,9 @@ export async function radiation_centre_script() {
             if (rounded < 1) {
                 let { _, __, totalBennies } = await swim.check_bennies(token)
                 chatData += ` and would take a Level of Fatigue from Radiation.`;
-                if (totalBennies < 1) {
+                if (soldier && soldierSwitch === false) {
+                    dialogReroll();
+                } else if (totalBennies < 1) {
                     applyFatigue();
                 }
                 else {
@@ -187,18 +193,41 @@ export async function radiation_centre_script() {
     // Dialog to be rendered if roll failed.
     async function dialogReroll() {
         let { _, __, totalBennies } = await swim.check_bennies(token)
-        if (totalBennies > 0) {
-            new Dialog({
-                title: 'Reroll',
-                content: `<form class="swade-core">
-                     <p>You've failed your roll</b>; you will <b>receive 1 Level of Fatigue</b>.</p>
-                     <p>Do you want to reroll your Vigor Roll (you have <b>${totalBennies} Bennies</b> left)</p?
-                     </form>`,
-                buttons: {
+        if (totalBennies > 0 || (soldier && soldierSwitch === false)) {
+            let buttons
+            let text
+            if (soldier && soldierSwitch === false) {
+                buttons = {
                     one: {
                         label: `<i class="fas fa-dice"></i>Reroll`,
                         callback: async () => {
-                            await swim.spend_benny(token)
+                            soldierSwitch = true
+                            rollVigor();
+                        }
+                    },
+                    two: {
+                        label: `<i class="fas fa-radiation"></i>No, apply Fatigue now`,
+                        callback: () => {
+                            ui.notifications.notify("Fatigue will be applied now.");
+                            applyFatigue();
+                        }
+                    }
+                }
+                text = `<form class="swade-core">
+                            <p>You've failed your roll</b>; you will <b>receive 1 Level of Fatigue</b>.</p>
+                            <p>Do you want to use your free reroll?</p>
+                        </form>`
+            } else {
+                text = `<form class="swade-core">
+                            <p>You've failed your roll</b>; you will <b>receive 1 Level of Fatigue</b>.</p>
+                            <p>Do you want to reroll your Vigor Roll (you have <b>${totalBennies} Bennies</b> left)</p?
+                        </form>`
+                buttons = {
+                    one: {
+                        label: `<i class="fas fa-dice"></i>Reroll`,
+                        callback: async () => {
+                            let message = true
+                            await swim.spend_benny(token, message)
                             if (!!elan) {
                                 elanBonus = 2;
                             }
@@ -212,7 +241,12 @@ export async function radiation_centre_script() {
                             applyFatigue();
                         }
                     }
-                },
+                }
+            }
+            new Dialog({
+                title: 'Reroll',
+                content: text,
+                buttons: buttons,
                 default: "one",
             }).render(true);
         }

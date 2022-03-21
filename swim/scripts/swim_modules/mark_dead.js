@@ -3,11 +3,16 @@
  * This Macro works best with Health Estimate installed.
  * It will mark the selected tokens as dead.
  * If the selected token is dead, it will be marked as alive instead.
- * v. 4.0.0 Originally from Health Estimate, altered by SalieriC.
+ * v. 4.0.1 Originally from Health Estimate, altered by SalieriC.
  *******************************************/
 export async function mark_dead_script() {
     const { _, __, ___, token } = await swim.get_macro_variables()
     
+    if (!game.modules.get("healthEstimate")?.active) {
+        ui.notifications.error("Please install and activate Health Estimate to use this macro.");
+        return;
+    }
+
     //Set up
     if (canvas.tokens.controlled.length === 0) {
         ui.notifications.error("Please select a token first");
