@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 2.0.0
+ * v. 2.0.1
  * By SalieriC
  ******************************************************/
 export async function shape_changer_script() {
@@ -377,7 +377,7 @@ export async function shape_changer_gm(data) {
         let combatData = newToken.combatant.toObject()
         combatData.flags = oldCombatData.flags
         combatData.initiative = oldCombatData.initiative
-        await newToken.combatant.data.update(combatData)
+        await newToken.combatant.update(combatData)
     }
 
     async function update_pc(ownerActor) {
