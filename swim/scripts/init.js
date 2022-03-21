@@ -3,6 +3,7 @@ import { register_settings } from './settings.js'
 import { swim_buttons } from './buttons.js'
 import { gm_relay } from './gm_relay.js'
 import { shape_changer_gm } from './swim_modules/shape_changer.js'
+import { summoner_gm } from './swim_modules/mighty-summoner.js'
 
 /*Hooks.on('getCardsDirectoryEntryContext', function (stuff) {
     console.log(stuff)
@@ -76,5 +77,14 @@ Hooks.on(`ready`, () => {
 
     // Warpgate Watches
     warpgate.event.watch("SWIM.shapeChanger", shape_changer_gm, swim.is_first_gm)
+    warpgate.event.watch("SWIM.summoner", summoner_gm, swim.is_first_gm)
     warpgate.event.watch("SWIM.deleteActor", gm_relay.gmDeleteActor, swim.is_first_gm)
 });
+
+//BR2 Hooks
+Hooks.on(`BRSW-Unshake`, async (message, actor) => {
+    const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(actor)
+    if (unshakeSFX) {
+        await swim.play_sfx(unshakeSFX)
+    }
+})
