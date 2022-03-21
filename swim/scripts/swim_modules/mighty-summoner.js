@@ -36,6 +36,12 @@
         return;
     }
 
+    // Check if a token is selected.
+    if ((!token || canvas.tokens.controlled.length > 1)) {
+        ui.notifications.error("Please select a single token first.");
+        return;
+    }
+
     //Set div class based on enabled official module:
     const officialClass = swim.get_official_class()
 
