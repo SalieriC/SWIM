@@ -7,6 +7,7 @@ import { falling_damage_script } from './swim_modules/falling_damage.js'
 import { fear_table_script } from './swim_modules/fear_table.js'
 import { loot_o_mat_script } from './swim_modules/loot-o-mat.js'
 import { mark_dead_script } from './swim_modules/mark_dead.js'
+import { summoner_script } from './swim_modules/mighty-summoner.js'
 import { personal_health_centre_script } from './swim_modules/personal_health_centre.js'
 import { radiation_centre_script } from './swim_modules/radiation_centre.js'
 import { scale_calculator } from './swim_modules/scale_calculator.js'
@@ -36,6 +37,8 @@ export class api {
       is_first_gm: api._is_first_gm,
       wait: api._wait,
       get_official_class: api._get_official_class,
+      get_actor_sfx: api._get_actor_sfx,
+      play_sfx: api._play_sfx,
       // Convenience
       ammo_management: api._ammo_management,
       br2_ammo_management: api._ammo_management_br2,
@@ -45,6 +48,7 @@ export class api {
       fear_table: api._fear_table,
       loot_o_mat: api._loot_o_mat,
       mark_dead: api._mark_dead,
+      mighty_summoner: api._mighty_summoner,
       personal_health_centre: api._personal_health_centre,
       radiation_centre: api._radiation_centre,
       scale_calculator: api._scale_calculator,
@@ -63,7 +67,8 @@ export class api {
    * - Get Benny Image
    * - Check Bennies
    * - Spend Benny
-   * - Radiation Centre
+   * - Get SFX
+   * - Play SFX
    ******************************************/
 
   // Get Macro Variables
@@ -117,12 +122,14 @@ export class api {
     let gmBennies
     let totalBennies
     //Check for actor status and adjust bennies based on edges.
-    let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
-    let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
+    let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === game.i18n.localize("SWIM.edge-luck").toLowerCase()) });
+    let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === game.i18n.localize("SWIM.edge-greatLuck").toLowerCase()) });
+    let actorCoup = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === game.i18n.localize("SWIM.ability-coup-50f").toLowerCase()) });
     if ((token.actor.data.data.wildcard === false) && (actorGreatLuck === undefined)) {
       if ((!(actorLuck === undefined)) && (tokenBennies > 1) && ((actorGreatLuck === undefined))) { tokenBennies = 1; }
       else { tokenBennies = 0; }
     }
+    if (actorCoup) { tokenBennies = tokenBennies + 1 }
 
     // Non GM token has <1 bennie OR GM user AND selected token has <1 benny
     if ((!game.user.isGM && tokenBennies < 1) || (game.user.isGM && tokenBennies < 1 && game.user.getFlag("swade", "bennies") < 1)) {
@@ -178,19 +185,46 @@ export class api {
     return game.user.id === api._first_gm()?.id;
   }
   // Wait
-  static _wait(ms) {
+  static async _wait(ms) {
     return new Promise(resolve => {
       setTimeout(resolve, ms);
     });
   }
   // Get official Class for HTML
-  static _get_official_class() {
+  static async _get_official_class() {
     let officialClass = '<div>'
     if (game.modules.get("swpf-core-rules")?.active) { officialClass = '<div class="swade-core">' }
     else if (game.modules.get("deadlands-core-rules")?.active) { officialClass = '<div class="swade-core">' }
     else if (game.modules.get("sprawl-core-rules")?.active) { officialClass = '<div class="sprawl-core">' }
     else if (game.modules.get("swade-core-rules")?.active) { officialClass = '<div class="swade-core">' }
     return officialClass
+  }
+  // Get SFX
+  static async _get_actor_sfx(actor) {
+    let shakenSFX
+    let deathSFX
+    let unshakeSFX
+    let soakSFX
+    if (actor.data.data.additionalStats?.sfx) {
+      let sfxSequence = actor.data.data.additionalStats.sfx.value.split("|")
+      shakenSFX = sfxSequence[0]
+      deathSFX = sfxSequence[1]
+      unshakeSFX = sfxSequence[2]
+      soakSFX = sfxSequence[3]
+    }
+    if (!shakenSFX || shakenSFX === "NULL") { shakenSFX = game.settings.get('swim', 'shakenSFX') }
+    if (!deathSFX || deathSFX === "NULL") { deathSFX = undefined }
+    if (!unshakeSFX || unshakeSFX === "NULL") { unshakeSFX = undefined }
+    if (!soakSFX || soakSFX === "NULL") { soakSFX = undefined }
+    return { shakenSFX, deathSFX, unshakeSFX, soakSFX }
+  }
+  // Play SFX
+  static async _play_sfx(sfx, volume) {
+    if (!volume) {
+      volume = game.settings.get(
+        'swim', 'defaultVolume')
+    }
+    AudioHelper.play({ src: `${sfx}`, volume: volume, loop: false }, true);
   }
 
   /*******************************************
@@ -203,7 +237,9 @@ export class api {
    * - Fear Table
    * - Loot-o-Mat
    * - Mark Dead
+   * - Mighty Summoner
    * - Personal Health Centre
+   * - Radiation Centre
    * - Scale Calculator
    * - Shape Changer
    * - Soak Damage
@@ -242,6 +278,9 @@ export class api {
   // Mark Dead
   static async _mark_dead() {
     mark_dead_script()
+  }
+  static async _mighty_summoner() {
+    summoner_script()
   }
   // Personal Health Centre
   static async _personal_health_centre() {

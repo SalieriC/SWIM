@@ -56,6 +56,19 @@ This returns the proper html div tag for the installed an active rules compendiu
 `swim.get_official_class()`  
 It currently supports the Savage Worlds Pathfinder, Deadlands, Sprawlrunners and SWADE Core modules in this priority order. This means that the divider will be used whichever is first in the aformentioned list if multiple are activated. So if you were to use Deadlands and SWADE Core in your world, the function would return the Deadlands class.  
 
+### Get Actor SFX
+Gets and returns all the SFX file paths from an actor. Will return the default ones if the paths are not found or labeled `NULL` (*case sensitive*). (There currently only is a default one for becoming shaken, thus the other will returned as `undefined`.)  
+`swim.get_actor_sfx(actor)`  
+- `actor` {object}: The actor on which to search the sfx file paths.  
+Returns the four sfx file paths. Best used like this:  
+`const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_SFX(actor)`  
+
+### Play SFX
+This just plays the sfx with the provided settings for everyone.  
+`swim.play_sfx(sfx, volume)`  
+- `sfx` {string}: The file path to the audio file.  
+- `volume` {number}: The volume level on which to play the audio between 0 and 1. Will use default settings of SWIM if undefined.  
+
 ## Feature Functions
 The following functions present the core features of SWIM. They are probably less useful for macro and module devs but presented here anyway in case you want to utilise them.  
 Note that all of them except the BR2 ones get the macro variables (see above) first, so they really only work on selected token(s). The BR2 ones need the BR2 variables passed to function.  
