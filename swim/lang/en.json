@@ -115,6 +115,8 @@
   "SWIM.injury-headScar": "Injury: Head (hideous scar)",
   "SWIM.injury-headBlinded": "Injury: Head (blinded)",
   "SWIM.injury-headBrainDamage": "Injury: Head (brain damage)",
+  "swim.injury-permanent": " (permanent)",
+  "swim.injury-combat": " (combat)",
   "SWIM.skill-athletics": "Athletics",
   "SWIM.skill-persuasion": "Persuasion"
 }
