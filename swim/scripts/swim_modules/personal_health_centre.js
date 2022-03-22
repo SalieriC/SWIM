@@ -50,7 +50,7 @@ export async function personal_health_centre_script() {
                 one: {
                     label: "Heal myself",
                     callback: async (_) => {
-                        healSelf(token)
+                        healSelf(token, speaker)
                     }
                 },
                 two: {
@@ -219,7 +219,7 @@ export async function heal_other_gm(data) {
     }
 }
 
-async function healSelf(token) {
+async function healSelf(token, speaker) {
     // Setting SFX
     let woundedSFX = game.settings.get(
         'swim', 'woundedSFX');
