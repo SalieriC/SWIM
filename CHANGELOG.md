@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Radiation Centre will now inform about Benny use.
 - Small update fix in shape changer that will hopefully update the combat.
 - Combat injuries were not properly applied in soak damage.
+- A bug that caused the PHC to break because of a faulty setting string.
 
 ## [0.15.0] - 2022-03-18
 ### Added  

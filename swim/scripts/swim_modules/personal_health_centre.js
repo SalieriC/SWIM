@@ -246,7 +246,7 @@ async function healSelf(token) {
     const fm = token.actor.data.data.fatigue.max;
     //Checking for Edges (and Special/Racial Abilities)
     let natHeal_time = game.settings.get(
-        'swim', 'natHeal_time');
+        'swim', 'natHeal_Time');
     const fastHealer = token.actor.data.items.find(function (item) {
         return ((item.name.toLowerCase() === game.i18n.localize("SWIM.edge-fastHealer").toLowerCase()) && item.type === "edge");
     });
