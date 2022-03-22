@@ -118,5 +118,7 @@
   "swim.injury-permanent": " (permanent)",
   "swim.injury-combat": " (combat)",
   "SWIM.skill-athletics": "Athletics",
-  "SWIM.skill-persuasion": "Persuasion"
+  "SWIM.skill-persuasion": "Persuasion",
+  "SWIM.edge-hardToKill": "Hard To Kill",
+  "SWIM.edge-harderToKill": "Harder To Kill"
 }
