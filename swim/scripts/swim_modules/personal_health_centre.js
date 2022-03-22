@@ -5,18 +5,221 @@
  ******************************************/
 export async function personal_health_centre_script() {
     const { speaker, _, __, token } = await swim.get_macro_variables()
+    const target = Array.from(game.user.targets)[0]
     if (!game.modules.get("healthEstimate")?.active) {
         ui.notifications.error("Please install and activate Health Estimate to use this macro.");
         return;
     }
     // Check if a token is selected.
-    if ((!token || canvas.tokens.controlled.length > 1)) {
-        ui.notifications.error("Please select a single token first.");
+    if (!token || canvas.tokens.controlled.length > 1 || game.user.targets.size > 1) {
+        ui.notifications.error("Please select or target a single token first.");
         return;
     }
-    // Checking for SWADE Spices & Flavours and setting up the Benny image.
-    let bennyImage = await swim.get_benny_image()
+    const officialClass = await swim.get_official_class()
 
+    if (game.user.targets.size === 1 && (token.id != target.id)) {
+        new Dialog({
+            title: "Heal other",
+            content: `${officialClass}
+             <h3>Heal someone else.</h3>
+             <p>You have targeted another token. Do you wish to heal that token?</p>
+             <p>If you wish to heal yourself instead, please remove the target.</p>
+             </div>`,
+            buttons: {
+                one: {
+                    label: "Heal Target",
+                    callback: async (_) => {
+                        healOther(token, target)
+                    }
+                },
+                two: {
+                    label: "Cancel",
+                }
+            }
+        }).render(true)
+    } else if (token && canvas.tokens.controlled.length === 1) {
+        // Heal Self
+        new Dialog({
+            title: "Heal self",
+            content: `${officialClass}
+             <h3>Heal yourself.</h3>
+             <p>You have selected one token and may have targeted the same. This will only allow you to heal a token you own.</p>
+             <p>If you wish to heal someone else instead, please target another token but select yourself.</p>
+             </div>`,
+            buttons: {
+                one: {
+                    label: "Heal myself",
+                    callback: async (_) => {
+                        healSelf(token)
+                    }
+                },
+                two: {
+                    label: "Cancel",
+                }
+            }
+        }).render(true)
+    }
+}
+
+async function healOther(token, target) {
+    // The non-GM part of the heal other functionality
+    const officialClass = await swim.get_official_class()
+    let data
+    const methodOptions = `<option value="heal">Heal Wound(s)</option><option value="relief">Remove Fatigue</option>`
+    new Dialog({
+        title: "Heal other",
+        content: `${officialClass}
+         <p>What was your result? Did you heal or remove fatigue</p>
+         <p>Note: If you had a Critical Failure on the healing or relief power you shouldn't be here. Only select Success or Raise if you used the power.</p>
+         <div class="form-group">
+                <label for="method">Method: </label>
+                <select id="method">${methodOptions}</select>
+            </div>
+         </div>`,
+        buttons: {
+            one: {
+                label: "Critical Failure",
+                callback: async (html) => {
+                    const method = html.find(`#method`)[0].value;
+                    data = {
+                        targetID: target.id,
+                        tokenID: token.id,
+                        rating: "critFail",
+                        method: method
+                    }
+                    warpgate.event.notify("SWIM.healOther", data)
+                }
+            },
+            two: {
+                label: "Failure",
+                callback: () => {
+                    ui.notifications.notify("There is nothing for you to do here.");
+                }
+            },
+            three: {
+                label: "Success",
+                callback: async (html) => {
+                    const method = html.find(`#method`)[0].value;
+                    data = {
+                        targetID: target.id,
+                        tokenID: token.id,
+                        rating: "success",
+                        method: method
+                    }
+                    warpgate.event.notify("SWIM.healOther", data)
+                }
+            },
+            four: {
+                label: "Raise",
+                callback: async (html) => {
+                    const method = html.find(`#method`)[0].value;
+                    data = {
+                        targetID: target.id,
+                        tokenID: token.id,
+                        rating: "raise",
+                        method: method
+                    }
+                    warpgate.event.notify("SWIM.healOther", data)
+                }
+            }
+        }
+    }).render(true)
+}
+
+export async function heal_other_gm(data) {
+    const targetID = data.targetID
+    const target = canvas.tokens.get(targetID)
+    const targetActor = target.actor
+    const targetWounds = targetActor.data.data.wounds.value
+    const targetWoundsMax = targetActor.data.data.wounds.max
+    const targetFatigue = targetActor.data.data.fatigue.value
+    const tokenID = data.tokenID
+    const token = canvas.tokens.get(tokenID)
+    const tokenActor = token.actor
+    const rating = data.rating
+    const method = data.method
+    const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(targetActor)
+    let amount
+    let chatContent
+
+    if (rating === "critFail") {
+        //Apply another wound or cancel
+        if (method === "relief") {
+            return
+        } else if (method === "heal") {
+            //Apply another Wound
+            if (targetWounds === targetWoundsMax) {
+                //Make INC!
+                await succ.toggle_status(targetActor, 'incapacitated', true)
+                await swim.play_sfx(deathSFX)
+                chatContent = `${token.name} tried to heal ${target.name} but failed miserably and incapacitated him in the process.`
+                await createChatMessage()
+            } else {
+                amount = 1
+                await apply()
+                chatContent = `${token.name} tried to heal ${target.name} but failed miserably and applied another wound.`
+                await createChatMessage()
+            }
+        }
+    } else if (rating === "success") {
+        //Heal one Wound or Fatigue
+        if (method === "relief") {
+            amount = 1
+            await apply()
+            chatContent = `${token.name} gave ${target.name} some relief by removing a Level of Fatigue and/or Shaken.`
+            await createChatMessage()
+            await succ.toggle_status(targetActor, 'shaken', false)
+        } else if (method === "heal") {
+            amount = 1
+            await apply()
+            chatContent = `${token.name} healed ${target.name} for one Wound.`
+            await createChatMessage()
+        }
+    } else if (rating === "raise") {
+        //Heal two Wounds or remove two Fatigue
+        if (method === "relief") {
+            //Heal two Fatigue and remove Shaken and Stunned
+            amount = 2
+            await apply()
+            chatContent = `${token.name} gave ${target.name} some relief by removing up to two Levels of Fatigue and/or Shaken and/or Stunned.`
+            await createChatMessage()
+            await succ.toggle_status(targetActor, 'shaken', false)
+            await succ.toggle_status(targetActor, 'stunned', false)
+            await succ.toggle_status(targetActor, 'vulnerable', false)
+        } else if (method === "heal") {
+            //Heal two Wounds
+            amount = 2
+            await apply()
+            chatContent = `${token.name} healed ${target.name} for two Wounds.`
+            await createChatMessage()
+        }
+    } else {
+        ui.notifications.error("An error occured. See the console for more details.");
+        console.error("The heal_other_gm() function wasn't passed the proper success rating. Please report this to the SWIM developer on the repository or directly to him on Discord: SalieriC#8263.")
+    }
+    async function apply() {
+        if (rating === "critFail" && method === "heal") {
+            targetActor.update({ "data.wounds.value": targetWounds+amount })
+        } else if (method === "relief") {
+            if (targetFatigue < amount) { amount = targetFatigue }
+            targetActor.update({ "data.fatigue.value": targetFatigue-amount })
+            await swim.play_sfx(unshakeSFX)
+        } else if (method === "heal") {
+            if (targetWounds < amount) {amount = targetWounds }
+            targetActor.update({ "data.wounds.value": targetWounds-amount })
+            await swim.play_sfx(soakSFX)
+        }
+    }
+    
+    async function createChatMessage() {
+        ChatMessage.create({
+            user: game.user.id,
+            content: chatContent,
+        });
+    }
+}
+
+async function healSelf(token) {
     // Setting SFX
     let woundedSFX = game.settings.get(
         'swim', 'woundedSFX');
@@ -706,4 +909,147 @@ export async function personal_health_centre_script() {
             setTimeout(resolve, ms);
         });
     }
+}
+
+async function applyInjury(actor, permanent) {
+    //roll on injury table:
+    let result = await game.tables.getName(`${injuryTable}`).draw();
+    let text = result.results[0].data.text;
+    const img = result.results[0].data.img;
+    let injuryData = {
+        changes: [],
+        flags: { swim: { 
+            isCombatInjury: false,
+            isPermanentInjury: permanent
+        } }
+    };
+    injuryData.icon = img;
+    if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-unmentionables"))) {
+        //unmentionables; create dummy AE without actual effect
+        injuryData.label = game.i18n.localize("SWIM.injury-unmentionables");
+    } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-arm"))) {
+        //arm; create a dummy AE without actual effect
+        injuryData.label = game.i18n.localize("SWIM.injury-armUnusable");
+    } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-leg"))) {
+        //leg, create AE with appropriate value depending on whether or not the character is slow already
+        const slow = token.actor.data.items.find(function (item) {
+            return ((item.name.toLowerCase() === game.i18n.localize("SWIM.hindrance-slow").toLowerCase()) ||
+                (item.name.toLowerCase() === game.i18n.localize("SWIM.hindrance-slow").toLowerCase())) &&
+                item.type === "hindrance";
+        });
+        if (!slow) {
+            //Actor isn't slow, create AE with minor slow effect = data.stats.speed.runningDie -2 && data.stats.speed.value -1
+            injuryData.label = game.i18n.localize("SWIM.injury-legSlow");
+            if (token.actor.data.data.stats.speed.runningDie === 4) {
+                //Running die is a d4 already, alter AE like so: data.stats.speed.runningDie.modifier -1 && data.stats.speed.value -1
+                injuryData.changes.push({
+                    key: 'data.stats.speed.runningDie.modifier',
+                    mode: 2,
+                    value: -1
+                }, {
+                    key: 'data.stats.speed.value',
+                    mode: 2,
+                    value: -1
+                }
+                )
+            } else {
+                //AE as above
+                injuryData.changes.push({
+                    key: 'data.stats.speed.runningDie',
+                    mode: 2,
+                    value: -2
+                }, {
+                    key: 'data.stats.speed.value',
+                    mode: 2,
+                    value: -1
+                })
+            }
+        } else if (slow.data.data.major === false) {
+            //Actor is minor slow, create AE with major slow effect = data.stats.speed.runningDie -2 && data.stats.speed.value -2 && @Skill{Athletics}[data.die.modifier] -2
+            injuryData.label = game.i18n.localize("SWIM.injury-legSlow");
+            if (token.actor.data.data.stats.speed.runningDie === 4) {
+                //Running die is a d4 already, alter AE like so: data.stats.speed.runningDie.modifier -1 && data.stats.speed.value -2
+                injuryData.changes.push({
+                    key: 'data.stats.speed.runningDie.modifier',
+                    mode: 2,
+                    value: -1
+                }, {
+                    key: 'data.stats.speed.value',
+                    mode: 2,
+                    value: -2
+                }, {
+                    key: `@Skill{${game.i18n.localize("SWIM.skill-athletics")}}[data.die.modifier]`,
+                    mode: 2,
+                    value: -2
+                })
+            } else {
+                //AE as above
+                injuryData.changes.push({
+                    key: 'data.stats.speed.runningDie',
+                    mode: 2,
+                    value: -2
+                }, {
+                    key: 'data.stats.speed.value',
+                    mode: 2,
+                    value: -2
+                }, {
+                    key: `@Skill{${game.i18n.localize("SWIM.skill-athletics")}}[data.die.modifier]`,
+                    mode: 2,
+                    value: -2
+                })
+            }
+            //Do nothing if actor is major slow already.
+        }
+    } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-guts"))) {
+        //evaluate all the guts:
+        if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-broken"))) {
+            //Guts broken, create AE with data.attributes.agility.die.sides -2
+            injuryData.label = game.i18n.localize("SWIM.injury-gutsBroken");
+            injuryData.changes.push({
+                key: 'data.attributes.agility.die.sides',
+                mode: 2,
+                value: -2
+            })
+        } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-battered"))) {
+            //Guts battered, create AE with data.attributes.vigor.die.sides -2
+            injuryData.label = game.i18n.localize("SWIM.injury-gutsBattered");
+            injuryData.changes.push({
+                key: 'data.attributes.vigor.die.sides',
+                mode: 2,
+                value: -2
+            })
+        } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-busted"))) {
+            //Guts busted, created AE with data.attributes.strength.die.sides -2
+            injuryData.label = game.i18n.localize("SWIM.injury-gutsBusted");
+            injuryData.changes.push({
+                key: 'data.attributes.strength.die.sides',
+                mode: 2,
+                value: -2
+            })
+        }
+    } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-head"))) {
+        //evaluate all the head results:
+        if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-hideousScar"))) {
+            //hideous scar, create AE with @Skill{Persuasion}[data.die.modifier] -2
+            injuryData.label = game.i18n.localize("SWIM.injury-headScar");
+            injuryData.changes.push({
+                key: `@Skill{${game.i18n.localize("SWIM.skill-persuasion")}}[data.die.modifier]`,
+                mode: 2,
+                value: -2
+            })
+        } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-blinded"))) {
+            //Blinded, create dummy AE without actual effect
+            injuryData.label = game.i18n.localize("SWIM.injury-headBlinded");
+        } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-brain"))) {
+            //Brain damage, create AE with data.attributes.smarts.die.sides -2
+            injuryData.label = game.i18n.localize("SWIM.injury-headBrainDamage");
+            injuryData.changes.push({
+                key: 'data.attributes.smarts.die.sides',
+                mode: 2,
+                value: -2
+            })
+        }
+    }
+    //Create the AE:
+    await actor.createEmbeddedDocuments('ActiveEffect', [injuryData]);
 }

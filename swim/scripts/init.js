@@ -4,6 +4,7 @@ import { swim_buttons } from './buttons.js'
 import { gm_relay } from './gm_relay.js'
 import { shape_changer_gm } from './swim_modules/shape_changer.js'
 import { summoner_gm } from './swim_modules/mighty-summoner.js'
+import { heal_other_gm } from './swim_modules/personal_health_centre.js'
 
 /*Hooks.on('getCardsDirectoryEntryContext', function (stuff) {
     console.log(stuff)
@@ -78,6 +79,7 @@ Hooks.on(`ready`, () => {
     // Warpgate Watches
     warpgate.event.watch("SWIM.shapeChanger", shape_changer_gm, swim.is_first_gm)
     warpgate.event.watch("SWIM.summoner", summoner_gm, swim.is_first_gm)
+    warpgate.event.watch("SWIM.healOther", heal_other_gm, swim.is_first_gm)
     warpgate.event.watch("SWIM.deleteActor", gm_relay.gmDeleteActor, swim.is_first_gm)
 });
 
