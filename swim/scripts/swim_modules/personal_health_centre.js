@@ -133,6 +133,8 @@ export async function heal_other_gm(data) {
     const targetWounds = targetActor.data.data.wounds.value
     const targetWoundsMax = targetActor.data.data.wounds.max
     const targetFatigue = targetActor.data.data.fatigue.value
+    const targetInc = await succ.check_status(targetActor, 'incapacitated')
+    const targetBleedOut = await succ.check_status(targetActor, 'bleeding-out')
     const tokenID = data.tokenID
     const token = canvas.tokens.get(tokenID)
     const tokenActor = token.actor
@@ -169,6 +171,16 @@ export async function heal_other_gm(data) {
             chatContent = `${token.name} gave ${target.name} some relief by removing a Level of Fatigue and/or Shaken.`
             await createChatMessage()
             await succ.toggle_status(targetActor, 'shaken', false)
+        } else if (method === "heal" && (targetInc === true || targetBleedOut === true || (targetInc === true && targetBleedOut === true))) {
+            // Remove Bleeding out/Incap before any wounds
+            if (targetBleedOut) {
+                await succ.toggle_status(targetActor, 'bleeding-out', false)
+                chatContent = `${token.name} stopped ${target.name}'s Bleeding Out.`
+            } else if (targetInc) {
+                await succ.toggle_status(targetActor, 'incapacitated', false)
+                chatContent = `${token.name} cured ${target.name}'s Incapacitation.`
+            }
+            await createChatMessage()
         } else if (method === "heal") {
             amount = 1
             await removeInjury(targetActor, amount)
@@ -188,12 +200,30 @@ export async function heal_other_gm(data) {
             await succ.toggle_status(targetActor, 'stunned', false)
             await succ.toggle_status(targetActor, 'vulnerable', false)
         } else if (method === "heal") {
-            //Heal two Wounds
             amount = 2
-            await removeInjury(targetActor, amount)
-            await apply()
-            chatContent = `${token.name} healed ${target.name} for two Wounds.`
-            await createChatMessage()
+            if (targetInc === true || targetBleedOut === true || (targetInc === true && targetBleedOut === true)) {
+                // Remove Bleeding out/Incap before any wounds
+                if (targetBleedOut) {
+                    await succ.toggle_status(targetActor, 'bleeding-out', false)
+                    amount = amount - 1
+                    chatContent = `${token.name} stopped ${target.name}'s Bleeding Out.`
+                } if (targetInc) {
+                    await succ.toggle_status(targetActor, 'incapacitated', false)
+                    amount = amount - 1
+                    chatContent += ` And cured ${target.name}'s Incapacitation.`
+                    if (amount <= 0) { await createChatMessage() }
+                }
+            } if (amount > 0) {
+                //Heal two Wounds
+                await removeInjury(targetActor, amount)
+                await apply()
+                if (amount === 2) {
+                    chatContent = `${token.name} healed ${target.name} for two Wounds.`
+                } else if (amount === 1) {
+                    chatContent += ` And healed ${target.name} for one Wound.`
+                }
+                await createChatMessage()
+            }
         }
     } else {
         ui.notifications.error("An error occured. See the console for more details.");
@@ -201,18 +231,18 @@ export async function heal_other_gm(data) {
     }
     async function apply() {
         if (rating === "critFail" && method === "heal") {
-            targetActor.update({ "data.wounds.value": targetWounds+amount })
+            targetActor.update({ "data.wounds.value": targetWounds + amount })
         } else if (method === "relief") {
             if (targetFatigue < amount) { amount = targetFatigue }
-            targetActor.update({ "data.fatigue.value": targetFatigue-amount })
+            targetActor.update({ "data.fatigue.value": targetFatigue - amount })
             await swim.play_sfx(unshakeSFX)
         } else if (method === "heal") {
-            if (targetWounds < amount) {amount = targetWounds }
-            targetActor.update({ "data.wounds.value": targetWounds-amount })
+            if (targetWounds < amount) { amount = targetWounds }
+            targetActor.update({ "data.wounds.value": targetWounds - amount })
             await swim.play_sfx(soakSFX)
         }
     }
-    
+
     async function createChatMessage() {
         ChatMessage.create({
             user: game.user.id,
