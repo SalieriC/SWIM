@@ -52,7 +52,7 @@ export async function soak_damage_script() {
     let elanBonus;
     let newWounds;
     let { ___, ____, totalBennies } = await swim.check_bennies(token)
-    const inc = await succ.check_status(targetActor, 'incapacitated')
+    const inc = await succ.check_status(token, 'incapacitated')
     if (inc === true) {
         incVigor()
     }
