@@ -53,9 +53,6 @@ export async function soak_damage_script() {
     let newWounds;
     let { ___, ____, totalBennies } = await swim.check_bennies(token)
     const inc = await succ.check_status(token, 'incapacitated')
-    if (inc === true) {
-        incVigor()
-    }
 
     // This is the main function that handles the Vigor roll.
     async function rollSoak() {
@@ -269,23 +266,26 @@ export async function soak_damage_script() {
         }
     }
 
-    // Main Dialogue
-    new Dialog({
-        title: 'Soaking Wounds',
-        content: `<form>
+    if (inc === true) { incVigor() }
+    else {
+        // Main Dialogue
+        new Dialog({
+            title: 'Soaking Wounds',
+            content: `<form>
          <p>You currently have <b>${wv}/${wm}</b> Wounds and <b>${totalBennies}</b> Bennies.</p>
      <div class="form-group">
          <label for="numWounds">Amount of Wounds: </label>
          <input id="numWounds" name="num" type="number" min="0" value="1"></input>
      </div>
      </form>`,
-        buttons: buttonsMain,
-        default: "one",
-        render: ([dialogContent]) => {
-            dialogContent.querySelector(`input[name="num"`).focus();
-            dialogContent.querySelector(`input[name="num"`).select();
-        },
-    }).render(true);
+            buttons: buttonsMain,
+            default: "one",
+            render: ([dialogContent]) => {
+                dialogContent.querySelector(`input[name="num"`).focus();
+                dialogContent.querySelector(`input[name="num"`).select();
+            },
+        }).render(true);
+    }
 
     // Dialog to be rendered if not all wounds were soaked in rollSoak.
     async function dialogReroll() {
@@ -519,7 +519,7 @@ export async function soak_damage_script() {
                 const edges = token.actor.data.items.filter(function (item) {
                     return edgeNames.includes(item.name.toLowerCase()) && (item.type === "edge" || item.type === "ability");
                 });
-                
+
                 rollWithEdge = r.total;
                 for (let edge of edges) {
                     rollWithEdge += 2;
