@@ -14,7 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added SFX player to the API.
 - Added default volume option to the settings.
 - Mighty Summoner macro that summons a creature selected by the user.  
-- Heal and remove fatigue for non-owned tokens/actors in the Personal Health Centre.
+- Soak Damage now allows for Incapacitation rolls and applies appropriate injuries.
+- Heal Wounds and remove fatigue for non-owned tokens/actors in the Personal Health Centre (PHC).
+- PHC now removes combat injuries and those from Incapacitation (unless they are permanent).
+- PHC now removes Bleeding Out and Incapacitation before Wounds.
+- PHC now removes the Health Estimate flag if Incapacitated is removed.
 ### Fixed
 - Radiation Centre will now inform about Benny use.
 - Small update fix in shape changer that will hopefully update the combat.
