@@ -1,6 +1,6 @@
 /*******************************************
  * Personal Health Centre
- * // v.5.0.0
+ * // v.6.0.0
  * By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
  ******************************************/
 export async function personal_health_centre_script() {
@@ -333,6 +333,8 @@ async function healSelf(token, speaker) {
     let buttons_main;
     let md_text
     const sendMessage = true
+    const inc = await succ.check_status(token, 'incapacitated')
+    const bleedOut = await succ.check_status(token, 'bleeding-out')
 
     // Adjusting buttons and Main Dialogue text
     if (fv < 1 && wv < 1) {
@@ -587,8 +589,8 @@ async function healSelf(token, speaker) {
 
     // This is the main function that handles the Vigor roll.
     async function rollNatHeal() {
-
-        const edgeNames = ['fast healer'];
+        
+        const edgeNames = [game.i18n.localize("SWIM.edge-fastHealer").toLowerCase()];
         const actorAlias = speaker.alias;
         // Roll Vigor and check for Fast Healer.
         const r = await token.actor.rollAttribute('vigor');
@@ -628,6 +630,8 @@ async function healSelf(token, speaker) {
             ChatMessage.create({ content: chatData });
         }
         else {
+            let roundedCopy = rounded
+            let conditionsText = ""
             if (rounded < 1) {
                 let { _, __, totalBennies } = await swim.check_bennies(token)
                 chatData += ` and is unable to heal any Wounds.`;
@@ -637,16 +641,35 @@ async function healSelf(token, speaker) {
                 else {
                     dialogReroll();
                 }
-            } else if ((rounded === 1 && numberWounds > 1) || (rounded === 2 && numberWounds > 2)) {
+            } else if (inc === true || bleedOut === true) {
+                if (roundedCopy > 2) { roundedCopy = 2 }
+                if (bleedOut === true && roundedCopy > 0) {
+                    roundedCopy = roundedCopy -1
+                    chatData += `, stabilises from Bleeding Out`
+                    conditionsText += " but you stabilise from Bleeding Out"
+                } if (inc === true && roundedCopy > 0) {
+                    roundedCopy = roundedCopy -1
+                    if (roundedCopy <= 0) { 
+                        chatData += ` and recovers from Incapacitation.`
+                        conditionsText += " and recover from Incapacitation"
+                    }
+                    else { 
+                        chatData += `, recovers from Incapacitation`
+                        conditionsText += " but you recover from Incapacitation"
+                    }
+                    conditionsText += "."
+                }
+                if (roundedCopy < 1) { removeWounds(); }
+            } if (roundedCopy === 1 && numberWounds > 1) {
                 let { _, __, totalBennies } = await swim.check_bennies(token)
-                chatData += ` and heals ${rounded} of his ${numberWounds} Wounds.`;
-                if (totalBennies < 1) {
+                chatData += ` and heals ${roundedCopy} of his ${numberWounds} Wounds.`;
+                if (totalBennies < 1 || (roundedCopy === 1 && rounded >= 2)) {
                     removeWounds();
                 }
                 else {
-                    dialogReroll();
+                    dialogReroll(roundedCopy, conditionsText);
                 };
-            } else if ((rounded > 1 && rounded >= numberWounds && numberWounds < 3) || (rounded === 1 && numberWounds === 1)) {
+            } else if ((roundedCopy > 1 && roundedCopy >= numberWounds) || (roundedCopy === 1 && numberWounds === 1)) {
                 chatData += ` and heals all of his Wounds.`;
                 removeWounds();
             }
@@ -657,13 +680,13 @@ async function healSelf(token, speaker) {
     }
 
     // Function containing the reroll Dialogue
-    async function dialogReroll() {
+    async function dialogReroll(roundedCopy, conditionsText) {
         let { _, __, totalBennies } = await swim.check_bennies(token)
         if (totalBennies > 0) {
             new Dialog({
                 title: 'Reroll',
                 content: `<form>
-                You've healed <b>${rounded} Wounds</b>.
+                You've healed <b>${roundedCopy} Wounds</b>${conditionsText}.
                 </br>Do you want to reroll your Natural Healing roll (you have <b>${totalBennies} Bennies</b> left)?
                 </form>`,
                 buttons: {
@@ -709,7 +732,17 @@ async function healSelf(token, speaker) {
 
     async function removeWounds() {
         if (genericHealWounds) {
-            if (genericHealWounds > wv) {
+            if (inc === true || bleedOut === true) {
+                if (bleedOut === true && genericHealWounds > 0) {
+                    await succ.toggle_status(token, 'bleeding-out', false)
+                    genericHealWounds = genericHealWounds -1
+                } if (inc === true && genericHealWounds > 0) {
+                    await succ.toggle_status(token, 'incapacitated', false)
+                    genericHealWounds = genericHealWounds -1
+                }
+                ui.notifications.notify(`Bleeding out and Incapacitation will be removed before any Wounds.`);
+            }
+            if (genericHealWounds > wv && genericHealWounds > 0) {
                 genericHealWounds = wv;
                 ui.notifications.error(`You can't heal more wounds than you have, healing all Wounds instead now...`);
             }
@@ -719,6 +752,17 @@ async function healSelf(token, speaker) {
             ui.notifications.notify(`${genericHealWounds} Wound(s) healed.`);
         }
         else {
+            if (inc === true || bleedOut === true) {
+                if (rounded >= 2) { rounded = 2 } //Can't heal more than 2 Wounds
+                if (bleedOut === true && rounded > 0) {
+                    await succ.toggle_status(token, 'bleeding-out', false)
+                    rounded = rounded -1
+                } if (inc === true && rounded > 0) {
+                    await succ.toggle_status(token, 'incapacitated', false)
+                    rounded = rounded -1
+                }
+                ui.notifications.notify(`Bleeding out and Incapacitation will be removed before any Wounds.`);
+            }
             if (rounded === 1) {
                 setWounds = wv - 1;
                 if (setWounds < 0) {
@@ -937,6 +981,7 @@ async function healSelf(token, speaker) {
             if (incapSFX) {
                 AudioHelper.play({ src: `${incapSFX}` }, true);
             }
+            await swim.soak_damage()
         }
     }
 
