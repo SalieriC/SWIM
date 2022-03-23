@@ -178,6 +178,7 @@ export async function heal_other_gm(data) {
                 chatContent = `${token.name} stopped ${target.name}'s Bleeding Out.`
             } else if (targetInc) {
                 await succ.toggle_status(targetActor, 'incapacitated', false)
+                if (target.data.flags?.healthEstimate?.dead) { target.document.unsetFlag("healthEstimate", "dead") }
                 chatContent = `${token.name} cured ${target.name}'s Incapacitation.`
             }
             await createChatMessage()
@@ -738,6 +739,7 @@ async function healSelf(token, speaker) {
                     genericHealWounds = genericHealWounds -1
                 } if (inc === true && genericHealWounds > 0) {
                     await succ.toggle_status(token, 'incapacitated', false)
+                    if (token.data.flags?.healthEstimate?.dead) { token.document.unsetFlag("healthEstimate", "dead") }
                     genericHealWounds = genericHealWounds -1
                 }
                 ui.notifications.notify(`Bleeding out and Incapacitation will be removed before any Wounds.`);
@@ -759,6 +761,7 @@ async function healSelf(token, speaker) {
                     rounded = rounded -1
                 } if (inc === true && rounded > 0) {
                     await succ.toggle_status(token, 'incapacitated', false)
+                    if (token.data.flags?.healthEstimate?.dead) { token.document.unsetFlag("healthEstimate", "dead") }
                     rounded = rounded -1
                 }
                 ui.notifications.notify(`Bleeding out and Incapacitation will be removed before any Wounds.`);
