@@ -171,6 +171,7 @@ export async function heal_other_gm(data) {
             await succ.toggle_status(targetActor, 'shaken', false)
         } else if (method === "heal") {
             amount = 1
+            await removeInjury(targetActor, amount)
             await apply()
             chatContent = `${token.name} healed ${target.name} for one Wound.`
             await createChatMessage()
@@ -189,6 +190,7 @@ export async function heal_other_gm(data) {
         } else if (method === "heal") {
             //Heal two Wounds
             amount = 2
+            await removeInjury(targetActor, amount)
             await apply()
             chatContent = `${token.name} healed ${target.name} for two Wounds.`
             await createChatMessage()
@@ -683,6 +685,7 @@ async function healSelf(token, speaker) {
             }
             setWounds = wv - genericHealWounds;
             await token.actor.update({ "data.wounds.value": setWounds });
+            await removeInjury(token.actor, wv)
             ui.notifications.notify(`${genericHealWounds} Wound(s) healed.`);
         }
         else {
@@ -692,6 +695,7 @@ async function healSelf(token, speaker) {
                     setWounds = 0;
                 }
                 await token.actor.update({ "data.wounds.value": setWounds });
+                await removeInjury(token.actor, rounded)
                 ui.notifications.notify("One Wound healed.");
             }
             if (rounded >= 2) {
@@ -700,6 +704,8 @@ async function healSelf(token, speaker) {
                     setWounds = 0
                 }
                 await token.actor.update({ "data.wounds.value": setWounds });
+                rounded = 2
+                await removeInjury(token.actor, rounded)
                 ui.notifications.notify("Two Wounds healed.");
             }
         }
@@ -911,145 +917,32 @@ async function healSelf(token, speaker) {
     }
 }
 
-async function applyInjury(actor, permanent) {
-    //roll on injury table:
-    let result = await game.tables.getName(`${injuryTable}`).draw();
-    let text = result.results[0].data.text;
-    const img = result.results[0].data.img;
-    let injuryData = {
-        changes: [],
-        flags: { swim: { 
-            isCombatInjury: false,
-            isPermanentInjury: permanent
-        } }
-    };
-    injuryData.icon = img;
-    if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-unmentionables"))) {
-        //unmentionables; create dummy AE without actual effect
-        injuryData.label = game.i18n.localize("SWIM.injury-unmentionables");
-    } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-arm"))) {
-        //arm; create a dummy AE without actual effect
-        injuryData.label = game.i18n.localize("SWIM.injury-armUnusable");
-    } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-leg"))) {
-        //leg, create AE with appropriate value depending on whether or not the character is slow already
-        const slow = token.actor.data.items.find(function (item) {
-            return ((item.name.toLowerCase() === game.i18n.localize("SWIM.hindrance-slow").toLowerCase()) ||
-                (item.name.toLowerCase() === game.i18n.localize("SWIM.hindrance-slow").toLowerCase())) &&
-                item.type === "hindrance";
-        });
-        if (!slow) {
-            //Actor isn't slow, create AE with minor slow effect = data.stats.speed.runningDie -2 && data.stats.speed.value -1
-            injuryData.label = game.i18n.localize("SWIM.injury-legSlow");
-            if (token.actor.data.data.stats.speed.runningDie === 4) {
-                //Running die is a d4 already, alter AE like so: data.stats.speed.runningDie.modifier -1 && data.stats.speed.value -1
-                injuryData.changes.push({
-                    key: 'data.stats.speed.runningDie.modifier',
-                    mode: 2,
-                    value: -1
-                }, {
-                    key: 'data.stats.speed.value',
-                    mode: 2,
-                    value: -1
-                }
-                )
-            } else {
-                //AE as above
-                injuryData.changes.push({
-                    key: 'data.stats.speed.runningDie',
-                    mode: 2,
-                    value: -2
-                }, {
-                    key: 'data.stats.speed.value',
-                    mode: 2,
-                    value: -1
-                })
-            }
-        } else if (slow.data.data.major === false) {
-            //Actor is minor slow, create AE with major slow effect = data.stats.speed.runningDie -2 && data.stats.speed.value -2 && @Skill{Athletics}[data.die.modifier] -2
-            injuryData.label = game.i18n.localize("SWIM.injury-legSlow");
-            if (token.actor.data.data.stats.speed.runningDie === 4) {
-                //Running die is a d4 already, alter AE like so: data.stats.speed.runningDie.modifier -1 && data.stats.speed.value -2
-                injuryData.changes.push({
-                    key: 'data.stats.speed.runningDie.modifier',
-                    mode: 2,
-                    value: -1
-                }, {
-                    key: 'data.stats.speed.value',
-                    mode: 2,
-                    value: -2
-                }, {
-                    key: `@Skill{${game.i18n.localize("SWIM.skill-athletics")}}[data.die.modifier]`,
-                    mode: 2,
-                    value: -2
-                })
-            } else {
-                //AE as above
-                injuryData.changes.push({
-                    key: 'data.stats.speed.runningDie',
-                    mode: 2,
-                    value: -2
-                }, {
-                    key: 'data.stats.speed.value',
-                    mode: 2,
-                    value: -2
-                }, {
-                    key: `@Skill{${game.i18n.localize("SWIM.skill-athletics")}}[data.die.modifier]`,
-                    mode: 2,
-                    value: -2
-                })
-            }
-            //Do nothing if actor is major slow already.
-        }
-    } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-guts"))) {
-        //evaluate all the guts:
-        if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-broken"))) {
-            //Guts broken, create AE with data.attributes.agility.die.sides -2
-            injuryData.label = game.i18n.localize("SWIM.injury-gutsBroken");
-            injuryData.changes.push({
-                key: 'data.attributes.agility.die.sides',
-                mode: 2,
-                value: -2
-            })
-        } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-battered"))) {
-            //Guts battered, create AE with data.attributes.vigor.die.sides -2
-            injuryData.label = game.i18n.localize("SWIM.injury-gutsBattered");
-            injuryData.changes.push({
-                key: 'data.attributes.vigor.die.sides',
-                mode: 2,
-                value: -2
-            })
-        } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-busted"))) {
-            //Guts busted, created AE with data.attributes.strength.die.sides -2
-            injuryData.label = game.i18n.localize("SWIM.injury-gutsBusted");
-            injuryData.changes.push({
-                key: 'data.attributes.strength.die.sides',
-                mode: 2,
-                value: -2
-            })
-        }
-    } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-head"))) {
-        //evaluate all the head results:
-        if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-hideousScar"))) {
-            //hideous scar, create AE with @Skill{Persuasion}[data.die.modifier] -2
-            injuryData.label = game.i18n.localize("SWIM.injury-headScar");
-            injuryData.changes.push({
-                key: `@Skill{${game.i18n.localize("SWIM.skill-persuasion")}}[data.die.modifier]`,
-                mode: 2,
-                value: -2
-            })
-        } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-blinded"))) {
-            //Blinded, create dummy AE without actual effect
-            injuryData.label = game.i18n.localize("SWIM.injury-headBlinded");
-        } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-brain"))) {
-            //Brain damage, create AE with data.attributes.smarts.die.sides -2
-            injuryData.label = game.i18n.localize("SWIM.injury-headBrainDamage");
-            injuryData.changes.push({
-                key: 'data.attributes.smarts.die.sides',
-                mode: 2,
-                value: -2
-            })
+async function removeInjury(actor, healedWounds) {
+    let activeEffects = actor.data.effects
+    let injuries = []
+    let aeIDsToRemove = []
+    for (let effect of activeEffects) {
+        if (effect.data.flags?.swim) {
+            injuries.push(effect)
         }
     }
-    //Create the AE:
-    await actor.createEmbeddedDocuments('ActiveEffect', [injuryData]);
+    injuries.reverse() //Reverse to remove combat injuries in proper order, from most recent to least recent.
+    for (let injury of injuries) {
+        let combat = injury.data.flags.swim.isCombatInjury
+        let permanent = injury.data.flags.swim.isPermanent
+        if (permanent === false && combat === true) {
+            //remove if wound is healed
+            if (healedWounds > 0) {
+                aeIDsToRemove.push(injury.id)
+                healedWounds = healedWounds - 1
+            }
+        } else if (permanent === false && combat === false) {
+            // Is a temorary injury from Inc.
+            if (actor.data.data.wounds.value === 0) {
+                // Remove the injury if all Wounds are healed.
+                aeIDsToRemove.push(injury.id)
+            }
+        }
+    }
+    await actor.deleteEmbeddedDocuments("ActiveEffect", aeIDsToRemove)
 }
