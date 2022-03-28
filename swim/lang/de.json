@@ -116,5 +116,7 @@
   "SWIM.injury-headBlinded": "Verletzung: Kopf (Geblendet)",
   "SWIM.injury-headBrainDamage": "Verletzung: Kopf (Gehirnschaden)",
   "SWIM.skill-athletics": "Athletik",
-  "SWIM.skill-persuasion": "Überreden"
+  "SWIM.skill-persuasion": "Überreden",
+  "SWIM.edge-hardToKill": "Hart im Nehmen",
+  "SWIM.edge-harderToKill": "Härter im Nehmen"
 }
