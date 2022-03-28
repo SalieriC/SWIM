@@ -553,7 +553,7 @@ export async function soak_damage_script() {
                     ChatMessage.create({ content: chatData });
                 } else if (harderToKillRoll.total === 2) {
                     ui.notifications.notify(`You've rolled a Critical Failure but made your ${harderToKill.name} roll! You will survive <i>somehow</i>...`);
-                    let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure, but made the ${harderToKill.name} roll, is Incapacitated and survives <i>somehow</i>. </span>`;
+                    let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure, but made the ${harderToKill.name} roll, is Incapacitated but survives, <i>somehow</i>. </span>`;
                     ChatMessage.create({ content: chatData });
                 }
             } else if (critFail === true) {
