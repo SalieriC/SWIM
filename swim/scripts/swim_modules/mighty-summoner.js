@@ -36,7 +36,7 @@
 
     // Check if a token is selected.
     if ((!token || canvas.tokens.controlled.length > 1)) {
-        ui.notifications.error("Please select a single token first.");
+        ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"));
         return;
     }
     const actor = token.actor;

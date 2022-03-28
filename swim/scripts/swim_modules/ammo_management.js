@@ -24,7 +24,7 @@ export async function ammo_management_script() {
     }
 
     async function weaponDialog() {
-        if (!token) return ui.notifications.error("Please select a token first");
+        if (!token) return ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"));
 
         const actor = token.actor;
         const weapons = actor.items.filter(i =>

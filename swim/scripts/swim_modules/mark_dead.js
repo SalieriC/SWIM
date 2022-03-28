@@ -15,7 +15,7 @@ export async function mark_dead_script() {
 
     //Set up
     if (canvas.tokens.controlled.length === 0) {
-        ui.notifications.error("Please select a token first");
+        ui.notifications.error(game.i18n.localize("SWIM.notification-selectOneOrMoreTokens"));
         return;
     }
     let incapSFX = game.settings.get(

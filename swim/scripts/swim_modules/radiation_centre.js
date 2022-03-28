@@ -8,7 +8,7 @@ export async function radiation_centre_script() {
     const { speaker, _, __, token } = await swim.get_macro_variables()
     // Checking if at least one token is defined.
     if (!token || canvas.tokens.controlled.length > 1) {
-        ui.notifications.error("Please select a token first");
+        ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"));
         return;
     }
     if (!succ.get_condition('irradiated')) {

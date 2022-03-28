@@ -9,7 +9,7 @@ export async function unstun_script() {
 
     // No Token is Selected
     if (!token || canvas.tokens.controlled.length > 1) {
-        ui.notifications.error("Please select a single token first.");
+        ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"));
         return;
     }
 

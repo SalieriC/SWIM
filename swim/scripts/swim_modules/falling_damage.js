@@ -10,7 +10,7 @@ export async function falling_damage_script() {
     //use deduplication to get rid of those which are both, selected and targeted:
     let tokens = [...new Set([...canvas.tokens.controlled, ...game.user.targets])];
     if (tokens.length === 0) {
-        return ui.notifications.error("Select or target one or more tokens first.");
+        return ui.notifications.error(game.i18n.localize("SWIM.notification-selectOrTargetOneOrMoreTokens"));
     }
     const icon = "modules/swim/assets/icons/macros/falling_sbed_game-icons.net.png"
     let messageContent = `<div class="swade-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> Damage from Falling</h2>`;

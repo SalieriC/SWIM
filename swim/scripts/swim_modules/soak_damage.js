@@ -12,7 +12,7 @@ export async function soak_damage_script() {
     }
     // Checking if at least one token is defined.
     if (!token || canvas.tokens.controlled.length > 1) {
-        ui.notifications.error("Please select a single token first");
+        ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"));
         return;
     }
     // Checking for System Benny image.

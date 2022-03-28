@@ -22,7 +22,7 @@
 export async function shape_changer_script() {
     const { speaker, _, __, token } = await swim.get_macro_variables()
     if (!token || canvas.tokens.controlled.length > 1) {
-        ui.notifications.error("Please select a single token first.");
+        ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"));
         return;
     }
     const actor = token.actor;
