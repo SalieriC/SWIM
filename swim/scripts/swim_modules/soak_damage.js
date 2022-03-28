@@ -52,6 +52,7 @@ export async function soak_damage_script() {
     let elanBonus;
     let newWounds;
     let { ___, ____, totalBennies } = await swim.check_bennies(token)
+    const inc = await succ.check_status(token, 'incapacitated')
 
     // This is the main function that handles the Vigor roll.
     async function rollSoak() {
@@ -152,6 +153,7 @@ export async function soak_damage_script() {
                     callback: async (html) => {
                         let applWounds = Number(html.find("#applWounds")[0].value);
                         let setWounds = wv + applWounds;
+                        let inc = false
                         if (setWounds <= wm && setWounds > 0) {
                             token.actor.update({ "data.wounds.value": setWounds });
                             await succ.apply_status(token, 'shaken', true)
@@ -164,10 +166,16 @@ export async function soak_damage_script() {
                         }
                         else {
                             token.actor.update({ "data.wounds.value": wm });
-                            swim.mark_dead()
+                            await swim.mark_dead()
+                            if (token.actor.data.type === "character") {
+                                await incVigor()
+                            }
+                            inc = true
                         }
-                        if (setWounds > 0 && grit === true && (token.actor.data.type === "character" || token.actor.data.type === "npc" && gritNPC === true)) {
-                            await apply_injury();
+                        if ((setWounds > 0 && grit === true && (token.actor.data.type === "character" || token.actor.data.type === "npc" && gritNPC === true)) && inc === false) {
+                            let permanent = false
+                            let combat = true
+                            await apply_injury(permanent, combat);
                         }
                     }
                 }
@@ -258,23 +266,26 @@ export async function soak_damage_script() {
         }
     }
 
-    // Main Dialogue
-    new Dialog({
-        title: 'Soaking Wounds',
-        content: `<form>
+    if (inc === true) { incVigor() }
+    else {
+        // Main Dialogue
+        new Dialog({
+            title: 'Soaking Wounds',
+            content: `<form>
          <p>You currently have <b>${wv}/${wm}</b> Wounds and <b>${totalBennies}</b> Bennies.</p>
      <div class="form-group">
          <label for="numWounds">Amount of Wounds: </label>
          <input id="numWounds" name="num" type="number" min="0" value="1"></input>
      </div>
      </form>`,
-        buttons: buttonsMain,
-        default: "one",
-        render: ([dialogContent]) => {
-            dialogContent.querySelector(`input[name="num"`).focus();
-            dialogContent.querySelector(`input[name="num"`).select();
-        },
-    }).render(true);
+            buttons: buttonsMain,
+            default: "one",
+            render: ([dialogContent]) => {
+                dialogContent.querySelector(`input[name="num"`).focus();
+                dialogContent.querySelector(`input[name="num"`).select();
+            },
+        }).render(true);
+    }
 
     // Dialog to be rendered if not all wounds were soaked in rollSoak.
     async function dialogReroll() {
@@ -315,14 +326,19 @@ export async function soak_damage_script() {
         }
     }
 
-    async function apply_injury() {
+    async function apply_injury(permanent, combat) {
         //roll on injury table:
         let result = await game.tables.getName(`${injuryTable}`).draw();
         let text = result.results[0].data.text;
         const img = result.results[0].data.img;
         let injuryData = {
             changes: [],
-            flags: { swim: { isCombatInjury: true } }
+            flags: {
+                swim: {
+                    isCombatInjury: combat,
+                    isPermanent: permanent
+                }
+            }
         };
         injuryData.icon = img;
         if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-unmentionables"))) {
@@ -451,7 +467,154 @@ export async function soak_damage_script() {
                 })
             }
         }
+        if (permanent === false && combat === true) {
+            injuryData.label += `${game.i18n.localize("swim.injury-combat")}`;
+        } else if (permanent === true && combat === false) {
+            injuryData.label += `${game.i18n.localize("swim.injury-permanent")}`;
+        }
         //Create the AE:
         await actor.createEmbeddedDocuments('ActiveEffect', [injuryData]);
+    }
+
+    async function incVigor() {
+        let permanent = false
+        let combat = false
+        elanBonus = undefined
+        let bestResult = -1
+        let rerollDeclined = false
+        let rollWithEdge
+        let chatData
+        let critFail
+        const hardToKill = token.actor.data.items.find(function (item) {
+            return item.name.toLowerCase() === game.i18n.localize("SWIM.edge-hardToKill").toLowerCase() && item.type === "edge";
+        });
+        const harderToKill = token.actor.data.items.find(function (item) {
+            return item.name.toLowerCase() === game.i18n.localize("SWIM.edge-harderToKill").toLowerCase() && item.type === "edge";
+        });
+
+        new Dialog({
+            title: 'Incapacitation Roll',
+            content: `<form>
+             <p>You became incapacitated by damage.</p>
+             <p>You need to make an immediate Vigor roll. On a Critical Failure you will perish.</p>
+         </form>`,
+            buttons: {
+                one: {
+                    label: "Roll Vigor",
+                    callback: async (_) => {
+                        rollVigor()
+                    }
+                }
+            },
+            default: "one",
+        }).render(true);
+
+        async function rollVigor() {
+            const edgeNames = [];
+            const actorAlias = speaker.alias;
+            let edgeText = "";
+            if (rerollDeclined === false) {
+                // Roll Vigor and check for Iron Jaw.
+                const r = await token.actor.rollAttribute('vigor');
+                const edges = token.actor.data.items.filter(function (item) {
+                    return edgeNames.includes(item.name.toLowerCase()) && (item.type === "edge" || item.type === "ability");
+                });
+
+                rollWithEdge = r.total;
+                for (let edge of edges) {
+                    rollWithEdge += 2;
+                    edgeText += `<br/><i>+ 2 <img src="${edge.img}" alt="" width="15" height="15" style="border:0" />${edge.name}</i>`;
+                }
+
+                if (hardToKill) {
+                    let hardToKillBonus = token.actor.data.data.wounds.value - token.actor.data.data.wounds.ignored
+                    rollWithEdge += hardToKillBonus
+                    edgeText = edgeText + `<br/><i>+ ${hardToKillBonus} <img src="${hardToKill.img}" alt="" width="15" height="15" style="border:0" />${hardToKill.name}</i>`;
+                }
+
+                // Apply +2 if Elan is present and if it is a reroll.
+                if (typeof elanBonus === "number") {
+                    rollWithEdge += 2;
+                    edgeText = edgeText + `<br/><i>+ Elan</i>.`;
+                }
+
+                // Roll Vigor
+                chatData = `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge} </span>`;
+                // Checking for a Critical Failure.
+                let wildCard = true;
+                if (token.actor.data.data.wildcard === false && token.actor.type === "npc") { wildCard = false }
+                critFail = await swim.critFail_check(wildCard, r)
+            }
+            if (critFail === true) {
+                ui.notifications.notify("You've rolled a Critical Failure! You will die now...");
+                let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure and perishes! </span>`;
+                ChatMessage.create({ content: chatData });
+            } else {
+                let { _, __, totalBennies } = await swim.check_bennies(token)
+                if (bestResult <= rollWithEdge) { bestResult = rollWithEdge }
+                else if (bestResult > rollWithEdge) { rollWithEdge = bestResult }
+                if ((totalBennies > 0 && rollWithEdge <= 8) && rerollDeclined === false) {
+                    //Use Benny
+                    if (rollWithEdge < 4) {
+                        //Permanent injury and Bleeding Out
+                        let dialogContent = `<p>You've rolled a ${rollWithEdge} as your best result.</p><p>You would receive a permanent Injury and become Bleeding out.</p><p>You have <b>${totalBennies} Bennies</b> left. Do you want to spend one to reroll?</p>`
+                        incReroll(dialogContent)
+                    } else if (rollWithEdge >= 4 && rollWithEdge <= 7) {
+                        //Injury until all wounds are healed
+                        let dialogContent = `<p>You've rolled a ${rollWithEdge} as your best result.</p><p>You would receive an Injury that sticks until all wounds are healed.</p><p>You have <b>${totalBennies} Bennies</b> left. Do you want to spend one to reroll?</p>`
+                        incReroll(dialogContent)
+                    }
+                } else if (rollWithEdge < 4) {
+                    //Permanent injury and Bleeding Out
+                    permanent = true
+                    await apply_injury(permanent, combat)
+                    await succ.apply_status(token, 'bleeding-out', true)
+                    chatData += `<p>${actorAlias} receives a permanent injury and is Bleeding Out.<p>`
+                } else if (rollWithEdge >= 4 && rollWithEdge <= 7) {
+                    //Injury until all wounds are healed
+                    permanent = false
+                    await apply_injury(permanent, combat)
+                    chatData += `<p>${actorAlias} receives a temporary injury that is removed when all wounds are healed.</p>`
+                } else if (rollWithEdge >= 8) {
+                    //Injury until all wounds are helaed or after 24 hours
+                    permanent = false
+                    await apply_injury(permanent, combat)
+                    chatData += `<p>${actorAlias} receives a temporary injury that is removed when all wounds are healed or after 24 hours, whichever comes first.</p>`
+                }
+                chatData += ` ${edgeText}`;
+            }
+            ChatMessage.create({ content: chatData });
+        }
+
+        async function incReroll(dialog_content) {
+            dialog_content += `<p>Unless you roll a Critical Failure, your best result will be kept.</p>`
+            if (elan) {
+                elanBonus = 2
+                dialog_content += `<p>You will get your Elan bonus on a reroll.</p>`
+            }
+            new Dialog({
+                title: 'Incapacitation Reroll',
+                content: dialog_content,
+                buttons: {
+                    one: {
+                        label: "Roll Vigor",
+                        callback: async (_) => {
+                            rerollDeclined = false
+                            rollVigor()
+                            let sendMessage = true
+                            swim.spend_benny(token, sendMessage)
+                        }
+                    },
+                    two: {
+                        label: "Apply result",
+                        callback: async (_) => {
+                            rerollDeclined = true
+                            rollVigor()
+                        }
+                    }
+                },
+                default: "one",
+            }).render(true);
+        }
     }
 }

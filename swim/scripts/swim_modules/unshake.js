@@ -1,6 +1,6 @@
 /*******************************************
  * Unshake macro for SWD
- * version 4.0.1
+ * version 4.0.2
  * Original code (an eternity ago) by Shteff, altered by Forien, edited and maintained by SalieriC#8263.
  ******************************************/
 
@@ -35,7 +35,7 @@ export async function unshake_swd_script() {
             game.i18n.localize("SWIM.ability-amorphous-theAfter").toLowerCase()
         ];
         // Making all lower case:
-        edgeNames = edgeAndAbilityNames.map(name => name.toLowerCase())
+        edgeNames = edgeNames.map(name => name.toLowerCase())
         const undeadAE = token.actor.effects.find(ae => ae.data.label.toLowerCase() === game.i18n.localize("SWIM.ability-undead").toLowerCase());
         if (undeadAE && undeadAE.data.disabled === false) {
             edgeNames.push('undead')
@@ -164,7 +164,7 @@ export async function unshake_swd_script() {
 
 /*******************************************
  * Unshake macro for SWADE
- * version 4.0.1
+ * version 4.0.2
  * Original code (an eternity ago) by Shteff, altered by Forien, edited and maintained by SalieriC#8263.
  ******************************************/
 
@@ -200,7 +200,7 @@ export async function unshake_swade_script() {
             game.i18n.localize("SWIM.ability-amorphous-theAfter").toLowerCase()
         ];
         // Making all lower case:
-        edgeNames = edgeAndAbilityNames.map(name => name.toLowerCase())
+        edgeNames = edgeNames.map(name => name.toLowerCase())
         const undeadAE = token.actor.effects.find(ae => ae.data.label.toLowerCase() === game.i18n.localize("SWIM.ability-undead").toLowerCase());
         if (undeadAE && undeadAE.data.disabled === false) {
             edgeNames.push('undead')

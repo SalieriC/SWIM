@@ -213,9 +213,9 @@ export class api {
       soakSFX = sfxSequence[3]
     }
     if (!shakenSFX || shakenSFX === "NULL") { shakenSFX = game.settings.get('swim', 'shakenSFX') }
-    if (!deathSFX || deathSFX === "NULL") { deathSFX = undefined }
-    if (!unshakeSFX || unshakeSFX === "NULL") { unshakeSFX = undefined }
-    if (!soakSFX || soakSFX === "NULL") { soakSFX = undefined }
+    if (!deathSFX || deathSFX === "NULL") { deathSFX = game.settings.get('swim', 'incapSFX') }
+    if (!unshakeSFX || unshakeSFX === "NULL") { unshakeSFX = game.settings.get('swim', 'looseFatigueSFX'); }
+    if (!soakSFX || soakSFX === "NULL") { soakSFX = game.settings.get('swim', 'looseFatigueSFX'); }
     return { shakenSFX, deathSFX, unshakeSFX, soakSFX }
   }
   // Play SFX

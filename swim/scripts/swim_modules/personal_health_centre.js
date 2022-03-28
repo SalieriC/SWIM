@@ -1,22 +1,258 @@
 /*******************************************
  * Personal Health Centre
- * // v.4.0.1
+ * // v.6.0.0
  * By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
  ******************************************/
 export async function personal_health_centre_script() {
     const { speaker, _, __, token } = await swim.get_macro_variables()
+    const target = Array.from(game.user.targets)[0]
     if (!game.modules.get("healthEstimate")?.active) {
         ui.notifications.error("Please install and activate Health Estimate to use this macro.");
         return;
     }
     // Check if a token is selected.
-    if ((!token || canvas.tokens.controlled.length > 1)) {
-        ui.notifications.error("Please select a single token first.");
+    if (!token || canvas.tokens.controlled.length > 1 || game.user.targets.size > 1) {
+        ui.notifications.error("Please select or target a single token first.");
         return;
     }
-    // Checking for SWADE Spices & Flavours and setting up the Benny image.
-    let bennyImage = await swim.get_benny_image()
+    const officialClass = await swim.get_official_class()
 
+    if (game.user.targets.size === 1 && (token.id != target.id)) {
+        new Dialog({
+            title: "Heal other",
+            content: `${officialClass}
+             <h3>Heal someone else.</h3>
+             <p>You have targeted another token. Do you wish to heal that token?</p>
+             <p>If you wish to heal yourself instead, please remove the target.</p>
+             </div>`,
+            buttons: {
+                one: {
+                    label: "Heal Target",
+                    callback: async (_) => {
+                        healOther(token, target)
+                    }
+                },
+                two: {
+                    label: "Cancel",
+                }
+            }
+        }).render(true)
+    } else if (token && canvas.tokens.controlled.length === 1) {
+        // Heal Self
+        new Dialog({
+            title: "Heal self",
+            content: `${officialClass}
+             <h3>Heal yourself.</h3>
+             <p>You have selected one token and may have targeted the same. This will only allow you to heal a token you own.</p>
+             <p>If you wish to heal someone else instead, please target another token but select yourself.</p>
+             </div>`,
+            buttons: {
+                one: {
+                    label: "Heal myself",
+                    callback: async (_) => {
+                        healSelf(token, speaker)
+                    }
+                },
+                two: {
+                    label: "Cancel",
+                }
+            }
+        }).render(true)
+    }
+}
+
+async function healOther(token, target) {
+    // The non-GM part of the heal other functionality
+    const officialClass = await swim.get_official_class()
+    let data
+    const methodOptions = `<option value="heal">Heal Wound(s)</option><option value="relief">Remove Fatigue</option>`
+    new Dialog({
+        title: "Heal other",
+        content: `${officialClass}
+         <p>What was your result? Did you heal or remove fatigue</p>
+         <p>Note: If you had a Critical Failure on the healing or relief power you shouldn't be here. Only select Success or Raise if you used the power.</p>
+         <div class="form-group">
+                <label for="method">Method: </label>
+                <select id="method">${methodOptions}</select>
+            </div>
+         </div>`,
+        buttons: {
+            one: {
+                label: "Critical Failure",
+                callback: async (html) => {
+                    const method = html.find(`#method`)[0].value;
+                    data = {
+                        targetID: target.id,
+                        tokenID: token.id,
+                        rating: "critFail",
+                        method: method
+                    }
+                    warpgate.event.notify("SWIM.healOther", data)
+                }
+            },
+            two: {
+                label: "Failure",
+                callback: () => {
+                    ui.notifications.notify("There is nothing for you to do here.");
+                }
+            },
+            three: {
+                label: "Success",
+                callback: async (html) => {
+                    const method = html.find(`#method`)[0].value;
+                    data = {
+                        targetID: target.id,
+                        tokenID: token.id,
+                        rating: "success",
+                        method: method
+                    }
+                    warpgate.event.notify("SWIM.healOther", data)
+                }
+            },
+            four: {
+                label: "Raise",
+                callback: async (html) => {
+                    const method = html.find(`#method`)[0].value;
+                    data = {
+                        targetID: target.id,
+                        tokenID: token.id,
+                        rating: "raise",
+                        method: method
+                    }
+                    warpgate.event.notify("SWIM.healOther", data)
+                }
+            }
+        }
+    }).render(true)
+}
+
+export async function heal_other_gm(data) {
+    const targetID = data.targetID
+    const target = canvas.tokens.get(targetID)
+    const targetActor = target.actor
+    const targetWounds = targetActor.data.data.wounds.value
+    const targetWoundsMax = targetActor.data.data.wounds.max
+    const targetFatigue = targetActor.data.data.fatigue.value
+    const targetInc = await succ.check_status(targetActor, 'incapacitated')
+    const targetBleedOut = await succ.check_status(targetActor, 'bleeding-out')
+    const tokenID = data.tokenID
+    const token = canvas.tokens.get(tokenID)
+    const tokenActor = token.actor
+    const rating = data.rating
+    const method = data.method
+    const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(targetActor)
+    let amount
+    let chatContent
+
+    if (rating === "critFail") {
+        //Apply another wound or cancel
+        if (method === "relief") {
+            return
+        } else if (method === "heal") {
+            //Apply another Wound
+            if (targetWounds === targetWoundsMax) {
+                //Make INC!
+                await succ.toggle_status(targetActor, 'incapacitated', true)
+                await swim.play_sfx(deathSFX)
+                chatContent = `${token.name} tried to heal ${target.name} but failed miserably and incapacitated him in the process.`
+                await createChatMessage()
+            } else {
+                amount = 1
+                await apply()
+                chatContent = `${token.name} tried to heal ${target.name} but failed miserably and applied another wound.`
+                await createChatMessage()
+            }
+        }
+    } else if (rating === "success") {
+        //Heal one Wound or Fatigue
+        if (method === "relief") {
+            amount = 1
+            await apply()
+            chatContent = `${token.name} gave ${target.name} some relief by removing a Level of Fatigue and/or Shaken.`
+            await createChatMessage()
+            await succ.toggle_status(targetActor, 'shaken', false)
+        } else if (method === "heal" && (targetInc === true || targetBleedOut === true || (targetInc === true && targetBleedOut === true))) {
+            // Remove Bleeding out/Incap before any wounds
+            if (targetBleedOut) {
+                await succ.toggle_status(targetActor, 'bleeding-out', false)
+                chatContent = `${token.name} stopped ${target.name}'s Bleeding Out.`
+            } else if (targetInc) {
+                await succ.toggle_status(targetActor, 'incapacitated', false)
+                if (target.data.flags?.healthEstimate?.dead) { target.document.unsetFlag("healthEstimate", "dead") }
+                chatContent = `${token.name} cured ${target.name}'s Incapacitation.`
+            }
+            await createChatMessage()
+        } else if (method === "heal") {
+            amount = 1
+            await removeInjury(targetActor, amount)
+            await apply()
+            chatContent = `${token.name} healed ${target.name} for one Wound.`
+            await createChatMessage()
+        }
+    } else if (rating === "raise") {
+        //Heal two Wounds or remove two Fatigue
+        if (method === "relief") {
+            //Heal two Fatigue and remove Shaken and Stunned
+            amount = 2
+            await apply()
+            chatContent = `${token.name} gave ${target.name} some relief by removing up to two Levels of Fatigue and/or Shaken and/or Stunned.`
+            await createChatMessage()
+            await succ.toggle_status(targetActor, 'shaken', false)
+            await succ.toggle_status(targetActor, 'stunned', false)
+            await succ.toggle_status(targetActor, 'vulnerable', false)
+        } else if (method === "heal") {
+            amount = 2
+            if (targetInc === true || targetBleedOut === true || (targetInc === true && targetBleedOut === true)) {
+                // Remove Bleeding out/Incap before any wounds
+                if (targetBleedOut) {
+                    await succ.toggle_status(targetActor, 'bleeding-out', false)
+                    amount = amount - 1
+                    chatContent = `${token.name} stopped ${target.name}'s Bleeding Out.`
+                } if (targetInc) {
+                    await succ.toggle_status(targetActor, 'incapacitated', false)
+                    amount = amount - 1
+                    chatContent += ` And cured ${target.name}'s Incapacitation.`
+                    if (amount <= 0) { await createChatMessage() }
+                }
+            } if (amount > 0) {
+                //Heal two Wounds
+                await removeInjury(targetActor, amount)
+                await apply()
+                if (amount === 2) {
+                    chatContent = `${token.name} healed ${target.name} for two Wounds.`
+                } else if (amount === 1) {
+                    chatContent += ` And healed ${target.name} for one Wound.`
+                }
+                await createChatMessage()
+            }
+        }
+    } else {
+        ui.notifications.error("An error occured. See the console for more details.");
+        console.error("The heal_other_gm() function wasn't passed the proper success rating. Please report this to the SWIM developer on the repository or directly to him on Discord: SalieriC#8263.")
+    }
+    async function apply() {
+        if (rating === "critFail" && method === "heal") {
+            targetActor.update({ "data.wounds.value": targetWounds + amount })
+        } else if (method === "relief") {
+            if (targetFatigue < amount) { amount = targetFatigue }
+            targetActor.update({ "data.fatigue.value": targetFatigue - amount })
+            await swim.play_sfx(unshakeSFX)
+        } else if (method === "heal") {
+            if (targetWounds < amount) { amount = targetWounds }
+            targetActor.update({ "data.wounds.value": targetWounds - amount })
+            await swim.play_sfx(soakSFX)
+        }
+    }
+
+    async function createChatMessage() {
+        ChatMessage.create({
+            user: game.user.id,
+            content: chatContent,
+        });
+    }
+}
+
+async function healSelf(token, speaker) {
     // Setting SFX
     let woundedSFX = game.settings.get(
         'swim', 'woundedSFX');
@@ -43,7 +279,7 @@ export async function personal_health_centre_script() {
     const fm = token.actor.data.data.fatigue.max;
     //Checking for Edges (and Special/Racial Abilities)
     let natHeal_time = game.settings.get(
-        'swim', 'natHeal_time');
+        'swim', 'natHeal_Time');
     const fastHealer = token.actor.data.items.find(function (item) {
         return ((item.name.toLowerCase() === game.i18n.localize("SWIM.edge-fastHealer").toLowerCase()) && item.type === "edge");
     });
@@ -98,6 +334,8 @@ export async function personal_health_centre_script() {
     let buttons_main;
     let md_text
     const sendMessage = true
+    const inc = await succ.check_status(token, 'incapacitated')
+    const bleedOut = await succ.check_status(token, 'bleeding-out')
 
     // Adjusting buttons and Main Dialogue text
     if (fv < 1 && wv < 1) {
@@ -352,8 +590,8 @@ export async function personal_health_centre_script() {
 
     // This is the main function that handles the Vigor roll.
     async function rollNatHeal() {
-
-        const edgeNames = ['fast healer'];
+        
+        const edgeNames = [game.i18n.localize("SWIM.edge-fastHealer").toLowerCase()];
         const actorAlias = speaker.alias;
         // Roll Vigor and check for Fast Healer.
         const r = await token.actor.rollAttribute('vigor');
@@ -393,6 +631,8 @@ export async function personal_health_centre_script() {
             ChatMessage.create({ content: chatData });
         }
         else {
+            let roundedCopy = rounded
+            let conditionsText = ""
             if (rounded < 1) {
                 let { _, __, totalBennies } = await swim.check_bennies(token)
                 chatData += ` and is unable to heal any Wounds.`;
@@ -402,16 +642,35 @@ export async function personal_health_centre_script() {
                 else {
                     dialogReroll();
                 }
-            } else if ((rounded === 1 && numberWounds > 1) || (rounded === 2 && numberWounds > 2)) {
+            } else if (inc === true || bleedOut === true) {
+                if (roundedCopy > 2) { roundedCopy = 2 }
+                if (bleedOut === true && roundedCopy > 0) {
+                    roundedCopy = roundedCopy -1
+                    chatData += `, stabilises from Bleeding Out`
+                    conditionsText += " but you stabilise from Bleeding Out"
+                } if (inc === true && roundedCopy > 0) {
+                    roundedCopy = roundedCopy -1
+                    if (roundedCopy <= 0) { 
+                        chatData += ` and recovers from Incapacitation.`
+                        conditionsText += " and recover from Incapacitation"
+                    }
+                    else { 
+                        chatData += `, recovers from Incapacitation`
+                        conditionsText += " but you recover from Incapacitation"
+                    }
+                    conditionsText += "."
+                }
+                if (roundedCopy < 1) { removeWounds(); }
+            } if (roundedCopy === 1 && numberWounds > 1) {
                 let { _, __, totalBennies } = await swim.check_bennies(token)
-                chatData += ` and heals ${rounded} of his ${numberWounds} Wounds.`;
-                if (totalBennies < 1) {
+                chatData += ` and heals ${roundedCopy} of his ${numberWounds} Wounds.`;
+                if (totalBennies < 1 || (roundedCopy === 1 && rounded >= 2)) {
                     removeWounds();
                 }
                 else {
-                    dialogReroll();
+                    dialogReroll(roundedCopy, conditionsText);
                 };
-            } else if ((rounded > 1 && rounded >= numberWounds && numberWounds < 3) || (rounded === 1 && numberWounds === 1)) {
+            } else if ((roundedCopy > 1 && roundedCopy >= numberWounds) || (roundedCopy === 1 && numberWounds === 1)) {
                 chatData += ` and heals all of his Wounds.`;
                 removeWounds();
             }
@@ -422,13 +681,13 @@ export async function personal_health_centre_script() {
     }
 
     // Function containing the reroll Dialogue
-    async function dialogReroll() {
+    async function dialogReroll(roundedCopy, conditionsText) {
         let { _, __, totalBennies } = await swim.check_bennies(token)
         if (totalBennies > 0) {
             new Dialog({
                 title: 'Reroll',
                 content: `<form>
-                You've healed <b>${rounded} Wounds</b>.
+                You've healed <b>${roundedCopy} Wounds</b>${conditionsText}.
                 </br>Do you want to reroll your Natural Healing roll (you have <b>${totalBennies} Bennies</b> left)?
                 </form>`,
                 buttons: {
@@ -474,21 +733,46 @@ export async function personal_health_centre_script() {
 
     async function removeWounds() {
         if (genericHealWounds) {
-            if (genericHealWounds > wv) {
+            if (inc === true || bleedOut === true) {
+                if (bleedOut === true && genericHealWounds > 0) {
+                    await succ.toggle_status(token, 'bleeding-out', false)
+                    genericHealWounds = genericHealWounds -1
+                } if (inc === true && genericHealWounds > 0) {
+                    await succ.toggle_status(token, 'incapacitated', false)
+                    if (token.data.flags?.healthEstimate?.dead) { token.document.unsetFlag("healthEstimate", "dead") }
+                    genericHealWounds = genericHealWounds -1
+                }
+                ui.notifications.notify(`Bleeding out and Incapacitation will be removed before any Wounds.`);
+            }
+            if (genericHealWounds > wv && genericHealWounds > 0) {
                 genericHealWounds = wv;
                 ui.notifications.error(`You can't heal more wounds than you have, healing all Wounds instead now...`);
             }
             setWounds = wv - genericHealWounds;
             await token.actor.update({ "data.wounds.value": setWounds });
+            await removeInjury(token.actor, wv)
             ui.notifications.notify(`${genericHealWounds} Wound(s) healed.`);
         }
         else {
+            if (inc === true || bleedOut === true) {
+                if (rounded >= 2) { rounded = 2 } //Can't heal more than 2 Wounds
+                if (bleedOut === true && rounded > 0) {
+                    await succ.toggle_status(token, 'bleeding-out', false)
+                    rounded = rounded -1
+                } if (inc === true && rounded > 0) {
+                    await succ.toggle_status(token, 'incapacitated', false)
+                    if (token.data.flags?.healthEstimate?.dead) { token.document.unsetFlag("healthEstimate", "dead") }
+                    rounded = rounded -1
+                }
+                ui.notifications.notify(`Bleeding out and Incapacitation will be removed before any Wounds.`);
+            }
             if (rounded === 1) {
                 setWounds = wv - 1;
                 if (setWounds < 0) {
                     setWounds = 0;
                 }
                 await token.actor.update({ "data.wounds.value": setWounds });
+                await removeInjury(token.actor, rounded)
                 ui.notifications.notify("One Wound healed.");
             }
             if (rounded >= 2) {
@@ -497,6 +781,8 @@ export async function personal_health_centre_script() {
                     setWounds = 0
                 }
                 await token.actor.update({ "data.wounds.value": setWounds });
+                rounded = 2
+                await removeInjury(token.actor, rounded)
                 ui.notifications.notify("Two Wounds healed.");
             }
         }
@@ -698,6 +984,7 @@ export async function personal_health_centre_script() {
             if (incapSFX) {
                 AudioHelper.play({ src: `${incapSFX}` }, true);
             }
+            await swim.soak_damage()
         }
     }
 
@@ -706,4 +993,34 @@ export async function personal_health_centre_script() {
             setTimeout(resolve, ms);
         });
     }
+}
+
+async function removeInjury(actor, healedWounds) {
+    let activeEffects = actor.data.effects
+    let injuries = []
+    let aeIDsToRemove = []
+    for (let effect of activeEffects) {
+        if (effect.data.flags?.swim) {
+            injuries.push(effect)
+        }
+    }
+    injuries.reverse() //Reverse to remove combat injuries in proper order, from most recent to least recent.
+    for (let injury of injuries) {
+        let combat = injury.data.flags.swim.isCombatInjury
+        let permanent = injury.data.flags.swim.isPermanent
+        if (permanent === false && combat === true) {
+            //remove if wound is healed
+            if (healedWounds > 0) {
+                aeIDsToRemove.push(injury.id)
+                healedWounds = healedWounds - 1
+            }
+        } else if (permanent === false && combat === false) {
+            // Is a temorary injury from Inc.
+            if (actor.data.data.wounds.value === 0) {
+                // Remove the injury if all Wounds are healed.
+                aeIDsToRemove.push(injury.id)
+            }
+        }
+    }
+    await actor.deleteEmbeddedDocuments("ActiveEffect", aeIDsToRemove)
 }
