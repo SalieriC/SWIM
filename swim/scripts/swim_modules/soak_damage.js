@@ -545,7 +545,18 @@ export async function soak_damage_script() {
                 if (token.actor.data.data.wildcard === false && token.actor.type === "npc") { wildCard = false }
                 critFail = await swim.critFail_check(wildCard, r)
             }
-            if (critFail === true) {
+            if (critFail === true && harderToKill) {
+                const harderToKillRoll = await new Roll(`1d2`).evaluate({ async: false });
+                if (harderToKillRoll.total === 1) {
+                    ui.notifications.notify(`You've rolled a Critical Failure and failed your ${harderToKill.name} roll! You will die now...`);
+                    let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure, didn't make the ${harderToKill.name} roll and perishes! </span>`;
+                    ChatMessage.create({ content: chatData });
+                } else if (harderToKillRoll.total === 2) {
+                    ui.notifications.notify(`You've rolled a Critical Failure but made your ${harderToKill.name} roll! You will survive <i>somehow</i>...`);
+                    let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure, but made the ${harderToKill.name} roll, is Incapacitated and survives <i>somehow</i>. </span>`;
+                    ChatMessage.create({ content: chatData });
+                }
+            } else if (critFail === true) {
                 ui.notifications.notify("You've rolled a Critical Failure! You will die now...");
                 let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure and perishes! </span>`;
                 ChatMessage.create({ content: chatData });
