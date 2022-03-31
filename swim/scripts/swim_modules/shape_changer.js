@@ -160,7 +160,7 @@ export async function shape_changer_gm(data) {
 
             const scSize = scCopy.data.data.stats.size;
 
-            await set_token_size(scCopy, scSize);
+            await set_token_size(scCopy, scSize, raise);
             await set_tokenSettings(scCopy, originalID);
             await update_preset(scCopy, scSize, raise, originalID);
             // Now, add permission to scCopy if the requesting user doesn't have it (that should also ensure the user get the token selected automatically):
@@ -185,25 +185,36 @@ export async function shape_changer_gm(data) {
     }
 
     async function set_token_size(scCopy, scSize) {
+        let height = 1;
+        let width = 1;
+        let scale = 1;
+
         if (scSize <= 2 && scSize >= 0) {
-            await scCopy.update({ token: { height: 1, width: 1, scale: 1 } })
+            // defaults
         } else if (scSize <= 5 && scSize >= 3) {
-            await scCopy.update({ token: { height: 2, width: 2, scale: 1 } })
+            height = width = 2;
         } else if (scSize <= 8 && scSize >= 6) {
-            await scCopy.update({ token: { height: 4, width: 4, scale: 1 } })
+            height = width = 4;
         } else if (scSize <= 11 && scSize >= 9) {
-            await scCopy.update({ token: { height: 8, width: 8, scale: 1 } })
+            height = width = 8;
         } else if (scSize > 11) {
-            await scCopy.update({ token: { height: 16, width: 16, scale: 1 } })
+            height = width = 16;
         } else if (scSize === -1) {
-            await scCopy.update({ token: { height: 1, width: 1, scale: 0.85 } })
+            scale = 0.85
         } else if (scSize === -2) {
-            await scCopy.update({ token: { height: 1, width: 1, scale: 0.75 } })
+            scale = 0.75
         } else if (scSize === -3) {
-            await scCopy.update({ token: { height: 1, width: 1, scale: 0.6 } })
+            scale = 0.6
         } else if (scSize <= -4) {
-            await scCopy.update({ token: { height: 1, width: 1, scale: 0.5 } })
+            scale = 0.5
         }
+
+        if (raise) {
+            // Make the token a little larger on a raise.
+            scale = scale * 1.25;
+        }
+
+        await scCopy.update({token: {height: height, width: width, scale: scale}})
     }
 
     async function set_tokenSettings(scCopy, pcID) {
@@ -315,11 +326,12 @@ export async function shape_changer_gm(data) {
         if (shapeShiftSFX) { AudioHelper.play({ src: `${shapeShiftSFX}` }, true); }
         if (game.modules.get("sequencer")?.active && shapeShiftVFX) {
             //let tokenD = canvas.tokens.controlled[0];
+            let scale = scCopy.data.token.scale;
             let sequence = new Sequence()
                 .effect()
                 .file(`${shapeShiftVFX}`) //recommendation: "modules/jb2a_patreon/Library/2nd_Level/Misty_Step/MistyStep_01_Regular_Green_400x400.webm"
                 .atLocation(token)
-                .scale(1)
+                .scale(scale)
             sequence.play();
             await swim.wait(`800`);
         }
