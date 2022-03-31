@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 2.0.1
+ * v. 2.0.2
  * By SalieriC
  ******************************************************/
 export async function shape_changer_script() {
@@ -96,7 +96,8 @@ export async function shape_changer_script() {
                             actorID: actor.id,
                             scID: scID,
                             mainFolder: mainFolder,
-                            tokenID: token.id
+                            tokenID: token.id,
+                            userID: game.user.id
                         }
                         warpgate.event.notify("SWIM.shapeChanger", data)
                     }
@@ -127,6 +128,7 @@ export async function shape_changer_gm(data) {
     const token = canvas.tokens.get(tokenID)
     const actor = token.actor
     const mainFolder = data.mainFolder
+    const userID = data.userID
 
     let folder = game.folders.getName("Shape Change Presets");
     let content = folder.content;
@@ -161,6 +163,12 @@ export async function shape_changer_gm(data) {
             await set_token_size(scCopy, scSize);
             await set_tokenSettings(scCopy, originalID);
             await update_preset(scCopy, scSize, raise, originalID);
+            // Now, add permission to scCopy if the requesting user doesn't have it (that should also ensure the user get the token selected automatically):
+            //if (!scCopy.data.permissions[userID] || scCopy.data.permissions[userID] < 3 ) {
+                let perms = duplicate(scCopy.data.permission)
+                perms[userID] = 3
+                await scCopy.update({permission: perms})
+            //}
             await replace_token(scCopy);
             if (originalID) {
                 actor.delete()
@@ -353,11 +361,11 @@ export async function shape_changer_gm(data) {
             'swim', 'shapeShiftVFX');
         if (shapeShiftSFX) { AudioHelper.play({ src: `${shapeShiftSFX}` }, true); }
         if (game.modules.get("sequencer")?.active && shapeShiftVFX) {
-            let tokenD = canvas.tokens.controlled[0];
+            //let tokenD = canvas.tokens.controlled[0];
             let sequence = new Sequence()
                 .effect()
                 .file(`${shapeShiftVFX}`) //recommendation: "modules/jb2a_patreon/Library/2nd_Level/Misty_Step/MistyStep_01_Regular_Green_400x400.webm"
-                .atLocation(tokenD)
+                .atLocation(token)
                 .scale(1)
             sequence.play();
             await swim.wait(`800`);
