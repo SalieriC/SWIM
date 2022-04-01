@@ -127,7 +127,12 @@ export async function shape_changer_gm(data) {
     const tokenID = data.tokenID
     const token = canvas.tokens.get(tokenID)
     const actor = token.actor
-    const mainFolder = data.mainFolder
+    //const mainFolder = data.mainFolder
+    const mainFolder = game.folders.getName("[SWIM] Shape Changing");
+    if (!mainFolder) {
+        ui.notifications.error("Please import and set up the '[SWIM] Shape Change Presets' folder from the compendium first.");
+        return;
+    }
     const userID = data.userID
 
     let folder = game.folders.getName("Shape Change Presets");
