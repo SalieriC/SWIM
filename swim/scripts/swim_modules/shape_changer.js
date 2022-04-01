@@ -40,7 +40,7 @@ export async function shape_changer_script() {
     }
 
     //Set div class based on enabled official module:
-    const officialClass = swim.get_official_class()
+    const officialClass = await swim.get_official_class()
 
     let folder = game.folders.getName("Shape Change Presets");
     let content = folder.content;
