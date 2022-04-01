@@ -160,7 +160,7 @@ export async function shape_changer_gm(data) {
 
             const scSize = scCopy.data.data.stats.size;
 
-            await set_token_size(scCopy, scSize);
+            await set_token_size(scCopy, scSize, raise);
             await set_tokenSettings(scCopy, originalID);
             await update_preset(scCopy, scSize, raise, originalID);
             // Now, add permission to scCopy if the requesting user doesn't have it (that should also ensure the user get the token selected automatically):
@@ -185,72 +185,58 @@ export async function shape_changer_gm(data) {
     }
 
     async function set_token_size(scCopy, scSize) {
+        let height = 1;
+        let width = 1;
+        let scale = 1;
+
         if (scSize <= 2 && scSize >= 0) {
-            await scCopy.update({ token: { height: 1, width: 1, scale: 1 } })
+            // defaults
         } else if (scSize <= 5 && scSize >= 3) {
-            await scCopy.update({ token: { height: 2, width: 2, scale: 1 } })
+            height = width = 2;
         } else if (scSize <= 8 && scSize >= 6) {
-            await scCopy.update({ token: { height: 4, width: 4, scale: 1 } })
+            height = width = 4;
         } else if (scSize <= 11 && scSize >= 9) {
-            await scCopy.update({ token: { height: 8, width: 8, scale: 1 } })
+            height = width = 8;
         } else if (scSize > 11) {
-            await scCopy.update({ token: { height: 16, width: 16, scale: 1 } })
+            height = width = 16;
         } else if (scSize === -1) {
-            await scCopy.update({ token: { height: 1, width: 1, scale: 0.85 } })
+            scale = 0.85
         } else if (scSize === -2) {
-            await scCopy.update({ token: { height: 1, width: 1, scale: 0.75 } })
+            scale = 0.75
         } else if (scSize === -3) {
-            await scCopy.update({ token: { height: 1, width: 1, scale: 0.6 } })
+            scale = 0.6
         } else if (scSize <= -4) {
-            await scCopy.update({ token: { height: 1, width: 1, scale: 0.5 } })
+            scale = 0.5
         }
+
+        if (raise) {
+            // Make the token a little larger on a raise.
+            scale = scale * 1.25;
+        }
+
+        await scCopy.update({token: {height: height, width: width, scale: scale}})
     }
 
     async function set_tokenSettings(scCopy, pcID) {
-        let pc = actor;
-        if (pcID) {
-            pc = game.actors.get(pcID)
-            carry = actor;
-        }
-        let updateData;
-        if (pcID) {
-            updateData = {
-                "token.actorLink": carry.data.token.actorLink,
-                "token.bar1.attribute": carry.data.token.bar1.attribute,
-                "token.bar2.attribute": carry.data.token.bar2.attribute,
-                "token.disposition": carry.data.token.disposition,
-                "token.lockRotation": carry.data.token.lockRotation,
-                "token.name": carry.data.token.name,
-                "token.randomImg": carry.data.token.randomImg,
-                "token.vision": carry.data.token.vision,
-                "token.displayBars": carry.data.token.displayBars,
-                "token.displayName": carry.data.token.displayName,
-                "data.advances.value": carry.data.data.advances.value
-            }
-        } else {
-            updateData = {
-                "token.actorLink": pc.data.token.actorLink,
-                "token.bar1.attribute": pc.data.token.bar1.attribute,
-                "token.bar2.attribute": pc.data.token.bar2.attribute,
-                "token.disposition": pc.data.token.disposition,
-                "token.lockRotation": pc.data.token.lockRotation,
-                "token.name": pc.data.token.name,
-                "token.randomImg": pc.data.token.randomImg,
-                "token.vision": pc.data.token.vision,
-                "token.displayBars": pc.data.token.displayBars,
-                "token.displayName": pc.data.token.displayName,
-                "data.advances.value": pc.data.data.advances.value
-            }
+        let updateData = {
+            "token.actorLink": actor.data.token.actorLink,
+            "token.bar1.attribute": actor.data.token.bar1.attribute,
+            "token.bar2.attribute": actor.data.token.bar2.attribute,
+            "token.disposition": actor.data.token.disposition,
+            "token.lockRotation": actor.data.token.lockRotation,
+            "token.name": actor.data.token.name,
+            "token.randomImg": actor.data.token.randomImg,
+            "token.vision": actor.data.token.vision,
+            "token.displayBars": actor.data.token.displayBars,
+            "token.displayName": actor.data.token.displayName,
+            "data.advances.value": actor.data.data.advances.value
         }
         await scCopy.update(updateData)
     }
 
     async function update_preset(scCopy, scSize, raise, pcID) {
-        let pc = actor;
-        if (pcID) {
-            pc = game.actors.get(pcID)
-            carry = actor;
-        }
+        let pc = pcID ? game.actors.get(pcID) : actor;
+        let src = pcID ? actor : pc;
         let maxWounds = pc.data.data.wounds.max;
         /* "The caster does not inherit extra Wounds when transforming[.]" Leaving it here anyway in case s/o wan't to change that.
         if (scSize >= 4 && scSize <= 7) {maxWounds = pc.data.data.wounds.max + 1}
@@ -275,34 +261,20 @@ export async function shape_changer_gm(data) {
             "data.attributes.smarts.animal": pc.data.data.attributes.smarts.animal,
             "data.powerPoints.value": pc.data.data.powerPoints.value,
             "data.powerPoints.max": pc.data.data.powerPoints.max,
+            "name": `${scCopy.data.name} (${pc.data.name})`,
         }
-        if (pcID) {
-            let carryUpdates = {
-                "data.bennies.value": carry.data.data.bennies.value,
-                "data.fatigue.value": carry.data.data.fatigue.value,
-                "data.wounds.value": carry.data.data.wounds.value,
-                "data.details.conviction.value": carry.data.data.details.conviction.value,
-                "data.details.conviction.active": carry.data.data.details.conviction.active,
-                "data.powerPoints.value": carry.data.data.powerPoints.value,
-                "data.details.archetype": `Shape Changed ${carry.data.token.name}`,
-                "data.wildcard": carry.data.data.wildcard,
-                "name": `${scCopy.data.name} (${carry.data.name})`
-            }
-            updateData = Object.assign(updateData, carryUpdates)
-        } else {
-            let pcUpdates = {
-                "data.bennies.value": pc.data.data.bennies.value,
-                "data.fatigue.value": pc.data.data.fatigue.value,
-                "data.wounds.value": pc.data.data.wounds.value,
-                "data.details.archetype": `Shape Changed ${pc.data.token.name}`,
-                "data.details.conviction.value": pc.data.data.details.conviction.value,
-                "data.details.conviction.active": pc.data.data.details.conviction.active,
-                "data.wildcard": pc.data.data.wildcard,
-                "name": `${scCopy.data.name} (${pc.data.name})`,
-                "data.powerPoints.value": pc.data.data.powerPoints.value
-            }
-            updateData = Object.assign(updateData, pcUpdates)
+
+        let srcUpdates = {
+            "data.bennies.value": src.data.data.bennies.value,
+            "data.fatigue.value": src.data.data.fatigue.value,
+            "data.wounds.value": src.data.data.wounds.value,
+            "data.details.conviction.value": src.data.data.details.conviction.value,
+            "data.details.conviction.active": src.data.data.details.conviction.active,
+            "data.powerPoints.value": src.data.data.powerPoints.value,
+            "data.details.archetype": `Shape Changed ${src.data.token.name}`,
+            "data.wildcard": src.data.data.wildcard,
         }
+        updateData = Object.assign(updateData, srcUpdates);
 
         //Doing Skills:
         let pcSkills = pc.data.items.filter(i => (i.data.type === "skill" && (i.data.data.attribute === "smarts" || i.data.data.attribute === "spirit")));
@@ -330,17 +302,9 @@ export async function shape_changer_gm(data) {
         for (let power of itemsToCreate.filter(p => (p.data.type === "power"))) {
             if (power.data.data.arcane) {
                 let arcaneBackground = power.data.data.arcane;
-                let ppUpdates;
-                if (pcID) {
-                    ppUpdates = {
-                        ['data.powerPoints.' + arcaneBackground + '.max']: carry.data.data.powerPoints[arcaneBackground].max,
-                        ['data.powerPoints.' + arcaneBackground + '.value']: carry.data.data.powerPoints[arcaneBackground].value
-                    }
-                } else {
-                    ppUpdates = {
-                        ['data.powerPoints.' + arcaneBackground + '.max']: pc.data.data.powerPoints[arcaneBackground].max,
-                        ['data.powerPoints.' + arcaneBackground + '.value']: pc.data.data.powerPoints[arcaneBackground].value
-                    }
+                let ppUpdates = {
+                    ['data.powerPoints.' + arcaneBackground + '.max']: src.data.data.powerPoints[arcaneBackground].max,
+                    ['data.powerPoints.' + arcaneBackground + '.value']: src.data.data.powerPoints[arcaneBackground].value
                 }
                 updateData = Object.assign(updateData, ppUpdates)
             }
@@ -362,11 +326,12 @@ export async function shape_changer_gm(data) {
         if (shapeShiftSFX) { AudioHelper.play({ src: `${shapeShiftSFX}` }, true); }
         if (game.modules.get("sequencer")?.active && shapeShiftVFX) {
             //let tokenD = canvas.tokens.controlled[0];
+            let scale = scCopy.data.token.scale;
             let sequence = new Sequence()
                 .effect()
                 .file(`${shapeShiftVFX}`) //recommendation: "modules/jb2a_patreon/Library/2nd_Level/Misty_Step/MistyStep_01_Regular_Green_400x400.webm"
                 .atLocation(token)
-                .scale(1)
+                .scale(scale)
             sequence.play();
             await swim.wait(`800`);
         }
@@ -402,3 +367,4 @@ export async function shape_changer_gm(data) {
 
     main()
 }
+
