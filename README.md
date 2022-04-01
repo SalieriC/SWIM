@@ -108,18 +108,6 @@ It comes with optional BR2 integration for the shooting/using ammo part. How the
 I can't include that many sfx right now. It is rather difficult to find good weapon sounds which I am allowed to include and I don't have the funds to buy them for this module. I'm not gonna recommend any particular way on how to get adequate sound effects, figuring that out is on you. Just know that there are many resources you should be able to use out there. As a general lead: Look for PC game modifications which alter the weapon sounds in that specific game. You may not be allowed to use the sfx from the game directly (depends on the game of course), but those from mods are usually not a problem but check that before you do take them. I cannot be held responsible for any breach of contract or copyright you commit it is on you to check whether or not you're allowed to use the sfx you find.  
 You may also want to take a look at [SoundFx Library](https://foundryvtt.com/packages/soundfxlibrary) by Cris. It comes with a few bow sounds which may be sufficient for your standard medieval fantasy settings.  
 
-### Power Sounds  
-**Immersion setting:** SFX.  
-**Requirements:**  
-- [Better Rolls 2 (BR2)](https://foundryvtt.com/packages/betterrolls-swade2)  
-**Description:**  
-This does not manage your Power Points but it does automatically play SFX when using a power. For this you need to set up some World Global Actions in Better Rolls 2. Take a look at the BR2 integration section of the [Shooting & Reloading setup documentation](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/documentation/Shooting%20%26%20Reloading%20Setup.md) for a general idea how that works.  
-Put simply: Set up an additional stat called "sfx" in your world, activate it in a power and fill it with the relative path to the sfx. Then import the "SWIM: Powers SFX" macro in your world and copy-paste [this](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/swim/assets/imports/BR2-spellcasting-integration.json) in a new World Global action in the BR2 settings. Don't worry about the naming, it'll work for all powers no matter the skill - even if it is rolled with untrained or an Attribute.  
-Again, see the Shooting & Reloading documentation linked above for more details on BR2 integration if you feel lost.  
-**Wait, where do I get weapon sound effects?**  
-I can't include that many sfx right now. It is rather difficult to find good magic sounds which I am allowed to include and I don't have the funds to buy them for this module. I'm not gonna recommend any particular way on how to get adequate sound effects, figuring that out is on you. Just know that there are many resources you should be able to use out there. As a general lead: Look for PC game modifications which alter the magic sounds in that specific game. You may not be allowed to use the sfx from the game directly (depends on the game of course), but those from mods are usually not a problem but check that before you do take them. I cannot be held responsible for any breach of contract or copyright you commit it is on you to check whether or not you're allowed to use the sfx you find.  
-You may also want to take a look at [SoundFx Library](https://foundryvtt.com/packages/soundfxlibrary) by Cris. It comes with a few bow sounds which may be sufficient for your standard medieval fantasy settings.  
-
 ### Fear Table
 **Requirements:** None.  
 **Immersion setting:** SFX.  
@@ -137,7 +125,7 @@ This macro basically just opens a dialogue that asks for a fear modifier and the
 This is a rather simple macro that marks a token as Incapacitated! and is mainly intended for NPC Extras. It requires CUB to toggle the Inc.! status and Health Estimate.  
 The macro plays a sound effect on execution and will mark all selected as Inc.! It works both ways though and can uncheck Inc.! if needed.  
 
-### Power Point Management  
+### Power Point Management (CURRENTLY NOT WORKING)  
 **Incompatibility:**  This macro is *not* compatible with the power point management offered by the SWADE system. Disable it if you want to use this macro.  
 **Requirements:**
 - [Health Estimate](https://foundryvtt.com/packages/healthEstimate/)
@@ -151,15 +139,19 @@ In terms of other SFX: The macro again uses the Incapacitation sfx and the wound
 
 ### Personal Health Centre  
 **Requirements:**
-- [Health Estimate](https://foundryvtt.com/packages/healthEstimate/)
+- [Health Estimate](https://foundryvtt.com/packages/healthEstimate/)  
+**Compatibility:**
+- [Sequencer](https://foundryvtt.com/packages/sequencer) (Enabling VFX)
 
-**Immersion setting:** SFX.  
+**Immersion setting:** SFX & VFX.  
 **Description:**  
 This macro is more or less the opposite of the Soak Damage macro. It offers functionality to remove wounds in a generic way (i.e. due to the Healing Skill or Power) and also a way to roll on Natural Healing, interpreting the results, removing wounds, offerring rerolls and is aware of Snake Eyes (adds another Wound or Inc.!). It supports Fast Healer and (on rerolls) Elan as well.  
 It also supporst the Regeneration Special/Racial Ability but it must be set up as an Edge or Ability called "Fast Regeneration" or "Slow Regeneration". Then it adjusts the time that needs to be passed until a Natural Healing roll can be made. If your setting calls for longer or shorter periods of time until a Natural Healing roll can be made (Hellfrost comes to mind), then you can set this up in the modules settings.  
 It uses the sfx for Wounds, Inc.! and Healing.  
 The macro is also capable of removing Fatigue using a given number, which also supports a unique sfx.  
 Both, removing Fatigue and Wounds, does support using potions. For this you need to provide the potion names in the relevant game settings. Make sure that you enter the **exact** names (case sensitive) and seperate them by `, ` (comma + empty space). Drinking the potion also has a unique sfx and drinking a potion reduces the quatity by 1. If it was the last potion of this kind, it will be removed from the inventory.  
+It is alsocapable of playing visual effects (VFX) if Sequencer is installed and active. I suggest Generic Heal and Cure Wounds for everyone with access to the JB2A patreon module.
+Finally it can also be used to heal the target even if you don't have permission to change the target. For this you need to select your token and target another.  
 <p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Personal%20Health%20Centre.jpg?raw=true"> </p>  
 
 ### Token Vision  
@@ -187,29 +179,24 @@ The macro works different for players and GMs. For players it only shows options
 In general it is best to set up a universal/global light source instead of touching the vision type as that's what SWADE relies on. But the options are there in case the GM forgets to set it up and needs to act quickly.  
 (1) These options also lock the token rotation because the core rules uses portrait style tokens. If you use top-down view tokens instead you may want to change that in the macros code.  
 
-### Shuffle Action Deck  
-**Requirements:** None.  
-**Immersion setting:** System card deal sound.  
-**Description:**  
-A very basic macro that resets the roll table from which the action cards are drawn. It's mainly there to fix issues when the table doesn't reset during combat.  
-
 ### Chase Setup  
 **Requirements:** Chase layouts/scenes (included in a compendium) and a roll table with card images.  
 **Immersion setting:** System card deal sound.  
 **Description:**  
-This macro can set up and clean your chase scenes with cards. It places the cards automatically in the correct position. See the [Chase Scenes documentation](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/documentation/Chase%20Scenes.md) for details.  
+This will set your chase scene up with little effort. Accessed easily on the tile controls on any scene (the car icon, added by the system and overwritten by SWIM). It places the cards automatically in the correct position. See the [Chase Scenes documentation](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/documentation/Chase%20Scenes.md) for details.  
 *This requires the chase scenes that come in a compendium with this module.* These carry various options, players have in a chase, made with permission from Shane.  
+If you don't want to use my chase layouts you can also change the settings either in the dialogue after pressing the button mentioned above or by changing the default values in the SWIM module configurations.  
+**Note:** This currently uses a roll table instead of a card deck, thus you'll need a chase card table. One you can import is included in a compendium in SWIM for your convenience.  
 
-### Raise Calculator & Raise Calculator (Dynamic)  
+### Raise Calculator (Dynamic)  
 **Requirements:** None.  
 **Immersion setting:** None.  
 **Description:**  
-Two rather simple macros to calculate Raises inside Foundry. The first one offers a Dialogue and gives a Notification with your amount of Raises. The Dynamic one is more usable in my opinion: It changes the amount of Raises dynamically, depending on your input while you type. Whenever you change the result input field the text below is adjusted and will show you the amount of raises. It does not have a button because a button isn't needed. You could keep this one open at all times and change the values whenever you want.  
+A simple raise calculator that can be easily accessed from the controls on the left side of the screen as long as you have a scene. It is the big plus button in the basic (token) controls.  
+Changes the amount of Raises dynamically, depending on your input while you type. Whenever you change the result input field the text below is adjusted and will show you the amount of raises. It does not have a button because a button isn't needed. You could keep this one open at all times and change the values whenever you want.  
 Below are screenshots from the dynamic version:  
 <p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Raise%20Calculator%201.jpg?raw=true"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Raise%20Calculator%202.jpg?raw=true"> </p>   
 <p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Raise%20Calculator%203.jpg?raw=true"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Raise%20Calculator%204.jpg?raw=true"> </p>   
-
-**Please note:** As of version 0.5.0 of SWIM you don't need this macro anymore. It can be easily accessed from the controls on the left side of the screen as long as you have a scene. It is the big plus button in the basic (token) controls.  
 
 ### Ability Converter  
 **Requirements:** SWADE 0.17.0 and above.  
@@ -263,10 +250,28 @@ In Hellfrost this represents Silver Scields, in Settings which don't use a sub-c
 **Description:**  
 The first macro in a lot of things. Writing it was challenging but it seems to work reasonably well. Please report any bugs as usual.  
 This macro allows players and GMs alike to shape change their characters into other creatures. It automatically shows those which are available and you can choose whether to change into a new form or back to your regular form. [Warp Gate](https://github.com/trioderegion/warpgate) by honeybadger is required to exchange the token on the canvas, so you can't access it without it. The macro will carry over every values that are required, including wounds, fatigue, conviction, power points, etc. Even on changing back all those values will be updated. The macro should relly take care of everything for you.  
-There is some setup to be done however: First head to the compendiums and locate the "SWIM Shape Change Folders" compendium. Open it and import the folder structure into your world. *Do not change the folders names!* Inside the folder structure you'll find sub-folders. You now need to populate these folders with the creatures a chape changer can change into. You don't need to edit any of their settings, the macro will take care of everything. It is recommended that you rename these to avoid confusion with other actors however. I recommend adding a simple "SC: " in front of their names, e.g. "SC: Wolf". Also you might want to delete all the powers the creature might have because as of version 0.13.0, the macro does not delete those (yet). *Make sure to set permission to owner on these actors for all players that are shape shifters! Also give them permission to create new actors and to create new tokens!* (Due to limitations in Foundry core, setting permission automatically isn't possible atm.) And that is everything.
+There is some setup to be done however: First head to the compendiums and locate the "SWIM Shape Change Folders" compendium. Open it and import the folder structure into your world. *Do not change the folders names!* Inside the folder structure you'll find sub-folders. You now need to populate these folders with the creatures a chape changer can change into. You don't need to edit any of their settings, the macro will take care of everything. It is recommended that you rename these to avoid confusion with other actors however. I recommend adding a simple "SC: " in front of their names, e.g. "SC: Wolf". Also you might want to delete all the powers the creature might have because as of version 0.13.0, the macro does not delete those (yet). *Make sure to set permission to limited or observer on these actors for all players that are shape shifters!* (Do *not* make the players owner on these, the function will handle that. If all shape shifters have owner permission on the templates, bad things could happen.) And that is everything.
    
 **How does it work?**
 The macro will search this folder structure for your presets and add them to the list of creatures a shape changer can change into. It then will create a duplicate of the selected actor and uses that duplicate for this specific player. It then will change the actor according to the rules. It will change the skills, attributes, token settings, wounds, fatigue, and much more. It even activates conviction if it was currently running on the shape changer.  
 *Why not creating the folder structure automatically on first starting the world?* - Shape Change isn't the most common power in my experience, thus I don't want to force it on GMs who have no need for it.  
 Here is a short video that showcases the macro (visual effect by JB2A, not included in SWIM):  
 <p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/shape_changer_showcase.gif?raw=true"> </p>  
+
+### Mighty Summoner    
+**Immersion setting:** SFX & VFX
+**Requirements:**  
+- [Warp Gate](https://github.com/trioderegion/warpgate)  
+**Compatibility:**
+- [Sequencer](https://foundryvtt.com/packages/sequencer) (Enabling VFX)
+**Description:**  
+The Mighty Summoner allows players to summon creatures to the canvas.  
+First you need to import the `[SWIM] Summon Creature` folder structure from the actor compendium. In this folder you now place all the actors your players shall be able to summon. You may sort them to the rank folders but that is not necessary. Important is that they are all in the `Summon Creature Presets` sub-folder of `[SWIM] Summon Creature` or the respective sub-folders of `Summon Creature Presets`.  
+Now give the players which are able to summon creatures *at least* limited permission of the creatures. By doing this you can control who is able to summon which creature.  
+That's basically everything. It uses the same VFX and SFX as the Shape Changer and Warp Gate handles the placement.  
+   
+**How does it work?**
+The function will search the folder structure for your presets and add them to the list of creatures a ssummoner can summon. It then will give the player the selected creature attached to the mouse pointer. On clikc the player places the token on the canvas and give that player permission to control it. It does not create a new actor and thus is only available as a token on the canvas. The sheet can be accessed by double left clicking the token as usual.  
+*Why not creating the folder structure automatically on first starting the world?* - Summon powers aren't the most common powers in my experience, especially not on lower ranks, thus I don't want to force it on GMs who have no need for it.  
+Here is a short video that showcases the macro (visual effect by JB2A, not included in SWIM):  
+<p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/mighty_summoner_showcase.gif?raw=true"> </p>  

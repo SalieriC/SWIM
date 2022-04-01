@@ -19,11 +19,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PHC now removes combat injuries and those from Incapacitation (unless they are permanent).
 - PHC now removes Bleeding Out and Incapacitation before Wounds.
 - PHC now removes the Health Estimate flag if Incapacitated is removed.
+- Shape Changer now copies the permission settings from the original actor to give the player owner permissions.
+### Changed
+- Refactored the shape changer script to a few less lines (@pmoore603).
+- Shape changer now makes the newly created actor the same `type` as the original. This means that PCs will change into PCs and NPCs will change into NPCs, no matter what the preset type is. This is important for the Joker's Wild setting rule to work properly.
 ### Fixed
 - Radiation Centre will now inform about Benny use.
 - Small update fix in shape changer that will hopefully update the combat.
 - Combat injuries were not properly applied in soak damage.
 - A bug that caused the PHC to break because of a faulty setting string.
+- A leftover variable declaration in the shape changer caused it to fail when trying to play the VFX if executed by a non-GM.
+- Fixed missing variable exception error when shape changing (@pmoore603).
+- Shape changer now adds elevation of the original token to the newly created token (thanks @pmoore603 for spotting this).
+- Shape changer now creates the new actor in the proper folder even if executed by non-GM.
+- Shape changer dialogue now gets the proper div class.
 
 ## [0.15.0] - 2022-03-18
 ### Added  
