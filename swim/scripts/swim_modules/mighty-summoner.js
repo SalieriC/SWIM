@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 1.0.0
+ * v. 1.0.1
  * By SalieriC
  ******************************************************/
  export async function summoner_script() {
@@ -43,7 +43,7 @@
     const range = actor.data.data.attributes.smarts.die.sides
 
     //Set div class based on enabled official module:
-    const officialClass = swim.get_official_class()
+    const officialClass = await swim.get_official_class()
 
     let folder = game.folders.getName("Summon Creature Presets");
     let content = folder.content;
