@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 2.0.2
+ * v. 2.0.3
  * By SalieriC
  ******************************************************/
 export async function shape_changer_script() {
