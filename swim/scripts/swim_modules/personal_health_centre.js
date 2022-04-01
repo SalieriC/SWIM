@@ -595,12 +595,10 @@ async function healSelf(token, speaker) {
         const actorAlias = speaker.alias;
         // Roll Vigor and check for Fast Healer.
         const r = await token.actor.rollAttribute('vigor');
-        console.log(r)
         const edges = token.actor.data.items.filter(function (item) {
             return edgeNames.includes(item.name.toLowerCase()) && (item.type === "edge" || item.type === "ability");
         });
         let rollWithEdge = r.total;
-        console.log(rollWithEdge)
         let edgeText = "";
         for (let edge of edges) {
             rollWithEdge += 2;
@@ -634,7 +632,6 @@ async function healSelf(token, speaker) {
         }
         else {
             let roundedCopy = rounded
-            console.log(rounded, roundedCopy)
             let conditionsText = ""
             if (rounded < 1) {
                 let { _, __, totalBennies } = await swim.check_bennies(token)
@@ -675,7 +672,6 @@ async function healSelf(token, speaker) {
                 };
             } else if ((roundedCopy > 1 && roundedCopy >= numberWounds) || (roundedCopy === 1 && numberWounds === 1)) {
                 chatData += ` and heals all of his Wounds.`;
-                console.log("I GOT HERE!")
                 removeWounds();
             }
             chatData += ` ${edgeText}`;
