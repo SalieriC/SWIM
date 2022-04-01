@@ -123,5 +123,5 @@
   "SWIM.edge-harderToKill": "Harder To Kill",
   "SWIM.notification-selectSingleToken": "Please select a single token first.",
   "SWIM.notification-selectOneOrMoreTokens": "Please select one or more tokens.",
-  "SWIM.notification-selectOrTargetOneOrMoreTokens": "Please select one or more tokens."
+  "SWIM.notification-selectOrTargetOneOrMoreTokens": "Please select or target one or more tokens."
 }
