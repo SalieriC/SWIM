@@ -265,6 +265,7 @@ export async function shape_changer_gm(data) {
             "data.powerPoints.value": pc.data.data.powerPoints.value,
             "data.powerPoints.max": pc.data.data.powerPoints.max,
             "name": `${scCopy.data.name} (${pc.data.name})`,
+            "type": pc.type
         }
 
         let srcUpdates = {
