@@ -187,29 +187,24 @@ The macro works different for players and GMs. For players it only shows options
 In general it is best to set up a universal/global light source instead of touching the vision type as that's what SWADE relies on. But the options are there in case the GM forgets to set it up and needs to act quickly.  
 (1) These options also lock the token rotation because the core rules uses portrait style tokens. If you use top-down view tokens instead you may want to change that in the macros code.  
 
-### Shuffle Action Deck  
-**Requirements:** None.  
-**Immersion setting:** System card deal sound.  
-**Description:**  
-A very basic macro that resets the roll table from which the action cards are drawn. It's mainly there to fix issues when the table doesn't reset during combat.  
-
 ### Chase Setup  
 **Requirements:** Chase layouts/scenes (included in a compendium) and a roll table with card images.  
 **Immersion setting:** System card deal sound.  
 **Description:**  
-This macro can set up and clean your chase scenes with cards. It places the cards automatically in the correct position. See the [Chase Scenes documentation](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/documentation/Chase%20Scenes.md) for details.  
+This will set your chase scene up with little effort. Accessed easily on the tile controls on any scene (the car icon, added by the system and overwritten by SWIM). It places the cards automatically in the correct position. See the [Chase Scenes documentation](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/documentation/Chase%20Scenes.md) for details.  
 *This requires the chase scenes that come in a compendium with this module.* These carry various options, players have in a chase, made with permission from Shane.  
+If you don't want to use my chase layouts you can also change the settings either in the dialogue after pressing the button mentioned above or by changing the default values in the SWIM module configurations.  
+**Note:** This currently uses a roll table instead of a card deck, thus you'll need a chase card table. One you can import is included in a compendium in SWIM for your convenience.  
 
-### Raise Calculator & Raise Calculator (Dynamic)  
+### Raise Calculator (Dynamic)  
 **Requirements:** None.  
 **Immersion setting:** None.  
 **Description:**  
-Two rather simple macros to calculate Raises inside Foundry. The first one offers a Dialogue and gives a Notification with your amount of Raises. The Dynamic one is more usable in my opinion: It changes the amount of Raises dynamically, depending on your input while you type. Whenever you change the result input field the text below is adjusted and will show you the amount of raises. It does not have a button because a button isn't needed. You could keep this one open at all times and change the values whenever you want.  
+A simple raise calculator that can be easily accessed from the controls on the left side of the screen as long as you have a scene. It is the big plus button in the basic (token) controls.  
+Changes the amount of Raises dynamically, depending on your input while you type. Whenever you change the result input field the text below is adjusted and will show you the amount of raises. It does not have a button because a button isn't needed. You could keep this one open at all times and change the values whenever you want.  
 Below are screenshots from the dynamic version:  
 <p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Raise%20Calculator%201.jpg?raw=true"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Raise%20Calculator%202.jpg?raw=true"> </p>   
 <p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Raise%20Calculator%203.jpg?raw=true"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Raise%20Calculator%204.jpg?raw=true"> </p>   
-
-**Please note:** As of version 0.5.0 of SWIM you don't need this macro anymore. It can be easily accessed from the controls on the left side of the screen as long as you have a scene. It is the big plus button in the basic (token) controls.  
 
 ### Ability Converter  
 **Requirements:** SWADE 0.17.0 and above.  

@@ -38,6 +38,8 @@ export const settingVariables = [
         default: 'modules/swim/assets/sfx/Suspense_Sound_Effect_altered_-_David_Fesliyan-www.FesliyanStudios.com.ogg'},
     {id: 'healSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",
         default: 'modules/swim/assets/sfx/Huh-converted-Alexander-www.orangefreesounds.com.ogg'},
+    {id: 'healVFX', config_type: window.Azzu.SettingsTypes.FilePickerVideo, tab: "SFX & VFX Options",
+        default: ''},
     {id: 'looseFatigueSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",
         default: 'modules/swim/assets/sfx/Huh-converted-Alexander-www.orangefreesounds.com.ogg'},
     {id:  'potionSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",

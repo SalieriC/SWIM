@@ -123,5 +123,7 @@
   "SWIM.edge-harderToKill": "Harder To Kill",
   "SWIM.notification-selectSingleToken": "Please select a single token first.",
   "SWIM.notification-selectOneOrMoreTokens": "Please select one or more tokens.",
-  "SWIM.notification-selectOrTargetOneOrMoreTokens": "Please select or target one or more tokens."
+  "SWIM.notification-selectOrTargetOneOrMoreTokens": "Please select or target one or more tokens.",
+  "SWIM.healVFXName": "Healing VFX:",
+  "SWIM.healVFXHint": "The visual effect to be played when a token is healed. I recommend Healing Generic or Cure Wounds for everyone with access to the jb2a patreon module. Playing VFX requires Sequencer."
 }

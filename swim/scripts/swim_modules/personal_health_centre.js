@@ -236,11 +236,11 @@ export async function heal_other_gm(data) {
         } else if (method === "relief") {
             if (targetFatigue < amount) { amount = targetFatigue }
             targetActor.update({ "data.fatigue.value": targetFatigue - amount })
-            await swim.play_sfx(unshakeSFX)
+            await playHealFX(target, unshakeSFX)
         } else if (method === "heal") {
             if (targetWounds < amount) { amount = targetWounds }
             targetActor.update({ "data.wounds.value": targetWounds - amount })
-            await swim.play_sfx(soakSFX)
+            await playHealFX(target, soakSFX)
         }
     }
 
@@ -787,7 +787,7 @@ async function healSelf(token, speaker) {
             }
         }
         if (healSFX && genericHealWounds > 0 || healSFX && rounded > 0) {
-            AudioHelper.play({ src: `${healSFX}` }, true);
+            await playHealFX(token, healSFX)
         }
     }
 
@@ -966,7 +966,7 @@ async function healSelf(token, speaker) {
         await token.actor.update({ "data.fatigue.value": setFatigue });
         ui.notifications.notify(`${genericHealFatigue} Level(s) of Fatigue cured.`);
         if (looseFatigueSFX && genericHealFatigue > 0) {
-            AudioHelper.play({ src: `${looseFatigueSFX}` }, true);
+            await playHealFX(token, looseFatigueSFX)
         }
     }
 
@@ -1023,4 +1023,22 @@ async function removeInjury(actor, healedWounds) {
         }
     }
     await actor.deleteEmbeddedDocuments("ActiveEffect", aeIDsToRemove)
+}
+
+async function playHealFX(token, sfx) {
+    let healVFX = game.settings.get(
+        'swim', 'healVFX');
+    if (game.modules.get("sequencer")?.active && healVFX) {
+        let healVFX = game.settings.get(
+            'swim', 'healVFX');
+        //let tokenD = canvas.tokens.controlled[0];
+        let scale = token.scale;
+        let sequence = new Sequence()
+            .effect()
+            .file(`${healVFX}`) //recommendation: "modules/jb2a_patreon/Library/2nd_Level/Misty_Step/MistyStep_01_Regular_Green_400x400.webm"
+            .atLocation(token)
+            .scale(scale)
+        sequence.play();
+    }
+    await swim.play_sfx(sfx)
 }
