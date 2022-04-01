@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PHC now removes combat injuries and those from Incapacitation (unless they are permanent).
 - PHC now removes Bleeding Out and Incapacitation before Wounds.
 - PHC now removes the Health Estimate flag if Incapacitated is removed.
-- Shape Changer now adds owner permission to the created actor.
+- Shape Changer now copies the permission settings from the original actor to give the player owner permissions.
 ### Changed
 - Refactored the shape changer script to a few less lines (@pmoore603).
 ### Fixed

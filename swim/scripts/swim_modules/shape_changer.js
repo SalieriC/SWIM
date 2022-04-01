@@ -163,12 +163,10 @@ export async function shape_changer_gm(data) {
             await set_token_size(scCopy, scSize, raise);
             await set_tokenSettings(scCopy, originalID);
             await update_preset(scCopy, scSize, raise, originalID);
-            // Now, add permission to scCopy if the requesting user doesn't have it (that should also ensure the user get the token selected automatically):
-            //if (!scCopy.data.permissions[userID] || scCopy.data.permissions[userID] < 3 ) {
-                let perms = duplicate(scCopy.data.permission)
-                perms[userID] = 3
-                await scCopy.update({permission: perms})
-            //}
+            // Now, add permission to scCopy by copying permissions of the original actor (that should also ensure the user get the token selected automatically):
+            let perms = duplicate(actor.data.permission)
+            await scCopy.update({permission: perms})
+
             await replace_token(scCopy);
             if (originalID) {
                 actor.delete()
