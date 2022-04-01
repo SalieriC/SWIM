@@ -1,6 +1,6 @@
 /*******************************************
  * Unstun macro for SWADE
- * version v.4.0.3
+ * version v.4.0.2
  * Made and maintained by SalieriC#8263 using original Code from Shteff.
  ******************************************/
 
@@ -77,6 +77,8 @@ export async function unstun_script() {
                 await succ.apply_status(token, 'distracted', false)
                 await swim.wait(delay)
                 await succ.apply_status(token, 'stunned', false)
+                await swim.wait(delay)
+                await succ.apply_status(token, 'prone', false)
                 if (unshakeSFX) { AudioHelper.play({ src: `${unshakeSFX}` }, true); }
             } else {
                 chatData += ` and remains Stunned.`;
