@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PHC now removes Bleeding Out and Incapacitation before Wounds.
 - PHC now removes the Health Estimate flag if Incapacitated is removed.
 - Shape Changer now copies the permission settings from the original actor to give the player owner permissions.
+- Shape Changer adds focus to new token.
 ### Changed
 - Refactored the shape changer script to a few less lines (@pmoore603).
 - Shape changer now makes the newly created actor the same `type` as the original. This means that PCs will change into PCs and NPCs will change into NPCs, no matter what the preset type is. This is important for the Joker's Wild setting rule to work properly.

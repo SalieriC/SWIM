@@ -344,6 +344,10 @@ export async function shape_changer_gm(data) {
         // Adding elevation of the original token to the new token
         let newToken = canvas.tokens.get(newTokenID[0])
         await newToken.document.update({'elevation': token.data.elevation})
+        // Add focus if the user is a GM, otherwise permission management will take care of that later.
+        if (game.user.isGM === true) {
+            newToken.control()
+        }
 
         if (token.combatant != null) {
             let oldCombatData = token.combatant.toObject()
