@@ -123,5 +123,5 @@
   "SWIM.edge-harderToKill": "Härter im Nehmen"
   "SWIM.notification-selectSingleToken": "Bitte wähle zuerst eine einzelne Figur.",
   "SWIM.notification-selectOneOrMoreTokens": "Bitte wähle eine oder mehrere Figur(en) aus.",
-  "SWIM.notification-selectOrTargetOneOrMoreTokens": "Bitte wähle eine oder mehrere Figur(en) aus."
+  "SWIM.notification-selectOrTargetOneOrMoreTokens": "Es muss eine oder mehrere Figur(en) entweder anvisiert oder ausgewählt sein."
 }
