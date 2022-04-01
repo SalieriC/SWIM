@@ -20,9 +20,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PHC now removes Bleeding Out and Incapacitation before Wounds.
 - PHC now removes the Health Estimate flag if Incapacitated is removed.
 - Shape Changer now copies the permission settings from the original actor to give the player owner permissions.
+- Shape Changer adds focus to new token.
 ### Changed
 - Refactored the shape changer script to a few less lines (@pmoore603).
 - Shape changer now makes the newly created actor the same `type` as the original. This means that PCs will change into PCs and NPCs will change into NPCs, no matter what the preset type is. This is important for the Joker's Wild setting rule to work properly.
+- GMs are now able to access all shape change sizes instead of only those the characters rank permits.
 ### Fixed
 - Radiation Centre will now inform about Benny use.
 - Small update fix in shape changer that will hopefully update the combat.
@@ -33,6 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Shape changer now adds elevation of the original token to the newly created token (thanks @pmoore603 for spotting this).
 - Shape changer now creates the new actor in the proper folder even if executed by non-GM.
 - Shape changer dialogue now gets the proper div class.
+- Unstun doesn't remove prone but now properly removes stunned on a raise.
+- Macros now have the proper icons from SUCC.
 
 ## [0.15.0] - 2022-03-18
 ### Added  
