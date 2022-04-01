@@ -33,6 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Shape changer now adds elevation of the original token to the newly created token (thanks @pmoore603 for spotting this).
 - Shape changer now creates the new actor in the proper folder even if executed by non-GM.
 - Shape changer dialogue now gets the proper div class.
+- Unstun doesn't remove prone but now properly removes stunned on a raise.
+- Macros now have the proper icons from SUCC.
 
 ## [0.15.0] - 2022-03-18
 ### Added  
