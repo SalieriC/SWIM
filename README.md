@@ -108,18 +108,6 @@ It comes with optional BR2 integration for the shooting/using ammo part. How the
 I can't include that many sfx right now. It is rather difficult to find good weapon sounds which I am allowed to include and I don't have the funds to buy them for this module. I'm not gonna recommend any particular way on how to get adequate sound effects, figuring that out is on you. Just know that there are many resources you should be able to use out there. As a general lead: Look for PC game modifications which alter the weapon sounds in that specific game. You may not be allowed to use the sfx from the game directly (depends on the game of course), but those from mods are usually not a problem but check that before you do take them. I cannot be held responsible for any breach of contract or copyright you commit it is on you to check whether or not you're allowed to use the sfx you find.  
 You may also want to take a look at [SoundFx Library](https://foundryvtt.com/packages/soundfxlibrary) by Cris. It comes with a few bow sounds which may be sufficient for your standard medieval fantasy settings.  
 
-### Power Sounds  
-**Immersion setting:** SFX.  
-**Requirements:**  
-- [Better Rolls 2 (BR2)](https://foundryvtt.com/packages/betterrolls-swade2)  
-**Description:**  
-This does not manage your Power Points but it does automatically play SFX when using a power. For this you need to set up some World Global Actions in Better Rolls 2. Take a look at the BR2 integration section of the [Shooting & Reloading setup documentation](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/documentation/Shooting%20%26%20Reloading%20Setup.md) for a general idea how that works.  
-Put simply: Set up an additional stat called "sfx" in your world, activate it in a power and fill it with the relative path to the sfx. Then import the "SWIM: Powers SFX" macro in your world and copy-paste [this](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/swim/assets/imports/BR2-spellcasting-integration.json) in a new World Global action in the BR2 settings. Don't worry about the naming, it'll work for all powers no matter the skill - even if it is rolled with untrained or an Attribute.  
-Again, see the Shooting & Reloading documentation linked above for more details on BR2 integration if you feel lost.  
-**Wait, where do I get weapon sound effects?**  
-I can't include that many sfx right now. It is rather difficult to find good magic sounds which I am allowed to include and I don't have the funds to buy them for this module. I'm not gonna recommend any particular way on how to get adequate sound effects, figuring that out is on you. Just know that there are many resources you should be able to use out there. As a general lead: Look for PC game modifications which alter the magic sounds in that specific game. You may not be allowed to use the sfx from the game directly (depends on the game of course), but those from mods are usually not a problem but check that before you do take them. I cannot be held responsible for any breach of contract or copyright you commit it is on you to check whether or not you're allowed to use the sfx you find.  
-You may also want to take a look at [SoundFx Library](https://foundryvtt.com/packages/soundfxlibrary) by Cris. It comes with a few bow sounds which may be sufficient for your standard medieval fantasy settings.  
-
 ### Fear Table
 **Requirements:** None.  
 **Immersion setting:** SFX.  
@@ -137,7 +125,7 @@ This macro basically just opens a dialogue that asks for a fear modifier and the
 This is a rather simple macro that marks a token as Incapacitated! and is mainly intended for NPC Extras. It requires CUB to toggle the Inc.! status and Health Estimate.  
 The macro plays a sound effect on execution and will mark all selected as Inc.! It works both ways though and can uncheck Inc.! if needed.  
 
-### Power Point Management  
+### Power Point Management (CURRENTLY NOT WORKING)  
 **Incompatibility:**  This macro is *not* compatible with the power point management offered by the SWADE system. Disable it if you want to use this macro.  
 **Requirements:**
 - [Health Estimate](https://foundryvtt.com/packages/healthEstimate/)
@@ -151,15 +139,19 @@ In terms of other SFX: The macro again uses the Incapacitation sfx and the wound
 
 ### Personal Health Centre  
 **Requirements:**
-- [Health Estimate](https://foundryvtt.com/packages/healthEstimate/)
+- [Health Estimate](https://foundryvtt.com/packages/healthEstimate/)  
+**Compatibility:**
+- [Sequencer](https://foundryvtt.com/packages/sequencer) (Enabling VFX)
 
-**Immersion setting:** SFX.  
+**Immersion setting:** SFX & VFX.  
 **Description:**  
 This macro is more or less the opposite of the Soak Damage macro. It offers functionality to remove wounds in a generic way (i.e. due to the Healing Skill or Power) and also a way to roll on Natural Healing, interpreting the results, removing wounds, offerring rerolls and is aware of Snake Eyes (adds another Wound or Inc.!). It supports Fast Healer and (on rerolls) Elan as well.  
 It also supporst the Regeneration Special/Racial Ability but it must be set up as an Edge or Ability called "Fast Regeneration" or "Slow Regeneration". Then it adjusts the time that needs to be passed until a Natural Healing roll can be made. If your setting calls for longer or shorter periods of time until a Natural Healing roll can be made (Hellfrost comes to mind), then you can set this up in the modules settings.  
 It uses the sfx for Wounds, Inc.! and Healing.  
 The macro is also capable of removing Fatigue using a given number, which also supports a unique sfx.  
 Both, removing Fatigue and Wounds, does support using potions. For this you need to provide the potion names in the relevant game settings. Make sure that you enter the **exact** names (case sensitive) and seperate them by `, ` (comma + empty space). Drinking the potion also has a unique sfx and drinking a potion reduces the quatity by 1. If it was the last potion of this kind, it will be removed from the inventory.  
+It is alsocapable of playing visual effects (VFX) if Sequencer is installed and active. I suggest Generic Heal and Cure Wounds for everyone with access to the JB2A patreon module.
+Finally it can also be used to heal the target even if you don't have permission to change the target. For this you need to select your token and target another.  
 <p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/Personal%20Health%20Centre.jpg?raw=true"> </p>  
 
 ### Token Vision  
