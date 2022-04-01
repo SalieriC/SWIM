@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 2.0.2
+ * v. 2.0.3
  * By SalieriC
  ******************************************************/
 export async function shape_changer_script() {
@@ -40,7 +40,7 @@ export async function shape_changer_script() {
     }
 
     //Set div class based on enabled official module:
-    const officialClass = swim.get_official_class()
+    const officialClass = await swim.get_official_class()
 
     let folder = game.folders.getName("Shape Change Presets");
     let content = folder.content;
@@ -127,7 +127,12 @@ export async function shape_changer_gm(data) {
     const tokenID = data.tokenID
     const token = canvas.tokens.get(tokenID)
     const actor = token.actor
-    const mainFolder = data.mainFolder
+    //const mainFolder = data.mainFolder
+    const mainFolder = game.folders.getName("[SWIM] Shape Changing");
+    if (!mainFolder) {
+        ui.notifications.error("Please import and set up the '[SWIM] Shape Change Presets' folder from the compendium first.");
+        return;
+    }
     const userID = data.userID
 
     let folder = game.folders.getName("Shape Change Presets");
@@ -163,12 +168,10 @@ export async function shape_changer_gm(data) {
             await set_token_size(scCopy, scSize, raise);
             await set_tokenSettings(scCopy, originalID);
             await update_preset(scCopy, scSize, raise, originalID);
-            // Now, add permission to scCopy if the requesting user doesn't have it (that should also ensure the user get the token selected automatically):
-            //if (!scCopy.data.permissions[userID] || scCopy.data.permissions[userID] < 3 ) {
-                let perms = duplicate(scCopy.data.permission)
-                perms[userID] = 3
-                await scCopy.update({permission: perms})
-            //}
+            // Now, add permission to scCopy by copying permissions of the original actor (that should also ensure the user get the token selected automatically):
+            let perms = duplicate(actor.data.permission)
+            await scCopy.update({permission: perms})
+
             await replace_token(scCopy);
             if (originalID) {
                 actor.delete()
@@ -209,11 +212,12 @@ export async function shape_changer_gm(data) {
             scale = 0.5
         }
 
+        /* Commented out because it overfills borders in an inconvenient way
         if (raise) {
             // Make the token a little larger on a raise.
             scale = scale * 1.25;
         }
-
+        */
         await scCopy.update({token: {height: height, width: width, scale: scale}})
     }
 
@@ -262,6 +266,7 @@ export async function shape_changer_gm(data) {
             "data.powerPoints.value": pc.data.data.powerPoints.value,
             "data.powerPoints.max": pc.data.data.powerPoints.max,
             "name": `${scCopy.data.name} (${pc.data.name})`,
+            "type": pc.type
         }
 
         let srcUpdates = {
@@ -337,6 +342,10 @@ export async function shape_changer_gm(data) {
         }
         //Replacing the token using WardGate:
         let newTokenID = await warpgate.spawnAt(token.center, scCopy.data.name)
+        // Adding elevation of the original token to the new token
+        let newToken = canvas.tokens.get(newTokenID[0])
+        await newToken.document.update({'elevation': token.data.elevation})
+
         if (token.combatant != null) {
             let oldCombatData = token.combatant.toObject()
             await update_combat(newTokenID, oldCombatData)
