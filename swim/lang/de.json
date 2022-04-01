@@ -120,10 +120,10 @@
   "SWIM.skill-athletics": "Athletik",
   "SWIM.skill-persuasion": "Überreden",
   "SWIM.edge-hardToKill": "Hart im Nehmen",
-  "SWIM.edge-harderToKill": "Härter im Nehmen"
+  "SWIM.edge-harderToKill": "Härter im Nehmen",
   "SWIM.notification-selectSingleToken": "Bitte wähle zuerst eine einzelne Figur.",
   "SWIM.notification-selectOneOrMoreTokens": "Bitte wähle eine oder mehrere Figur(en) aus.",
-  "SWIM.notification-selectOrTargetOneOrMoreTokens": "Es muss eine oder mehrere Figur(en) entweder anvisiert oder ausgewählt sein."
+  "SWIM.notification-selectOrTargetOneOrMoreTokens": "Es muss eine oder mehrere Figur(en) entweder anvisiert oder ausgewählt sein.",
   "SWIM.healVFXName": "Visueller Effekt (Heilung):",
   "SWIM.healVFXHint": "Wenn eine Figur geheilt wird, wird dieser Effekt abgespielt. Ich empfehle die Effekte 'Healing Generic' oder 'Cure Wounds' solltest du Zugriff auf das JB2A Patreon Module haben. Das Abspielen visueller Effekte benötigt das Sequencer-Modul."
 }
