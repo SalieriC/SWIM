@@ -1,6 +1,6 @@
 /*******************************************
  * Personal Health Centre
- * // v.6.0.0
+ * // v.6.2.0
  * By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
  ******************************************/
 export async function personal_health_centre_script() {
@@ -595,10 +595,12 @@ async function healSelf(token, speaker) {
         const actorAlias = speaker.alias;
         // Roll Vigor and check for Fast Healer.
         const r = await token.actor.rollAttribute('vigor');
+        console.log(r)
         const edges = token.actor.data.items.filter(function (item) {
             return edgeNames.includes(item.name.toLowerCase()) && (item.type === "edge" || item.type === "ability");
         });
         let rollWithEdge = r.total;
+        console.log(rollWithEdge)
         let edgeText = "";
         for (let edge of edges) {
             rollWithEdge += 2;
@@ -632,6 +634,7 @@ async function healSelf(token, speaker) {
         }
         else {
             let roundedCopy = rounded
+            console.log(rounded, roundedCopy)
             let conditionsText = ""
             if (rounded < 1) {
                 let { _, __, totalBennies } = await swim.check_bennies(token)
@@ -661,7 +664,7 @@ async function healSelf(token, speaker) {
                     conditionsText += "."
                 }
                 if (roundedCopy < 1) { removeWounds(); }
-            } if (roundedCopy === 1 && numberWounds > 1) {
+            } if ((roundedCopy === 1 && numberWounds > 1) || (roundedCopy > 1 && roundedCopy <= numberWounds)) {
                 let { _, __, totalBennies } = await swim.check_bennies(token)
                 chatData += ` and heals ${roundedCopy} of his ${numberWounds} Wounds.`;
                 if (totalBennies < 1 || (roundedCopy === 1 && rounded >= 2)) {
@@ -672,6 +675,7 @@ async function healSelf(token, speaker) {
                 };
             } else if ((roundedCopy > 1 && roundedCopy >= numberWounds) || (roundedCopy === 1 && numberWounds === 1)) {
                 chatData += ` and heals all of his Wounds.`;
+                console.log("I GOT HERE!")
                 removeWounds();
             }
             chatData += ` ${edgeText}`;
