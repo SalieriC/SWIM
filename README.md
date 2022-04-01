@@ -257,3 +257,21 @@ The macro will search this folder structure for your presets and add them to the
 *Why not creating the folder structure automatically on first starting the world?* - Shape Change isn't the most common power in my experience, thus I don't want to force it on GMs who have no need for it.  
 Here is a short video that showcases the macro (visual effect by JB2A, not included in SWIM):  
 <p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/shape_changer_showcase.gif?raw=true"> </p>  
+
+### Mighty Summoner    
+**Immersion setting:** SFX & VFX
+**Requirements:**  
+- [Warp Gate](https://github.com/trioderegion/warpgate)  
+**Compatibility:**
+- [Sequencer](https://foundryvtt.com/packages/sequencer) (Enabling VFX)
+**Description:**  
+The Mighty Summoner allows players to summon creatures to the canvas.  
+First you need to import the `[SWIM] Summon Creature` folder structure from the actor compendium. In this folder you now place all the actors your players shall be able to summon. You may sort them to the rank folders but that is not necessary. Important is that they are all in the `Summon Creature Presets` sub-folder of `[SWIM] Summon Creature` or the respective sub-folders of `Summon Creature Presets`.  
+Now give the players which are able to summon creatures *at least* limited permission of the creatures. By doing this you can control who is able to summon which creature.  
+That's basically everything. It uses the same VFX and SFX as the Shape Changer and Warp Gate handles the placement.  
+   
+**How does it work?**
+The function will search the folder structure for your presets and add them to the list of creatures a ssummoner can summon. It then will give the player the selected creature attached to the mouse pointer. On clikc the player places the token on the canvas and give that player permission to control it. It does not create a new actor and thus is only available as a token on the canvas. The sheet can be accessed by double left clicking the token as usual.  
+*Why not creating the folder structure automatically on first starting the world?* - Summon powers aren't the most common powers in my experience, especially not on lower ranks, thus I don't want to force it on GMs who have no need for it.  
+Here is a short video that showcases the macro (visual effect by JB2A, not included in SWIM):  
+<p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/mighty_summoner_showcase.gif?raw=true"> </p>  
