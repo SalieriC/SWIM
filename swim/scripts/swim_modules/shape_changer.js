@@ -337,6 +337,10 @@ export async function shape_changer_gm(data) {
         }
         //Replacing the token using WardGate:
         let newTokenID = await warpgate.spawnAt(token.center, scCopy.data.name)
+        // Adding elevation of the original token to the new token
+        let newToken = canvas.tokens.get(newTokenID[0])
+        await newToken.document.update({'elevation': token.data.elevation})
+
         if (token.combatant != null) {
             let oldCombatData = token.combatant.toObject()
             await update_combat(newTokenID, oldCombatData)
