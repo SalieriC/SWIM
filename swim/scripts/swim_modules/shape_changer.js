@@ -208,12 +208,12 @@ export async function shape_changer_gm(data) {
         } else if (scSize <= -4) {
             scale = 0.5
         }
-
+        /* Commented out because it overfills borders in an inconvenient way
         if (raise) {
             // Make the token a little larger on a raise.
             scale = scale * 1.25;
         }
-
+        */
         await scCopy.update({token: {height: height, width: width, scale: scale}})
     }
 
