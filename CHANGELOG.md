@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A bug that caused the PHC to break because of a faulty setting string.
 - A leftover variable declaration in the shape changer caused it to fail when trying to play the VFX if executed by a non-GM.
 - Fixed missing variable exception error when shape changing (@pmoore603).
+- Shape changer now adds elevation of the original token to the newly created token (thanks @pmoore603 for spotting this).
 
 ## [0.15.0] - 2022-03-18
 ### Added  
