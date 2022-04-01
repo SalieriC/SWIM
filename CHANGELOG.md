@@ -20,12 +20,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PHC now removes Bleeding Out and Incapacitation before Wounds.
 - PHC now removes the Health Estimate flag if Incapacitated is removed.
 - Shape Changer now adds owner permission to the created actor.
+### Changed
+- Refactored the shape changer script to a few less lines (@pmoore603).
 ### Fixed
 - Radiation Centre will now inform about Benny use.
 - Small update fix in shape changer that will hopefully update the combat.
 - Combat injuries were not properly applied in soak damage.
 - A bug that caused the PHC to break because of a faulty setting string.
 - A leftover variable declaration in the shape changer caused it to fail when trying to play the VFX if executed by a non-GM.
+- Fixed missing variable exception error when shape changing (@pmoore603).
 
 ## [0.15.0] - 2022-03-18
 ### Added  
