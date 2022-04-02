@@ -123,5 +123,13 @@
   "SWIM.notification-selectOneOrMoreTokens": "Bitte wähle eine oder mehrere Figur(en) aus.",
   "SWIM.notification-selectOrTargetOneOrMoreTokens": "Es muss eine oder mehrere Figur(en) entweder anvisiert oder ausgewählt sein.",
   "SWIM.healVFXName": "Visueller Effekt (Heilung):",
-  "SWIM.healVFXHint": "Wenn eine Figur geheilt wird, wird dieser Effekt abgespielt. Ich empfehle die Effekte 'Healing Generic' oder 'Cure Wounds' solltest du Zugriff auf das JB2A Patreon Module haben. Das Abspielen visueller Effekte benötigt das Sequencer-Modul."
+  "SWIM.healVFXHint": "Wenn eine Figur geheilt wird, wird dieser Effekt abgespielt. Ich empfehle die Effekte 'Healing Generic' oder 'Cure Wounds' solltest du Zugriff auf das JB2A Patreon Module haben. Das Abspielen visueller Effekte benötigt das Sequencer-Modul.",
+  "SWIM.notification-targetSingleToken": "Bitte ziele auf eine einzelne Figur",
+  "SWIM.edge-commonBond": "Selbstlos",
+  "SWIM.notification-noCommonBond": "Dieser Charakter kann seine Benys nicht an Andere geben.",
+  "SWIM.dialogue-commonBond": "{officialClass}<p>Du möchtest einen Benny von <strong>{tokenName}</strong> an <strong>{targetName}</strong> geben. Möchtest du fortfahren?</p></div>",
+  "SWIM.dialogue-accept": "<i class='fas fa-check'></i> Bestätigen",
+  "SWIM.dialogue-cancel": "<i class='fas fa-times'></i> Abbrechen",
+  "SWIM.notification-noBenniesLeft": "Du hast keine Bennys mehr.",
+  "SWIM.chatMessage-commonBond": "{officialClass}<p>{bennyHTML} <strong>{tokenName}</strong> hat einen Benny an <strong>{targetName}</strong> abgegeben.</p></div>"
 }
