@@ -123,5 +123,13 @@
   "SWIM.notification-selectOneOrMoreTokens": "Please select one or more tokens.",
   "SWIM.notification-selectOrTargetOneOrMoreTokens": "Please select or target one or more tokens.",
   "SWIM.healVFXName": "Healing VFX:",
-  "SWIM.healVFXHint": "The visual effect to be played when a token is healed. I recommend Healing Generic or Cure Wounds for everyone with access to the jb2a patreon module. Playing VFX requires Sequencer."
+  "SWIM.healVFXHint": "The visual effect to be played when a token is healed. I recommend Healing Generic or Cure Wounds for everyone with access to the jb2a patreon module. Playing VFX requires Sequencer.",
+  "SWIM.notification-targetSingleToken": "Please target a single token first.",
+  "SWIM.edge-commonBond": "Common Bond",
+  "SWIM.notification-noCommonBond": "This character doesn't have the ability to give Bennies to others.",
+  "SWIM.dialogue-commonBond": "{officialClass}<p>You are about to give one Bennie from <strong>{tokenName}</strong> to <strong>{targetName}</strong>. Do you want to proceed?</p></div>",
+  "SWIM.dialogue-accept": "<i class='fas fa-check'></i> Accept",
+  "SWIM.dialogue-cancel": "<i class='fas fa-times'></i> Cancel",
+  "SWIM.notification-noBenniesLeft": "You have no more Bennies left.",
+  "SWIM.chatMessage-commonBond": "{officialClass}<p>{bennyHTML} <strong>{tokenName}</strong> gave a Benny to <strong>{targetName}</strong></p></div>"
 }

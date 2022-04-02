@@ -275,3 +275,13 @@ The function will search the folder structure for your presets and add them to t
 *Why not creating the folder structure automatically on first starting the world?* - Summon powers aren't the most common powers in my experience, especially not on lower ranks, thus I don't want to force it on GMs who have no need for it.  
 Here is a short video that showcases the macro (visual effect by JB2A, not included in SWIM):  
 <p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/mighty_summoner_showcase.gif?raw=true"> </p>  
+
+### Common Bond
+**Requirements:** None.  
+**Compatibility:**  
+- [Dice So Nice](https://foundryvtt.com/packages/dice-so-nice/) for the Benny throw.
+
+**Immersion setting:** None.  
+**Description:**  
+This will give one Benny from a token to another.  
+Target the token you want to give the Benny to and select the token from which you want to give the Benny away. The latter needs to have the Common Bond Edge. You need owner permission on the selected token, you don't need owner Permission for the target however.  

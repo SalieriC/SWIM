@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]  
 ### Added
+- Common Bond function to give a Benny from one token to another.
 - Free Reroll to the Radiation Centre macro if the Soldier Edge is found.
 - Added warnings to some functions to install Helath Estimate if it is not installed.
 - Localisation for Edges and Abilities.  
