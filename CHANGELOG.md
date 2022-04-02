@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Common Bond function to give a Benny from one token to another.
 - Free Reroll to the Radiation Centre macro if the Soldier Edge is found.
 - Added warnings to some functions to install Helath Estimate if it is not installed.
-- Localisation for Edges and Abilities.  
+- Localisation for Edges and Abilities. The module should now be *functional* in other languages. Please note that a lot of texts are still not localised. This is a lengthy process that will be done bit by bit over the course of the following months. New functionality will be fully localised however.
 - Added Coup (50 Fathoms) to the benny checker.
 - Added SFX to execute when BR2 sends the unshake hook.
 - Added SFX player to the API.
