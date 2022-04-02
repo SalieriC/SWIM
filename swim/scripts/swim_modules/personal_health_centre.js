@@ -164,9 +164,15 @@ export async function heal_other_gm(data) {
             //Apply another Wound
             if (targetWounds === targetWoundsMax) {
                 //Make INC!
-                await succ.toggle_status(targetActor, 'incapacitated', true)
-                await swim.play_sfx(deathSFX)
-                chatContent = `${token.name} tried to heal ${target.name} but failed miserably and incapacitated him in the process.`
+                if (targetInc) {
+                    await swim.play_sfx(deathSFX)
+                    await succ.apply_status(targetActor, 'bleeding-out', true)
+                    chatContent = `${token.name} tried to heal ${target.name} but failed miserably and made him/her Bleeding Out.`
+                } else {
+                    await succ.apply_status(targetActor, 'incapacitated', true)
+                    await swim.play_sfx(deathSFX)
+                    chatContent = `${token.name} tried to heal ${target.name} but failed miserably and incapacitated him/her in the process.`
+                }
                 await createChatMessage()
             } else {
                 amount = 1
@@ -250,7 +256,12 @@ export async function heal_other_gm(data) {
     }
     async function apply() {
         if (rating === "critFail" && method === "heal") {
-            targetActor.update({ "data.wounds.value": targetWounds + amount })
+            let setWounds = targetWounds + amount
+            if (targetWoundsMax <= setWounds) { 
+                setWounds = targetWoundsMax
+                await succ.apply_status(targetActor, 'incapacitated', true)
+            }
+            targetActor.update({ "data.wounds.value": setWounds })
         } else if (method === "relief") {
             if (targetFatigue < amount) { amount = targetFatigue }
             targetActor.update({ "data.fatigue.value": targetFatigue - amount })
