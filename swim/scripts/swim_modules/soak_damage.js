@@ -341,13 +341,13 @@ export async function soak_damage_script() {
             }
         };
         injuryData.icon = img;
-        if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-unmentionables"))) {
+        if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-unmentionables").toLowerCase())) {
             //unmentionables; create dummy AE without actual effect
             injuryData.label = game.i18n.localize("SWIM.injury-unmentionables");
-        } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-arm"))) {
+        } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-arm").toLowerCase())) {
             //arm; create a dummy AE without actual effect
             injuryData.label = game.i18n.localize("SWIM.injury-armUnusable");
-        } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-leg"))) {
+        } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-leg").toLowerCase())) {
             //leg, create AE with appropriate value depending on whether or not the character is slow already
             const slow = token.actor.data.items.find(function (item) {
                 return ((item.name.toLowerCase() === game.i18n.localize("SWIM.hindrance-slow").toLowerCase()) ||
@@ -417,9 +417,9 @@ export async function soak_damage_script() {
                 }
                 //Do nothing if actor is major slow already.
             }
-        } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-guts"))) {
+        } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-guts").toLowerCase())) {
             //evaluate all the guts:
-            if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-broken"))) {
+            if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-broken").toLowerCase())) {
                 //Guts broken, create AE with data.attributes.agility.die.sides -2
                 injuryData.label = game.i18n.localize("SWIM.injury-gutsBroken");
                 injuryData.changes.push({
@@ -427,7 +427,7 @@ export async function soak_damage_script() {
                     mode: 2,
                     value: -2
                 })
-            } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-battered"))) {
+            } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-battered").toLowerCase())) {
                 //Guts battered, create AE with data.attributes.vigor.die.sides -2
                 injuryData.label = game.i18n.localize("SWIM.injury-gutsBattered");
                 injuryData.changes.push({
@@ -435,7 +435,7 @@ export async function soak_damage_script() {
                     mode: 2,
                     value: -2
                 })
-            } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-busted"))) {
+            } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-busted").toLowerCase())) {
                 //Guts busted, created AE with data.attributes.strength.die.sides -2
                 injuryData.label = game.i18n.localize("SWIM.injury-gutsBusted");
                 injuryData.changes.push({
@@ -444,9 +444,9 @@ export async function soak_damage_script() {
                     value: -2
                 })
             }
-        } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-head"))) {
+        } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-head").toLowerCase())) {
             //evaluate all the head results:
-            if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-hideousScar"))) {
+            if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-hideousScar").toLowerCase())) {
                 //hideous scar, create AE with @Skill{Persuasion}[data.die.modifier] -2
                 injuryData.label = game.i18n.localize("SWIM.injury-headScar");
                 injuryData.changes.push({
@@ -454,10 +454,10 @@ export async function soak_damage_script() {
                     mode: 2,
                     value: -2
                 })
-            } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-blinded"))) {
+            } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-blinded").toLowerCase())) {
                 //Blinded, create dummy AE without actual effect
                 injuryData.label = game.i18n.localize("SWIM.injury-headBlinded");
-            } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-brain"))) {
+            } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-brain").toLowerCase())) {
                 //Brain damage, create AE with data.attributes.smarts.die.sides -2
                 injuryData.label = game.i18n.localize("SWIM.injury-headBrainDamage");
                 injuryData.changes.push({
