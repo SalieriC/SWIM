@@ -1,6 +1,6 @@
 /*******************************************
  * Soak Damage
- * v. 4.1.0
+ * v. 4.1.1
  * Code by SalieriC#8263.
  *******************************************/
 export async function soak_damage_script() {
@@ -564,7 +564,7 @@ export async function soak_damage_script() {
                 let { _, __, totalBennies } = await swim.check_bennies(token)
                 if (bestResult <= rollWithEdge) { bestResult = rollWithEdge }
                 else if (bestResult > rollWithEdge) { rollWithEdge = bestResult }
-                if ((totalBennies > 0 && rollWithEdge <= 8) && rerollDeclined === false) {
+                if ((totalBennies > 0 && rollWithEdge < 8) && rerollDeclined === false) {
                     //Use Benny
                     if (rollWithEdge < 4) {
                         //Permanent injury and Bleeding Out
