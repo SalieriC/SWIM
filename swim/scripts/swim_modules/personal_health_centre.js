@@ -627,7 +627,8 @@ async function healSelf(token, speaker) {
         if (critFail === true) {
             ui.notifications.notify("You've rolled a Critical Failure!");
             let chatData = `${actorAlias} rolled a <span style="font-size:150%">Critical Failure!</span> and takes another Wound! See the rules on Natural Healing for details.`;
-            applyWounds();
+            let noVig = true
+            applyWounds(noVig);
             ChatMessage.create({ content: chatData });
         }
         else {
@@ -973,7 +974,7 @@ async function healSelf(token, speaker) {
         }
     }
 
-    async function applyWounds() {
+    async function applyWounds(noVig) {
         setWounds = wv + 1
         if (setWounds <= wm) {
             await token.actor.update({ "data.wounds.value": setWounds });
@@ -987,6 +988,7 @@ async function healSelf(token, speaker) {
             if (incapSFX) {
                 AudioHelper.play({ src: `${incapSFX}` }, true);
             }
+            if (noVig === true) {return}
             await swim.soak_damage()
         }
     }
