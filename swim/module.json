@@ -4,7 +4,7 @@
 	"description": "<p><b>READ THE README!</b> Doing so is very important!</p><p>A module providing immersion friendly macros to ease play of the SWADE System on Foundry VTT. <a href='https://ko-fi.com/salieric'>Please consider donating.</a> </p>",
 	"minimumCoreVersion": "9.249",
 	"compatibleCoreVersion": "9.255",
-	"version": "0.15.0",
+	"version": "0.16.0",
 	"author": "SalieriC",
 	"dependencies": [
 		{
@@ -74,9 +74,9 @@
 			"private": true
         },
 		{
-		  "label": "SWIM Shape Change Folders",
-		  "name": "swim-shape-change-folders",
-		  "path": "packs/swim-shape-change-folders.db",
+		  "label": "SWIM Actor Folders",
+		  "name": "swim-actor-folders",
+		  "path": "packs/swim-actor-folders.db",
 		  "system": "swade",
 		  "module": "swim",
 		  "entity": "Actor",
