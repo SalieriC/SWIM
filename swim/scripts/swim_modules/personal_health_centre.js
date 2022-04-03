@@ -1,6 +1,6 @@
 /*******************************************
  * Personal Health Centre
- * // v.6.2.1
+ * // v.6.2.2
  * By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
  ******************************************/
 export async function personal_health_centre_script() {
@@ -71,9 +71,14 @@ async function healOther(token, target) {
         content: `${officialClass}
          <p>What was your result? Did you heal or remove fatigue</p>
          <p>Note: If you had a Critical Failure on the healing or relief power you shouldn't be here. Only select Success or Raise if you used the power.</p>
+         <p>Important: You can use the Healing <strong>Skill</strong> in combat to stabilise (remove Incapacitated and/or Bleeding Out). This takes one Action. If you do that please check the checkbox below.</p>
          <div class="form-group">
                 <label for="method">Method: </label>
                 <select id="method">${methodOptions}</select>
+            </div>
+            <div class="form-group">
+                <label for="combatHealing">Healing Skill in combat: </label>
+                <input id="combatHealing" name="combatHealingBox" type="checkbox"></input>
             </div>
          </div>`,
         buttons: {
@@ -81,11 +86,13 @@ async function healOther(token, target) {
                 label: "Critical Failure",
                 callback: async (html) => {
                     const method = html.find(`#method`)[0].value;
+                    const combatHealing = html.find(`#combatHealing`)[0].checked;
                     data = {
                         targetID: target.id,
                         tokenID: token.id,
                         rating: "critFail",
-                        method: method
+                        method: method,
+                        combatHealing: combatHealing
                     }
                     warpgate.event.notify("SWIM.healOther", data)
                 }
@@ -100,11 +107,13 @@ async function healOther(token, target) {
                 label: "Success",
                 callback: async (html) => {
                     const method = html.find(`#method`)[0].value;
+                    const combatHealing = html.find(`#combatHealing`)[0].checked;
                     data = {
                         targetID: target.id,
                         tokenID: token.id,
                         rating: "success",
-                        method: method
+                        method: method,
+                        combatHealing: combatHealing
                     }
                     warpgate.event.notify("SWIM.healOther", data)
                 }
@@ -113,11 +122,13 @@ async function healOther(token, target) {
                 label: "Raise",
                 callback: async (html) => {
                     const method = html.find(`#method`)[0].value;
+                    const combatHealing = html.find(`#combatHealing`)[0].checked;
                     data = {
                         targetID: target.id,
                         tokenID: token.id,
                         rating: "raise",
-                        method: method
+                        method: method,
+                        combatHealing: combatHealing
                     }
                     warpgate.event.notify("SWIM.healOther", data)
                 }
@@ -140,6 +151,7 @@ export async function heal_other_gm(data) {
     const tokenActor = token.actor
     const rating = data.rating
     const method = data.method
+    const combatHealing = data.combatHealing
     const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(targetActor)
     let amount
     let chatContent
@@ -152,9 +164,15 @@ export async function heal_other_gm(data) {
             //Apply another Wound
             if (targetWounds === targetWoundsMax) {
                 //Make INC!
-                await succ.toggle_status(targetActor, 'incapacitated', true)
-                await swim.play_sfx(deathSFX)
-                chatContent = `${token.name} tried to heal ${target.name} but failed miserably and incapacitated him in the process.`
+                if (targetInc) {
+                    await swim.play_sfx(deathSFX)
+                    await succ.apply_status(targetActor, 'bleeding-out', true)
+                    chatContent = `${token.name} tried to heal ${target.name} but failed miserably and made him/her Bleeding Out.`
+                } else {
+                    await succ.apply_status(targetActor, 'incapacitated', true)
+                    await swim.play_sfx(deathSFX)
+                    chatContent = `${token.name} tried to heal ${target.name} but failed miserably and incapacitated him/her in the process.`
+                }
                 await createChatMessage()
             } else {
                 amount = 1
@@ -179,7 +197,12 @@ export async function heal_other_gm(data) {
             } else if (targetInc) {
                 await succ.toggle_status(targetActor, 'incapacitated', false)
                 if (target.data.flags?.healthEstimate?.dead) { target.document.unsetFlag("healthEstimate", "dead") }
-                chatContent = `${token.name} cured ${target.name}'s Incapacitation.`
+                chatContent = `${token.name} cured ${target.name}'s Incapacitation.` //Incapacitation: Healing at least one Wound on an Incapacitated patient removes that state (and restores consciousness if he was knocked out). -> so a Wound is healed in any case(?).
+                if (combatHealing === false) {
+                    amount = 1
+                    await removeInjury(targetActor, amount)
+                    await apply()
+                }
             }
             await createChatMessage()
         } else if (method === "heal") {
@@ -210,8 +233,9 @@ export async function heal_other_gm(data) {
                     chatContent = `${token.name} stopped ${target.name}'s Bleeding Out.`
                 } if (targetInc) {
                     await succ.toggle_status(targetActor, 'incapacitated', false)
-                    amount = amount - 1
+                    //amount = amount - 1 //Incapacitation: Healing at least one Wound on an Incapacitated patient removes that state (and restores consciousness if he was knocked out). -> so a Wound is healed in any case(?).
                     chatContent += ` And cured ${target.name}'s Incapacitation.`
+                    if (combatHealing === true) {amount = 0}
                     if (amount <= 0) { await createChatMessage() }
                 }
             } if (amount > 0) {
@@ -232,7 +256,12 @@ export async function heal_other_gm(data) {
     }
     async function apply() {
         if (rating === "critFail" && method === "heal") {
-            targetActor.update({ "data.wounds.value": targetWounds + amount })
+            let setWounds = targetWounds + amount
+            if (targetWoundsMax <= setWounds) { 
+                setWounds = targetWoundsMax
+                await succ.apply_status(targetActor, 'incapacitated', true)
+            }
+            targetActor.update({ "data.wounds.value": setWounds })
         } else if (method === "relief") {
             if (targetFatigue < amount) { amount = targetFatigue }
             targetActor.update({ "data.fatigue.value": targetFatigue - amount })
@@ -627,7 +656,8 @@ async function healSelf(token, speaker) {
         if (critFail === true) {
             ui.notifications.notify("You've rolled a Critical Failure!");
             let chatData = `${actorAlias} rolled a <span style="font-size:150%">Critical Failure!</span> and takes another Wound! See the rules on Natural Healing for details.`;
-            applyWounds();
+            let noVig = true
+            applyWounds(noVig);
             ChatMessage.create({ content: chatData });
         }
         else {
@@ -649,7 +679,7 @@ async function healSelf(token, speaker) {
                     chatData += `, stabilises from Bleeding Out`
                     conditionsText += " but you stabilise from Bleeding Out"
                 } if (inc === true && roundedCopy > 0) {
-                    roundedCopy = roundedCopy -1
+                    //roundedCopy = roundedCopy -1 //Incapacitation: Healing at least one Wound on an Incapacitated patient removes that state (and restores consciousness if he was knocked out). -> so a Wound is healed in any case(?).
                     if (roundedCopy <= 0) { 
                         chatData += ` and recovers from Incapacitation.`
                         conditionsText += " and recover from Incapacitation"
@@ -973,7 +1003,7 @@ async function healSelf(token, speaker) {
         }
     }
 
-    async function applyWounds() {
+    async function applyWounds(noVig) {
         setWounds = wv + 1
         if (setWounds <= wm) {
             await token.actor.update({ "data.wounds.value": setWounds });
@@ -987,6 +1017,7 @@ async function healSelf(token, speaker) {
             if (incapSFX) {
                 AudioHelper.play({ src: `${incapSFX}` }, true);
             }
+            if (noVig === true) {return}
             await swim.soak_damage()
         }
     }

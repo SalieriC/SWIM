@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]  
+
+## [0.16.0] - 2022-04-03
 ### Added
 - Common Bond function to give a Benny from one token to another.
 - Free Reroll to the Radiation Centre macro if the Soldier Edge is found.
@@ -16,10 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added default volume option to the settings.
 - Mighty Summoner macro that summons a creature selected by the user.  
 - Soak Damage now allows for Incapacitation rolls and applies appropriate injuries.
-- Heal Wounds and remove fatigue for non-owned tokens/actors in the Personal Health Centre (PHC).
+- PHC can heal Wounds and remove fatigue for non-owned tokens/actors in the Personal Health Centre (PHC).
+- PHC offers a way to use the Healing *skill* in combat to remove Bleeding Out and/or Inc but not Wounds (important because healing Wounds takes ten minutes, stabilising however is an Action).
 - PHC now removes combat injuries and those from Incapacitation (unless they are permanent).
-- PHC now removes Bleeding Out and Incapacitation before Wounds.
-- PHC now removes the Health Estimate flag if Incapacitated is removed.
+- PHC now removes Bleeding Out before and Incapacitation with Wounds.
+- PHC now removes the Health Estimate flag if Incapacitated.
 - Shape Changer now copies the permission settings from the original actor to give the player owner permissions.
 - Shape Changer adds focus to new token.
 ### Changed
@@ -29,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The injury table results are no longer checked with case sensitive translation strings.
 ### Fixed
 - Radiation Centre will now inform about Benny use.
-- Small update fix in shape changer that will hopefully update the combat.
+- Small fix in shape changer that will hopefully update the combat.
 - Combat injuries were not properly applied in soak damage.
 - A bug that caused the PHC to break because of a faulty setting string.
 - A leftover variable declaration in the shape changer caused it to fail when trying to play the VFX if executed by a non-GM.
@@ -37,8 +40,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Shape changer now adds elevation of the original token to the newly created token (thanks @pmoore603 for spotting this).
 - Shape changer now creates the new actor in the proper folder even if executed by non-GM.
 - Shape changer dialogue now gets the proper div class.
-- Unstun doesn't remove prone but now properly removes stunned on a raise.
+- Unstun doesn't remove prone but now properly removes stunned on a raise (thanks @Razortide for spotting).
 - Macros now have the proper icons from SUCC.
+### Languages:
+- English
+- German (@Razortide)
 
 ## [0.15.0] - 2022-03-18
 ### Added  
