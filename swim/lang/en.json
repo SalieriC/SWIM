@@ -72,6 +72,8 @@
   "SWIM.chaseDeck-DeckDownHint": "The grid square on which the first card of the first row will be (measured from the top left corner of the scene, including padding). Default: 24",
   "SWIM.chaseDeck-DeckRightName": "First card position from left:",
   "SWIM.chaseDeck-DeckRightHint": "The grid square on which the first card of the first row will be (measured from the left border of the scene, including padding). Default: 10",
+  "SWIM.shapeChange-raiseScaleMultiplierName": "Shape change scale multiplier:",
+  "SWIM.shapeChange-raiseScaleMultiplierHint": "The multiplier used to apply to the token size on a Shape Change raise; must be a positive number between 0.10 and 5.00 (2 decimal places). This value should be higher than 1, since it represents a larger than normal effect. Default: 1",
   "SWIM.defaultVolumeName": "Default Volume:",
   "SWIM.defaultVolumeHint": "The volume used by default to play the sound effects. Must be a number between 0 and 1. Currently individual sounds can't have another volume, this feature will be implemented at a later time.",
   "SWIM.edge-combatReflexes": "Combat Reflexes",

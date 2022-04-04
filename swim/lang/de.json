@@ -72,6 +72,8 @@
   "SWIM.chaseDeck-DeckDownHint": "Das von oben gemessene Rasterquadrat, einschließlich des Paddings, zur Platzierung der ersten Karte. Standardeinstellung: 24",
   "SWIM.chaseDeck-DeckRightName": "Position der ersten Karte von links:",
   "SWIM.chaseDeck-DeckRightHint": "Das von links gemessene Rasterquadrat, einschließlich des Paddingsm zur Platzierung der ersten Karte. Standardeinstellung: 10",
+  "SWIM.shapeChange-raiseScaleMultiplierName": "Multiplikator für die Formänderungsskala:",
+  "SWIM.shapeChange-raiseScaleMultiplierHint": "Der Multiplikator, der verwendet wird, um die Token-Größe bei einer Shape-Change-Erhöhung anzuwenden; muss eine positive Zahl zwischen 0,10 und 5,00 sein (2 nachkommastellen). Dieser Wert sollte größer als 1 sein, da er einen größeren Effekt als normal darstellt.Standardeinstellung: 1",
   "SWIM.defaultVolumeName": "Standardlautstärke:",
   "SWIM.defaultVolumeHint": "Die Standardlautstärke, mit der ein Soundeffekt abgespielt wird. Dies muss eine Nummer zwischen 1 und 0 sein. Im Moment können einzelne Soundeffekte keine eigene Lautstärke haben, dieses Feature ist aber geplant.",
   "SWIM.edge-combatReflexes": "Kampfreflexe",

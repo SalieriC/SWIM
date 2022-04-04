@@ -1,5 +1,7 @@
 /* globals game, FormApplication, $ */
 
+import * as SWIM from './constants.js'
+
 export const settingVariables = [
     {id: 'grittyDamage', config_type: Boolean, tab: "Setting Rules", default: false},
     {id: 'grittyDamageNPC', config_type: Boolean, tab: "Setting Rules", default: false},
@@ -22,6 +24,8 @@ export const settingVariables = [
     {id: 'chaseDeck-CardWidth', config_type: Number, tab: "Chase Layout", default: '4'},
     {id: 'chaseDeck-DeckDown', config_type: Number, tab: "Chase Layout", default: '24'},
     {id: 'chaseDeck-DeckRight', config_type: Number, tab: "Chase Layout", default: '10'},
+    {id: 'shapeChange-raiseScaleMultiplier', config_type: Number, tab: "Macro Options", default: SWIM.RAISE_SCALE_DEFAULT,
+        min: SWIM.RAISE_SCALE_MIN, max: SWIM.RAISE_SCALE_MAX, step: 0.01},
     {id: 'sfxDelay', config_type: Number, tab: "SFX & VFX Options", default: '110'},
     {id: 'defaultVolume', config_type: Number, tab: "SFX & VFX Options", default: '1' },
     {id: 'shakenSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",
@@ -85,8 +89,8 @@ class CustomConfigForm extends FormApplication {
         let options = super.defaultOptions;
         options.id = 'swim-custom-config';
         options.template = "/modules/swim/templates/customConfig.hbs";
-        options.width = 660;
-        options.height = 600;
+        options.width = SWIM.CONFIG_WINDOW_WIDTH;
+        options.height = SWIM.CONFIG_WINDOW_HEIGHT;
         return options;
     }
 
@@ -114,7 +118,11 @@ class CustomConfigForm extends FormApplication {
             }
             tabs[setting.tab].push(
                 {id: setting.id,
-                 is_boolen: setting.config_type === Boolean,
+                 is_boolean: setting.config_type === Boolean,
+                 is_numeric: setting.config_type === Number,
+                 min: setting.min,
+                 max: setting.max,
+                 step: setting.step,
                  use_audio_picker: setting.config_type === window.Azzu.SettingsTypes.FilePickerAudio,
                  use_video_picker: setting.config_type === window.Azzu.SettingsTypes.FilePickerVideo,
                  value: game.settings.get('swim', setting.id),
