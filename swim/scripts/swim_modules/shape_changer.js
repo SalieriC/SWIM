@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 2.0.3
+ * v. 2.0.4
  * By SalieriC
  ******************************************************/
 export async function shape_changer_script() {
@@ -61,7 +61,7 @@ export async function shape_changer_script() {
             else if (actor.data.data.advances?.value < 16) { maxSize = 4 }
             else if (actor.data.data.advances?.value >= 16) { maxSize = 10 }
             //Selection for all shape change presets:
-            if (size <= maxSize) {
+            if (size <= maxSize || game.user.isGM === true) {
                 scOptions = scOptions + `<option value="${each.id}">${each.data.name}</option>`;
             }
         }
@@ -344,6 +344,10 @@ export async function shape_changer_gm(data) {
         // Adding elevation of the original token to the new token
         let newToken = canvas.tokens.get(newTokenID[0])
         await newToken.document.update({'elevation': token.data.elevation})
+        // Add focus if the user is a GM, otherwise permission management will take care of that later.
+        if (game.user.isGM === true) {
+            newToken.control()
+        }
 
         if (token.combatant != null) {
             let oldCombatData = token.combatant.toObject()

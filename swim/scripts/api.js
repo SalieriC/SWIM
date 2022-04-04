@@ -2,6 +2,7 @@
 
 import { ammo_management_script, br2_ammo_management_script } from './swim_modules/ammo_management.js'
 import { chase_setup_script } from './swim_modules/chase_setup.js'
+import { common_bond_script } from './swim_modules/common_bond.js'
 import { deviation_script } from './swim_modules/deviation.js'
 import { falling_damage_script } from './swim_modules/falling_damage.js'
 import { fear_table_script } from './swim_modules/fear_table.js'
@@ -43,6 +44,7 @@ export class api {
       ammo_management: api._ammo_management,
       br2_ammo_management: api._ammo_management_br2,
       chase_setup: api._chase_setup,
+      common_bond: api._common_bond,
       deviation: api._deviation,
       falling_damage: api._falling_damage,
       fear_table: api._fear_table,
@@ -232,6 +234,7 @@ export class api {
    * - Ammo Management
    * - Ammo Management for BR2
    * - Chase Setup
+   * - Common Bond
    * - Deviation
    * - Falling Damage
    * - Fear Table
@@ -258,6 +261,10 @@ export class api {
   // Chase Setup
   static async _chase_setup() {
     chase_setup_script()
+  }
+  // Common Bond
+  static async _common_bond() {
+    common_bond_script()
   }
   // Deviation
   static async _deviation() {

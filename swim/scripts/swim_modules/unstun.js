@@ -1,6 +1,6 @@
 /*******************************************
  * Unstun macro for SWADE
- * version v.4.0.1
+ * version v.4.0.3
  * Made and maintained by SalieriC#8263 using original Code from Shteff.
  ******************************************/
 
@@ -73,9 +73,10 @@ export async function unstun_script() {
                 useBenny();
             } else if (rollWithEdge >= 8) {
                 chatData += `, is no longer Stunned and looses Vulnerable after the turn.`;
+                let delay = 100
                 await succ.apply_status(token, 'distracted', false)
+                await swim.wait(delay)
                 await succ.apply_status(token, 'stunned', false)
-                await succ.apply_status(token, 'prone', false)
                 if (unshakeSFX) { AudioHelper.play({ src: `${unshakeSFX}` }, true); }
             } else {
                 chatData += ` and remains Stunned.`;
