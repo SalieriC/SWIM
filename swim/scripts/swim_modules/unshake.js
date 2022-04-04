@@ -97,7 +97,7 @@ export async function unshake_swd_script() {
         if (token.actor.data.data.wildcard === false && token.actor.type === "npc") { wildCard = false }
         let critFail = await swim.critFail_check(wildCard, r)
         if (critFail === true) {
-            ui.notifications.notify(game.i18n.localize("SWIM.notificaton-CritFail"));
+            ui.notifications.notify(game.i18n.localize("SWIM.notification-CritFail"));
             let chatData = game.i18n.format("SWIM.chatMessage-UnshakeResultCritFail", {name : actorAlias});
             ChatMessage.create({ content: chatData });
         }
@@ -262,7 +262,7 @@ export async function unshake_swade_script() {
         if (token.actor.data.data.wildcard === false && token.actor.type === "npc") { wildCard = false }
         let critFail = await swim.critFail_check(wildCard, r)
         if (critFail === true) {
-            ui.notifications.notify(game.i18n.localize("SWIM.notificaton-CritFail"));
+            ui.notifications.notify(game.i18n.localize("SWIM.notification-CritFail"));
             let chatData = game.i18n.format("SWIM.chatMessage-UnshakeResultCritFail", {name : actorAlias});
             ChatMessage.create({ content: chatData });
         }
