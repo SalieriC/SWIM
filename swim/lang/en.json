@@ -132,5 +132,16 @@
   "SWIM.dialogue-cancel": "<i class='fas fa-times'></i> Cancel",
   "SWIM.notification-noBenniesLeft": "You have no more Bennies left.",
   "SWIM.chatMessage-commonBond": "{officialClass}<p>{bennyHTML} <strong>{tokenName}</strong> gave a Benny to <strong>{targetName}</strong></p></div>",
-  "SWIM.notification-noTokens": "There are no tokens on the current scene that could partake in combat."
+  "SWIM.notification-noTokens": "There are no tokens on the current scene that could partake in combat.",
+  "SWIM.notification-noReloadableOrConsumableWeapon": "You have no reloadable or consumable weapons.",
+  "SWIM.dialogue-attack-dialog":"Attack Dialog",
+  "SWIM.dialogue-shoot":"Shoot",
+  "SWIM.dialogue-reload":"Reload",
+  "SWIM.notification-NoWeaponLeft":"You don't have a ${itemWeaponName} left.",
+  "SWIM.notification-NoRequiredAmmoAvailable":"You don't have the required ammo in your inventory.",
+  "SWIM.notification-InsufficientAmmoAvailable":"You have insufficient ammunition.",
+  "SWIM.notification-OutOfAmmo":"You have no ammo left to reload this weapon.",
+  "SWIM.notification-CannotReloadConsumableWeapons":"You cannot reload consumable weapons, please use Shooting instead.",
+  "SWIM.notification-CannotChangeAmmoTypeIfNPCDontUseAmmoFromInventory":"You cannot change ammo types on this weapon if NPCs don't use Ammo from their Inventory.",
+  "SWIM.notification-WeaponAlreadyFull":"The weapon is fully loaded already."
 }
