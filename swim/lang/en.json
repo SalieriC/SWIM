@@ -132,5 +132,13 @@
   "SWIM.dialogue-cancel": "<i class='fas fa-times'></i> Cancel",
   "SWIM.notification-noBenniesLeft": "You have no more Bennies left.",
   "SWIM.chatMessage-commonBond": "{officialClass}<p>{bennyHTML} <strong>{tokenName}</strong> gave a Benny to <strong>{targetName}</strong></p></div>",
-  "SWIM.notification-noTokens": "There are no tokens on the current scene that could partake in combat."
+  "SWIM.notification-noTokens": "There are no tokens on the current scene that could partake in combat.",
+  "SWIM.combatSetupName": "Combat Setup",
+  "SWIM.combatSetupHint": "Adds all appropriate tokens of the current scene to the combat tracker.",
+  "SWIM.combatPlaylistManagementName": "Combat Playlist Management",
+  "SWIM.combatPlaylistManagementHint": "If set to true, the combat playlist below will start playing when combat is started. When the combat ends, the combat playlist will stop and all previos playlists will start playing again.",
+  "SWIM.combatPlaylistName": "Combat Playlist:",
+  "SWIM.combatPlaylistHint": "This is the name of the playlist that starts playing when combat starts. Must be the exact name of the playlist, is case sensitive.",
+  "SWIM.noStopFolderName": "Folder of playlists that don't stop:",
+  "SWIM.noStopFolderHint": "You can specify a folder name (exact, not case sensitive) containing plalists that will never stop playing when combat starts."
 }
