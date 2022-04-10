@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]  
+### Added
+- Combat Setup Button in the Token Actions:
+- - Automatically adds all tokens on the current scene to the combat tracker (excluding NPCs which are incapacitated)
+- - Automatically starts combat, drawing initiative for all tokens and sets the turn to the first token
+- Settings to define a combat playlist which starts when combat starts
+- When combat starts, all playlists are stopped
+- - There is a way to define a folder in the settings which holds playlists that are never stopped on combat start.
 
 ## [0.16.0] - 2022-04-03
 ### Added
