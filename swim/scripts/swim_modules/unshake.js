@@ -87,32 +87,31 @@ export async function unshake_swd_script() {
             } //Finally, if the unShakeBonus does not come from an AE apply it generically (as of yet this is just a failsafe but makes the script future proof.)
         } else if (unShakeBonus != 0) {
             rollWithEdge += unShakeBonus;
-            edgeText += game.i18n.format("SWIM.chatMessage-UnshakeBonusOtherActor", {unShakeBonus: unShakeBonus});
+            edgeText += game.i18n.format("SWIM.chatMessage-unshakeBonusOtherActor", {unShakeBonus: unShakeBonus});
         }
 
-        let chatData = game.i18n.format("SWIM.chatMessage-UnshakeResultRoll", {name : actorAlias, rollWithEdge : rollWithEdge})
-        `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge} </span>`;
+        let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultRoll", {name : actorAlias, rollWithEdge : rollWithEdge})
         // Checking for a Critical Failure.
         let wildCard = true;
         if (token.actor.data.data.wildcard === false && token.actor.type === "npc") { wildCard = false }
         let critFail = await swim.critFail_check(wildCard, r)
         if (critFail === true) {
-            ui.notifications.notify(game.i18n.localize("SWIM.notification-CritFail"));
-            let chatData = game.i18n.format("SWIM.chatMessage-UnshakeResultCritFail", {name : actorAlias});
+            ui.notifications.notify(game.i18n.localize("SWIM.notification-critFail"));
+            let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultCritFail", {name : actorAlias});
             ChatMessage.create({ content: chatData });
         }
         else {
             if (rollWithEdge > 3 && rollWithEdge <= 7) {
-                chatData += game.i18n.localize("SWIM.chatMessage-UnshakeResultNoShakenCannotAct");
+                chatData += game.i18n.localize("SWIM.chatMessage-unshakeResultNoShakenCannotAct");
                 await succ.apply_status(token, 'shaken', false)
                 if (unshakeSFX) { AudioHelper.play({ src: `${unshakeSFX}` }, true); }
                 useBenny();
             } else if (rollWithEdge >= 8) {
-                chatData += game.i18n.localize("SWIM.chatMessage-UnshakeResultNoShakenCanAct");
+                chatData += game.i18n.localize("SWIM.chatMessage-unshakeResultNoShakenCanAct");
                 await succ.apply_status(token, 'shaken', false)
                 if (unshakeSFX) { AudioHelper.play({ src: `${unshakeSFX}` }, true); }
             } else {
-                chatData += game.i18n.localize("SWIM.chatMessage-UnshakeResultStillShaken");
+                chatData += game.i18n.localize("SWIM.chatMessage-unshakeResultStillShaken");
                 useBenny();
             }
             chatData += ` ${edgeText}`;
@@ -124,23 +123,23 @@ export async function unshake_swd_script() {
         let { _, __, totalBennies } = await swim.check_bennies(token)
         if (totalBennies > 0) {
             new Dialog({
-                title: game.i18n.localize("SWIM.dialogue-SpendBennyTitle"),
-                content: game.i18n.format("SWIM.dialogue-SpendBennyText", {totalBennies : totalBennies}),
+                title: game.i18n.localize("SWIM.dialogue-spendBennyTitle"),
+                content: game.i18n.format("SWIM.dialogue-spendBennyText", {totalBennies : totalBennies}),
                 buttons: {
                     one: {
-                        label: game.i18n.localize("SWIM.dialogue-Yes"),
+                        label: game.i18n.localize("SWIM.dialogue-yes"),
                         callback: async (_) => {
                             await swim.spend_benny(token);
                             //Chat Message to let the everyone knows a benny was spent
                             ChatMessage.create({
                                 user: game.user.id,
-                                content: game.i18n.format("SWIM.dialogue-SpentBennyToUnshake", {bennyImage : bennyImage, player : game.user.name, name : token.name}),
+                                content: game.i18n.format("SWIM.dialogue-spentBennyToUnshake", {bennyImage : bennyImage, player : game.user.name, name : token.name}),
                             });
                             await succ.apply_status(token, 'shaken', false)
                         }
                     },
                     two: {
-                        label: game.i18n.localize("SWIM.dialogue-Yes"),
+                        label: game.i18n.localize("SWIM.dialogue-yes"),
                         callback: (_) => { return; },
                     }
                 },
@@ -253,25 +252,25 @@ export async function unshake_swade_script() {
             } //Finally, if the unShakeBonus does not come from an AE apply it generically (as of yet this is just a failsafe but makes the script future proof.)
         } else if (unShakeBonus != 0) {
             rollWithEdge += unShakeBonus;
-            edgeText += game.i18n.format("SWIM.dialogue-SWIM.chatMessage-UnshakeBonusOtherActor", {unShakeBonus : unShakeBonus});
+            edgeText += game.i18n.format("SWIM.dialogue-SWIM.chatMessage-unshakeBonusOtherActor", {unShakeBonus : unShakeBonus});
         }
 
-        let chatData = game.i18n.format(""SWIM.chatMessage-UnshakeResultRoll", {name : actorAlias, rollWithEdge : rollWithEdge});
+        let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultRoll", {name : actorAlias, rollWithEdge : rollWithEdge});
         // Checking for a Critical Failure.
         let wildCard = true;
         if (token.actor.data.data.wildcard === false && token.actor.type === "npc") { wildCard = false }
         let critFail = await swim.critFail_check(wildCard, r)
         if (critFail === true) {
-            ui.notifications.notify(game.i18n.localize("SWIM.notification-CritFail"));
-            let chatData = game.i18n.format("SWIM.chatMessage-UnshakeResultCritFail", {name : actorAlias});
+            ui.notifications.notify(game.i18n.localize("SWIM.notification-critFail"));
+            let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultCritFail", {name : actorAlias});
             ChatMessage.create({ content: chatData });
         }
         else {
             if (rollWithEdge <= 3) {
-                chatData += game.i18n.localize("SWIM.chatMessage-UnshakeResultRemainShaken");
+                chatData += game.i18n.localize("SWIM.chatMessage-unshakeResultRemainShaken");
                 useBenny();
             } else if (rollWithEdge >= 4) {
-                chatData += game.i18n.localize("SWIM.chatMessage-UnshakeResultNoShakenCanAct");
+                chatData += game.i18n.localize("SWIM.chatMessage-unshakeResultNoShakenCanAct");
                 await succ.apply_status(token, 'shaken', false)
                 if (unshakeSFX) { AudioHelper.play({ src: `${unshakeSFX}` }, true); }
             }
@@ -284,23 +283,23 @@ export async function unshake_swade_script() {
         let { _, __, totalBennies } = await swim.check_bennies(token)
         if (totalBennies > 0) {
             new Dialog({
-                title: game.i18n.localize("SWIM.dialogue-SpendBennyTitle"),
-                content: game.i18n.format("SWIM.dialogue-SpendBennyText", {totalBennies : totalBennies}),
+                title: game.i18n.localize("SWIM.dialogue-spendBennyTitle"),
+                content: game.i18n.format("SWIM.dialogue-spendBennyText", {totalBennies : totalBennies}),
                 buttons: {
                     one: {
-                        label: game.i18n.localize("SWIM.dialogue-Yes"),
+                        label: game.i18n.localize("SWIM.dialogue-yes"),
                         callback: async (_) => {
                             await swim.spend_benny(token);
                             //Chat Message to let the everyone knows a benny was spent
                             ChatMessage.create({
                                 user: game.user.id,
-                                content: game.i18n.format("SWIM.dialogue-SpentBennyToUnshake", {player : game.user.name, name : token.name}),
+                                content: game.i18n.format("SWIM.dialogue-spentBennyToUnshake", {player : game.user.name, name : token.name}),
                             });
                             await succ.apply_status(token, 'shaken', false)
                         }
                     },
                     two: {
-                        label: game.i18n.localize("SWIM.dialogue-No"),
+                        label: game.i18n.localize("SWIM.dialogue-no"),
                         callback: (_) => { return; },
                     }
                 },
