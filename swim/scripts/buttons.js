@@ -1,3 +1,5 @@
+import { combat_setup } from "./swim_modules/combat_setup.js";
+
 export function swim_buttons(hudButtons) {
     // Add Raise Calculator Button
     let hud = hudButtons.find(val => { return val.name == "token"; })
@@ -48,6 +50,15 @@ export function swim_buttons(hudButtons) {
                 }).render(true);
             }
         });
+        if (game.user.isGM) {
+            hud.tools.push({
+                name: "SWIM.combatSetupName",
+                title: "SWIM.combatSetupHint",
+                icon: "fas fa-fist-raised",
+                button: true,
+                onClick: async () => { combat_setup() }
+            })
+        }
     }
 
     // Hijack the systems chase setup:
