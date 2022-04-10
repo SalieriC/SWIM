@@ -264,7 +264,6 @@ export async function ammo_management_script() {
                             alias: token.name
                         },
                         content: game.i18n.format("SWIM.chatMessage-shotsFired", {weaponIMG: weaponIMG, name: token.name, shots : shots, itemWeaponName: item_weapon.name, newCharges: newCharges})
-                        content: game.i18n.format("SWIM.chatMessage-ShotsFired", {weaponIMG: weaponIMG, name: token.name, shots : shots, itemWeaponName: item_weapon.name, newCharges: newCharges})
                     })
                 } else {
                     ChatMessage.create({
