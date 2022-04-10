@@ -494,7 +494,7 @@ export async function soak_damage_script() {
 
         new Dialog({
             title: game.i18n.localize("SWIM.dialogue-incapacitationRoll"),
-            content: game.i18n.localize("SWIM.dialogue-incapacitationRollText")
+            content: game.i18n.localize("SWIM.dialogue-incapacitationRollText"),
             buttons: {
                 one: {
                     label: game.i18n.localize("SWIM.dialogue-rollVigor"),
