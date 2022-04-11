@@ -77,7 +77,7 @@ export async function soak_damage_script() {
         // If Holy Warrior or Unholy Warrior is used: Include the amount of PPs used as a bonus to the roll.
         if (typeof numberPP === "number") {
             rollWithEdge += numberPP;
-            edgeText = edgeText + `<br/><em>+ ${numberPP}</em> from spent Power Points.`;
+            edgeText = edgeText + game.i18n.format("SWIM.chatMessage-edgeText", {numberPP : numberPP});
         }
 
         // Apply +2 if Elan is present and if it is a reroll.
