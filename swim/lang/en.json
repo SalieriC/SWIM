@@ -92,6 +92,7 @@
   "SWIM.ability-coup-50f": "Coup",
   "SWIM.edge-holyWarrior": "Holy Warrior",
   "SWIM.edge-unholyWarrior": "Unholy Warrior",
+  "SWIM.chatMessage-edgeText":"<br/><em>+ {numberPP}</em> from spent Power Points.",
   "SWIM.hindrance-slow": "Slow",
   "SWIM.injuryTable-unmentionables": "unmentionables",
   "SWIM.injuryTable-arm": "arm",
