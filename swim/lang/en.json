@@ -169,7 +169,7 @@
   "SWIM.chatMessage-unHolyWarrior":"<br/><em>+ {numberPP}</em> from spent Power Points.",
   "SWIM.chatMessage-soakNoWounds":" and is unable to soak any Wounds.",
   "SWIM.chatMessage-soakSomeWounds":" and soaks ${rounded} of his Wounds.",
-  "SWIM-chatMessage-SoakAllWounds":" and soaks all of his Wounds.",
+  "SWIM-chatMessage-soakAllWounds":" and soaks all of his Wounds.",
   "SWIM.dialogue-applyWounds":"Applying Wounds",
   "SWIM.dialogue-soakWounds":"Soak Wounds",
   "SWIM.dialogue-soakWoundsWithUnHolyWarrior":"Soak with (Un)Holy Warrior",
@@ -192,4 +192,3 @@
   "SWIM.noStopFolderName": "Folder of playlists that don't stop:",
   "SWIM.noStopFolderHint": "You can specify a folder name (exact, not case sensitive) containing plalists that will never stop playing when combat starts."
 }
-
