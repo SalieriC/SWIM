@@ -660,7 +660,7 @@ export async function br2_ammo_management_script(message, actor, item) {
                     speaker: {
                         alias: actor.name
                     },
-                    content: game.i18n.format("SWIM.chatMessage-shotsFiredWithCurrentAmmoNoRoundsWithoutNewCharges", {weaponIMG : weaponIMG, name : actor.name, shots : shots, currentAmmo: currentAmmo, itemWeaponName: item_weapon.name}
+                    content: game.i18n.format("SWIM.chatMessage-shotsFiredWithCurrentAmmoNoRoundsWithoutNewCharges", {weaponIMG : weaponIMG, name : actor.name, shots : shots, currentAmmo: currentAmmo, itemWeaponName: item_weapon.name})
                 })
             } else if (!item_ammo && actor.type === "character" && npcAmmo === false || !item_ammo && npcAmmo === true) {
                 return ui.notifications.error(game.i18n.localize("SWIM.notification-noRequiredAmmoAvailable"));
