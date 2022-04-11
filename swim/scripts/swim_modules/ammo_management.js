@@ -46,7 +46,7 @@ export async function ammo_management_script() {
         let buttons = getButtons();
 
         let dialog = new Dialog({
-            content, buttons, title: game.i18n.localize("SWIM.dialogue-attack");
+            content, buttons, title: game.i18n.localize("SWIM.dialogue-attack")
         }, {
             width: 400,
         });
