@@ -182,13 +182,5 @@
   "SWIM.dialogue-outOfBenniesApplyWounds":"You have no more bennies, Wounds will be applied now.",
   "SWIM.dialogue-incapacitationRoll":"Incapacitation Roll",
   "SWIM.dialogue-incapacitationRollText":"<form><p>You became incapacitated by damage.</p><p>You need to make an immediate Vigor roll. On a Critical Failure you will perish.</p></form>",
-  "SWIM.dialogue-rollVigor":"Roll Vigor",
-  "SWIM.combatSetupName": "Combat Setup",
-  "SWIM.combatSetupHint": "Adds all appropriate tokens of the current scene to the combat tracker.",
-  "SWIM.combatPlaylistManagementName": "Combat Playlist Management",
-  "SWIM.combatPlaylistManagementHint": "If set to true, the combat playlist below will start playing when combat is started. When the combat ends, the combat playlist will stop and all previos playlists will start playing again.",
-  "SWIM.combatPlaylistName": "Combat Playlist:",
-  "SWIM.combatPlaylistHint": "This is the name of the playlist that starts playing when combat starts. Must be the exact name of the playlist, is case sensitive.",
-  "SWIM.noStopFolderName": "Folder of playlists that don't stop:",
-  "SWIM.noStopFolderHint": "You can specify a folder name (exact, not case sensitive) containing plalists that will never stop playing when combat starts."
+  "SWIM.dialogue-rollVigor":"Roll Vigor"
 }
