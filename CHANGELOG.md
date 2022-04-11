@@ -12,12 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Settings to define a combat playlist which starts when combat starts
 - When combat starts, all playlists are stopped
 - - There is a way to define a folder in the settings which holds playlists that are never stopped on combat start.
-
-## [0.16.1] - 2022-04-04
-### Added
 - Added Macro Option tab in SWIM configuration window.
 - Added ability for Shape Change function to have the token be a larger size on a raise. The scale multiplier is a configurable option in the Macro Option tab.
 - Added constants.js file as a central repository for constant values.
+- Dismiss function for the Mighty Summoner: If the selected token is a summoned creature, the owner (and GMs) can choose to dismiss it instead of summoning a new creature.
 ### Changed
 - Enhanced Shape Change function to morph changing token into each other by growing/shrinking size and opacity (alpha) of both tokens as needed.
 - Enhanced numeric input handling for SWIM configuration. Allows number input fields to have min, max, and step fields, which allows fields to be range and precision (decimal places) checked.

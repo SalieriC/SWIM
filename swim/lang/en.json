@@ -142,5 +142,6 @@
   "SWIM.combatPlaylistName": "Combat Playlist:",
   "SWIM.combatPlaylistHint": "This is the name of the playlist that starts playing when combat starts. Must be the exact name of the playlist, is case sensitive.",
   "SWIM.noStopFolderName": "Folder of playlists that don't stop:",
-  "SWIM.noStopFolderHint": "You can specify a folder name (exact, not case sensitive) containing plalists that will never stop playing when combat starts."
+  "SWIM.noStopFolderHint": "You can specify a folder name (exact, not case sensitive) containing plalists that will never stop playing when combat starts.",
+  "SWIM.dialogue-dismiss": "{officialClass}<p>Do you want to dismiss {name}? <strong>This can not be undone.</strong></p></div>"
 }

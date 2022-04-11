@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 1.0.1
+ * v. 1.1.0
  * By SalieriC
  ******************************************************/
  export async function summoner_script() {
@@ -75,7 +75,7 @@
         </div>`,
             buttons: {
                 one: {
-                    label: `<i class="fas fa-paw"></i>Summon Creature`,
+                    label: `<i class="fas fa-paw"></i> Summon Creature`,
                     callback: async (html) => {
                         //Get actor based on provided ID:
                         const scID = html.find(`#selected_sc`)[0].value;
@@ -115,7 +115,31 @@
             default: "one",
         }).render(true);
     }
-    main();
+
+    async function dismiss() {
+        new Dialog({
+            title: 'Mighty Summoner',
+            content: game.i18n.format("SWIM.dialogue-dismiss", {officialClass: officialClass, name: token.name}),
+            buttons: {
+                one: {
+                    label: `<i class="fas fa-paw"></i> Dismiss Creature`,
+                    callback: async (_) => {
+                        const dismissData = [token.id]
+                        await play_sfx(dismissData)
+                        await swim.wait(`200`) // delay script execution so that the vfx has time to get the tokens position
+                        await warpgate.dismiss(token.id, game.scenes.current.id)
+                    }
+                }
+            },
+            default: "one",
+        }).render(true);
+    }
+
+    if ((token.data.flags?.warpgate?.sourceActorId && actor.data.flags?.warpgate?.control?.user) && (game.user.isGM || game.user.id === token.actor.data.flags?.warpgate?.control?.user)) {
+        dismiss()
+    } else {
+        main();
+    }
 
     async function play_sfx(spawnData) {
         //Playing VFX & SFX:
