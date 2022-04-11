@@ -7,33 +7,29 @@ export async function personal_health_centre_script() {
     const { speaker, _, __, token } = await swim.get_macro_variables()
     const target = Array.from(game.user.targets)[0]
     if (!game.modules.get("healthEstimate")?.active) {
-        ui.notifications.error("Please install and activate Health Estimate to use this macro.");
+        ui.notifications.error(game.i18n.localize("SWIM.notification-healthEstimateRequired"));
         return;
     }
     // Check if a token is selected.
     if (!token || canvas.tokens.controlled.length > 1 || game.user.targets.size > 1) {
-        ui.notifications.error("Please select or target a single token first.");
+        ui.notifications.error(game.i18n.localize("SWIM.notification-selectOrTargetOneOrMoreTokens");
         return;
     }
     const officialClass = await swim.get_official_class()
 
     if (game.user.targets.size === 1 && (token.id != target.id)) {
         new Dialog({
-            title: "Heal other",
-            content: `${officialClass}
-             <h3>Heal someone else.</h3>
-             <p>You have targeted another token. Do you wish to heal that token?</p>
-             <p>If you wish to heal yourself instead, please remove the target.</p>
-             </div>`,
+            title: game.i18n.localize("SWIM.dialogue-healOther"),
+            content: game.i18n.format("SWIM.dialogue.healOtherContent", {officalClass : officialClass}),
             buttons: {
                 one: {
-                    label: "Heal Target",
+                    label: game.i18n.localize("SWIM.dialogue-healTarget"),
                     callback: async (_) => {
                         healOther(token, target)
                     }
                 },
                 two: {
-                    label: "Cancel",
+                    label: game.i18n.localize("SWIM.dialogue-cancel"),
                 }
             }
         }).render(true)
@@ -41,20 +37,16 @@ export async function personal_health_centre_script() {
         // Heal Self
         new Dialog({
             title: "Heal self",
-            content: `${officialClass}
-             <h3>Heal yourself.</h3>
-             <p>You have selected one token and may have targeted the same. This will only allow you to heal a token you own.</p>
-             <p>If you wish to heal someone else instead, please target another token but select yourself.</p>
-             </div>`,
+            content: game.i18n.format("SWIM.dialogue.healSelfContent", {officalClass : officialClass}),
             buttons: {
                 one: {
-                    label: "Heal myself",
+                    label: game.i18n.localize("SWIM.dialogue-healMyself"),
                     callback: async (_) => {
                         healSelf(token, speaker)
                     }
                 },
                 two: {
-                    label: "Cancel",
+                    label: game.i18n.localize("SWIM.dialogue-cancel"),
                 }
             }
         }).render(true)
@@ -65,14 +57,12 @@ async function healOther(token, target) {
     // The non-GM part of the heal other functionality
     const officialClass = await swim.get_official_class()
     let data
+    //Translate ToDo
     const methodOptions = `<option value="heal">Heal Wound(s)</option><option value="relief">Remove Fatigue</option>`
     new Dialog({
-        title: "Heal other",
-        content: `${officialClass}
-         <p>What was your result? Did you heal or remove fatigue</p>
-         <p>Note: If you had a Critical Failure on the healing or relief power you shouldn't be here. Only select Success or Raise if you used the power.</p>
-         <p>Important: You can use the Healing <strong>Skill</strong> in combat to stabilise (remove Incapacitated and/or Bleeding Out). This takes one Action. If you do that please check the checkbox below.</p>
-         <div class="form-group">
+        title: game.i18n.localize("SWIM.dialogue-healOther"),
+        content: game.i18n.format("SWIM.dialogue.healOtherSelect", {officalClass : officialClass})+`
+        <div class="form-group">
                 <label for="method">Method: </label>
                 <select id="method">${methodOptions}</select>
             </div>
@@ -83,7 +73,7 @@ async function healOther(token, target) {
          </div>`,
         buttons: {
             one: {
-                label: "Critical Failure",
+                label: game.i18n.localize("SWIM.gameTerm-CritFail"),
                 callback: async (html) => {
                     const method = html.find(`#method`)[0].value;
                     const combatHealing = html.find(`#combatHealing`)[0].checked;
@@ -98,13 +88,13 @@ async function healOther(token, target) {
                 }
             },
             two: {
-                label: "Failure",
+                label: game.i18n.localize("SWIM.gameTerm-Failure"),
                 callback: () => {
-                    ui.notifications.notify("There is nothing for you to do here.");
+                    ui.notifications.notify(game.i18n.localize("SWIM.notification.nothingToDo"));
                 }
             },
             three: {
-                label: "Success",
+                label: game.i18n.localize("SWIM.gameTerm.Success"),
                 callback: async (html) => {
                     const method = html.find(`#method`)[0].value;
                     const combatHealing = html.find(`#combatHealing`)[0].checked;
@@ -119,7 +109,7 @@ async function healOther(token, target) {
                 }
             },
             four: {
-                label: "Raise",
+                label: game.i18n.localize("SWIM.gameTerm-Raise"),
                 callback: async (html) => {
                     const method = html.find(`#method`)[0].value;
                     const combatHealing = html.find(`#combatHealing`)[0].checked;
@@ -167,18 +157,18 @@ export async function heal_other_gm(data) {
                 if (targetInc) {
                     await swim.play_sfx(deathSFX)
                     await succ.apply_status(targetActor, 'bleeding-out', true)
-                    chatContent = `${token.name} tried to heal ${target.name} but failed miserably and made him/her Bleeding Out.`
+                    chatContent = game.i18n.format("SWIM.chatMessage-healOtherCritFailAndBleedOut", {tokenName : token.name, targetName : target.name})
                 } else {
                     await succ.apply_status(targetActor, 'incapacitated', true)
                     await swim.play_sfx(deathSFX)
-                    chatContent = `${token.name} tried to heal ${target.name} but failed miserably and incapacitated him/her in the process.`
+                    chatContent = game.i18n.format("SWIM.chatMessage-healOtherCritFailAndIncap", {tokenName : token.name, targetName : target.name})
                 }
-                await createChatMessage()
+                await createchatMessage()
             } else {
                 amount = 1
                 await apply()
-                chatContent = `${token.name} tried to heal ${target.name} but failed miserably and applied another wound.`
-                await createChatMessage()
+                chatContent = game.i18n.format("SWIM.chatMessage-healOtherCritFailAndWound", {tokenName : token.name, targetName : target.name})
+                await createchatMessage()
             }
         }
     } else if (rating === "success") {
@@ -186,31 +176,31 @@ export async function heal_other_gm(data) {
         if (method === "relief") {
             amount = 1
             await apply()
-            chatContent = `${token.name} gave ${target.name} some relief by removing a Level of Fatigue and/or Shaken.`
-            await createChatMessage()
+            chatContent = game.i18n.format("SWIM.chatMessage-healOtherRelief", {tokenName : token.name, targetName : target.name})
+            await createchatMessage()
             await succ.toggle_status(targetActor, 'shaken', false)
         } else if (method === "heal" && (targetInc === true || targetBleedOut === true || (targetInc === true && targetBleedOut === true))) {
             // Remove Bleeding out/Incap before any wounds
             if (targetBleedOut) {
                 await succ.toggle_status(targetActor, 'bleeding-out', false)
-                chatContent = `${token.name} stopped ${target.name}'s Bleeding Out.`
+                chatContent = game.i18n.format("SWIM.chatMessage-healOtherCureBleetOut", {tokenName : token.name, targetName : target.name})
             } else if (targetInc) {
                 await succ.toggle_status(targetActor, 'incapacitated', false)
                 if (target.data.flags?.healthEstimate?.dead) { target.document.unsetFlag("healthEstimate", "dead") }
-                chatContent = `${token.name} cured ${target.name}'s Incapacitation.` //Incapacitation: Healing at least one Wound on an Incapacitated patient removes that state (and restores consciousness if he was knocked out). -> so a Wound is healed in any case(?).
+                chatContent = game.i18n.format("SWIM.chatMessage-healOtherCureIncap", {tokenName : token.name, targetName : target.name}) //Incapacitation: Healing at least one Wound on an Incapacitated patient removes that state (and restores consciousness if he was knocked out). -> so a Wound is healed in any case(?).
                 if (combatHealing === false) {
                     amount = 1
                     await removeInjury(targetActor, amount)
                     await apply()
                 }
             }
-            await createChatMessage()
+            await createchatMessage()
         } else if (method === "heal") {
             amount = 1
             await removeInjury(targetActor, amount)
             await apply()
-            chatContent = `${token.name} healed ${target.name} for one Wound.`
-            await createChatMessage()
+            chatContent = game.i18n.format("SWIM.chatMessage-healOtherSuccess", {tokenName : token.name, targetName : target.name})
+            await createchatMessage()
         }
     } else if (rating === "raise") {
         //Heal two Wounds or remove two Fatigue
@@ -218,8 +208,8 @@ export async function heal_other_gm(data) {
             //Heal two Fatigue and remove Shaken and Stunned
             amount = 2
             await apply()
-            chatContent = `${token.name} gave ${target.name} some relief by removing up to two Levels of Fatigue and/or Shaken and/or Stunned.`
-            await createChatMessage()
+            chatContent = game.i18n.format("SWIM.chatMessage-healOtherRaiseRelief", {tokenName : token.name, targetName : target.name})
+            await createchatMessage()
             await succ.toggle_status(targetActor, 'shaken', false)
             await succ.toggle_status(targetActor, 'stunned', false)
             await succ.toggle_status(targetActor, 'vulnerable', false)
@@ -230,24 +220,24 @@ export async function heal_other_gm(data) {
                 if (targetBleedOut) {
                     await succ.toggle_status(targetActor, 'bleeding-out', false)
                     amount = amount - 1
-                    chatContent = `${token.name} stopped ${target.name}'s Bleeding Out.`
+                    chatContent = game.i18n.format("SWIM.chatMessage-healOtherCureBleetOut", {tokenName : token.name, targetName : target.name})
                 } if (targetInc) {
                     await succ.toggle_status(targetActor, 'incapacitated', false)
                     //amount = amount - 1 //Incapacitation: Healing at least one Wound on an Incapacitated patient removes that state (and restores consciousness if he was knocked out). -> so a Wound is healed in any case(?).
-                    chatContent += ` And cured ${target.name}'s Incapacitation.`
+                    chatContent += game.i18n.format("SWIM.chatMessage-healOtherCureIncapContinued", {targetName : target.name})
                     if (combatHealing === true) {amount = 0}
-                    if (amount <= 0) { await createChatMessage() }
+                    if (amount <= 0) { await createchatMessage() }
                 }
             } if (amount > 0) {
                 //Heal two Wounds
                 await removeInjury(targetActor, amount)
                 await apply()
                 if (amount === 2) {
-                    chatContent = `${token.name} healed ${target.name} for two Wounds.`
+                    chatContent = game.i18n.format("SWIM.chatMessage-healOtherhealOtherRaise", {tokenName : token.name, targetName : target.name})
                 } else if (amount === 1) {
-                    chatContent += ` And healed ${target.name} for one Wound.`
+                    chatContent += game.i18n.format("SWIM.chatMessage-healOtherhealOtherRaiseContinued", {targetName : target.name})
                 }
-                await createChatMessage()
+                await createchatMessage()
             }
         }
     } else {
@@ -257,7 +247,7 @@ export async function heal_other_gm(data) {
     async function apply() {
         if (rating === "critFail" && method === "heal") {
             let setWounds = targetWounds + amount
-            if (targetWoundsMax <= setWounds) { 
+            if (targetWoundsMax <= setWounds) {
                 setWounds = targetWoundsMax
                 await succ.apply_status(targetActor, 'incapacitated', true)
             }
@@ -273,8 +263,8 @@ export async function heal_other_gm(data) {
         }
     }
 
-    async function createChatMessage() {
-        ChatMessage.create({
+    async function createchatMessage() {
+        chatMessage.create({
             user: game.user.id,
             content: chatContent,
         });
@@ -619,7 +609,7 @@ async function healSelf(token, speaker) {
 
     // This is the main function that handles the Vigor roll.
     async function rollNatHeal() {
-        
+
         const edgeNames = [game.i18n.localize("SWIM.edge-fastHealer").toLowerCase()];
         const actorAlias = speaker.alias;
         // Roll Vigor and check for Fast Healer.
@@ -658,7 +648,7 @@ async function healSelf(token, speaker) {
             let chatData = `${actorAlias} rolled a <span style="font-size:150%">Critical Failure!</span> and takes another Wound! See the rules on Natural Healing for details.`;
             let noVig = true
             applyWounds(noVig);
-            ChatMessage.create({ content: chatData });
+            chatMessage.create({ content: chatData });
         }
         else {
             let roundedCopy = rounded
@@ -680,11 +670,11 @@ async function healSelf(token, speaker) {
                     conditionsText += " but you stabilise from Bleeding Out"
                 } if (inc === true && roundedCopy > 0) {
                     //roundedCopy = roundedCopy -1 //Incapacitation: Healing at least one Wound on an Incapacitated patient removes that state (and restores consciousness if he was knocked out). -> so a Wound is healed in any case(?).
-                    if (roundedCopy <= 0) { 
+                    if (roundedCopy <= 0) {
                         chatData += ` and recovers from Incapacitation.`
                         conditionsText += " and recover from Incapacitation"
                     }
-                    else { 
+                    else {
                         chatData += `, recovers from Incapacitation`
                         conditionsText += " but you recover from Incapacitation"
                     }
@@ -709,7 +699,7 @@ async function healSelf(token, speaker) {
             }
             chatData += ` ${edgeText}`;
 
-            ChatMessage.create({ content: chatData });
+            chatMessage.create({ content: chatData });
         }
     }
 
@@ -882,7 +872,7 @@ async function healSelf(token, speaker) {
                         if (potion_to_update.data.data.quantity < 1) {
                             potion_to_update.delete();
                         }
-                        ChatMessage.create({
+                        chatMessage.create({
                             speaker: {
                                 alias: token.name
                             },
@@ -934,7 +924,7 @@ async function healSelf(token, speaker) {
                         if (potion_to_update.data.data.quantity < 1) {
                             potion_to_update.delete();
                         }
-                        ChatMessage.create({
+                        chatMessage.create({
                             speaker: {
                                 alias: token.name
                             },
@@ -973,7 +963,7 @@ async function healSelf(token, speaker) {
                     callback: async (html) => {
                         genericHealFatigue = Number(html.find("#numFatigue")[0].value);
                         RemoveFatigue();
-                        await ChatMessage.create({
+                        await chatMessage.create({
                             speaker: {
                                 alias: token.name
                             },
