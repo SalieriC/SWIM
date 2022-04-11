@@ -139,7 +139,7 @@ export async function unshake_swd_script() {
                         }
                     },
                     two: {
-                        label: game.i18n.localize("SWIM.dialogue-yes"),
+                        label: game.i18n.localize("SWIM.dialogue-no"),
                         callback: (_) => { return; },
                     }
                 },

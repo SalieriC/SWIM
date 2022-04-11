@@ -297,7 +297,7 @@ export async function soak_damage_script() {
             let currWounds = numberWounds - rounded;
             new Dialog({
                 title: game.i18n.localize("SWIM.dialogue-reroll"),
-                content: game.i18n.format("SWIM.chatMessage-rerollText", {rounded : rounded, currWounds : currWounds, totalBennies : totalBennies}),
+                content: game.i18n.format("SWIM.dialogue-rerollText", {rounded : rounded, currWounds : currWounds, totalBennies : totalBennies}),
                 buttons: {
                     one: {
                         label: game.i18n.localize("SWIM.dialogue-reroll"),
