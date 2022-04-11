@@ -40,7 +40,7 @@
   "SWIM.healSFXName": "Soundeffekt (Heilung):",
   "SWIM.healSFXHint": "Wenn Wunden geheilt werden, wird dieser Soundeffekt abgespielt.",
   "SWIM.looseFatigueSFXName": "Soundeffekt (Erholung):",
-  "SWIM.looseFatigueSFXHint": "Wenn eine Figur sich von einer Erschöpfungsstufe erholt, wird dieser Soundeffekt abgespielt",
+  "SWIM.looseFatigueSFXHint": "Wenn eine Figur sich von einer Erschöpfungsstufe erholt, wird dieser Soundeffekt abgespielt.",
   "SWIM.potionSFXName": "Soundeffekt (Trank trinken):",
   "SWIM.potionSFXHint": "Wenn eine Figur einen Trank trinkt, wird dieser Soundeffekt abgespielt.",
   "SWIM.openRaiseCalculatorName": "Steigerungsrechner",
