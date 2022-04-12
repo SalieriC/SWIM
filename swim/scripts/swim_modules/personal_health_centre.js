@@ -36,8 +36,8 @@ export async function personal_health_centre_script() {
     } else if (token && canvas.tokens.controlled.length === 1) {
         // Heal Self
         new Dialog({
-            title: "Heal self",
-            content: game.i18n.format("SWIM.dialogue.healSelfContent", {officalClass : officialClass}),
+            title: game.i18n.localize("SWIM.dialogue-healSelf"),
+            content: game.i18n.format("SWIM.dialogue.healSelfContent", {officialClass : officialClass}),
             buttons: {
                 one: {
                     label: game.i18n.localize("SWIM.dialogue-healMyself"),
