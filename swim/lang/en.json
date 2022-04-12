@@ -167,6 +167,7 @@
   "SWIM.dialogue-yes":"Yes.",
   "SWIM.dialogue-no":"No.",
   "SWIM.notification-healthEstimateRequired":"Please install and activate Health Estimate to use this macro.",
+  "SWIM.notification-warpgateRequired":"Please install and activate Warp Gate to use this macro. See the console for more details.",
   "SWIM.chatMessage-unHolyWarrior":"<br/><em>+ {numberPP}</em> from spent Power Points.",
   "SWIM.chatMessage-soakNoWounds":" and is unable to soak any Wounds.",
   "SWIM.chatMessage-soakSomeWounds":" and soaks {rounded} of his Wounds.",
@@ -218,5 +219,6 @@
   "SWIM.dialogue-potion":"Potion",
   "SWIM.dialogue-woundCheck":"<p>You currently have <strong>{currentWounds}/{maxWounds}</strong> Wounds, <strong>no</strong> Fatigue and <strong>{totalBennies}</strong> Bennies.</p><p>You may make a Natural Healing roll <strong>every {natHeal_time}</strong> unless altered by setting specific circumstances.</p><p>You may also heal wounds directly (i.e. from the Healing Power).",
   "SWIM.dialogue-naturalHealing":"Natural Healing",
-  "SWIM.dialogue-directHealing":"Direct Healing"
+  "SWIM.dialogue-directHealing":"Direct Healing",
+  "SWIM.notififaction.setupSWIMSummonCreature":"Please import and set up the '[SWIM] Summon Creature' folder from the compendium first."
 }
