@@ -293,7 +293,7 @@ export async function unshake_swade_script() {
                             //Chat Message to let the everyone knows a benny was spent
                             ChatMessage.create({
                                 user: game.user.id,
-                                content: game.i18n.format("SWIM.dialogue-spentBennyToUnshake", {player : game.user.name, name : token.name}),
+                                content: game.i18n.format("SWIM.dialogue-spentBennyToUnshake", {bennyImage : bennyImage, player : game.user.name, name : token.name}),
                             });
                             await succ.apply_status(token, 'shaken', false)
                         }
