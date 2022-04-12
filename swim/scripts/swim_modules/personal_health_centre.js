@@ -415,7 +415,7 @@ async function healSelf(token, speaker) {
     }
     else if (fv < 1 && wv > 0 && hasHealthPotion) {
         let { _, __, totalBennies } = await swim.check_bennies(token)
-        md_text = "<form>"+game.i18n.format("SWIM.dialogue.woundCheck",{currentWounds: wv, maxWounds: wm, totalBennies: totalBennies, natHeal_time: natHeal_time})+game.i18n.localize("SWIM.dialogue-hasHealingPotion")+game.i18n.localize("SWIM.dialogue-whatDoYouWantToDo")+"</form>";
+        md_text = "<form>"+game.i18n.format("SWIM.dialogue-woundCheck",{currentWounds: wv, maxWounds: wm, totalBennies: totalBennies, natHeal_time: natHeal_time})+game.i18n.localize("SWIM.dialogue-hasHealingPotion")+game.i18n.localize("SWIM.dialogue-whatDoYouWantToDo")+"</form>";
         buttons_main = {
             one: {
                 label: game.i18n.localize("SWIM.dialogue-naturalHealing"),
