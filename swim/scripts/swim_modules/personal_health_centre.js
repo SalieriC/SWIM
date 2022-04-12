@@ -235,13 +235,13 @@ export async function heal_other_gm(data) {
                 if (amount === 2) {
                     chatContent = game.i18n.format("SWIM.chatMessage-healOtherhealOtherRaise", {tokenName : token.name, targetName : target.name})
                 } else if (amount === 1) {
-                    chatContent += game.i18n.format("SWIM.chatMessage-healOtherhealOtherRaiseContinued", {targetName : target.name})
+                    chatContent += game.i18n.format("SWIM.chatMessage-healOtherRaiseContinued", {targetName : target.name})
                 }
                 await createchatMessage()
             }
         }
     } else {
-        ui.notifications.error("An error occured. See the console for more details.");
+        ui.notifications.error(game.i18n.localize("SWIM.notification-generalErrorMsg"));
         console.error("The heal_other_gm() function wasn't passed the proper success rating. Please report this to the SWIM developer on the repository or directly to him on Discord: SalieriC#8263.")
     }
     async function apply() {
@@ -291,7 +291,7 @@ async function healSelf(token, speaker) {
         looseFatigueSFX = sfxSequence[2];
     }
 
-    // Declairing variables and constants.
+    // Declaring variables and constants.
     const wv = token.actor.data.data.wounds.value;
     const wm = token.actor.data.data.wounds.max;
     const fv = token.actor.data.data.fatigue.value;
@@ -358,25 +358,19 @@ async function healSelf(token, speaker) {
 
     // Adjusting buttons and Main Dialogue text
     if (fv < 1 && wv < 1) {
-        md_text = `<form>
-    <p>You currently neither have any Wounds nor Fatigue. There is nothing for you to do here.</p>
-    </form>`;
+        md_text = game.i18n.localize("SWIM.dialogue-noWoundsNorFatigue");
         buttons_main = {
             one: {
-                label: "Nevermind...",
+                label: game.i18n.localize("SWIM.dialogue-nevermind"),
                 callback: (_) => { },
             }
         }
     }
     else if (fv > 0 && wv < 1 && !hasFatiguePotion) {
-        md_text = `<form>
-    <p>You currently have <b>no</b> Wounds and <b>${fv}/${fm}</b> Fatigue.</p>
-    <p>In general you may remove a Level of Fatigue <b>every hour</b> when resting and the source of your Fatigue is absent. This can be altered depending on the source of Fatigue, so <b>ask your GM</b> if you're allowed to remove your Fatigue now.</p>
-    <p>What you you want to do?</p>
-    </form>`;
+        md_text = "<form>"+game.i18n.format("SWIM.dialogue-fatigueCheck", {currentFatigue : fv, maxFatigue : fm})+game.i18n.localize("SWIM.dialogue-whatDoYouWantToDo")+"</form>";
         buttons_main = {
             one: {
-                label: "Cure Fatigue",
+                label: game.i18n.localize("SWIM.dialogue-cureFatigue"),
                 callback: (_) => {
                     genericRemoveFatigue();
                 }
@@ -384,21 +378,16 @@ async function healSelf(token, speaker) {
         }
     }
     else if (fv > 0 && wv < 1 && hasFatiguePotion) {
-        md_text = `<form>
-    <p>You currently have <b>no</b> Wounds and <b>${fv}/${fm}</b> Fatigue.</p>
-    <p>In general you may remove a Level of Fatigue <b>every hour</b> when resting and the source of your Fatigue is absent. This can be altered depending on the source of Fatigue, so <b>ask your GM</b> if you're allowed to remove your Fatigue now.</p>
-    <p>You still have a <b>potion that cures Fatigue</b>, you might as well use it (but ask your GM, the source of your Fatigue might not allow it).</p>
-    <p>What you you want to do?</p>
-    </form>`;
+        md_text = "<form>"+game.i18n.format("SWIM.dialogue-fatigueCheck", {currentFatigue : fv, maxFatigue : fm})+game.i18n.localize("SWIM.dialogue-hasFatiguePotion")+game.i18n.localize("SWIM.dialogue-whatDoYouWantToDo")+"</form>";
         buttons_main = {
             one: {
-                label: "Cure Fatigue",
+                label: game.i18n.localize("SWIM.dialogue-cureFatigue"),
                 callback: (_) => {
                     genericRemoveFatigue();
                 }
             },
             two: {
-                label: "Potion",
+                label: game.i18n.localize("SWIM.dialogue-potion"),
                 callback: (_) => {
                     useFatiguePotion();
                 }
@@ -407,21 +396,17 @@ async function healSelf(token, speaker) {
     }
     else if (fv < 1 && wv > 0 && !hasHealthPotion) {
         let { _, __, totalBennies } = await swim.check_bennies(token)
-        md_text = `<form>
-    <p>You currently have <b>${wv}/${wm}</b> Wounds, <b>no</b> Fatigue and <b>${totalBennies}</b> Bennies.</p>
-    <p>You may make a Natural Healing roll <b>every ${natHeal_time}</b> unless altered by setting specific circumstances.</p>
-    <p>You may also heal wounds directly (i.e. from the Healing Power). What you you want to do?</p>
-    </form>`;
+        md_text = "<form>"+game.i18n.format("SWIM.dialogue-woundCheck",{currentWounds: wv, maxWounds: wm, totalBennies: totalBennies, natHeal_time: natHeal_time})+game.i18n.localize("SWIM.dialogue-whatDoYouWantToDo")+"</form>";
         buttons_main = {
             one: {
-                label: "Natural Healing",
+                label: game.i18n.localize("SWIM.dialogue-naturalHealing"),
                 callback: (_) => {
                     numberWounds = wv;
                     rollNatHeal();
                 }
             },
             two: {
-                label: "Direct Healing",
+                label: game.i18n.localize("SWIM.dialogue-directHealing"),
                 callback: (_) => {
                     genericRemoveWounds();
                 }
@@ -430,28 +415,23 @@ async function healSelf(token, speaker) {
     }
     else if (fv < 1 && wv > 0 && hasHealthPotion) {
         let { _, __, totalBennies } = await swim.check_bennies(token)
-        md_text = `<form>
-    <p>You currently have <b>${wv}/${wm}</b> Wounds, <b>no</b> Fatigue and <b>${totalBennies}</b> Bennies.</p>
-    <p>You may make a Natural Healing roll <b>every ${natHeal_time}</b> unless altered by setting specific circumstances.</p>
-    <p>You still have <b>Healing potions</b>, you might as well use one of these.</p>
-    <p>You may also heal wounds directly (i.e. from the Healing Power). What you you want to do?</p>
-    </form>`;
+        md_text = "<form>"+game.i18n.format("SWIM.dialogue.woundCheck",{currentWounds: wv, maxWounds: wm, totalBennies: totalBennies, natHeal_time: natHeal_time})+game.i18n.localize("SWIM.dialogue-hasHealingPotion")+game.i18n.localize("SWIM.dialogue-whatDoYouWantToDo")+"</form>";
         buttons_main = {
             one: {
-                label: "Natural Healing",
+                label: game.i18n.localize("SWIM.dialogue-naturalHealing"),
                 callback: (_) => {
                     numberWounds = wv;
                     rollNatHeal();
                 }
             },
             two: {
-                label: "Direct Healing",
+                label: game.i18n.localize("SWIM.dialogue-directHealing"),
                 callback: (_) => {
                     genericRemoveWounds();
                 }
             },
             three: {
-                label: "Potion",
+                label: game.i18n.localize("SWIM.dialogue-potion"),
                 callback: (_) => {
                     useHealthPotion();
                 }
