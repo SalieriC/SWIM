@@ -12,7 +12,7 @@ export async function personal_health_centre_script() {
     }
     // Check if a token is selected.
     if (!token || canvas.tokens.controlled.length > 1 || game.user.targets.size > 1) {
-        ui.notifications.error(game.i18n.localize("SWIM.notification-selectOrTargetOneOrMoreTokens");
+        ui.notifications.error(game.i18n.localize("SWIM.notification-selectOrTargetOneOrMoreTokens"));
         return;
     }
     const officialClass = await swim.get_official_class()
