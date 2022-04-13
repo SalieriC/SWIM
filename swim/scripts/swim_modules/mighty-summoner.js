@@ -6,12 +6,12 @@
  * so bugs may occur. Please create a ticket on the
  * gitHub if you find any problems with it:
  * https://github.com/SalieriC/SWADE-Immersive-Macros/issues/new
- * 
+ *
  * This requires Warp Gate by honeybadger:
  * https://foundryvtt.com/packages/warpgate
- * 
+ *
  * The Macro natively supports Sound Effects and if you
- * are using the Sequencer module by Wasp 
+ * are using the Sequencer module by Wasp
  * (https://foundryvtt.com/packages/sequencer), you can
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
@@ -23,14 +23,14 @@
     const { speaker, _, __, token } = await swim.get_macro_variables()
 
     if (!game.modules.get("warpgate")?.active) {
-        ui.notifications.error("Please install and activate Warp Gate to use this macro. See the console for more details.");
+        ui.notifications.error(game.i18n.localize("SWIM.notification.warpgateRequired"));
         console.error("The SWIM Shape Changer macro requires Warp Gate by honeybadger. It is needed to replace the token. Please install and activate Warp Gate to use the Shape Changer macro: https://foundryvtt.com/packages/warpgate - If you enjoy Warp Gate please consider donating to honeybadger at his KoFi page: https://ko-fi.com/trioderegion")
         return;
     }
 
     const mainFolder = game.folders.getName("[SWIM] Summon Creature");
     if (!mainFolder) {
-        ui.notifications.error("Please import and set up the '[SWIM] Summon Creature' folder from the compendium first.");
+        ui.notifications.error(game.i18n.localize("SWIM.notification.setupSWIMSummonCreature"));
         return;
     }
 
@@ -177,7 +177,7 @@
         combatData.initiative = oldCombatData.initiative
         combatData.flags.swade.groupId = oldCombatData._id
         delete combatData.flags.swade.isGroupLeader
-        
+
         // Apply combat data to the summoned creature
         await newToken.combatant.update(combatData)
         // Make Summoner a group leader
