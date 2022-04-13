@@ -285,3 +285,11 @@ Here is a short video that showcases the macro (visual effect by JB2A, not inclu
 **Description:**  
 This will give one Benny from a token to another.  
 Target the token you want to give the Benny to and select the token from which you want to give the Benny away. The latter needs to have the Common Bond Edge. You need owner permission on the selected token, you don't need owner Permission for the target however.  
+
+### Combat Setup
+**Requirements:** None.  
+**Immersion setting:** Changing Playlists.  
+**Description:**  
+This feature is available from a new button (with the fist icon FVTT uses) in the token controls section on the left (only GMs can see it). The button adds all tokens of the current scene to the combat tracker and prompts a dialogue. The user then has the opportunity to group the tokens as needed. A click on the button of the dialogue starts the combat, draws cards for all combatants/groups and sets the turn to the highes initiative.  
+Additionally, if configured and activated properly in the settings, the game will pause all current playlists and starts a defined combat playlist. This also works when setting up and starting a combat without the combat setup feature. It is possible to configure a folder with playlists that shall not be stopped (i.e. ambient playlists).  
+When stopping (deleting) the combat, the game will automatically stop the combat playlist and resume playing any playlists which were playing before the combat.  

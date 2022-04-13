@@ -45,17 +45,35 @@ export async function combat_setup() {
             }
         }
         */
-        tokensToAdd.push({tokenId: token.id, hidden: token.data.hidden})
+        tokensToAdd.push({ tokenId: token.id, hidden: token.data.hidden })
     }
-    const combat = !game.combat ? await Combat.create({scene: canvas.scene.id, active: true}) : game.combat
+    const combat = !game.combat ? await Combat.create({ scene: canvas.scene.id, active: true }) : game.combat
     const combatants = await combat.createEmbeddedDocuments("Combatant", tokensToAdd)
-    
+
     // Start the combat, setting turn to 0 if it is not.
-    await combat.startCombat()
-    console.log(combat)
-    Hooks.once("updateCombat", async (combat, update, _, userId) => {
-        if (update.turn != 0) {
-            await combat.update({"turn": 0})
-        }
-    })
+    // The Dialogue is a temporary solution until automatic grouping is possible.
+
+    const officialClass = await swim.get_official_class()
+    new Dialog({
+        title: 'Manage group initiative',
+        content: `${officialClass}
+        <p>Now you can group tokens as desired. Once you're finished, click "Start Combat".</p>
+        </div>`,
+        buttons: {
+            one: {
+                label: `<i class="fas fa-fist-raised"></i> Start Combat`,
+                callback: async (_) => {
+                    //Get actor based on provided ID:
+                    await combat.startCombat()
+                    //console.log(combat)
+                    Hooks.once("updateCombat", async (combat, update, _, userId) => {
+                        if (update.turn != 0) {
+                            await combat.update({ "turn": 0 })
+                        }
+                    })
+                }
+            }
+        },
+        default: "one",
+    }).render(true);
 }
