@@ -29,6 +29,8 @@ export const settingVariables = [
     {id: 'chaseDeck-DeckRight', config_type: Number, tab: "Chase Layout", default: '10'},
     {id: 'shapeChange-raiseScaleMultiplier', config_type: Number, tab: "Macro Options", default: SWIM.RAISE_SCALE_DEFAULT,
         min: SWIM.RAISE_SCALE_MIN, max: SWIM.RAISE_SCALE_MAX, step: 0.01},
+        {id: 'shapeChange-numMorphs', config_type: Number, tab: "Macro Options", default: SWIM.NUM_MORPHS_DEFAULT,
+        min: SWIM.NUM_MORPHS_MIN, max: SWIM.NUM_MORPHS_MAX, step: 1},
     {id: 'sfxDelay', config_type: Number, tab: "SFX & VFX Options", default: '110'},
     {id: 'defaultVolume', config_type: Number, tab: "SFX & VFX Options", default: '1' },
     {id: 'shakenSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",

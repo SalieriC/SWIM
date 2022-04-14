@@ -308,7 +308,7 @@ export async function shape_changer_gm(data) {
         }
         skillsToCreate = skillsToCreate.map(skill => skill.toObject()); //bring everything in order so foundry can create the items
         await scCopy.createEmbeddedDocuments('Item', skillsToCreate, { renderSheet: null });
-        console.warn("'renderSheet: null' may be changed to 'renderSheet: true' in a future version of SWADE.")
+        //console.warn("'renderSheet: null' may be changed to 'renderSheet: true' in a future version of SWADE.")
 
         //Doing Edges, Hindrances & Powers:
         let itemsToCreate = pc.data.items.filter(i => (i.data.type === "edge" || i.data.type === "hindrance" || i.data.type === "power"));
@@ -394,11 +394,11 @@ export async function shape_changer_gm(data) {
         // Use the scale as calculated for the desired shape change data.
         let newScale = scCopy.data.token.scale; //newToken.data.scale;
         // How much to adjust each attribute per iteration is the difference between the two, divided by the number of iterations (+1).
-        let NUM_MORPHS = 50;
+        let NUM_MORPHS = game.settings.get("swim", "shapeChange-numMorphs");
         let alphaAdj = decimal((newAlpha - oldAlpha) / (NUM_MORPHS + 1), 4);
         let scaleAdj = decimal((newScale - oldScale) / (NUM_MORPHS + 1), 4);
-        console.warn('alpha: adj ' + alphaAdj + ' old ' + oldAlpha + ' new ' + newAlpha);
-        console.warn('scale: adj ' + scaleAdj + ' old ' + oldScale + ' new ' + newScale);
+        //console.warn('alpha: adj ' + alphaAdj + ' old ' + oldAlpha + ' new ' + newAlpha);
+        //console.warn('scale: adj ' + scaleAdj + ' old ' + oldScale + ' new ' + newScale);
         for (let i=0; i<NUM_MORPHS; i++) {
             // Opacity of both tokens are done in reverse (one fades in, the other out).
             oldAlpha = decimal(oldAlpha + alphaAdj, 4);
@@ -411,7 +411,7 @@ export async function shape_changer_gm(data) {
             // Now apply them.
             await oldToken.document.update(oldUpdate);
             await newToken.document.update(newUpdate);
-            console.warn('alpha: old ' + oldAlpha + ' new ' + newAlpha + '  scale: old ' + oldScale + ' new ' + newScale);
+            //console.warn('alpha: old ' + oldAlpha + ' new ' + newAlpha + '  scale: old ' + oldScale + ' new ' + newScale);
         }
         // Final token setting (only need to do new token).
         newUpdate = { 'alpha': 1, 'scale': newToken.data.scale };
