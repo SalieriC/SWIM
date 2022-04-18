@@ -1,5 +1,5 @@
 # Sound Efects per actor
-SWIM enables you to have different sound effects (SFX) for each actor in your game. Utilising this you can make the a dying goblin sound different than a dying dragon for example.  
+SWIM enables you to have different sound effects (SFX) for each actor in your game. Utilising this you can make a dying goblin sound different than a dying dragon for example.  
 
 ## Setting up actor SFX
 Setting sound effects up is easy:
