@@ -3,18 +3,22 @@ let tableName;
 async function main() {
     const contentFromClipboard = await navigator.clipboard.readText();
     let allNames = contentFromClipboard.split("\n");
-    let number = allNames.length
+    let allNamesDeduplicated = Array.from(new Set(allNames))
+    let number = allNamesDeduplicated.length
     let data = { name: `${tableName}`, formula: `1d${number}` };
     var table = await RollTable.create(data);
+    let tableData = []
 
-    for (let i = 0; i < allNames.length; ++i) {
+    for (let i = 0; i < allNamesDeduplicated.length; ++i) {
         let result = {};
         result.type = 0;
-        result.text = allNames[i];
+        result.text = allNamesDeduplicated[i];
         result.weight = 1;
         result.range = [i + 1, i + 1];
-        await table.createEmbeddedEntity("TableResult", result);
+        tableData.push(result)
     }
+    await table.createEmbeddedDocuments("TableResult", tableData);
+    
     await ui.notifications.notify(`RollTable with ${number} entries created as "${tableName}".`);
 }
 
