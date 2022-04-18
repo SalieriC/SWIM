@@ -10,7 +10,7 @@ Setting sound effects up is easy:
 5. Save your changes.
   
 Now, you can enable this additional stat on any actor in your game world. In the resulting text field paste the SFX file paths modified like so:
-`path/to/injuredSFX.ogg|path/to/deathSFX.mp3|path/to/unshakeSFX.ogg|path/to/soakSFX.mp3|`
+`path/to/injuredSFX.ogg|path/to/deathSFX.mp3|path/to/unshakeSFX.ogg|path/to/soakSFX.mp3`
 File extension can be anything a sound file can be, `.mp3` and `.ogg` are just examples. File paths need to be relative to your data folder (when in doubt use a new playlist file to find the file path). The file paths *must* be seperated by the pipe symbol `|`.  
 I hope to find a way to set up the sounds in a more user friendly way in the future, if I do, I'll write a migration script so non of your set up now will be in vain.  
 
