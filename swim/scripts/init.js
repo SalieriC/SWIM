@@ -21,17 +21,17 @@ Hooks.on(`ready`, () => {
     // Check Dependencies
     if (!game.modules.get('settings-extender')?.active && game.user.isGM) {
         let key = "install and activate";
-        if(game.modules.get('settings-extender')) key = "activate";
+        if (game.modules.get('settings-extender')) key = "activate";
         ui.notifications.error(`SWIM requires the 'settings-extender' module. Please ${key} it.`)
     }
     if (!game.modules.get('compendium-folders')?.active && game.user.isGM) {
         let key = "install and activate";
-        if(game.modules.get('compendium-folders')) key = "activate";
+        if (game.modules.get('compendium-folders')) key = "activate";
         ui.notifications.error(`SWIM requires the 'compendium-folders' module. Please ${key} it.`)
     }
     if (!game.modules.get('warpgate')?.active && game.user.isGM) {
         let key = "install and activate";
-        if(game.modules.get('warpgate')) key = "activate";
+        if (game.modules.get('warpgate')) key = "activate";
         ui.notifications.error(`SWIM requires the 'warpgate' module. Please ${key} it.`)
     }
 
@@ -154,23 +154,27 @@ Hooks.on("deleteCombat", async (combat, options, userId) => {
 
 //BR2 Hooks
 Hooks.on(`BRSW-Unshake`, async (message, actor) => {
-    const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(actor)
-    if (unshakeSFX) {
-        await swim.play_sfx(unshakeSFX)
+    if (game.settings.get("swim", "br2Support") === true) {
+        const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(actor)
+        if (unshakeSFX) {
+            await swim.play_sfx(unshakeSFX)
+        }
     }
 })
 /*Hooks.on("BRSW-AfterShowDamageCard", async (actor, wounds, message) => {
     console.log(actor, wounds, message)
 });*/
 Hooks.on("BRSW-AfterApplyDamage", async (token, final_wounds, final_shaken, incapacitated, initial_wounds, initial_shaken, soaked) => {
-    const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(token.actor)
-    const volume = Number(game.settings.get("swim", "defaultVolume"))
-    if (soaked >= 1) {
-        await swim.play_sfx(soakSFX, volume)
-    } else if (incapacitated === true) {
-        await swim.play_sfx(deathSFX, volume)
-    } else if (final_wounds > initial_wounds || final_shaken === true) {
-        await swim.play_sfx(shakenSFX, volume)
+    if (game.settings.get("swim", "br2Support") === true) {
+        const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(token.actor)
+        const volume = Number(game.settings.get("swim", "defaultVolume"))
+        if (soaked >= 1) {
+            await swim.play_sfx(soakSFX, volume)
+        } else if (incapacitated === true) {
+            await swim.play_sfx(deathSFX, volume)
+        } else if (final_wounds > initial_wounds || final_shaken === true) {
+            await swim.play_sfx(shakenSFX, volume)
+        }
     }
 });
 /* This produces duplicate sound effects, leaving it commented until a good solution to exclude them on a condition is found.
