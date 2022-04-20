@@ -127,3 +127,43 @@ Hooks.on(`BRSW-Unshake`, async (message, actor) => {
         await swim.play_sfx(unshakeSFX)
     }
 })
+/*Hooks.on("BRSW-AfterShowDamageCard", async (actor, wounds, message) => {
+    console.log(actor, wounds, message)
+});*/
+Hooks.on("BRSW-AfterApplyDamage", async (token, final_wounds, final_shaken, incapacitated, initial_wounds, initial_shaken, soaked) => {
+    const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(token.actor)
+    const volume = Number(game.settings.get("swim", "defaultVolume"))
+    if (soaked >= 1) {
+        await swim.play_sfx(soakSFX, volume)
+    } else if (incapacitated === true) {
+        await swim.play_sfx(deathSFX, volume)
+    } else if (final_wounds > initial_wounds || final_shaken === true) {
+        await swim.play_sfx(shakenSFX, volume)
+    }
+});
+/* This produces duplicate sound effects, leaving it commented until a good solution to exclude them on a condition is found.
+Hooks.on(`createActiveEffect`, async (condition, _, userID) => {
+    if (condition.data.flags?.core?.statusId === "incapacitated" || condition.data.flags?.core?.statusId === "shaken") {
+        const actor = condition.parent
+        const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(actor)
+        const volume = Number(game.settings.get("swim", "defaultVolume"))
+        if (condition.data.flags?.core?.statusId === "incapacitated") {
+            await swim.play_sfx(deathSFX, volume)
+        } else if (condition.data.flags?.core?.statusId === "shaken") {
+            await swim.play_sfx(shakenSFX, volume)
+        }
+    }
+})
+Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
+    if (condition.data.flags?.core?.statusId === "incapacitated" || condition.data.flags?.core?.statusId === "shaken") {
+        const actor = condition.parent
+        const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(actor)
+        const volume = Number(game.settings.get("swim", "defaultVolume"))
+        if (condition.data.flags?.core?.statusId === "incapacitated") {
+            await swim.play_sfx(soakSFX, volume)
+        } else if (condition.data.flags?.core?.statusId === "shaken") {
+            await swim.play_sfx(unshakeSFX, volume)
+        }
+    }
+})
+*/
