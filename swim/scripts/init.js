@@ -95,7 +95,7 @@ Hooks.on(`ready`, () => {
             buttons: {
                 one: {
                     label: "Damn you Sal! Let. Me. Play. NOW!",
-                    callback: (html) => {
+                    callback: async (html) => {
                         let activate = html.find("#activate")[0].checked
                         if (activate === true) {
                             game.settings.set('swim', 'br2Support', true)
