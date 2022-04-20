@@ -67,6 +67,7 @@ export async function combat_setup() {
                     await combat.startCombat()
                     //console.log(combat)
                     Hooks.once("updateCombat", async (combat, update, _, userId) => {
+                        await swim.wait('200')
                         if (update.turn != 0) {
                             await combat.update({ "turn": 0 })
                         }
