@@ -233,5 +233,7 @@
   "SWIM.notififaction.setupSWIMSummonCreature":"Please import and set up the '[SWIM] Summon Creature' folder from the compendium first.",
   "SWIM.dialogue-dismiss": "{officialClass}<p>Do you want to dismiss {name}? <strong>This can not be undone.</strong></p></div>",
   "SWIM.shapeChange-numMorphsName": "Shape Change Blendings:",
-  "SWIM.shapeChange-numMorphsHint": "The Shape Changer supports blending of the new token into the old one for a smooth transition. If you experience delays or performance issues or prefer a faster blending reduce this number. '0' will make the transition very fast without delays. Default: 50"
+  "SWIM.shapeChange-numMorphsHint": "The Shape Changer supports blending of the new token into the old one for a smooth transition. If you experience delays or performance issues or prefer a faster blending reduce this number. '0' will make the transition very fast without delays. Default: 50",
+  "SWIM.br2SupportName": "BR2 Support:",
+  "SWIM.br2SupportHint": "SWIM supports Better Rolls 2 for SWADE to add Sound Effects on certain functions (applying damage, unshaking and soaking damage). This setting enables these sound effects."
 }

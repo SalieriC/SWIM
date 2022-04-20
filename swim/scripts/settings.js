@@ -31,6 +31,7 @@ export const settingVariables = [
         min: SWIM.RAISE_SCALE_MIN, max: SWIM.RAISE_SCALE_MAX, step: 0.01},
         {id: 'shapeChange-numMorphs', config_type: Number, tab: "Macro Options", default: SWIM.NUM_MORPHS_DEFAULT,
         min: SWIM.NUM_MORPHS_MIN, max: SWIM.NUM_MORPHS_MAX, step: 1},
+    {id: 'br2Support', config_type: Boolean, tab: "SFX & VFX Options", default: false},
     {id: 'sfxDelay', config_type: Number, tab: "SFX & VFX Options", default: '110'},
     {id: 'defaultVolume', config_type: Number, tab: "SFX & VFX Options", default: '1' },
     {id: 'shakenSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",
