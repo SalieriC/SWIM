@@ -61,7 +61,7 @@ Gets and returns all the SFX file paths from an actor. Will return the default o
 `swim.get_actor_sfx(actor)`  
 - `actor` {object}: The actor on which to search the sfx file paths.  
 Returns the four sfx file paths. Best used like this:  
-`const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_SFX(actor)`  
+`const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(actor)`  
 
 ### Play SFX
 This just plays the sfx with the provided settings for everyone.  
