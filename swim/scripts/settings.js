@@ -71,6 +71,14 @@ export function register_settings() {
         scope: 'user',
         config: true,
     });
+    game.settings.register('swim', 'br2Message', {
+        name: "br2MessageName",
+        hint: "br2MessageHint",
+        type: Boolean,
+        default: false,
+        scope: 'world',
+        config: false,
+    });
     game.settings.registerMenu('swim', 'custom-config', {
         name: game.i18n.localize("SWIM.ConfigMenuName"),
         label: game.i18n.localize("SWIM.ConfigMenuLabel"),
