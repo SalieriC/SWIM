@@ -68,9 +68,41 @@ Hooks.on(`ready`, () => {
                     label: "Let me play already!",
                     callback: (html) => {
                         let readIt = html.find("#readIt")[0].checked
-                        if (readIt) {
+                        if (readIt === true) {
                             game.settings.set('swim', 'docRead', true)
                         }
+                    }
+                }
+            },
+        }).render(true);
+    }
+    if (game.settings.get('swim', 'br2Message') === false && game.modules.get('betterrolls-swade2')?.active && game.user.isGM === true) {
+        new Dialog({
+            title: 'Better Rolls 2 support for SWIM.',
+            content: `<form>
+                <h1>Better Rolls 2 support for SWIM.</h1>
+                <p>Good news everyone!<p>
+                <p>As of SWIM version 0.17.0, SWIM natively offers Better Rolls 2 support. That means you can now enable all those immersive SWIM sound effects when applying damage, soaking and unshaking from the BR2 messages.</p>
+                <p>This setting is optional however.</p>
+                <div class="form-group">
+                    <label for="activate">Do you want to activate BR2 support now? (You'll only get asked this one time, you can change that in the module settings however.)</label>
+                    <input id="activate" name="Activate BR2 support?" type="checkbox"></input>
+                </div>
+                <hr />
+                <p>Please also consider to donate if you really like SWIM. This is one of the few ways of letting me know that SWIM is actually used and appreciated by some. =)</p>
+                <p><a href="https://ko-fi.com/salieric"><img style="border: 0px; display: block; margin-left: auto; margin-right: auto;" src="https://www.ko-fi.com/img/githubbutton_sm.svg" width="223" height="30" /></a></p>
+            </form>`,
+            buttons: {
+                one: {
+                    label: "Damn you Sal! Let. Me. Play. NOW!",
+                    callback: (html) => {
+                        let activate = html.find("#activate")[0].checked
+                        if (activate === true) {
+                            game.settings.set('swim', 'br2Support', true)
+                        }
+                        game.settings.set('swim', 'br2Message', true)
+                        await swim.wait('20')
+                        window.location.reload();
                     }
                 }
             },
