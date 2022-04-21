@@ -12,7 +12,7 @@
  * - Resumes all Playlists on combat end [X]
  * 
  * v. 1.0.0
- * By SalieriC
+ * By SalieriC, original groundwork by brunocalado#1650
  ******************************************************/
 export async function combat_setup() {
     const tokensUnfiltered = game.scenes.current.tokens
