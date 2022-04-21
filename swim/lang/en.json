@@ -235,5 +235,7 @@
   "SWIM.shapeChange-numMorphsName": "Shape Change Blendings:",
   "SWIM.shapeChange-numMorphsHint": "The Shape Changer supports blending of the new token into the old one for a smooth transition. If you experience delays or performance issues or prefer a faster blending reduce this number. '0' will make the transition very fast without delays. Default: 50",
   "SWIM.br2SupportName": "BR2 Support:",
-  "SWIM.br2SupportHint": "SWIM supports Better Rolls 2 for SWADE to add Sound Effects on certain functions (applying damage, unshaking and soaking damage). This setting enables these sound effects."
+  "SWIM.br2SupportHint": "SWIM supports Better Rolls 2 for SWADE to add Sound Effects on certain functions (applying damage, unshaking and soaking damage). This setting enables these sound effects.",
+  "SWIM.lightSFXName": "Light SFX:",
+  "SWIM.lightSFXHint": "The sound effect to be played when a light source is selected and applied in the Token Vision macro."
 }
