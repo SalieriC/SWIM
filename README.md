@@ -156,10 +156,12 @@ Finally it can also be used to heal the target even if you don't have permission
 
 ### Token Vision  
 **Requirements:** None.  
-**Immersion setting:** None yet.  
+**Immersion setting:**  
+- Light animation & colour  
+- Sound effect  
 **Description:**  
 This macro is based on a macro from [@Sky#9453](https://github.com/Sky-Captain-13/foundry) and supported DnD vision and lighting. I altered it to suit Savage Worlds. I have to say though, that information on vision and illumination is very lackluster in SWADE with regards to VTT software. It works fine on an actual tabletop but not with dynamic lighting on VTTs. I had to bring some personal taste in but I tried to stay as true to the rules as I could.  
-The macro works different for players and GMs. For players it only shows options to equip light sources (activates them in the token settings), GMs are alos able to update the tokens vision. All options work for *all* tokens that are selected. Here are the options explained:
+Here are the options explained:
 **Light Source:**  
 - No Change: Does not change the current settings.
 - None: Deactivates all emit light settings.
@@ -177,7 +179,7 @@ The macro works different for players and GMs. For players it only shows options
 - Infravision: As dim.  
 - Full Night Vision: Token has bright vision of 1000" (the maximum allowed by Foundry).  
 In general it is best to set up a universal/global light source instead of touching the vision type as that's what SWADE relies on. But the options are there in case the GM forgets to set it up and needs to act quickly.  
-(1) These options also lock the token rotation because the core rules uses portrait style tokens. If you use top-down view tokens instead you may want to change that in the macros code.  
+Additionally, the user can set up a light colour for the light source and it will be animated with the "torch" animation from core, but rather subtle.  
 
 ### Chase Setup  
 **Requirements:** Chase layouts/scenes (included in a compendium) and a roll table with card images.  
