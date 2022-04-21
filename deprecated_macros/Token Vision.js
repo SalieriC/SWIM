@@ -1,9 +1,17 @@
-// Open a dialog for quickly changing token vision parameters of the controlled tokens.
-// This macro was originally written by @Sky#9453
-// https://github.com/Sky-Captain-13/foundry
-// SWADE (this) version by SalieriC
+/************************************** 
+ * Token Vision
+ * 
+ * Open a dialog for quickly changing 
+ * token vision parameters of the 
+ * controlled tokens.
+ * This was originally written by @Sky#9453
+ * as a macro.
+ * https://github.com/Sky-Captain-13/foundry
+ * SWADE (this) version and light colour
+ * additions by SalieriC
 
-// Since return only works in functions, the sole purpose of the main() function is to stop the macro from executing if no token is selected.
+ * Version 3.0.0
+**************************************/
 main();
 
 async function main() {
@@ -238,5 +246,4 @@ async function main() {
       }
     }
   }).render(true);
-  // v.2.2.0
 }
