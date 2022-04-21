@@ -94,6 +94,7 @@ export async function token_vision_script() {
 
     async function changeVision(html) {
         for (let tokenD of canvas.tokens.controlled) {
+            let sfx
             let visionType;
             let lightSource = html.find('[name="light-source"]')[0].value || "none";
             let dimSight = 0;
@@ -161,6 +162,7 @@ export async function token_vision_script() {
                     brightLight = 0;
                     animIntensity = 0
                     animSpeed = 0
+                    sfx = game.settings.get("swim", "lightSFX")
                     break;
                 case "candle":
                     dimLight = 0;
@@ -171,6 +173,7 @@ export async function token_vision_script() {
                     animIntensity = 3
                     animSpeed = 3
                     animType = "torch"
+                    sfx = game.settings.get("swim", "lightSFX")
                     break;
                 case "lamp":
                     dimLight = 0;
@@ -181,6 +184,7 @@ export async function token_vision_script() {
                     animIntensity = 3
                     animSpeed = 3
                     animType = "torch"
+                    sfx = game.settings.get("swim", "lightSFX")
                     break;
                 case "bullseye":
                     dimLight = 0;
@@ -192,6 +196,7 @@ export async function token_vision_script() {
                     animIntensity = 3
                     animSpeed = 3
                     animType = "torch"
+                    sfx = game.settings.get("swim", "lightSFX")
                     break;
                 case "torch":
                     dimLight = 0;
@@ -202,6 +207,7 @@ export async function token_vision_script() {
                     animIntensity = 3
                     animSpeed = 3
                     animType = "torch"
+                    sfx = game.settings.get("swim", "lightSFX")
                     break;
                 case "flLight":
                     dimLight = 0;
@@ -212,6 +218,7 @@ export async function token_vision_script() {
                     lightColour = colourChoice
                     animIntensity = 0
                     animSpeed = 0
+                    sfx = game.settings.get("swim", "lightSFX")
                     break;
                 case "nochange":
                     //break;
@@ -246,6 +253,10 @@ export async function token_vision_script() {
                 },
                 lockRotation: lockRotation
             });
+            if (sfx) {
+                const volume = game.settings.get("swim", "defaultVolume")
+                await swim.play_sfx(sfx, volume)
+            }
         }
     }
 }
