@@ -11,7 +11,7 @@
 
 export async function token_vision_script() {
     main()
-    function main() {
+    async function main() {
         if (canvas.tokens.controlled[0] === undefined) {
             ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"))
             return
