@@ -13,17 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When combat starts, all playlists are stopped
 - - There is a way to define a folder in the settings which holds playlists that are never stopped on combat start.
 - Added Macro Option tab in SWIM configuration window.
-- Added ability for Shape Change function to have the token be a larger size on a raise. The scale multiplier is a configurable option in the Macro Option tab.
-- Added constants.js file as a central repository for constant values.
+- Added ability for Shape Change function to have the token be a larger size on a raise. The scale multiplier is a configurable option in the Macro Option tab (@pmoore603).
+- Added constants.js file as a central repository for constant values (@pmoore603).
 - Dismiss function for the Mighty Summoner: If the selected token is a summoned creature, the owner (and GMs) can choose to dismiss it instead of summoning a new creature.
 - Token Vision now supports custom (and preset) light colours.
+- Started localization of some macros (@Razortide). This is far from being finished and a long-term project but there will be some amount of process in future releases until it's all done.  
 ### Changed
-- Enhanced Shape Change function to morph changing token into each other by growing/shrinking size and opacity (alpha) of both tokens as needed.
+- Enhanced Shape Change function to morph changing token into each other by growing/shrinking size and opacity (alpha) of both tokens as needed (@pmoore603).
 - - This can be configured (and disabled) in the settings.
-- Enhanced numeric input handling for SWIM configuration. Allows number input fields to have min, max, and step fields, which allows fields to be range and precision (decimal places) checked.
+- Enhanced numeric input handling for SWIM configuration. Allows number input fields to have min, max, and step fields, which allows fields to be range and precision (decimal places) checked (@pmoore603).
 - Token Vision now enables non-GMs to edit their vision type.
 ### Fixed
-- Corrected an issue in the Shape Change function where temporary preset actors were incorrectly cleaned up. The issue happened when the player transforms into the same creature twice (or more) in a row.
+- Corrected an issue in the Shape Change function where temporary preset actors were incorrectly cleaned up. The issue happened when the player transforms into the same creature twice (or more) in a row (@pmoore603).
 
 ## [0.16.0] - 2022-04-03
 ### Added
