@@ -21,17 +21,17 @@ Hooks.on(`ready`, () => {
     // Check Dependencies
     if (!game.modules.get('settings-extender')?.active && game.user.isGM) {
         let key = "install and activate";
-        if(game.modules.get('settings-extender')) key = "activate";
+        if (game.modules.get('settings-extender')) key = "activate";
         ui.notifications.error(`SWIM requires the 'settings-extender' module. Please ${key} it.`)
     }
     if (!game.modules.get('compendium-folders')?.active && game.user.isGM) {
         let key = "install and activate";
-        if(game.modules.get('compendium-folders')) key = "activate";
+        if (game.modules.get('compendium-folders')) key = "activate";
         ui.notifications.error(`SWIM requires the 'compendium-folders' module. Please ${key} it.`)
     }
     if (!game.modules.get('warpgate')?.active && game.user.isGM) {
         let key = "install and activate";
-        if(game.modules.get('warpgate')) key = "activate";
+        if (game.modules.get('warpgate')) key = "activate";
         ui.notifications.error(`SWIM requires the 'warpgate' module. Please ${key} it.`)
     }
 
@@ -68,9 +68,41 @@ Hooks.on(`ready`, () => {
                     label: "Let me play already!",
                     callback: (html) => {
                         let readIt = html.find("#readIt")[0].checked
-                        if (readIt) {
+                        if (readIt === true) {
                             game.settings.set('swim', 'docRead', true)
                         }
+                    }
+                }
+            },
+        }).render(true);
+    }
+    if (game.settings.get('swim', 'br2Message') === false && game.modules.get('betterrolls-swade2')?.active && game.user.isGM === true) {
+        new Dialog({
+            title: 'Better Rolls 2 support for SWIM.',
+            content: `<form>
+                <h1>Better Rolls 2 support for SWIM.</h1>
+                <p>Good news everyone!<p>
+                <p>As of SWIM version 0.17.0, SWIM natively offers Better Rolls 2 support. That means you can now enable all those immersive SWIM sound effects when applying damage, soaking and unshaking from the BR2 messages.</p>
+                <p>This setting is optional however.</p>
+                <div class="form-group">
+                    <label for="activate">Do you want to activate BR2 support now? (You'll only get asked this one time, you can change that in the module settings however.)</label>
+                    <input id="activate" name="Activate BR2 support?" type="checkbox"></input>
+                </div>
+                <hr />
+                <p>Please also consider to donate if you really like SWIM. This is one of the few ways of letting me know that SWIM is actually used and appreciated by some. =)</p>
+                <p><a href="https://ko-fi.com/salieric"><img style="border: 0px; display: block; margin-left: auto; margin-right: auto;" src="https://www.ko-fi.com/img/githubbutton_sm.svg" width="223" height="30" /></a></p>
+            </form>`,
+            buttons: {
+                one: {
+                    label: "Damn you Sal! Let. Me. Play. NOW!",
+                    callback: async (html) => {
+                        let activate = html.find("#activate")[0].checked
+                        if (activate === true) {
+                            game.settings.set('swim', 'br2Support', true)
+                        }
+                        game.settings.set('swim', 'br2Message', true)
+                        await swim.wait('20')
+                        window.location.reload();
                     }
                 }
             },
@@ -85,10 +117,89 @@ Hooks.on(`ready`, () => {
     warpgate.event.watch("SWIM.deleteActor", gm_relay.gmDeleteActor, swim.is_first_gm)
 });
 
-//BR2 Hooks
-Hooks.on(`BRSW-Unshake`, async (message, actor) => {
-    const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(actor)
-    if (unshakeSFX) {
-        await swim.play_sfx(unshakeSFX)
+// Combat setup playlist handling
+Hooks.on("preUpdateCombat", async (combat, update, options, userId) => {
+    if (game.settings.get("swim", "combatPlaylistManagement") === true && combat.round === 0 && update.round === 1) {
+        if (swim.is_first_gm() === false) { return }
+        const combatPlaylistName = game.settings.get("swim", "combatPlaylist")
+        const combatPlaylist = game.playlists.getName(combatPlaylistName)
+        const protectedFolder = game.settings.get("swim", "noStopFolder")
+        for (let playlist of game.playlists.playing) {
+            if (playlist.folder?.name.toLowerCase() != protectedFolder.toLowerCase()) {
+                playlist.setFlag('swim', 'resumeAfterCombat', true)
+                playlist.stopAll()
+            }
+        }
+        if (combatPlaylist) {
+            combatPlaylist.playAll()
+        }
     }
 })
+
+Hooks.on("deleteCombat", async (combat, options, userId) => {
+    if (game.settings.get("swim", "combatPlaylistManagement") === true) {
+        if (swim.is_first_gm() === false) { return }
+        for (let playlist of game.playlists) {
+            if (playlist.data.flags?.swim?.resumeAfterCombat === true) {
+                await playlist.playAll()
+                playlist.unsetFlag('swim', 'resumeAfterCombat')
+            }
+        }
+        const combatPlaylist = game.playlists.find(p => p.name.toLowerCase() === "combat") //needs setting
+        if (combatPlaylist && combatPlaylist.data.playing === true) {
+            await combatPlaylist.stopAll()
+        }
+    }
+})
+
+//BR2 Hooks
+Hooks.on(`BRSW-Unshake`, async (message, actor) => {
+    if (game.settings.get("swim", "br2Support") === true) {
+        const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(actor)
+        if (unshakeSFX) {
+            await swim.play_sfx(unshakeSFX)
+        }
+    }
+})
+/*Hooks.on("BRSW-AfterShowDamageCard", async (actor, wounds, message) => {
+    console.log(actor, wounds, message)
+});*/
+Hooks.on("BRSW-AfterApplyDamage", async (token, final_wounds, final_shaken, incapacitated, initial_wounds, initial_shaken, soaked) => {
+    if (game.settings.get("swim", "br2Support") === true) {
+        const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(token.actor)
+        const volume = Number(game.settings.get("swim", "defaultVolume"))
+        if (soaked >= 1) {
+            await swim.play_sfx(soakSFX, volume)
+        } else if (incapacitated === true) {
+            await swim.play_sfx(deathSFX, volume)
+        } else if (final_wounds > initial_wounds || final_shaken === true) {
+            await swim.play_sfx(shakenSFX, volume)
+        }
+    }
+});
+/* This produces duplicate sound effects, leaving it commented until a good solution to exclude them on a condition is found.
+Hooks.on(`createActiveEffect`, async (condition, _, userID) => {
+    if (condition.data.flags?.core?.statusId === "incapacitated" || condition.data.flags?.core?.statusId === "shaken") {
+        const actor = condition.parent
+        const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(actor)
+        const volume = Number(game.settings.get("swim", "defaultVolume"))
+        if (condition.data.flags?.core?.statusId === "incapacitated") {
+            await swim.play_sfx(deathSFX, volume)
+        } else if (condition.data.flags?.core?.statusId === "shaken") {
+            await swim.play_sfx(shakenSFX, volume)
+        }
+    }
+})
+Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
+    if (condition.data.flags?.core?.statusId === "incapacitated" || condition.data.flags?.core?.statusId === "shaken") {
+        const actor = condition.parent
+        const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(actor)
+        const volume = Number(game.settings.get("swim", "defaultVolume"))
+        if (condition.data.flags?.core?.statusId === "incapacitated") {
+            await swim.play_sfx(soakSFX, volume)
+        } else if (condition.data.flags?.core?.statusId === "shaken") {
+            await swim.play_sfx(unshakeSFX, volume)
+        }
+    }
+})
+*/

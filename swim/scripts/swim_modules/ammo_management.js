@@ -2,7 +2,7 @@
  * Ammo Management (Enhanced Version)
  * version 5.0.0
  * By SalieriC#8263. Dialogue Framework: Kekilla#7036
- * 
+ *
  * Makes heavy use of SFX set up on the weapon.
  * For now these are set up as additional stats (see doc).
  * Preset:
@@ -39,14 +39,14 @@ export async function ammo_management_script() {
                 i.data.data.quantity > 0)
         );
 
-        if (weapons.length === 0) return ui.notifications.error("You have no reloadable or consumable weapons.");
+        if (weapons.length === 0) return ui.notifications.error(game.i18n.localize("SWIM.notification-noReloadableOrConsumableWeapon"));
 
         let html = getHTML();
         let content = getContent();
         let buttons = getButtons();
 
         let dialog = new Dialog({
-            content, buttons, title: `Attack Dialog`
+            content, buttons, title: game.i18n.localize("SWIM.dialogue-attack")
         }, {
             width: 400,
         });
@@ -86,12 +86,12 @@ export async function ammo_management_script() {
             let isSingleReload = parseInt(weapons.find(w => w.id === selectedWeapon).data.name.includes("Revolver"));
             if (isSingleReload === true){defaultSingleReload = true;}
             */
-
+            //TRANSLATE TODO
             return `
       <form>
         <div>
           <p>Here you can fire shots from your weapon or reload it.</p>
-          <p>You don't need to adjust the "# of Shots" for realoading. If you change the ammo type you'll keep the old ammo unless it is a Charge Pack.</p>
+          <p>You don't need to adjust the "# of Shots" for reloading. If you change the ammo type you'll keep the old ammo unless it is a Charge Pack.</p>
           <p><b># of Shots per ROF:</b> ROF 1 = 1 Shot; ROF 2 = 5; ROF 3 = 10; ROF 4 = 20; ROF 5 = 40; ROF 6 = 50</p>
         </div>
         <div class="form-group">
@@ -117,10 +117,10 @@ export async function ammo_management_script() {
         function getButtons() {
             return {
                 a: {
-                    label: "Shoot", callback: shoot,
+                    label: game.i18n.localize("SWIM.dialogue-shoot"), callback: shoot,
                 },
                 b: {
-                    label: "Reload", callback: reload,
+                    label: game.i18n.localize("SWIM.dialogue-reload"), callback: reload,
                 }
             }
         }
@@ -185,7 +185,7 @@ export async function ammo_management_script() {
             } else if (item_weapon.data.data.additionalStats.isConsumable && item_weapon.data.data.additionalStats.isConsumable.value === true) {
                 const currentQuantity = parseInt(item_weapon.data.data.quantity);
                 if (currentQuantity <= 0) {
-                    return ui.notifications.error(`You don't have a ${item_weapon.name} left.`);
+                    return ui.notifications.error(game.i18n.format("SWIM.notification-noItemLeft", {itemName: item_weapon.name}));
                 }
                 const newQuantity = currentQuantity - shots;
                 const updates = [
@@ -202,7 +202,7 @@ export async function ammo_management_script() {
                     speaker: {
                         alias: token.name
                     },
-                    content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${token.name} uses ${shots} ${item_weapon.name}(s) and has ${newQuantity} left.`
+                    content: game.i18n.format("SWIM.chatMessage-weaponUsed", {weaponIMG: weaponIMG, name: token.Name, shots : shots, itemWeaponName: item_weapon.name, newQuantity: newQuantity})
                 })
                 // Play sound effects
                 if (sfx_shot) {
@@ -217,11 +217,11 @@ export async function ammo_management_script() {
                         speaker: {
                             alias: actor.name
                         },
-                        content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${actor.name} fires <b>${shots} ${currentAmmo}</b> from a ${item_weapon.name}.`
+                        content: game.i18n.format("SWIM.chatMessage-shotsFiredWithCurrentAmmoNoRoundsWithoutNewCharges", {weaponIMG: weaponIMG, name: actor.name, shots : shots, currentAmmo: currentAmmo, itemWeaponName: item_weapon.name})
                     })
                 } else if (!item_ammo && actor.type === "character" && npcAmmo === false || !item_ammo && npcAmmo === true) {
-                    return ui.notifications.error(`You don't have the required ammo in your inventory.`);
-                } else if (item_ammo.data.data.quantity <= 0 && actor.type === "character" && npcAmmo === false || item_ammo.data.data.quantity <= 0 && npcAmmo === true) { return ui.notifications.error(`You don't have a ${item_ammo.name} left.`); }
+                    return ui.notifications.error(game.i18n.localize("SWIM.notification-noRequiredAmmoAvailable"));
+                } else if (item_ammo.data.data.quantity <= 0 && actor.type === "character" && npcAmmo === false || item_ammo.data.data.quantity <= 0 && npcAmmo === true) { return ui.notifications.error(game.i18n.format("SWIM.notification-noItemLeft", {itemName: item_ammo.name})); }
                 else {
                     //Setting new constants to overwrite the old ones
                     const currentCharges = parseInt(item_ammo.data.data.quantity);
@@ -237,7 +237,7 @@ export async function ammo_management_script() {
                         speaker: {
                             alias: actor.name
                         },
-                        content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${actor.name} fires <b>${shots} ${currentAmmo}</b> from a ${item_weapon.name} and has <b>${newCharges} left</b>.`
+                        content: game.i18n.format("SWIM.chatMessage-shotsFiredWithCurrentAmmoNoRoundsWithNewCharges", {weaponIMG: weaponIMG, name: actor.name, shots : shots, currentAmmo: currentAmmo, itemWeaponName: item_weapon.name, newCharges: newCharges})
                     })
                 }
                 //Playing the SFX
@@ -245,7 +245,7 @@ export async function ammo_management_script() {
             }
             // Check if enough bullets are in the weapon to fire the given amount of shots if this is not a consumable weapon and does require loading action.
             else if (currentCharges < shots && item_weapon.data.data.autoReload === false) {
-                ui.notifications.error("You have insufficient ammunition.")
+                ui.notifications.error(game.i18n.localize("SWIM.notification-insufficientAmmoAvailable"))
                 if (sfx_empty && currentCharges === 0) {
                     AudioHelper.play({ src: `${sfx_empty}` }, true);
                 }
@@ -263,14 +263,14 @@ export async function ammo_management_script() {
                         speaker: {
                             alias: token.name
                         },
-                        content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${token.name} fires <b>${shots} round(s)</b> from a ${item_weapon.name} and has <b>${newCharges} left</b>.`
+                        content: game.i18n.format("SWIM.chatMessage-shotsFired", {weaponIMG: weaponIMG, name: token.name, shots : shots, itemWeaponName: item_weapon.name, newCharges: newCharges})
                     })
                 } else {
                     ChatMessage.create({
                         speaker: {
                             alias: token.name
                         },
-                        content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${token.name} fires <b>${shots} ${currentAmmo} round(s)</b> from a ${item_weapon.name} and has <b>${newCharges} left</b>.`
+                        content: game.i18n.format("SWIM.chatMessage-shotsFiredWithCurrentAmmo", {weaponIMG: weaponIMG, name: token.name, shots : shots, currentAmmo : currentAmmo, itemWeaponName: item_weapon.name, newCharges: newCharges})
                     })
                 }
                 //Play SFX
@@ -285,14 +285,14 @@ export async function ammo_management_script() {
             let [shots, weapon, ammo, singleReload] = getValues(html);
             // If no ammo left throw an error message.
             if (!ammo && actor.type === 'character' && npcAmmo === false || !ammo && npcAmmo === true) {
-                return ui.notifications.error("You have no ammo left to reload this weapon.");
+                return ui.notifications.error(game.i18n.localize("SWIM.notification-outOfAmmo"));
             }
             let item_weapon = actor.items.get(weapon);
             // Only do all the reloading stuff if NPCs use Ammo from Inventory.
             if (actor.type === 'character' && npcAmmo === false || npcAmmo === true) {
                 // Do not allow consumable weapons to be reloaded
                 if (item_weapon.data.data.additionalStats.isConsumable && item_weapon.data.data.additionalStats.isConsumable.value === true) {
-                    return ui.notifications.error("You cannot reload consumable weapons, please use Shooting instead.");
+                    return ui.notifications.error(game.i18n.localize("SWIM.notification-cannotReloadConsumableWeapons"));
                 }
                 let item_ammo = actor.items.getName(`${ammo}`);
                 //console.log(weapon, item_weapon, ammo, item_ammo);
@@ -364,7 +364,7 @@ export async function ammo_management_script() {
                 }
                 // Check if there is ammo left to reload.
                 if (availableAmmo < 1) {
-                    ui.notifications.notify("You are out of ammunition.")
+                    ui.notifications.notify(game.i18n.localize("SWIM.notification-outOfAmmo"))
                 }
                 else if (chgType === true) {
                     const updates = [
@@ -378,7 +378,7 @@ export async function ammo_management_script() {
                         speaker: {
                             alias: token.name
                         },
-                        content: `<img src="${weaponIMG}" alt="" width="25" height="25" /><img src="${ammoIMG}" alt="" width="25" height="25" /> ${token.name} reloads his/her ${item_weapon.name} with ${item_ammo.name}.`
+                        content: game.i18n.format("SWIM.chatMessage-reloadWeaponWithAmmoName", {weaponIMG: weaponIMG, ammoIMG: ammoIMG, name: token.name, itemWeaponName: item_weapon.name, itemAmmoName : item_ammo.name})
                     })
                     if (sfx_reload) {
                         AudioHelper.play({ src: `${sfx_reload}` }, true)
@@ -395,7 +395,7 @@ export async function ammo_management_script() {
                         speaker: {
                             alias: token.name
                         },
-                        content: `<img src="${weaponIMG}" alt="" width="25" height="25" /><img src="${ammoIMG}" alt="" width="25" height="25" /> ${token.name} reloads his/her ${item_weapon.name} with ${item_ammo.name}.`
+                        content: game.i18n.format("SWIM.chatMessage-ReloadWeaponWithAmmoName", {weaponIMG: weaponIMG, ammoIMG: ammoIMG, name: token.name, itemWeaponName: item_weapon.name, itemAmmoName : item_ammo.name})
                     })
                     if (sfx_reload) {
                         AudioHelper.play({ src: `${sfx_reload}` }, true)
@@ -407,11 +407,11 @@ export async function ammo_management_script() {
                 const currentCharges = parseInt(item_weapon.data.data.currentShots);
                 const maxCharges = parseInt(item_weapon.data.data.shots);
                 if (item_weapon.data.data.additionalStats.isConsumable && item_weapon.data.data.additionalStats.isConsumable.value === true) {
-                    return ui.notifications.error("You cannot reload consumable weapons, please use Shooting instead.");
+                    return ui.notifications.error(game.i18n.localize("SWIM.notification-cannotReloadConsumableWeapons"));
                 } else if (item_weapon.data.data.autoReload === true) {
-                    return ui.notifications.error("You cannot change ammo types on this weapon if NPCs don't use Ammo from their Inventory.");
+                    return ui.notifications.error(game.i18n.localize("SWIM.notification-cannotChangeAmmoTypeIfNPCDontUseAmmoFromInventory"));
                 } else if (currentCharges === maxCharges) {
-                    return ui.notifications.error("The weapon is fully loaded already.");
+                    return ui.notifications.error(game.i18n.localize("SWIM.notification-weaponAlreadyFull"));
                 }
                 if (singleReload === true) {
                     //Do single reload
@@ -429,7 +429,7 @@ export async function ammo_management_script() {
                     speaker: {
                         alias: token.name
                     },
-                    content: `<img src="${item_weapon.img}" alt="" width="25" height="25" /> ${token.name} reloads his/her ${item_weapon.name}.`
+                    content: game.i18n.format("SWIM.chatMessage-reloadWeaponWithoutAmmoName", {weaponIMG: item_weapon.img, name: token.name, itemWeaponName: item_weapon.name})
                 })
                 if (item_weapon.data.data.additionalStats.sfx) {
                     let sfx = item_weapon.data.data.additionalStats.sfx.value.split(`|`);
@@ -503,7 +503,7 @@ export async function ammo_management_script() {
  * Ammo Management (BR2 Version)
  * version 5.0.0
  * By SalieriC#8263 with help from javierrivera#4813
- * 
+ *
  * This version relies on Better Rolls 2,
  * otherwise it uses the same additional stats
  * as above. Please read the documentation!
@@ -628,7 +628,7 @@ export async function br2_ammo_management_script(message, actor, item) {
                 usedSkill.includes("Stealth") === false) { return; }
             const currentQuantity = parseInt(item_weapon.data.data.quantity);
             if (currentQuantity <= 0) {
-                return ui.notifications.error(`You don't have a ${item_weapon.name} left.`);
+                return ui.notifications.error(game.i18n.format("SWIM.notification-noItemLeft", {itemName: item_weapon.name}));
             }
             const newQuantity = currentQuantity - shots;
             const updates = [
@@ -645,7 +645,7 @@ export async function br2_ammo_management_script(message, actor, item) {
                 speaker: {
                     alias: actor.name
                 },
-                content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${actor.name} uses ${shots} ${item_weapon.name}(s) and has ${newQuantity} left.`
+                content: game.i18n.format("SWIM.chatMessage-weaponUsed", {weaponIMG: weaponIMG, name: actor.Name, shots : shots, itemWeaponName: item_weapon.name, newQuantity: newQuantity})
             })
             // Play sound effects
             if (sfx_shot) {
@@ -660,11 +660,11 @@ export async function br2_ammo_management_script(message, actor, item) {
                     speaker: {
                         alias: actor.name
                     },
-                    content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${actor.name} fires <b>${shots} ${currentAmmo}</b> from a ${item_weapon.name}.`
+                    content: game.i18n.format("SWIM.chatMessage-shotsFiredWithCurrentAmmoNoRoundsWithoutNewCharges", {weaponIMG : weaponIMG, name : actor.name, shots : shots, currentAmmo: currentAmmo, itemWeaponName: item_weapon.name})
                 })
             } else if (!item_ammo && actor.type === "character" && npcAmmo === false || !item_ammo && npcAmmo === true) {
-                return ui.notifications.error(`You don't have the required ammo in your inventory.`);
-            } else if (item_ammo.data.data.quantity <= 0 && actor.type === "character" && npcAmmo === false || item_ammo.data.data.quantity <= 0 && npcAmmo === true) { return ui.notifications.error(`You don't have a ${item_ammo.name} left.`); }
+                return ui.notifications.error(game.i18n.localize("SWIM.notification-noRequiredAmmoAvailable"));
+            } else if (item_ammo.data.data.quantity <= 0 && actor.type === "character" && npcAmmo === false || item_ammo.data.data.quantity <= 0 && npcAmmo === true) { return ui.notifications.error(game.i18n.format("SWIM.notification-noItemLeft", {itemName: item_ammo.name})); }
             else {
                 //Setting new constants to overwrite the old ones
                 const currentCharges = parseInt(item_ammo.data.data.quantity);
@@ -680,7 +680,7 @@ export async function br2_ammo_management_script(message, actor, item) {
                     speaker: {
                         alias: actor.name
                     },
-                    content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${actor.name} fires <b>${shots} ${currentAmmo} round(s)</b> from a ${item_weapon.name} and has <b>${newCharges} left</b>.`
+                    content: game.i18n.format("SWIM.chatMessage-shotsFiredWithCurrentAmmo", {weaponIMG: weaponIMG, name: actor.name, shots : shots, currentAmmo: currentAmmo, itemWeaponName: item_weapon.name, newCharges: newCharges})
                 })
             }
             //Playing the SFX
@@ -689,7 +689,7 @@ export async function br2_ammo_management_script(message, actor, item) {
         }
         // Check if enough bullets are in the weapon to fire the given amount of shots if this is not a consumable weapon and does require loading action.
         else if (currentCharges < shots && item_weapon.data.data.autoReload === false) {
-            ui.notifications.error("You have insufficient ammunition.");
+            ui.notifications.error(game.i18n.localize("SWIM.notification-insufficientAmmoAvailable"));
             if (sfx_empty && currentCharges === 0) {
                 AudioHelper.play({ src: `${sfx_empty}` }, true);
             }
@@ -707,14 +707,14 @@ export async function br2_ammo_management_script(message, actor, item) {
                     speaker: {
                         alias: actor.name
                     },
-                    content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${actor.name} fires <b>${shots} round(s)</b> from a ${item_weapon.name} and has <b>${newCharges} left</b>.`
+                    content: game.i18n.format("SWIM.chatMessage-shotsFired", {weaponIMG: weaponIMG, name: actor.name, shots : shots, itemWeaponName: item_weapon.name, newCharges: newCharges})
                 })
             } else {
                 ChatMessage.create({
                     speaker: {
                         alias: actor.name
                     },
-                    content: `<img src="${weaponIMG}" alt="" width="25" height="25" /> ${actor.name} fires <b>${shots} ${currentAmmo} round(s)</b> from a ${item_weapon.name} and has <b>${newCharges} left</b>.`
+                    content: game.i18n.format("SWIM.chatMessage-shotsFiredWithCurrentAmmo", {weaponIMG: weaponIMG, name: actor.name, shots : shots, currentAmmo: currentAmmo, itemWeaponName: item_weapon.name, newCharges: newCharges})
                 })
             }
             // Play sound effects

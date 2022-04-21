@@ -16,9 +16,12 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 2.0.4
+ * v. 2.0.5
  * By SalieriC
  ******************************************************/
+
+import * as SWIM from '../constants.js'
+
 export async function shape_changer_script() {
     const { speaker, _, __, token } = await swim.get_macro_variables()
     if (!token || canvas.tokens.controlled.length > 1) {
@@ -79,7 +82,7 @@ export async function shape_changer_script() {
                 <label for="raise">Cast with a raise: </label>
                 <input id="raise" name="raiseBox" type="checkbox"></input>
             </div>
-        </div>`,
+            </div>`,
             buttons: {
                 one: {
                     label: `<i class="fas fa-paw"></i>Shape Change`,
@@ -211,12 +214,18 @@ export async function shape_changer_gm(data) {
         } else if (scSize <= -4) {
             scale = 0.5
         }
-        /* Commented out because it overfills borders in an inconvenient way
-        if (raise) {
-            // Make the token a little larger on a raise.
-            scale = scale * 1.25;
+
+        // Make the token a little larger on a raise.
+        if (data.raise) {
+            let multiplier = game.settings.get('swim', 'shapeChange-raiseScaleMultiplier');
+            // Ensure that if anything goes wrong, default to same size.
+            if (!multiplier || multiplier < SWIM.RAISE_SCALE_MIN ||
+                 multiplier > SWIM.RAISE_SCALE_MAX) {
+                multiplier = 1;
+            }
+            scale = scale * multiplier;
         }
-        */
+
         await scCopy.update({token: {height: height, width: width, scale: scale}})
     }
 
@@ -232,7 +241,8 @@ export async function shape_changer_gm(data) {
             "token.vision": actor.data.token.vision,
             "token.displayBars": actor.data.token.displayBars,
             "token.displayName": actor.data.token.displayName,
-            "data.advances.value": actor.data.data.advances.value
+            "token.alpha": SWIM.ALMOST_INVISIBLE,
+            "data.advances.value": actor.data.data.advances.value,
         }
         await scCopy.update(updateData)
     }
@@ -298,7 +308,7 @@ export async function shape_changer_gm(data) {
         }
         skillsToCreate = skillsToCreate.map(skill => skill.toObject()); //bring everything in order so foundry can create the items
         await scCopy.createEmbeddedDocuments('Item', skillsToCreate, { renderSheet: null });
-        console.warn("'renderSheet: null' may be changed to 'renderSheet: true' in a future version of SWADE.")
+        //console.warn("'renderSheet: null' may be changed to 'renderSheet: true' in a future version of SWADE.")
 
         //Doing Edges, Hindrances & Powers:
         let itemsToCreate = pc.data.items.filter(i => (i.data.type === "edge" || i.data.type === "hindrance" || i.data.type === "power"));
@@ -321,15 +331,19 @@ export async function shape_changer_gm(data) {
         await scCopy.update(updateData)
     }
 
+    function decimal(num, places) {
+        let power = 10 ** places;
+        return  parseInt(num * power) / power;
+    }
+
     async function replace_token(scCopy) {
-        //Playing VFX & SFX:
-        let shapeShiftSFX = game.settings.get(
-            'swim', 'shapeShiftSFX');
-        let shapeShiftVFX = game.settings.get(
-            'swim', 'shapeShiftVFX');
+        // Play SFX:
+        let shapeShiftSFX = game.settings.get('swim', 'shapeShiftSFX');
         if (shapeShiftSFX) { AudioHelper.play({ src: `${shapeShiftSFX}` }, true); }
-        if (game.modules.get("sequencer")?.active && shapeShiftVFX) {
-            //let tokenD = canvas.tokens.controlled[0];
+        // Play VFX:
+        let shapeShiftVFX = game.settings.get('swim', 'shapeShiftVFX');
+        if (shapeShiftVFX && game.modules.get("sequencer")?.active) {
+            // Initiate special effects at the token location
             let scale = scCopy.data.token.scale;
             let sequence = new Sequence()
                 .effect()
@@ -337,23 +351,71 @@ export async function shape_changer_gm(data) {
                 .atLocation(token)
                 .scale(scale)
             sequence.play();
-            await swim.wait(`800`);
+            await swim.wait(`100`);
         }
-        //Replacing the token using WardGate:
-        let newTokenID = await warpgate.spawnAt(token.center, scCopy.data.name)
+        // Make new token very opaque.
+        // Spawns the new token using WarpGate
+        let newTokenID = await warpgate.spawnAt(token.center, scCopy.data.name, {
+            'alpha': SWIM.ALMOST_INVISIBLE,
+            'actorId': scCopy.data._id,
+            } );
+        let newToken = canvas.tokens.get(newTokenID[0]);
+        // When shifting to the same creature, WarpGate wants to use the old actor ID.
+        // Set it to the newly created actor, otherwise the incorrect actor gets deleted!
+        newToken.document.update({'actorId': scCopy.data._id});
         // Adding elevation of the original token to the new token
-        let newToken = canvas.tokens.get(newTokenID[0])
-        await newToken.document.update({'elevation': token.data.elevation})
-        // Add focus if the user is a GM, otherwise permission management will take care of that later.
-        if (game.user.isGM === true) {
-            newToken.control()
-        }
-
+        await newToken.document.update( { 'elevation': token.data.elevation } );
+        // Update combatant info if a combat exists
         if (token.combatant != null) {
             let oldCombatData = token.combatant.toObject()
             await update_combat(newTokenID, oldCombatData)
         }
+        // Morph the tokens from old to new.
+        await morph_tokens(token, newToken, scCopy);
+        // Remove the old token
         await warpgate.dismiss(token.id)
+        // For GM, need to manually set the focus; include a short delay to allow the new token to appear.
+        if (game.user.isGM === true) {
+            await swim.wait(`100`);
+            await newToken.control();
+        }
+    }
+
+    async function morph_tokens(oldToken, newToken, scCopy) {
+        // Adjust attributes of each token so the old appears to morph into the new.
+        let oldUpdate;
+        let newUpdate;
+        // Alpha (opacity):
+        let oldAlpha = oldToken.alpha;
+        let newAlpha = SWIM.ALMOST_INVISIBLE;
+        // Scale:
+        let oldScale = oldToken.data.scale;
+        // When shifting to the same creature, WarpGate wants to use the old actor ID, which has the old scale.
+        // Use the scale as calculated for the desired shape change data.
+        let newScale = scCopy.data.token.scale; //newToken.data.scale;
+        // How much to adjust each attribute per iteration is the difference between the two, divided by the number of iterations (+1).
+        let NUM_MORPHS = game.settings.get("swim", "shapeChange-numMorphs");
+        let alphaAdj = decimal((newAlpha - oldAlpha) / (NUM_MORPHS + 1), 4);
+        let scaleAdj = decimal((newScale - oldScale) / (NUM_MORPHS + 1), 4);
+        //console.warn('alpha: adj ' + alphaAdj + ' old ' + oldAlpha + ' new ' + newAlpha);
+        //console.warn('scale: adj ' + scaleAdj + ' old ' + oldScale + ' new ' + newScale);
+        for (let i=0; i<NUM_MORPHS; i++) {
+            // Opacity of both tokens are done in reverse (one fades in, the other out).
+            oldAlpha = decimal(oldAlpha + alphaAdj, 4);
+            newAlpha = decimal(newAlpha - alphaAdj, 4);
+            // For scale, only change the old token.
+            oldScale = decimal(oldScale + scaleAdj, 4);
+            // Set token attribute structure values.
+            oldUpdate = { 'alpha': oldAlpha, 'scale': oldScale };
+            newUpdate = { 'alpha': newAlpha, 'scale': newScale };
+            // Now apply them.
+            await oldToken.document.update(oldUpdate);
+            await newToken.document.update(newUpdate);
+            //console.warn('alpha: old ' + oldAlpha + ' new ' + newAlpha + '  scale: old ' + oldScale + ' new ' + newScale);
+        }
+        // Final token setting (only need to do new token).
+        newUpdate = { 'alpha': 1, 'scale': newToken.data.scale };
+        await newToken.document.update(newUpdate);
     }
 
     async function update_combat(newTokenID, oldCombatData) {

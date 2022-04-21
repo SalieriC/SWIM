@@ -102,7 +102,7 @@ You can also use the Gritty Damage setting rule by adding the name of your Injur
 **Compatibility:**  
 - [Better Rolls 2 (BR2)](https://foundryvtt.com/packages/betterrolls-swade2)  
 **Description:**  
-A pretty complex macro. The simple one is pretty straight forward and will not be meintained any longer. The Enhanced version has got it's own documentation [here](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/documentation/Shooting%20%26%20Reloading%20Setup.md). Make sure to read it, it is mandatory to do so, otherwise the macro will not work.  
+A pretty complex macro. The simple one is pretty straight forward and will not be meintained any longer. The Enhanced version has got it's own documentation [here](https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/documentation/Ammo%20Management%20Setup.md). Make sure to read it, it is mandatory to do so, otherwise the macro will not work.  
 It comes with optional BR2 integration for the shooting/using ammo part. How the integration works is documented in the above link as well.  
 **Wait, where do I get weapon sound effects?**  
 I can't include that many sfx right now. It is rather difficult to find good weapon sounds which I am allowed to include and I don't have the funds to buy them for this module. I'm not gonna recommend any particular way on how to get adequate sound effects, figuring that out is on you. Just know that there are many resources you should be able to use out there. As a general lead: Look for PC game modifications which alter the weapon sounds in that specific game. You may not be allowed to use the sfx from the game directly (depends on the game of course), but those from mods are usually not a problem but check that before you do take them. I cannot be held responsible for any breach of contract or copyright you commit it is on you to check whether or not you're allowed to use the sfx you find.  
@@ -156,10 +156,12 @@ Finally it can also be used to heal the target even if you don't have permission
 
 ### Token Vision  
 **Requirements:** None.  
-**Immersion setting:** None yet.  
+**Immersion setting:**  
+- Light animation & colour  
+- Sound effect  
 **Description:**  
 This macro is based on a macro from [@Sky#9453](https://github.com/Sky-Captain-13/foundry) and supported DnD vision and lighting. I altered it to suit Savage Worlds. I have to say though, that information on vision and illumination is very lackluster in SWADE with regards to VTT software. It works fine on an actual tabletop but not with dynamic lighting on VTTs. I had to bring some personal taste in but I tried to stay as true to the rules as I could.  
-The macro works different for players and GMs. For players it only shows options to equip light sources (activates them in the token settings), GMs are alos able to update the tokens vision. All options work for *all* tokens that are selected. Here are the options explained:
+Here are the options explained:
 **Light Source:**  
 - No Change: Does not change the current settings.
 - None: Deactivates all emit light settings.
@@ -177,7 +179,7 @@ The macro works different for players and GMs. For players it only shows options
 - Infravision: As dim.  
 - Full Night Vision: Token has bright vision of 1000" (the maximum allowed by Foundry).  
 In general it is best to set up a universal/global light source instead of touching the vision type as that's what SWADE relies on. But the options are there in case the GM forgets to set it up and needs to act quickly.  
-(1) These options also lock the token rotation because the core rules uses portrait style tokens. If you use top-down view tokens instead you may want to change that in the macros code.  
+Additionally, the user can set up a light colour for the light source and it will be animated with the "torch" animation from core, but rather subtle.  
 
 ### Chase Setup  
 **Requirements:** Chase layouts/scenes (included in a compendium) and a roll table with card images.  
@@ -285,3 +287,11 @@ Here is a short video that showcases the macro (visual effect by JB2A, not inclu
 **Description:**  
 This will give one Benny from a token to another.  
 Target the token you want to give the Benny to and select the token from which you want to give the Benny away. The latter needs to have the Common Bond Edge. You need owner permission on the selected token, you don't need owner Permission for the target however.  
+
+### Combat Setup
+**Requirements:** None.  
+**Immersion setting:** Changing Playlists.  
+**Description:**  
+This feature is available from a new button (with the fist icon FVTT uses) in the token controls section on the left (only GMs can see it). The button adds all tokens of the current scene to the combat tracker and prompts a dialogue. The user then has the opportunity to group the tokens as needed. A click on the button of the dialogue starts the combat, draws cards for all combatants/groups and sets the turn to the highes initiative.  
+Additionally, if configured and activated properly in the settings, the game will pause all current playlists and starts a defined combat playlist. This also works when setting up and starting a combat without the combat setup feature. It is possible to configure a folder with playlists that shall not be stopped (i.e. ambient playlists).  
+When stopping (deleting) the combat, the game will automatically stop the combat playlist and resume playing any playlists which were playing before the combat.  

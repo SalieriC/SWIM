@@ -7,7 +7,7 @@ export async function soak_damage_script() {
     const { speaker, _, __, token } = await swim.get_macro_variables()
     const actor = token.actor
     if (!game.modules.get("healthEstimate")?.active) {
-        ui.notifications.error("Please install and activate Health Estimate to use this macro.");
+        ui.notifications.error(game.i18n.localize("SWIM.notification-healthEstimateRequired"));
         return;
     }
     // Checking if at least one token is defined.
@@ -71,23 +71,23 @@ export async function soak_damage_script() {
         let edgeText = "";
         for (let edge of edges) {
             rollWithEdge += 2;
-            edgeText += `<br/><i>+ 2 <img src="${edge.img}" alt="" width="15" height="15" style="border:0" />${edge.name}</i>`;
+            edgeText += `<br/><em>+ 2 <img src="${edge.img}" alt="" width="15" height="15" style="border:0" />${edge.name}</em>`;
         }
 
         // If Holy Warrior or Unholy Warrior is used: Include the amount of PPs used as a bonus to the roll.
         if (typeof numberPP === "number") {
             rollWithEdge += numberPP;
-            edgeText = edgeText + `<br/><i>+ ${numberPP}</i> from spent Power Points.`;
+            edgeText = edgeText + game.i18n.format("SWIM.chatMessage-edgeText", {numberPP : numberPP});
         }
 
         // Apply +2 if Elan is present and if it is a reroll.
         if (typeof elanBonus === "number") {
             rollWithEdge += 2;
-            edgeText = edgeText + `<br/><i>+ Elan</i>.`;
+            edgeText = edgeText + `<br/><em>+ game.i18n.localize("SWIM.edge-elan")</em>.`;
         }
 
         // Roll Vigor including +2 if Iron Jaw is present, amount of PPs used as modifier if Holy Warrior or Unholy Warrior was used and another +2 if this is a reroll.
-        let chatData = `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge} </span>`;
+        let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultRoll", {name : actorAlias, rollWithEdge: rollWithEdge});
         rounded = Math.floor(rollWithEdge / 4);
 
         // Making rounded 0 if it would be negative.
@@ -100,14 +100,14 @@ export async function soak_damage_script() {
         if (token.actor.data.data.wildcard === false && token.actor.type === "npc") { wildCard = false }
         let critFail = await swim.critFail_check(wildCard, r)
         if (critFail === true) {
-            ui.notifications.notify("You've rolled a Critical Failure! Applying wounds now...");
-            let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure! </span>`;
+            ui.notifications.notify(game.i18n.localize("SWIM.notification-critFailApplyWounds"));
+            let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultCritFail", {name : actorAlias});
             applyWounds();
             ChatMessage.create({ content: chatData });
         } else {
             let { _, __, totalBennies } = await swim.check_bennies(token)
             if (rounded < 1) {
-                chatData += ` and is unable to soak any Wounds.`;
+                chatData += game.i18n.localize("SWIM.chatMessage-soakNoWounds");
                 if (totalBennies < 1) {
                     applyWounds();
                 }
@@ -115,7 +115,7 @@ export async function soak_damage_script() {
                     dialogReroll();
                 }
             } else if (rounded < numberWounds) {
-                chatData += ` and soaks ${rounded} of his Wounds.`;
+                chatData += game.i18n.format("SWIM.chatMessage-soakSomeWounds", {rounded : rounded});
                 if (soakSFX) { AudioHelper.play({ src: `${soakSFX}` }, true); }
                 if (totalBennies < 1) {
                     applyWounds();
@@ -124,7 +124,7 @@ export async function soak_damage_script() {
                     dialogReroll();
                 };
             } else if (rounded >= numberWounds) {
-                chatData += ` and soaks all of his Wounds.`;
+                chatData += game.i18n.localize("SWIM.chatMessage-soakAllWounds");
                 if (soakSFX) { AudioHelper.play({ src: `${soakSFX}` }, true); }
                 if (token.actor.data.data.status.isShaken === true) {
                     await succ.apply_status(token, 'shaken', false)
@@ -139,8 +139,9 @@ export async function soak_damage_script() {
     // Apply wounds if not all wounds were soaked.
     async function applyWounds() {
         newWounds = numberWounds - rounded;
+        //Translate TODO
         new Dialog({
-            title: 'Applying Wounds',
+            title: game.i18n.localize("SWIM.dialogue-applyWounds"),
             content: `<form>
              <div class="form-group">
                  <label for="applWounds">Wounds to apply:</label>
@@ -149,7 +150,7 @@ export async function soak_damage_script() {
              </form>`,
             buttons: {
                 one: {
-                    label: "Apply Wounds",
+                    label: game.i18n.localize("SWIM.dialogue-applyWounds"),
                     callback: async (html) => {
                         let applWounds = Number(html.find("#applWounds")[0].value);
                         let setWounds = wv + applWounds;
@@ -191,7 +192,7 @@ export async function soak_damage_script() {
     // Buttons for the main Dialogue.
     let buttonsMain = {
         one: {
-            label: "Soak Wounds",
+            label: game.i18n.localize("SWIM.dialogue-soakWounds"),
             callback: async (html) => {
                 numberWounds = Number(html.find("#numWounds")[0].value);
                 let { _, __, totalBennies } = await swim.check_bennies(token)
@@ -205,7 +206,7 @@ export async function soak_damage_script() {
             }
         },
         two: {
-            label: "Apply Damage",
+            label: game.i18n.localize("SWIM.dialogue-applyDmg"),
             callback: (html) => {
                 numberWounds = Number(html.find("#numWounds")[0].value);
                 rounded = 0
@@ -216,11 +217,12 @@ export async function soak_damage_script() {
 
     // If Unholy Warrior or Holy Warrior is present, add another button to the Main Dialogue and render another dialogue to enter the amount of PP to be used.
     if (holyWarr) buttonsMain["three"] = {
-        label: "Soak with (Un)Holy Warrior",
+        label: game.i18n.localize("SWIM.dialogue-soakWoundsWithUnHolyWarrior"),
         callback: (html) => {
             numberWounds = Number(html.find("#numWounds")[0].value);
+            //Translate ToDo
             new Dialog({
-                title: 'Soaking Wounds',
+                title: game.i18n.localize("SWIM.dialogue-soakWounds"),
                 content: `<form>
              <div class="form-group">
                  <form>
@@ -233,14 +235,14 @@ export async function soak_damage_script() {
              </form>`,
                 buttons: {
                     one: {
-                        label: "Soak Wounds",
+                        label: game.i18n.localize("SWIM.dialogue-soakWounds"),
                         callback: async (html) => {
                             numberPP = Number(html.find("#numPP")[0].value);
                             if (ppv < numberPP) {
-                                ui.notifications.notify("You have insufficient Power Points.");
+                                ui.notifications.notify(game.i18n.localize("SWIM.dialogue-insufficientPowerPoints"));
                             }
                             else if (numberPP > 4) {
-                                ui.notifications.error("You can't use more than 4 Power Points.");
+                                ui.notifications.error(game.i18n.localize("SWIM.dialogue-cannotUseMoreThanFourPP"));
                             }
                             else {
                                 let { _, __, totalBennies } = await swim.check_bennies(token)
@@ -269,8 +271,9 @@ export async function soak_damage_script() {
     if (inc === true) { incVigor() }
     else {
         // Main Dialogue
+        //Translate ToDo
         new Dialog({
-            title: 'Soaking Wounds',
+            title: game.i18n.localize("SWIM.dialogue-soakWounds"),
             content: `<form>
          <p>You currently have <b>${wv}/${wm}</b> Wounds and <b>${totalBennies}</b> Bennies.</p>
      <div class="form-group">
@@ -293,14 +296,11 @@ export async function soak_damage_script() {
         if (totalBennies > 0) {
             let currWounds = numberWounds - rounded;
             new Dialog({
-                title: 'Reroll',
-                content: `<form>
-                     You've soaked <b>${rounded} Wounds</b>; you will <b>receive ${currWounds} Wounds</b>.
-                     </br>Do you want to reroll your Soaking Roll (you have <b>${totalBennies} Bennies</b> left)?
-                     </form>`,
+                title: game.i18n.localize("SWIM.dialogue-reroll"),
+                content: game.i18n.format("SWIM.dialogue-rerollText", {rounded : rounded, currWounds : currWounds, totalBennies : totalBennies}),
                 buttons: {
                     one: {
-                        label: "Reroll",
+                        label: game.i18n.localize("SWIM.dialogue-reroll"),
                         callback: async (_) => {
                             await swim.spend_benny(token, sendMessage)
                             if (!!elan) {
@@ -310,9 +310,9 @@ export async function soak_damage_script() {
                         }
                     },
                     two: {
-                        label: "No, apply Wounds now",
+                        label: game.i18n.localize("SWIM.dialogue-decisionToApplyWounds"),
                         callback: (_) => {
-                            ui.notifications.notify("Wounds will be applied now.");
+                            ui.notifications.notify(game.i18n.localize("SWIM.dialogue-applyWounds"));
                             applyWounds();
                         }
                     }
@@ -321,7 +321,7 @@ export async function soak_damage_script() {
             }).render(true);
         }
         else {
-            ui.notifications.notify("You have no more bennies, Wounds will be applied now.");
+            ui.notifications.notify(game.i18n.localize("SWIM.dialogue-outOfBenniesApplyWounds"));
             applyWounds();
         }
     }
@@ -493,14 +493,11 @@ export async function soak_damage_script() {
         });
 
         new Dialog({
-            title: 'Incapacitation Roll',
-            content: `<form>
-             <p>You became incapacitated by damage.</p>
-             <p>You need to make an immediate Vigor roll. On a Critical Failure you will perish.</p>
-         </form>`,
+            title: game.i18n.localize("SWIM.dialogue-incapacitationRoll"),
+            content: game.i18n.localize("SWIM.dialogue-incapacitationRollText"),
             buttons: {
                 one: {
-                    label: "Roll Vigor",
+                    label: game.i18n.localize("SWIM.dialogue-rollVigor"),
                     callback: async (_) => {
                         rollVigor()
                     }
@@ -523,19 +520,19 @@ export async function soak_damage_script() {
                 rollWithEdge = r.total;
                 for (let edge of edges) {
                     rollWithEdge += 2;
-                    edgeText += `<br/><i>+ 2 <img src="${edge.img}" alt="" width="15" height="15" style="border:0" />${edge.name}</i>`;
+                    edgeText += `<br/><em>+ 2 <img src="${edge.img}" alt="" width="15" height="15" style="border:0" />${edge.name}</em>`;
                 }
 
                 if (hardToKill) {
                     let hardToKillBonus = token.actor.data.data.wounds.value - token.actor.data.data.wounds.ignored
                     rollWithEdge += hardToKillBonus
-                    edgeText = edgeText + `<br/><i>+ ${hardToKillBonus} <img src="${hardToKill.img}" alt="" width="15" height="15" style="border:0" />${hardToKill.name}</i>`;
+                    edgeText = edgeText + `<br/><em>+ ${hardToKillBonus} <img src="${hardToKill.img}" alt="" width="15" height="15" style="border:0" />${hardToKill.name}</em>`;
                 }
 
                 // Apply +2 if Elan is present and if it is a reroll.
                 if (typeof elanBonus === "number") {
                     rollWithEdge += 2;
-                    edgeText = edgeText + `<br/><i>+ Elan</i>.`;
+                    edgeText = edgeText + `<br/><em>+ Elan</em>.`;
                 }
 
                 // Roll Vigor
@@ -552,8 +549,8 @@ export async function soak_damage_script() {
                     let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure, didn't make the ${harderToKill.name} roll and perishes! </span>`;
                     ChatMessage.create({ content: chatData });
                 } else if (harderToKillRoll.total === 2) {
-                    ui.notifications.notify(`You've rolled a Critical Failure but made your ${harderToKill.name} roll! You will survive <i>somehow</i>...`);
-                    let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure, but made the ${harderToKill.name} roll, is Incapacitated but survives, <i>somehow</i>. </span>`;
+                    ui.notifications.notify(`You've rolled a Critical Failure but made your ${harderToKill.name} roll! You will survive <em>somehow</em>...`);
+                    let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure, but made the ${harderToKill.name} roll, is Incapacitated but survives, <em>somehow</em>. </span>`;
                     ChatMessage.create({ content: chatData });
                 }
             } else if (critFail === true) {

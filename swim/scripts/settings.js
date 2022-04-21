@@ -1,5 +1,7 @@
 /* globals game, FormApplication, $ */
 
+import * as SWIM from './constants.js'
+
 export const settingVariables = [
     {id: 'grittyDamage', config_type: Boolean, tab: "Setting Rules", default: false},
     {id: 'grittyDamageNPC', config_type: Boolean, tab: "Setting Rules", default: false},
@@ -9,9 +11,12 @@ export const settingVariables = [
         default: 'Minor Health Potion|Health Potion|Greater Health Potion|Minor Healing Potion|Healing Potion|Greater Healing Potion'},
     {id: 'fatiguePotionOptions', config_type: String, tab: "Item Options",
         default: 'Minor Potion of Well-Being|Potion of Well-Being|Greater Potion of Well-Being|Minor Recreational Potion|Recreational Potion|Greater Recreational Potion'},
-    {id: 'injuryTable', config_type: String, tab: "Roll Tables", default: 'Injury Table'},
-    {id: 'fearTable', config_type: String, tab: "Roll Tables", default: 'Fear Table'},
-    {id: 'chaseDeck', config_type: String, tab: "Roll Tables", default: 'Chase Deck'},
+    {id: 'injuryTable', config_type: String, tab: "Tables & Playlists", default: 'Injury Table'},
+    {id: 'fearTable', config_type: String, tab: "Tables & Playlists", default: 'Fear Table'},
+    {id: 'chaseDeck', config_type: String, tab: "Tables & Playlists", default: 'Chase Deck'},
+    {id: 'combatPlaylistManagement', config_type: Boolean, tab: "Tables & Playlists", default: true},
+    {id: 'combatPlaylist', config_type: String, tab: "Tables & Playlists", default: 'Combat'},
+    {id: 'noStopFolder', config_type: String, tab: "Tables & Playlists", default: 'Ambient'},
     {id: 'chaseDeck-MaxCards', config_type: Number, tab: "Chase Layout", default: '18'},
     {id: 'chaseDeck-CardsPerRow', config_type: Number, tab: "Chase Layout", default: '9'},
     {id: 'chaseDeck-CardsToDraw', config_type: Number, tab: "Chase Layout", default: '18'},
@@ -22,6 +27,11 @@ export const settingVariables = [
     {id: 'chaseDeck-CardWidth', config_type: Number, tab: "Chase Layout", default: '4'},
     {id: 'chaseDeck-DeckDown', config_type: Number, tab: "Chase Layout", default: '24'},
     {id: 'chaseDeck-DeckRight', config_type: Number, tab: "Chase Layout", default: '10'},
+    {id: 'shapeChange-raiseScaleMultiplier', config_type: Number, tab: "Macro Options", default: SWIM.RAISE_SCALE_DEFAULT,
+        min: SWIM.RAISE_SCALE_MIN, max: SWIM.RAISE_SCALE_MAX, step: 0.01},
+        {id: 'shapeChange-numMorphs', config_type: Number, tab: "Macro Options", default: SWIM.NUM_MORPHS_DEFAULT,
+        min: SWIM.NUM_MORPHS_MIN, max: SWIM.NUM_MORPHS_MAX, step: 1},
+    {id: 'br2Support', config_type: Boolean, tab: "SFX & VFX Options", default: false},
     {id: 'sfxDelay', config_type: Number, tab: "SFX & VFX Options", default: '110'},
     {id: 'defaultVolume', config_type: Number, tab: "SFX & VFX Options", default: '1' },
     {id: 'shakenSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",
@@ -48,6 +58,8 @@ export const settingVariables = [
         default: ''},
     {id: 'shapeShiftVFX', config_type: window.Azzu.SettingsTypes.FilePickerVideo, tab: "SFX & VFX Options",
         default: ''},
+    {id:  'lightSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",
+        default: 'modules/swim/assets/sfx/Fireball-Super-Quick-Whoosh-www.fesliyanstudios.com.ogg'},
     {id: 'irradiationSetting', config_type: Boolean, tab: "Additional Conditions", default: false},
 ];
 
@@ -60,6 +72,14 @@ export function register_settings() {
         default: false,
         scope: 'user',
         config: true,
+    });
+    game.settings.register('swim', 'br2Message', {
+        name: "br2MessageName",
+        hint: "br2MessageHint",
+        type: Boolean,
+        default: false,
+        scope: 'world',
+        config: false,
     });
     game.settings.registerMenu('swim', 'custom-config', {
         name: game.i18n.localize("SWIM.ConfigMenuName"),
@@ -85,8 +105,8 @@ class CustomConfigForm extends FormApplication {
         let options = super.defaultOptions;
         options.id = 'swim-custom-config';
         options.template = "/modules/swim/templates/customConfig.hbs";
-        options.width = 660;
-        options.height = 600;
+        options.width = SWIM.CONFIG_WINDOW_WIDTH;
+        options.height = SWIM.CONFIG_WINDOW_HEIGHT;
         return options;
     }
 
@@ -114,7 +134,11 @@ class CustomConfigForm extends FormApplication {
             }
             tabs[setting.tab].push(
                 {id: setting.id,
-                 is_boolen: setting.config_type === Boolean,
+                 is_boolean: setting.config_type === Boolean,
+                 is_numeric: setting.config_type === Number,
+                 min: setting.min,
+                 max: setting.max,
+                 step: setting.step,
                  use_audio_picker: setting.config_type === window.Azzu.SettingsTypes.FilePickerAudio,
                  use_video_picker: setting.config_type === window.Azzu.SettingsTypes.FilePickerVideo,
                  value: game.settings.get('swim', setting.id),

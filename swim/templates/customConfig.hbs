@@ -13,7 +13,7 @@
                     <div class="form-group">
                         <label>{{ this.name }}</label>
                         <div class="form-fields">
-                            {{#if this.is_boolen}}
+                            {{#if this.is_boolean}}
                                 <input type="checkbox" name="{{ this.id }}" {{#if this.value }}checked=""{{/if}}>
                             {{else}}
                                 <input type="text" name="{{ this.id }}" value="{{ this.value }}">

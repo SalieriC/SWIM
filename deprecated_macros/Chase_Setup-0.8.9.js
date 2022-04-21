@@ -1,5 +1,20 @@
 //To be used with the included chase layouts.
 
+// Card related constants
+const MAX_CARDS=18;
+const CARDS_PER_ROW=9;
+const DEF_NUM_CARDS=MAX_CARDS;
+// Pixel related constants
+const DEF_GRID_PIXELS=50;
+const DEF_BORDER_HORIZ=0;
+const DEF_BORDER_VERT=0;
+// Card dimensions in grid units
+const DEF_CARD_HEIGHT=6;
+const DEF_CARD_WIDTH=4;
+// Deck origin in grid units
+const DEF_DECK_DOWN=24
+const DEF_DECK_RIGHT=10
+
 getRequirements();
 
 function getRequirements() {
@@ -24,14 +39,29 @@ function getRequirements() {
     });
 
     let template = `
-  <p>Table to Draw From: <select id="tableName">${cardsList}</select></p>
-  <p>Number of Cards to Draw: <input id="drawAmt" type="number" style="width: 50px;" value=18></p>
-  `/*`
-  <p>
-    Height: <input id="height" type="number" style="width: 50px" value=300>
-    Width: <input id="width" type="number" style="width: 50px" value=200>
-  </p>
-  `*/;
+        <p>Table to Draw From: <select id="tableName">${cardsList}</select></p>
+        <p>Number of Cards to Draw: <input id="drawAmt" type="number" style="width: 50px;" value=${DEF_NUM_CARDS}></p>
+        <hr>
+        <p>Pixel Sizes:</p>
+        <p>Per Grid Unit: <input id="gridPixels" type="number" style="width: 50px;" value=${DEF_GRID_PIXELS}></p>
+        <p>
+            Horizontal Border: <input id="borderHoriz" type="number" style="width: 50px;" value=${DEF_BORDER_HORIZ}>
+            Vertical Border: <input id="borderVert" type="number" style="width: 50px;" value=${DEF_BORDER_VERT}>
+        </p>
+        <hr>
+        <p>Card Dimensions (in grid units):</p>
+        <p>
+            Height: <input id="cardHeight" type="number" style="width: 50px;" value=${DEF_CARD_HEIGHT}>
+            Width: <input id="cardWidth" type="number" style="width: 50px;" value=${DEF_CARD_WIDTH}>
+        </p>
+        <hr>
+        <p>Position of Deck From Top Left (in grid units):</p>
+        <p>
+            Down: <input id="deckDown" type="number" style="width: 50px;" value=${DEF_DECK_DOWN}>
+            Right: <input id="deckRight" type="number" style="width: 50px;" value=${DEF_DECK_RIGHT}>
+        </p>
+        `;
+
     new Dialog({
         title: "Chase Layout Manager",
         content: template,
@@ -58,12 +88,17 @@ function getRequirements() {
 async function makeChase(html) {
     let tableName = html.find("#tableName")[0].value;
     let cardsToDraw = html.find("#drawAmt")[0].value;
-    let _height = 300;
-    let _width = 200;
-    if (cardsToDraw > 18) {
-        ui.notifications.error("You can't set up more than 18 cards on this layout.")
-        ui.notifications.notify("Setting up 18 cards instead.")
-        cardsToDraw = 18;
+    let gridPixels = Number(html.find("#gridPixels")[0].value);
+    let borderHoriz = Number(html.find("#borderHoriz")[0].value);
+    let borderVert = Number(html.find("#borderVert")[0].value);
+    let cardHeight = Number(html.find("#cardHeight")[0].value) * gridPixels;
+    let cardWidth = Number(html.find("#cardWidth")[0].value) * gridPixels;
+    let deckDown = Number(html.find("#deckDown")[0].value) * gridPixels;
+    let deckRight = Number(html.find("#deckRight")[0].value) * gridPixels;
+    if (cardsToDraw > MAX_CARDS) {
+        ui.notifications.error("You can't set up more than " + MAX_CARDS + " cards on this layout.")
+        ui.notifications.notify("Setting up " + MAX_CARDS + " cards instead.")
+        cardsToDraw = MAX_CARDS;
     }
 
     let cardDraws = (
@@ -75,13 +110,15 @@ async function makeChase(html) {
     AudioHelper.play({ src: `systems/swade/assets/card-flip.wav` }, true);
     
     for (let i = 0; i < cardsToDraw; i++) {
-        let xPosition = 500 + i % 9 * 200;
-        let yPosition = (i > 8) ? 1500 : 1200;
+        let row = parseInt( i / CARDS_PER_ROW );
+        let col = i % CARDS_PER_ROW;
+        let xPosition = deckRight + ( col * ( cardWidth + borderHoriz ) );
+        let yPosition = deckDown + ( row * ( cardHeight + borderVert ) );
         
         const tileData = {
             img: cardDraws[i].data.img,
-            width: _width,
-            height: _height,
+            width: cardWidth,
+            height: cardHeight,
             x: xPosition,
             y: yPosition,
             'flags.swim.isChaseCard': true
