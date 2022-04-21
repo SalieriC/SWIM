@@ -19,10 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Token Vision now supports custom (and preset) light colours.
 ### Changed
 - Enhanced Shape Change function to morph changing token into each other by growing/shrinking size and opacity (alpha) of both tokens as needed.
+- - This can be configured (and disabled) in the settings.
 - Enhanced numeric input handling for SWIM configuration. Allows number input fields to have min, max, and step fields, which allows fields to be range and precision (decimal places) checked.
 - Token Vision now enables non-GMs to edit their vision type.
 ### Fixed
-- Corrected an issue in the Shape Change function where temporary preset actors were incorrectly cleaned up. The issue happens when the player transforms into the same creature twice (or more) in a row.
+- Corrected an issue in the Shape Change function where temporary preset actors were incorrectly cleaned up. The issue happened when the player transforms into the same creature twice (or more) in a row.
 
 ## [0.16.0] - 2022-04-03
 ### Added
