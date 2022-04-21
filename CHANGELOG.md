@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dismiss function for the Mighty Summoner: If the selected token is a summoned creature, the owner (and GMs) can choose to dismiss it instead of summoning a new creature.
 - Token Vision now supports custom (and preset) light colours.
 - Started localization of some macros (@Razortide). This is far from being finished and a long-term project but there will be some amount of process in future releases until it's all done.  
+- New sound effect for use in the token vision.
 ### Changed
 - Enhanced Shape Change function to morph changing token into each other by growing/shrinking size and opacity (alpha) of both tokens as needed (@pmoore603).
 - - This can be configured (and disabled) in the settings.
