@@ -102,10 +102,10 @@ export async function token_vision_script() {
             let brightLight = 0;
             let lightAngle = 360;
             let lockRotation = tokenD.data.lockRotation;
-            let alpha = token.data.light.alpha;
-            let animIntensity = token.data.light.animation.intensity;
-            let animSpeed = token.data.light.animation.speed;
-            let animType = token.data.light.animation.type;
+            let alpha = tokenD.data.light.alpha;
+            let animIntensity = tokenD.data.light.animation.intensity;
+            let animSpeed = tokenD.data.light.animation.speed;
+            let animType = tokenD.data.light.animation.type;
             // Get Vision Type Values
             visionType = html.find('[name="vision-type"]')[0].value || "none";
             let presetChoice = html.find('[id="colour-presets"]')[0].value;
@@ -149,7 +149,7 @@ export async function token_vision_script() {
                     brightSight = 1000;
                     break;
                 case "nochange":
-                    break;
+                    //break;
                 default:
                     dimSight = tokenD.data.dimSight;
                     brightSight = tokenD.data.brightSight;
@@ -214,17 +214,17 @@ export async function token_vision_script() {
                     animSpeed = 0
                     break;
                 case "nochange":
-                    break;
+                    //break;
                 default:
                     dimLight = tokenD.data.light.dim;
                     brightLight = tokenD.data.light.bright;
                     lightAngle = tokenD.data.light.angle;
                     lockRotation = tokenD.data.lockRotation;
-                    alpha = token.data.light.alpha;
+                    alpha = tokenD.data.light.alpha;
                     lightColour = lightColour;
-                    animIntensity = token.data.light.animation.intensity;
-                    animSpeed = token.data.light.animation.speed;
-                    animType = token.data.light.animation.type;
+                    animIntensity = tokenD.data.light.animation.intensity;
+                    animSpeed = tokenD.data.light.animation.speed;
+                    animType = tokenD.data.light.animation.type;
                     break;
             }
             // Update Token
