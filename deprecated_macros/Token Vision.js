@@ -12,11 +12,13 @@ async function main() {
     ui.notifications.error("Please select a token first");
     return;
   }
+  let currentColour = token.data.light.color
+  console.log(currentColour)
   // Add Vision Type only if the Game Master is using the Macro
   let dialogue_content;
-  if (game.user.isGM) {
     dialogue_content = `
     <form>
+    <dt>
       <div class="form-group">
         <label>Light Source:</label>
         <select id="light-source" name="light-source">
@@ -29,6 +31,23 @@ async function main() {
           <option value="flLight">Flashlight</option>
         </select>
       </div>
+      <dd>
+      <div class="form-group">
+        <label>Light Colour Presets:</label>
+        <select id="colour-presets" name="colour-presets">
+          <option value="picker">Current/Custom (use picker)</option>
+          <option value="candle">Candle Colour</option>
+          <option value="fire">Fire Torch Colour</option>
+          <option value="magnesium">Magnesium Torch Colour</option>
+          <option value="white">White/Flashlight Colour</option>
+        </select>
+      </div>
+      </dd><dd>
+      <div class="form-group">
+        <label>Custom Colour:</label>
+        <input type="color" id="colour-choice" value="${currentColour}" style="width:50%;" align="right">
+      </div>
+      </dd></dt><dt>
       <div class="form-group">
         <label>Vision Type:</label>
         <select id="vision-type" name="vision-type">
@@ -42,25 +61,9 @@ async function main() {
           <option value="fullNiVis">Full Night Vision</option>
         </select>
       </div>
+      </dt>
     </form>
 `;
-  } else {
-    dialogue_content = `
-    <form>
-      <div class="form-group">
-        <label>Light Source:</label>
-        <select id="light-source" name="light-source">
-          <option value="nochange">No Change</option>
-          <option value="none">None</option>
-          <option value="candle">Candle</option>
-          <option value="lamp">Lantern</option>
-          <option value="bullseye">Lantern (Bullseye)</option>
-          <option value="torch">Torch</option>
-          <option value="flLight">Flashlight</option>
-        </select>
-      </div>
-    `;
-  }
 
   let applyChanges = false;
   new Dialog({
@@ -78,7 +81,7 @@ async function main() {
       },
     },
     default: "yes",
-    close: async(html) => {
+    close: async (html) => {
       if (applyChanges) {
         for (let token of canvas.tokens.controlled) {
           let visionType;
@@ -89,9 +92,20 @@ async function main() {
           let brightLight = 0;
           let lightAngle = 360;
           let lockRotation = token.data.lockRotation;
+          let alpha = token.data.light.alpha;  
+          let animIntensity = token.data.light.animation.intensity; 
+          let animSpeed = token.data.light.animation.speed; 
+          let animType = token.data.light.animation.type;
           // Get Vision Type Values
-          if (game.user.isGM){
-            visionType = html.find('[name="vision-type"]')[0].value || "none";
+          visionType = html.find('[name="vision-type"]')[0].value || "none";
+          let presetChoice = html.find('[id="colour-presets"]')[0].value;
+          let colourChoice
+          if (presetChoice === "picker") {colourChoice = html.find('[id="colour-choice"]')[0].value;}
+          else if (presetChoice === "candle") {colourChoice = "#fffcbb"}
+          else if (presetChoice === "fire") {colourChoice = "#f8c377"}
+          else if (presetChoice === "magnesium") {colourChoice = "#e52424"}
+          else if (presetChoice === "white") {colourChoice = "#FFFFFF"}
+          let lightColour = colourChoice;
           switch (visionType) {
             case "pDark":
               dimSight = 0;
@@ -131,30 +145,59 @@ async function main() {
             case "none":
               dimLight = 0;
               brightLight = 0;
+              animIntensity = 0
+              animSpeed = 0
               break;
             case "candle":
               dimLight = 0;
               brightLight = 2;
+              lightAngle = 360
+              alpha = 0.5
+              lightColour = colourChoice
+              animIntensity = 3
+              animSpeed = 3
+              animType = "torch"
               break;
             case "lamp":
               dimLight = 0;
               brightLight = 4;
+              lightAngle = 360
+              alpha = 0.5
+              lightColour = colourChoice
+              animIntensity = 3
+              animSpeed = 3
+              animType = "torch"
               break;
             case "bullseye":
               dimLight = 0;
               brightLight = 4;
               lockRotation = true;
               lightAngle = 52.5;
+              alpha = 0.5
+              lightColour = colourChoice
+              animIntensity = 3
+              animSpeed = 3
+              animType = "torch"
               break;
             case "torch":
               dimLight = 0;
               brightLight = 4;
+              lightAngle = 360
+              alpha = 0.5
+              lightColour = colourChoice
+              animIntensity = 3
+              animSpeed = 3
+              animType = "torch"
               break;
             case "flLight":
               dimLight = 0;
               brightLight = 10;
               lockRotation = true;
               lightAngle = 52.5;
+              alpha = 0.5
+              lightColour = colourChoice
+              animIntensity = 0
+              animSpeed = 0
               break;
             case "nochange":
             default:
@@ -162,6 +205,11 @@ async function main() {
               brightLight = token.data.brightLight;
               lightAngle = token.data.lightAngle;
               lockRotation = token.data.lockRotation;
+              alpha = token.data.light.alpha; 
+              lightColour = lightColour; 
+              animIntensity = token.data.light.animation.intensity; 
+              animSpeed = token.data.light.animation.speed; 
+              animType = token.data.light.animation.type;
           }
           // Update Token
           //console.log(token);
@@ -169,60 +217,23 @@ async function main() {
             vision: true,
             dimSight: dimSight,
             brightSight: brightSight,
-            dimLight: dimLight,
-            brightLight: brightLight,
-            lightAngle: lightAngle,
-            lockRotation: lockRotation
+            //dimLight: dimLight,
+            //brightLight: brightLight,
+            //lightAngle: lightAngle,
+            lockRotation: lockRotation,
+            light: {
+              alpha: alpha,
+              angle: lightAngle,
+              bright: brightLight,
+              dim: dimLight,
+              color: lightColour,
+              animation: {
+                intensity: animIntensity,
+                speed: animSpeed,
+                type: animType
+              }
+            }
           });
-        }
-        else {
-          // Get Light Source Values
-          switch (lightSource) {
-            case "none":
-              dimLight = 0;
-              brightLight = 0;
-              break;
-            case "candle":
-              dimLight = 0;
-              brightLight = 2;
-              break;
-            case "lamp":
-              dimLight = 0;
-              brightLight = 4;
-              break;
-            case "bullseye":
-              dimLight = 0;
-              brightLight = 4;
-              lockRotation = true;
-              lightAngle = 52.5;
-              break;
-            case "torch":
-              dimLight = 0;
-              brightLight = 4;
-              break;
-            case "flLight":
-              dimLight = 0;
-              brightLight = 10;
-              lockRotation = true;
-              lightAngle = 52.5;
-              break;
-            case "nochange":
-            default:
-              dimLight = token.data.dimLight;
-              brightLight = token.data.brightLight;
-              lightAngle = token.data.lightAngle;
-              lockRotation = token.data.lockRotation;
-          }
-          // Update Token
-          //console.log(token);
-          await token.document.update({
-            vision: true,
-            dimLight: dimLight,
-            brightLight: brightLight,
-            lightAngle: lightAngle,
-            lockRotation: lockRotation
-          });
-        }
         }
       }
     }
