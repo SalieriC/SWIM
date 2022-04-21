@@ -21,7 +21,6 @@ async function main() {
     return;
   }
   let currentColour = token.data.light.color
-  console.log(currentColour)
   // Add Vision Type only if the Game Master is using the Macro
   let dialogue_content;
     dialogue_content = `
