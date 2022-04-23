@@ -1,6 +1,6 @@
 /*******************************************
  * Personal Health Centre
- * // v.6.2.2
+ * // v.6.2.3
  * By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
  ******************************************/
 export async function personal_health_centre_script() {
@@ -264,7 +264,7 @@ export async function heal_other_gm(data) {
     }
 
     async function createchatMessage() {
-        chatMessage.create({
+        ChatMessage.create({
             user: game.user.id,
             content: chatContent,
         });
@@ -628,7 +628,7 @@ async function healSelf(token, speaker) {
             let chatData = `${actorAlias} rolled a <span style="font-size:150%">Critical Failure!</span> and takes another Wound! See the rules on Natural Healing for details.`;
             let noVig = true
             applyWounds(noVig);
-            chatMessage.create({ content: chatData });
+            ChatMessage.create({ content: chatData });
         }
         else {
             let roundedCopy = rounded
@@ -679,7 +679,7 @@ async function healSelf(token, speaker) {
             }
             chatData += ` ${edgeText}`;
 
-            chatMessage.create({ content: chatData });
+            ChatMessage.create({ content: chatData });
         }
     }
 
@@ -852,7 +852,7 @@ async function healSelf(token, speaker) {
                         if (potion_to_update.data.data.quantity < 1) {
                             potion_to_update.delete();
                         }
-                        chatMessage.create({
+                        ChatMessage.create({
                             speaker: {
                                 alias: token.name
                             },
@@ -904,7 +904,7 @@ async function healSelf(token, speaker) {
                         if (potion_to_update.data.data.quantity < 1) {
                             potion_to_update.delete();
                         }
-                        chatMessage.create({
+                        ChatMessage.create({
                             speaker: {
                                 alias: token.name
                             },
@@ -943,7 +943,7 @@ async function healSelf(token, speaker) {
                     callback: async (html) => {
                         genericHealFatigue = Number(html.find("#numFatigue")[0].value);
                         RemoveFatigue();
-                        await chatMessage.create({
+                        await ChatMessage.create({
                             speaker: {
                                 alias: token.name
                             },
