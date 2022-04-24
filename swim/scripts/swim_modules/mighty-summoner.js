@@ -204,7 +204,6 @@
         oldCombatData.flags.swade.isGroupLeader = true
         delete oldCombatData.flags.swade.groupId
         await summoner.combatant.update(oldCombatData)
-        console.log(oldCombatData)
         aeData.duration.startRound = game.combat.data.round
     }
     // Apply AE
