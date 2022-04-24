@@ -24,7 +24,7 @@
 
     if (!game.modules.get("warpgate")?.active) {
         ui.notifications.error(game.i18n.localize("SWIM.notification.warpgateRequired"));
-        console.error("The SWIM Shape Changer macro requires Warp Gate by honeybadger. It is needed to replace the token. Please install and activate Warp Gate to use the Shape Changer macro: https://foundryvtt.com/packages/warpgate - If you enjoy Warp Gate please consider donating to honeybadger at his KoFi page: https://ko-fi.com/trioderegion")
+        console.error("The SWIM Mighty Summoner macro requires Warp Gate by honeybadger. It is needed to replace the token. Please install and activate Warp Gate to use the Shape Changer macro: https://foundryvtt.com/packages/warpgate - If you enjoy Warp Gate please consider donating to honeybadger at his KoFi page: https://ko-fi.com/trioderegion")
         return;
     }
 
@@ -166,6 +166,26 @@
     const newToken = canvas.tokens.get(newTokenID)
     const summonerID = data.summonerID
     const summoner = canvas.tokens.get(summonerID)
+
+    // Setting up AE with duration that notifies about the powers end time.
+    let aeData = {
+        changes: [],
+        icon: "modules/swim/assets/icons/effects/0-summoned.svg",
+        label: game.i18n.localize("SWIM.label-summoned"),
+        duration: {
+            rounds: 5,
+        },
+        flags: {
+            swade: {
+                expiration: 3
+            }
+        }
+    }
+
+    // Double the duration if the caster has concentration:
+    const concentration = summoner.actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-concentration"))
+    if (concentration) { aeData.duration.rounds = aeData.duration.rounds * 2 }
+
     if (summoner.combatant != null) {
         let oldCombatData = summoner.combatant.toObject()
         await update_combat(oldCombatData)
@@ -184,5 +204,9 @@
         oldCombatData.flags.swade.isGroupLeader = true
         delete oldCombatData.flags.swade.groupId
         await summoner.combatant.update(oldCombatData)
+        console.log(oldCombatData)
+        aeData.duration.startRound = game.combat.data.round
     }
+    // Apply AE
+    await newToken.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
  }

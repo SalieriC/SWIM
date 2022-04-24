@@ -10,7 +10,7 @@ You'll find all the macros in a new compendium delivered by the module. It conta
 **Important:** You might need to update the macros you've imported when you update the module. I hope to find a method to automate this in the future.  
 
 ### SUCC  
-[SUCC (SWADE Ultimate Condition Changer)](https://github.com/SalieriC/SUCC) is a module created by Javier Rivera Castro and myself and is a new dependency for SWIM. It is now completely replacing Combat Utility Belt (CUB) because since SWADE v.1+ the way how conditions are handled by the system changed dramatically. CUB will likely take a long time to be fully compatible with the SWADE system, if it ever will be again. This is why I decided to make a module to do what I need myself (after Javier convinced me). SUCC provides a native support for SWADE and thus is very light on the user configuration. No more complicated CUB setup required. It is required to use SWIM.
+[SUCC (SWADE Ultimate Condition Changer)](https://github.com/SalieriC/SUCC) is a module created by Javier Rivera Castro and myself and is a new dependency for SWIM. It is now completely replacing Combat Utility Belt (CUB) because since SWADE v.1+ the way how conditions are handled by the system changed dramatically. CUB will likely take a long time to be fully compatible with the SWADE system, if it ever will be again. This is why I decided to make a module to do what I need myself (after Javier convinced me). SUCC provides a native support for SWADE and thus is very light on the user configuration. No more complicated CUB setup required. It is required to use SWIM and because makes extended use of it. Because of that it is mandatory to keep SUCC up to date whenever you update SWIM.
 
 ### Health Estimate
 [Health Estimate](https://foundryvtt.com/packages/healthEstimate/) is a cool immersion module and thus works great with SWIM. I highly recomment it as it is so much more immersive to say and read "he is a bit beatin'" than to say/read "he has one Wound". Health Estimate should work fine out of the box once activated but you can easily set it up to your liking if you want.  
@@ -33,6 +33,7 @@ You can reach me on Discord with general questions as well: SalieriC#8263
 ### Current Assets
 In this repository you can find a number of assets already.  
 - **Icons:** [Game-Icons.net](https://game-icons.net/).  
+- - Summon Creature Duration: [Pentacle by Skoll](https://game-icons.net/1x1/skoll/pentacle.html)  
 - **SFX:** (see their file name for origin)
 - - [Fesliyan Studios](www.fesliyanstudios.com), all used with explicit permission (thank you so much), [see their License here](https://www.fesliyanstudios.com/policy).  
 - - [Orange Free Sounds](https://orangefreesounds.com/), all used unter the [CC BY-NC 4.0 License](https://creativecommons.org/licenses/by-nc/4.0/), converted to *.ogg and possibly altered (see file name), Author is in the file names as well.  
