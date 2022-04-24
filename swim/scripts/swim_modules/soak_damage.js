@@ -579,8 +579,8 @@ export async function soak_damage_script() {
                     if (await succ.check_status(token, 'incapacitated') === true) {
                         const incCondition = await succ.get_condition_from(token.actor, 'incapacitated')
                         if (incCondition.data.flags?.core?.overlay === true) {
-                            effect.setFlag('succ', 'updatedAE', true)
-                            await effect.update({"flags.core.overlay": false})
+                            incCondition.setFlag('succ', 'updatedAE', true)
+                            await incCondition.update({"flags.core.overlay": false})
                         }
                     }
                     await succ.apply_status(token, 'bleeding-out', true, true)
