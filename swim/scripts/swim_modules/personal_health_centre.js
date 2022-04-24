@@ -1,6 +1,6 @@
 /*******************************************
  * Personal Health Centre
- * // v.6.2.3
+ * // v.6.2.4
  * By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
  ******************************************/
 export async function personal_health_centre_script() {
@@ -156,10 +156,10 @@ export async function heal_other_gm(data) {
                 //Make INC!
                 if (targetInc) {
                     await swim.play_sfx(deathSFX)
-                    await succ.apply_status(targetActor, 'bleeding-out', true)
+                    await succ.apply_status(targetActor, 'bleeding-out', true, true)
                     chatContent = game.i18n.format("SWIM.chatMessage-healOtherCritFailAndBleedOut", {tokenName : token.name, targetName : target.name})
                 } else {
-                    await succ.apply_status(targetActor, 'incapacitated', true)
+                    await succ.apply_status(targetActor, 'incapacitated', true, true)
                     await swim.play_sfx(deathSFX)
                     chatContent = game.i18n.format("SWIM.chatMessage-healOtherCritFailAndIncap", {tokenName : token.name, targetName : target.name})
                 }
@@ -983,7 +983,7 @@ async function healSelf(token, speaker) {
         }
         else {
             await token.actor.update({ "data.wounds.value": wm });
-            await succ.apply_status(token, 'incapacitated', true)
+            await succ.apply_status(token, 'incapacitated', true, true)
             if (incapSFX) {
                 AudioHelper.play({ src: `${incapSFX}` }, true);
             }

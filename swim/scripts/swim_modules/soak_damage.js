@@ -1,6 +1,6 @@
 /*******************************************
  * Soak Damage
- * v. 4.1.1
+ * v. 4.1.2
  * Code by SalieriC#8263.
  *******************************************/
 export async function soak_damage_script() {
@@ -576,7 +576,14 @@ export async function soak_damage_script() {
                     //Permanent injury and Bleeding Out
                     permanent = true
                     await apply_injury(permanent, combat)
-                    await succ.apply_status(token, 'bleeding-out', true)
+                    if (await succ.check_status(token, 'incapacitated') === true) {
+                        const incCondition = await succ.get_condition_from(token.actor, 'incapacitated')
+                        if (incCondition.data.flags?.core?.overlay === true) {
+                            effect.setFlag('succ', 'updatedAE', true)
+                            await effect.update({"flags.core.overlay": false})
+                        }
+                    }
+                    await succ.apply_status(token, 'bleeding-out', true, true)
                     chatData += `<p>${actorAlias} receives a permanent injury and is Bleeding Out.<p>`
                 } else if (rollWithEdge >= 4 && rollWithEdge <= 7) {
                     //Injury until all wounds are healed
