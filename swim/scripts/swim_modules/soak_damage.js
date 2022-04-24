@@ -566,10 +566,12 @@ export async function soak_damage_script() {
                     if (rollWithEdge < 4) {
                         //Permanent injury and Bleeding Out
                         let dialogContent = `<p>You've rolled a ${rollWithEdge} as your best result.</p><p>You would receive a permanent Injury and become Bleeding out.</p><p>You have <b>${totalBennies} Bennies</b> left. Do you want to spend one to reroll?</p>`
+                        chatData += "and would receive a permanent Injury and become Bleeding out."
                         incReroll(dialogContent)
                     } else if (rollWithEdge >= 4 && rollWithEdge <= 7) {
                         //Injury until all wounds are healed
                         let dialogContent = `<p>You've rolled a ${rollWithEdge} as your best result.</p><p>You would receive an Injury that sticks until all wounds are healed.</p><p>You have <b>${totalBennies} Bennies</b> left. Do you want to spend one to reroll?</p>`
+                        chatData += "and would receive an Injury that sticks until all wounds are healed."
                         incReroll(dialogContent)
                     }
                 } else if (rollWithEdge < 4) {
