@@ -157,6 +157,13 @@ export async function heal_other_gm(data) {
                 if (targetInc) {
                     await swim.play_sfx(deathSFX)
                     await succ.apply_status(targetActor, 'bleeding-out', true, true)
+                    if (await succ.check_status(token, 'incapacitated') === true) {
+                        const incCondition = await succ.get_condition_from(token.actor, 'incapacitated')
+                        if (incCondition.data.flags?.core?.overlay === true) {
+                            incCondition.setFlag('succ', 'updatedAE', true)
+                            await incCondition.update({"flags.core.overlay": false})
+                        }
+                    }
                     chatContent = game.i18n.format("SWIM.chatMessage-healOtherCritFailAndBleedOut", {tokenName : token.name, targetName : target.name})
                 } else {
                     await succ.apply_status(targetActor, 'incapacitated', true, true)
@@ -183,6 +190,13 @@ export async function heal_other_gm(data) {
             // Remove Bleeding out/Incap before any wounds
             if (targetBleedOut) {
                 await succ.toggle_status(targetActor, 'bleeding-out', false)
+                if (await succ.check_status(token, 'incapacitated') === true) {
+                    const incCondition = await succ.get_condition_from(token.actor, 'incapacitated')
+                    if (incCondition.data.flags?.core?.overlay === false) {
+                        incCondition.setFlag('succ', 'updatedAE', true)
+                        await incCondition.update({"flags.core.overlay": true})
+                    }
+                }
                 chatContent = game.i18n.format("SWIM.chatMessage-healOtherCureBleetOut", {tokenName : token.name, targetName : target.name})
             } else if (targetInc) {
                 await succ.toggle_status(targetActor, 'incapacitated', false)
