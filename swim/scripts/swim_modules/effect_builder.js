@@ -73,7 +73,7 @@ export async function effect_builder() {
                         if (raise === true) { degree = "raise" }
                         const data = {
                             targetIDs: targetIDs,
-                            type: "lower",
+                            type: "boost",
                             boost: {
                                 degree: degree,
                                 trait: selectedTrait,
@@ -180,7 +180,8 @@ export async function effect_builder() {
 </div>
 `*/
 
-export async function effect_builder_gm() {
+export async function effect_builder_gm(data) {
+    console.log(data)
     const type = data.type
     if (type === "boost") {
         for (let target of data.targetIDs) {
