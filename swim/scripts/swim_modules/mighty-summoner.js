@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 1.1.0
+ * v. 1.1.2
  * By SalieriC
  ******************************************************/
  export async function summoner_script() {
@@ -183,7 +183,7 @@
     }
 
     // Double the duration if the caster has concentration:
-    const concentration = summoner.actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-concentration"))
+    const concentration = summoner.actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-concentration") && i.type === "edge")
     if (concentration) { aeData.duration.rounds = aeData.duration.rounds * 2 }
 
     if (summoner.combatant != null) {
