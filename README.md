@@ -260,6 +260,7 @@ The macro will search this folder structure for your presets and add them to the
 *Why not creating the folder structure automatically on first starting the world?* - Shape Change isn't the most common power in my experience, thus I don't want to force it on GMs who have no need for it.  
 Here is a short video that showcases the macro (visual effect by JB2A, not included in SWIM):  
 <p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/shape_changer_showcase.gif?raw=true"> </p>  
+(Assets used in the scene are from ForgottenAdventures and PEG Inc. and not part of SWIM.)  
 
 ### Mighty Summoner    
 **Immersion setting:** SFX & VFX
@@ -277,7 +278,8 @@ That's basically everything. It uses the same VFX and SFX as the Shape Changer a
 The function will search the folder structure for your presets and add them to the list of creatures a ssummoner can summon. It then will give the player the selected creature attached to the mouse pointer. On clikc the player places the token on the canvas and give that player permission to control it. It does not create a new actor and thus is only available as a token on the canvas. The sheet can be accessed by double left clicking the token as usual.  
 *Why not creating the folder structure automatically on first starting the world?* - Summon powers aren't the most common powers in my experience, especially not on lower ranks, thus I don't want to force it on GMs who have no need for it.  
 Here is a short video that showcases the macro (visual effect by JB2A, not included in SWIM):  
-<p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/mighty_summoner_showcase.gif?raw=true"> </p>  
+<p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/mighty_summoner_showcase.gif?raw=true"> </p> 
+(Assets used in the scene are from ForgottenAdventures and PEG Inc. and not part of SWIM.)  
 
 ### Common Bond
 **Requirements:** None.  
@@ -296,3 +298,14 @@ Target the token you want to give the Benny to and select the token from which y
 This feature is available from a new button (with the fist icon FVTT uses) in the token controls section on the left (only GMs can see it). The button adds all tokens of the current scene to the combat tracker and prompts a dialogue. The user then has the opportunity to group the tokens as needed. A click on the button of the dialogue starts the combat, draws cards for all combatants/groups and sets the turn to the highes initiative.  
 Additionally, if configured and activated properly in the settings, the game will pause all current playlists and starts a defined combat playlist. This also works when setting up and starting a combat without the combat setup feature. It is possible to configure a folder with playlists that shall not be stopped (i.e. ambient playlists).  
 When stopping (deleting) the combat, the game will automatically stop the combat playlist and resume playing any playlists which were playing before the combat.  
+
+### Power Effect Builder
+**Requirements:**  
+- [Warp Gate](https://github.com/trioderegion/warpgate)  
+- [SUCC](https://github.com/SalieriC/SUCC)  
+**Immersion setting:** None atm.  
+**Description:**  
+An immensely powerful way of setting up Active Effects for the smite, protection and boost/lower powers (more to come) on multiple targets. It sets the AE up with the appropriate duration (also respecting the concentration edge if the caster (selected token) has it), end of turn message and so on.  
+It makes use of the very powerfull API provided by [Warp Gate](https://github.com/trioderegion/warpgate) and [SUCC](https://github.com/SalieriC/SUCC) to apply the effect even on tokens the user doesn't have permission to edit. Make sure your SUCC and Warp Gate installations are up to date.  
+<p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/power_effect_builder_showcase.gif?raw=true"> </p>  
+(Assets used in the scene are from JB2A, ForgottenAdventures, The Elder Scrolls and Adellos and not part of SWIM.)  
