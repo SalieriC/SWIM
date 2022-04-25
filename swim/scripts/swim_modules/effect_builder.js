@@ -105,12 +105,27 @@ export async function effect_builder() {
                             protection: {
                                 bonus: bonus,
                                 type: selectedType,
-                                duration: duration
+                                duration: 1
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "smite") {
-                        //
+                        const bonus = Number(html.find(`#damageBonus`)[0].value)
+                        let weapons = []
+                        for (let target of targets) {
+                            const targetWeaponName = html.find(`#${target.id}`)[0].value
+                            weapons.push({targetID: target.id, weaponName: targetWeaponName})
+                        }
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: "smite",
+                            smite: {
+                                bonus: bonus,
+                                weapon: weapons,
+                                duration: duration
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
                     }
                 }
             }
@@ -130,7 +145,23 @@ export async function effect_builder() {
                 } else if (selectedPower === "protection") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderProtection", {amountText: game.i18n.localize("SUCC.dialogue.amount_to_increase")})
                 } else if (selectedPower === "smite") {
-                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderSmite")
+                    //Get weapons for everyone
+                    let allHTML = []
+                    for (let target of targets) {
+                        const targetWeapons = target.actor.items.filter(w => w.type === "weapon" && w.data.data.quantity >= 1)
+                        let weaponOptions
+                        for (let weapon of targetWeapons) {
+                            weaponOptions = weaponOptions + `<option value="${weapon.name}">${weapon.data.name}</option>`
+                        }
+                        let html = `
+                        <div class='form-group'>
+                            <label for='${target.id}'><p>${game.i18n.localize("SWIM.dialogue-powerEffectBuilderSmiteWeaponOf")} ${target.name}:</p></label>
+                            <select id='${target.id}'>${weaponOptions}</select>
+                        </div>
+                        `
+                        allHTML = allHTML += html
+                    }
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderSmite", {allHTML: allHTML, increaseText: game.i18n.localize('SUCC.dialogue.amount_to_increase')})
                 }
             });
         },
@@ -149,4 +180,51 @@ export async function effect_builder() {
 </div>
 `*/
 
-export async function effect_builder_gm() {}
+export async function effect_builder_gm() {
+    const type = data.type
+    if (type === "boost") {
+        for (let target of data.targetIDs) {
+            const boostData = {
+                boost: {
+                    degree: data.boost.degree,
+                    trait: data.boost.trait,
+                    duration: data.boost.duration
+                }
+            }
+            await succ.apply_status(target, 'boost', true, false, boostData)
+        }
+    } else if (type === "lower") {
+        for (let target of data.targetIDs) {
+            const lowerData = {
+                lower: {
+                    degree: data.lower.degree,
+                    trait: data.lower.trait,
+                    duration: data.lower.duration
+                }
+            }
+            await succ.apply_status(target, 'lower', true, false, lowerData)
+        }
+    } else if (type === "protection") {
+        for (let target of data.targetIDs) {
+            const protectionData = {
+                protection: {
+                    bonus: data.protection.bonus,
+                    type: data.protection.type,
+                    duration: data.protection.duration
+                }
+            }
+            await succ.apply_status(target, 'protection', true, false, protectionData)
+        }
+    } else if (type === "smite") {
+        for (let target of data.smite.weapon) {
+            const smiteData = {
+                smite: {
+                    bonus: data.smite.bonus,
+                    weapon: target.weaponName,
+                    duration: data.smite.duration
+                }
+            }
+            await succ.apply_status(target.targetID, 'smite', true, false, smiteData)
+        }
+    }
+}
