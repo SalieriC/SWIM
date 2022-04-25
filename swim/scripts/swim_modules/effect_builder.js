@@ -7,7 +7,7 @@
  * concentration edge.
  * 
  * v. 0.0.0
- * By SalieriC
+ * By SalieriC#8263; dialogue resizing by Freeze#2689.
  ******************************************************/
 
 export async function effect_builder() {
@@ -94,6 +94,10 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "protection") {
+                        //
+                    } else if (selectedPower === "smite") {
+                        //
                     }
                 }
             }
