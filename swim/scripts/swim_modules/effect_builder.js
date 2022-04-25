@@ -23,7 +23,7 @@ export async function effect_builder() {
         ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleTargetMultiToken"))
         return
     }
-    
+
     //Set div class based on enabled official module:
     const officialClass = await swim.get_official_class()
 
@@ -61,11 +61,11 @@ export async function effect_builder() {
         traitOptions = traitOptions + `<option value="${each.toLowerCase()}">${game.i18n.localize("SUCC.dialogue.skill")} ${each}</option>`
     }
 
-    let text = game.i18n.format("SWIM.dialogue-powerEffectBuilderBoost", {trait: game.i18n.localize("SUCC.dialogue.trait"), traitOptions: traitOptions})
+    let text = game.i18n.format("SWIM.dialogue-powerEffectBuilderBoost", { trait: game.i18n.localize("SUCC.dialogue.trait"), traitOptions: traitOptions })
 
     new Dialog({
         title: game.i18n.localize("SWIM.dialogue-powerEffectBuilderTitle"),
-        content: game.i18n.format("SWIM.dialogue-powerEffectBuilderContent", {class: officialClass, options: options, text: text}),
+        content: game.i18n.format("SWIM.dialogue-powerEffectBuilderContent", { class: officialClass, options: options, text: text }),
         buttons: {
             one: {
                 label: `<i class="fas fa-magic"></i> Proceed`,
@@ -119,7 +119,7 @@ export async function effect_builder() {
                         let weapons = []
                         for (let target of targets) {
                             const targetWeaponName = html.find(`#${target.id}`)[0].value
-                            weapons.push({targetID: target.id, weaponName: targetWeaponName})
+                            weapons.push({ targetID: target.id, weaponName: targetWeaponName })
                         }
                         const data = {
                             targetIDs: targetIDs,
@@ -144,34 +144,36 @@ export async function effect_builder() {
                 const effectContent = form.querySelector(".effectContent");
                 const selectedPower = form.querySelector('select[id="selected_power"]').value;
                 if (selectedPower === "boost") {
-                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderBoost", {trait: game.i18n.localize("SUCC.dialogue.trait"), traitOptions: traitOptions})
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderBoost", { trait: game.i18n.localize("SUCC.dialogue.trait"), traitOptions: traitOptions })
                 } else if (selectedPower === "lower") {
-                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderLower", {trait: game.i18n.localize("SUCC.dialogue.trait"), traitOptions: traitOptions})
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderLower", { trait: game.i18n.localize("SUCC.dialogue.trait"), traitOptions: traitOptions })
                 } else if (selectedPower === "protection") {
-                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderProtection", {amountText: game.i18n.localize("SUCC.dialogue.amount_to_increase")})
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderProtection", { amountText: game.i18n.localize("SUCC.dialogue.amount_to_increase") })
                 } else if (selectedPower === "smite") {
                     //Get weapons for everyone
                     let allHTML = []
                     for (let target of targets) {
                         const targetWeapons = target.actor.items.filter(w => w.type === "weapon" && w.data.data.quantity >= 1)
-                        let weaponOptions
-                        for (let weapon of targetWeapons) {
-                            weaponOptions = weaponOptions + `<option value="${weapon.name}">${weapon.data.name}</option>`
+                        if (targetWeapons.length >= 1) {
+                            let weaponOptions
+                            for (let weapon of targetWeapons) {
+                                weaponOptions = weaponOptions + `<option value="${weapon.name}">${weapon.data.name}</option>`
+                            }
+                            let html = `
+                                <div class='form-group'>
+                                    <label for='${target.id}'><p>${game.i18n.localize("SWIM.dialogue-powerEffectBuilderSmiteWeaponOf")} ${target.name}:</p></label>
+                                    <select id='${target.id}'>${weaponOptions}</select>
+                                </div>
+                            `
+                            allHTML = allHTML += html
                         }
-                        let html = `
-                        <div class='form-group'>
-                            <label for='${target.id}'><p>${game.i18n.localize("SWIM.dialogue-powerEffectBuilderSmiteWeaponOf")} ${target.name}:</p></label>
-                            <select id='${target.id}'>${weaponOptions}</select>
-                        </div>
-                        `
-                        allHTML = allHTML += html
                     }
-                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderSmite", {allHTML: allHTML, increaseText: game.i18n.localize('SUCC.dialogue.amount_to_increase')})
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderSmite", { allHTML: allHTML, increaseText: game.i18n.localize('SUCC.dialogue.amount_to_increase') })
                 }
             });
         },
         default: "one",
-    },{
+    }, {
         id: "power-effect-dialogue"
     }).render(true);
 }
