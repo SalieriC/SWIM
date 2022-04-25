@@ -32,10 +32,10 @@ export async function effect_builder() {
     if (concentration) { duration = duration * 2 }
 
     const options = `
-        <option value="boost">Boost Trait</option>
-        <option value="lower">Lower Trait</option>
-        <option value="protection">Protection</option>
-        <option value="smite">Smite</option>
+        <option value="boost">${game.i18n.localize("SWIM.power-boostTrait")}</option>
+        <option value="lower">${game.i18n.localize("SWIM.power-lowerTrait")}</option>
+        <option value="protection">${game.i18n.localize("SWIM.power-protection")}</option>
+        <option value="smite">${game.i18n.localize("SWIM.power-smite")}</option>
     `
 
     // Boost/Lower trait options
