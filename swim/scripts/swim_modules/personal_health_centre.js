@@ -1,6 +1,6 @@
 /*******************************************
  * Personal Health Centre
- * // v.6.2.2
+ * // v.6.2.5
  * By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
  ******************************************/
 export async function personal_health_centre_script() {
@@ -156,10 +156,17 @@ export async function heal_other_gm(data) {
                 //Make INC!
                 if (targetInc) {
                     await swim.play_sfx(deathSFX)
-                    await succ.apply_status(targetActor, 'bleeding-out', true)
+                    await succ.apply_status(targetActor, 'bleeding-out', true, true)
+                    if (await succ.check_status(token, 'incapacitated') === true) {
+                        const incCondition = await succ.get_condition_from(token.actor, 'incapacitated')
+                        if (incCondition.data.flags?.core?.overlay === true) {
+                            incCondition.setFlag('succ', 'updatedAE', true)
+                            await incCondition.update({"flags.core.overlay": false})
+                        }
+                    }
                     chatContent = game.i18n.format("SWIM.chatMessage-healOtherCritFailAndBleedOut", {tokenName : token.name, targetName : target.name})
                 } else {
-                    await succ.apply_status(targetActor, 'incapacitated', true)
+                    await succ.apply_status(targetActor, 'incapacitated', true, true)
                     await swim.play_sfx(deathSFX)
                     chatContent = game.i18n.format("SWIM.chatMessage-healOtherCritFailAndIncap", {tokenName : token.name, targetName : target.name})
                 }
@@ -183,6 +190,13 @@ export async function heal_other_gm(data) {
             // Remove Bleeding out/Incap before any wounds
             if (targetBleedOut) {
                 await succ.toggle_status(targetActor, 'bleeding-out', false)
+                if (await succ.check_status(token, 'incapacitated') === true) {
+                    const incCondition = await succ.get_condition_from(token.actor, 'incapacitated')
+                    if (incCondition.data.flags?.core?.overlay === false) {
+                        incCondition.setFlag('succ', 'updatedAE', true)
+                        await incCondition.update({"flags.core.overlay": true})
+                    }
+                }
                 chatContent = game.i18n.format("SWIM.chatMessage-healOtherCureBleetOut", {tokenName : token.name, targetName : target.name})
             } else if (targetInc) {
                 await succ.toggle_status(targetActor, 'incapacitated', false)
@@ -264,7 +278,7 @@ export async function heal_other_gm(data) {
     }
 
     async function createchatMessage() {
-        chatMessage.create({
+        ChatMessage.create({
             user: game.user.id,
             content: chatContent,
         });
@@ -628,7 +642,7 @@ async function healSelf(token, speaker) {
             let chatData = `${actorAlias} rolled a <span style="font-size:150%">Critical Failure!</span> and takes another Wound! See the rules on Natural Healing for details.`;
             let noVig = true
             applyWounds(noVig);
-            chatMessage.create({ content: chatData });
+            ChatMessage.create({ content: chatData });
         }
         else {
             let roundedCopy = rounded
@@ -679,7 +693,7 @@ async function healSelf(token, speaker) {
             }
             chatData += ` ${edgeText}`;
 
-            chatMessage.create({ content: chatData });
+            ChatMessage.create({ content: chatData });
         }
     }
 
@@ -852,7 +866,7 @@ async function healSelf(token, speaker) {
                         if (potion_to_update.data.data.quantity < 1) {
                             potion_to_update.delete();
                         }
-                        chatMessage.create({
+                        ChatMessage.create({
                             speaker: {
                                 alias: token.name
                             },
@@ -904,7 +918,7 @@ async function healSelf(token, speaker) {
                         if (potion_to_update.data.data.quantity < 1) {
                             potion_to_update.delete();
                         }
-                        chatMessage.create({
+                        ChatMessage.create({
                             speaker: {
                                 alias: token.name
                             },
@@ -943,7 +957,7 @@ async function healSelf(token, speaker) {
                     callback: async (html) => {
                         genericHealFatigue = Number(html.find("#numFatigue")[0].value);
                         RemoveFatigue();
-                        await chatMessage.create({
+                        await ChatMessage.create({
                             speaker: {
                                 alias: token.name
                             },
@@ -983,7 +997,7 @@ async function healSelf(token, speaker) {
         }
         else {
             await token.actor.update({ "data.wounds.value": wm });
-            await succ.apply_status(token, 'incapacitated', true)
+            await succ.apply_status(token, 'incapacitated', true, true)
             if (incapSFX) {
                 AudioHelper.play({ src: `${incapSFX}` }, true);
             }

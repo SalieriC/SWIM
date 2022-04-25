@@ -4,6 +4,7 @@ import { ammo_management_script, br2_ammo_management_script } from './swim_modul
 import { chase_setup_script } from './swim_modules/chase_setup.js'
 import { common_bond_script } from './swim_modules/common_bond.js'
 import { deviation_script } from './swim_modules/deviation.js'
+import { effect_builder } from './swim_modules/effect_builder.js'
 import { falling_damage_script } from './swim_modules/falling_damage.js'
 import { fear_table_script } from './swim_modules/fear_table.js'
 import { loot_o_mat_script } from './swim_modules/loot-o-mat.js'
@@ -46,6 +47,7 @@ export class api {
       chase_setup: api._chase_setup,
       common_bond: api._common_bond,
       deviation: api._deviation,
+      effect_builder: api._effect_builder,
       falling_damage: api._falling_damage,
       fear_table: api._fear_table,
       loot_o_mat: api._loot_o_mat,
@@ -236,6 +238,7 @@ export class api {
    * - Chase Setup
    * - Common Bond
    * - Deviation
+   * - Effect Builder
    * - Falling Damage
    * - Fear Table
    * - Loot-o-Mat
@@ -269,6 +272,10 @@ export class api {
   // Deviation
   static async _deviation() {
     deviation_script()
+  }
+  // Effect Builder
+  static async _effect_builder() {
+    effect_builder()
   }
   // Falling Damage
   static async _falling_damage() {

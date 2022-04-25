@@ -237,5 +237,15 @@
   "SWIM.br2SupportName": "BR2 Support:",
   "SWIM.br2SupportHint": "SWIM supports Better Rolls 2 for SWADE to add Sound Effects on certain functions (applying damage, unshaking and soaking damage). This setting enables these sound effects.",
   "SWIM.lightSFXName": "Light SFX:",
-  "SWIM.lightSFXHint": "The sound effect to be played when a light source is selected and applied in the Token Vision macro."
+  "SWIM.lightSFXHint": "The sound effect to be played when a light source is selected and applied in the Token Vision macro.",
+  "SWIM.label-summoned": "Summoned Creature Duration",
+  "SWIM.edge-concentration": "Concentration",
+  "SWIM.notification-selectSingleTargetMultiToken": "Please select a single token and target one or more first.",
+  "SWIM.dialogue-powerEffectBuilderTitle": "Power Effect Builder",
+  "SWIM.dialogue-powerEffectBuilderContent": "<form>{class}<p>Please select a power for more configuration options.</p><p>The selected token will be treated as the caster, the targeted tokens as the powers targets. Please target <i>and</i> select the caster if he is a recipient as well.</p><div class='form-group'><label for='selected_power'><p>Power: </p></label><select id='selected_power'>{options}</select></div><hr /><div class='effectContent'>{text}</div></form>",
+  "SWIM.dialogue-powerEffectBuilderBoost": "<div class='form-group'><label for='selected_trait'><p>{trait} </p></label><select id='selected_trait'>{traitOptions}</select></div><div class='form-group'><label for='raise'><p>Cast with a raise: </p></label><input id='raise' name='raiseBox' type='checkbox'></input></div></div>",
+  "SWIM.dialogue-powerEffectBuilderLower": "<div class='form-group'><label for='selected_trait'><p>{trait} </p></label><select id='selected_trait'>{traitOptions}</select></div><div class='form-group'><label for='raise'><p>Cast with a raise: </p></label><input id='raise' name='raiseBox' type='checkbox'></input></div></div>",
+  "SWIM.dialogue-powerEffectBuilderProtection": "<div style='display:flex'><p style='flex:3'>{amountText}</p><input type='number' id='protectionAmount' value='2' min='1' style='flex:1'/></input></div><div class='form-group'><label for='armour'><p>Armour: </p></label><input id='armour' name='type_choice' type='radio' value='armor' checked='true'></input><label for='toughness'><p>Toughness: </p></label><input id='toughness' name='type_choice' type='radio' value='toughness'></input></div></div>",
+  "SWIM.dialogue-powerEffectBuilderSmiteWeaponOf": "Weapon of",
+  "SWIM.dialogue-powerEffectBuilderSmite": "{allHTML}<div style='display:flex'><p style='flex:3'>{increaseText}</p><input type='number' id='damageBonus' value='2' min='1' style='flex:1'/></input></div></div>"
 }
