@@ -73,6 +73,7 @@ export async function effect_builder() {
                         if (raise === true) { degree = "raise" }
                         const data = {
                             targetIDs: targetIDs,
+                            type: "lower",
                             boost: {
                                 degree: degree,
                                 trait: selectedTrait,
@@ -87,6 +88,7 @@ export async function effect_builder() {
                         if (raise === true) { degree = "raise" }
                         const data = {
                             targetIDs: targetIDs,
+                            type: "lower",
                             lower: {
                                 degree: degree,
                                 trait: selectedTrait,
@@ -95,7 +97,18 @@ export async function effect_builder() {
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "protection") {
-                        //
+                        const bonus = Number(html.find(`#protectionAmount`)[0].value)
+                        const selectedType = html.find("input[name=type_choice]:checked").val()
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: "protection",
+                            protection: {
+                                bonus: bonus,
+                                type: selectedType,
+                                duration: duration
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "smite") {
                         //
                     }
@@ -103,9 +116,7 @@ export async function effect_builder() {
             }
         },
         render: ([dialogContent]) => {
-            $("#power-effect-dialogue").change(function() {
-                $("#power-effect-dialogue").css("height", "auto");
-            });
+            $("#power-effect-dialogue").css("height", "auto"); // Adjust the dialogue to its content. Also fixes the error of scroll bar on first dialogue after login/reload.
             dialogContent.querySelector(`select[id="selected_power"`).focus();
             dialogContent.querySelector(`select[id="selected_power"`).addEventListener("input", (event) => {
                 const textInput = event.target;
@@ -115,9 +126,9 @@ export async function effect_builder() {
                 if (selectedPower === "boost") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderBoost", {trait: game.i18n.localize("SUCC.dialogue.trait"), traitOptions: traitOptions})
                 } else if (selectedPower === "lower") {
-                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderLower")
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderLower", {trait: game.i18n.localize("SUCC.dialogue.trait"), traitOptions: traitOptions})
                 } else if (selectedPower === "protection") {
-                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderProtection")
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderProtection", {amountText: game.i18n.localize("SUCC.dialogue.amount_to_increase")})
                 } else if (selectedPower === "smite") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderSmite")
                 }
@@ -128,5 +139,14 @@ export async function effect_builder() {
         id: "power-effect-dialogue"
     }).render(true);
 }
+
+/*`
+<div class='form-group'>
+    <label for='armour'><p>Armour: </p></label>
+    <input id='armour' name='armourBox' type='checkbox'></input>
+    <label for='toughness'><p>Toughness: </p></label>
+    <input id='toughness' name='toughnessBox' type='checkbox'></input>
+</div>
+`*/
 
 export async function effect_builder_gm() {}
