@@ -33,8 +33,10 @@ export async function effect_builder() {
 
     const options = `
         <option value="boost">${game.i18n.localize("SWIM.power-boostTrait")}</option>
+        <option value="growth">${game.i18n.localize("SWIM.power-growth")}</option>
         <option value="lower">${game.i18n.localize("SWIM.power-lowerTrait")}</option>
         <option value="protection">${game.i18n.localize("SWIM.power-protection")}</option>
+        <option value="shrink">${game.i18n.localize("SWIM.power-shrink")}</option>
         <option value="smite">${game.i18n.localize("SWIM.power-smite")}</option>
     `
 
@@ -131,6 +133,28 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "growth") {
+                        const change = Number(html.find(`#sizeAmount`)[0].value)
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: "growth",
+                            growth: {
+                                change: change,
+                                duration: duration
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "shrink") {
+                        const change = Number(html.find(`#sizeAmount`)[0].value)
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: "shrink",
+                            shrink: {
+                                change: change,
+                                duration: duration
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
                     }
                 }
             }
@@ -169,6 +193,10 @@ export async function effect_builder() {
                         }
                     }
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderSmite", { allHTML: allHTML, increaseText: game.i18n.localize('SUCC.dialogue.amount_to_increase') })
+                } else if (selectedPower === "growth") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderGrowth")
+                } else if (selectedPower === "shrink") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderShrink")
                 }
             });
         },
@@ -177,15 +205,6 @@ export async function effect_builder() {
         id: "power-effect-dialogue"
     }).render(true);
 }
-
-/*`
-<div class='form-group'>
-    <label for='armour'><p>Armour: </p></label>
-    <input id='armour' name='armourBox' type='checkbox'></input>
-    <label for='toughness'><p>Toughness: </p></label>
-    <input id='toughness' name='toughnessBox' type='checkbox'></input>
-</div>
-`*/
 
 export async function effect_builder_gm(data) {
     console.log(data)
@@ -233,6 +252,70 @@ export async function effect_builder_gm(data) {
                 }
             }
             await succ.apply_status(target.targetID, 'smite', true, false, smiteData)
+        }
+    } else if (type === "growth") {
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            const change = data.growth.change
+            let aeData = {
+                changes: [],
+                icon: "modules/swim/assets/icons/effects/m-growth.svg",
+                label: game.i18n.localize("SWIM.power-growth"),
+                duration: {
+                    rounds: data.growth.duration,
+                },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    }
+                }
+            }
+            if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
+            const targetStr = target.actor.data.data.attributes.strength.die.sides + change*2
+            if (targetStr <= 12) {
+                aeData.changes.push({ key: `data.attributes.strength.die.sides`, mode: 2, priority: undefined, value: change*2 })
+            } else {
+                const toMax = 12 - target.actor.data.data.attributes.strength.die.sides
+                const rest = change - (toMax/2)
+                aeData.changes.push({ key: `data.attributes.strength.die.sides`, mode: 2, priority: undefined, value: toMax },
+                { key: `data.attributes.strength.die.modifier`, mode: 2, priority: undefined, value: rest })
+            }
+            aeData.changes.push({ key: `data.stats.size`, mode: 2, priority: undefined, value: change })
+            if (target.actor.data.data.details.autoCalcToughness === false) {
+                aeData.changes.push({ key: `data.stats.toughness.value`, mode: 2, priority: undefined, value: change })
+            }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
+    } else if (type === "shrink") {
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            const change = data.shrink.change
+            let aeData = {
+                changes: [],
+                icon: "modules/swim/assets/icons/effects/m-shrink.svg",
+                label: game.i18n.localize("SWIM.power-shrink"),
+                duration: {
+                    rounds: data.shrink.duration,
+                },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    }
+                }
+            }
+            if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
+            const targetStr = target.actor.data.data.attributes.strength.die.sides + change*2
+            if (targetStr <= 4) {
+                const toMin = 4 - target.actor.data.data.attributes.strength.die.sides
+                aeData.changes.push({ key: `data.attributes.strength.die.sides`, mode: 2, priority: undefined, value: toMin })
+            } else {
+                aeData.changes.push({ key: `data.attributes.strength.die.sides`, mode: 2, priority: undefined, value: change*2 })
+            }
+            aeData.changes.push({ key: `data.stats.size`, mode: 2, priority: undefined, value: change })
+            if (target.actor.data.data.details.autoCalcToughness === false) {
+                aeData.changes.push({ key: `data.stats.toughness.value`, mode: 2, priority: undefined, value: change })
+            }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
     }
 }
