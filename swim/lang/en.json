@@ -248,6 +248,7 @@
   "SWIM.power-shrink": "Shrink",
   "SWIM.power-sloth": "Sloth",
   "SWIM.power-speed": "Speed",
+  "SWIM.power-speedQuickness": "Quickness",
   "SWIM.notification-selectSingleTargetMultiToken": "Please select a single token and target one or more first.",
   "SWIM.dialogue-powerEffectBuilderTitle": "Power Effect Builder",
   "SWIM.dialogue-powerEffectBuilderContent": "<form>{class}<p>Please select a power for more configuration options.</p><p>The selected token will be treated as the caster, the targeted tokens as the powers targets. Please target <i>and</i> select the caster if he is a recipient as well.</p><div class='form-group'><label for='selected_power'><p>Power: </p></label><select id='selected_power'>{options}</select></div><hr /><div class='effectContent'>{text}</div></form>",
@@ -259,5 +260,5 @@
   "SWIM.dialogue-powerEffectBuilderGrowth": "<div style='display:flex'><p style='flex:3'>Increase in Size steps: </p><input type='number' id='sizeAmount' value='1' min='1' style='flex:1'/></input></div></div>",
   "SWIM.dialogue-powerEffectBuilderShrink": "<div style='display:flex'><p style='flex:3'>Decrease in Size steps: </p></label><input type='number' id='sizeAmount' value='-1' max='-1' style='flex:1'/></input></div></div>",
   "SWIM.dialogue-powerEffectBuilderNothingElse": "<p>There is nothing more to do here.</p>",
-  "SWIM.dialogue-powerEffectBuilderSpeed": "<div class='form-group'><label for='quickness'>Cast using the quickness modifier: </label><input id='quickness' name='quicknessBox' type='checkbox'></input></div></div>"
+  "SWIM.dialogue-powerEffectBuilderSpeed": "<div class='form-group'><label for='quickness'><p>Cast using the quickness modifier: </p></label><input id='quickness' name='quicknessBox' type='checkbox'></input></div></div>"
 }
