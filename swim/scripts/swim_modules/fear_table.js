@@ -1,15 +1,15 @@
 /*******************************************
  * Fear Table Macro.
- * v. 2.0.0 by SalieriC#8263, original creator unknown.
+ * v. 2.1.0 by SalieriC#8263, original creator unknown.
  *******************************************/
 export async function fear_table_script() {
     const dialog = new Dialog({
-        title: 'Fear',
-        content: '<form class="fearTable"><div class="form-group"><label>Fear Modifier</label><input type="number" name="fearModifier" /></div></form>',
+        title: game.i18n.localize("SWIM.fear"),
+        content: game.i18n.format("SWIM.dialogue-fearContent"),
         default: 'roll',
         buttons: {
             roll: {
-                label: 'Roll',
+                label: game.i18n.localize("SWIM.dialogue-roll"),
                 callback: (html) => {
                     let modifier = html.find('.fearTable input[name="fearModifier"]')[0].value;
     
@@ -24,14 +24,14 @@ export async function fear_table_script() {
                         if (fearTableName) {
                             let fearTable = game.tables.getName(`${fearTableName}`)
                             if (!fearTable) {
-                                ui.notifications.error("Unable to locate '" + fearTableName + "'. Please import it into the world first.")
+                                ui.notifications.error(game.i18n.format("SWIM.notification.tableNotFound", {tableName: fearTableName}))
                                 return
                             } else {
                                 fearTable.draw({ roll });
                             }
                         }
                         else {
-                            ui.notifications.error("Please set a Fear table name in the SWIM settings.");
+                            ui.notifications.error(game.i18n.localize("SWIM.notification.tableNameMissing", {type: game.i18n.localize("SWIM.fear")}));
                             return;
                         }
                     let fearSFX = game.settings.get(
