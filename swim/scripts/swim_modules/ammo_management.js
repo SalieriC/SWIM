@@ -395,7 +395,7 @@ export async function ammo_management_script() {
                         speaker: {
                             alias: token.name
                         },
-                        content: game.i18n.format("SWIM.chatMessage-ReloadWeaponWithAmmoName", {weaponIMG: weaponIMG, ammoIMG: ammoIMG, name: token.name, itemWeaponName: item_weapon.name, itemAmmoName : item_ammo.name})
+                        content: game.i18n.format("SWIM.chatMessage-reloadWeaponWithAmmoName", {weaponIMG: weaponIMG, ammoIMG: ammoIMG, name: token.name, itemWeaponName: item_weapon.name, itemAmmoName : item_ammo.name})
                     })
                     if (sfx_reload) {
                         AudioHelper.play({ src: `${sfx_reload}` }, true)
