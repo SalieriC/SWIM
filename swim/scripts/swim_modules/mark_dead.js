@@ -33,7 +33,7 @@ export async function mark_dead_script() {
             e.document.setFlag("healthEstimate", "dead", hasAlive)
             await succ.toggle_status(e, 'incapacitated', true, true)
         }
-        ui.notifications.info("Marked as dead/alive.");
+        ui.notifications.info(game.i18n.localize("SWIM.notification.markDeadAlive"));
         AudioHelper.play({ src: `${incapSFX}` }, true);
     }
 }

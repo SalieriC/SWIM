@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added sloth/speed to Power Effect Builder.  
 - Localisation for:
 - - Fear Table function.
+- - Mark Dead function.
 - Various new localisation strings.
 ### Changed
 - Incapacitation and Bleeding Out are added as overlays instead of small icons now. Inc. will be set as small icon if Bleeding Out is applied.
