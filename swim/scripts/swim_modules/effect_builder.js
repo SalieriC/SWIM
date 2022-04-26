@@ -75,9 +75,12 @@ export async function effect_builder() {
                 label: `<i class="fas fa-magic"></i> Proceed`,
                 callback: async (html) => {
                     const selectedPower = html.find(`#selected_power`)[0].value
+                    const usePowerIcons = game.settings.get("swim", "effectBuilder-usePowerIcons")
                     if (selectedPower === "boost") {
                         const selectedTrait = html.find(`#selected_trait`)[0].value
                         const raise = html.find(`#raise`)[0].checked
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-boost").toLowerCase()))
+                        const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
@@ -86,13 +89,16 @@ export async function effect_builder() {
                             boost: {
                                 degree: degree,
                                 trait: selectedTrait,
-                                duration: duration
+                                duration: duration,
+                                icon: usePowerIcons ? icon : false
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "lower") {
                         const selectedTrait = html.find(`#selected_trait`)[0].value
                         const raise = html.find(`#raise`)[0].checked
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-lower").toLowerCase()))
+                        const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
@@ -101,25 +107,31 @@ export async function effect_builder() {
                             lower: {
                                 degree: degree,
                                 trait: selectedTrait,
-                                duration: duration
+                                duration: duration,
+                                icon: usePowerIcons ? icon : false
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "protection") {
                         const bonus = Number(html.find(`#protectionAmount`)[0].value)
                         const selectedType = html.find("input[name=type_choice]:checked").val()
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-protection").toLowerCase()))
+                        const icon = power ? power.img : false
                         const data = {
                             targetIDs: targetIDs,
                             type: "protection",
                             protection: {
                                 bonus: bonus,
                                 type: selectedType,
-                                duration: 1
+                                duration: 1,
+                                icon: usePowerIcons ? icon : false
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "smite") {
                         const bonus = Number(html.find(`#damageBonus`)[0].value)
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-smite").toLowerCase()))
+                        const icon = power ? power.img : false
                         let weapons = []
                         for (let target of targets) {
                             const targetWeaponName = html.find(`#${target.id}`)[0].value
@@ -131,51 +143,64 @@ export async function effect_builder() {
                             smite: {
                                 bonus: bonus,
                                 weapon: weapons,
-                                duration: duration
+                                duration: duration,
+                                icon: usePowerIcons ? icon : false
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "growth") {
                         const change = Number(html.find(`#sizeAmount`)[0].value)
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-growth").toLowerCase()))
+                        const icon = power ? power.img : false
                         const data = {
                             targetIDs: targetIDs,
                             type: "growth",
                             growth: {
                                 change: change,
-                                duration: duration
+                                duration: duration,
+                                icon: usePowerIcons ? icon : false
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "shrink") {
                         const change = Number(html.find(`#sizeAmount`)[0].value)
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-shrink").toLowerCase()))
+                        const icon = power ? power.img : false
                         const data = {
                             targetIDs: targetIDs,
                             type: "shrink",
                             shrink: {
                                 change: change,
-                                duration: duration
+                                duration: duration,
+                                icon: usePowerIcons ? icon : false
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "sloth") {
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-sloth").toLowerCase()))
+                        const icon = power ? power.img : false
                         const data = {
                             targetIDs: targetIDs,
                             type: "sloth",
                             sloth: {
                                 change: 0.5,
-                                duration: 1
+                                duration: 1,
+                                icon: usePowerIcons ? icon : false
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "speed") {
                         const quickness = html.find(`#quickness`)[0].checked;
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-speed").toLowerCase()))
+                        const icon = power ? power.img : false
                         const data = {
                             targetIDs: targetIDs,
                             type: "speed",
                             speed: {
                                 change: 2,
                                 duration: duration,
-                                quickness: quickness
+                                quickness: quickness,
+                                icon: usePowerIcons ? icon : false
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
@@ -235,7 +260,6 @@ export async function effect_builder() {
 }
 
 export async function effect_builder_gm(data) {
-    console.log(data)
     const type = data.type
     if (type === "boost") {
         for (let target of data.targetIDs) {
@@ -243,7 +267,8 @@ export async function effect_builder_gm(data) {
                 boost: {
                     degree: data.boost.degree,
                     trait: data.boost.trait,
-                    duration: data.boost.duration
+                    duration: data.boost.duration,
+                    icon: data.boost.icon
                 }
             }
             await succ.apply_status(target, 'boost', true, false, boostData)
@@ -254,7 +279,8 @@ export async function effect_builder_gm(data) {
                 lower: {
                     degree: data.lower.degree,
                     trait: data.lower.trait,
-                    duration: data.lower.duration
+                    duration: data.lower.duration,
+                    icon: data.lower.icon
                 }
             }
             await succ.apply_status(target, 'lower', true, false, lowerData)
@@ -265,7 +291,8 @@ export async function effect_builder_gm(data) {
                 protection: {
                     bonus: data.protection.bonus,
                     type: data.protection.type,
-                    duration: data.protection.duration
+                    duration: data.protection.duration,
+                    icon: data.protection.icon
                 }
             }
             await succ.apply_status(target, 'protection', true, false, protectionData)
@@ -276,7 +303,8 @@ export async function effect_builder_gm(data) {
                 smite: {
                     bonus: data.smite.bonus,
                     weapon: target.weaponName,
-                    duration: data.smite.duration
+                    duration: data.smite.duration,
+                    icon: data.smite.icon
                 }
             }
             await succ.apply_status(target.targetID, 'smite', true, false, smiteData)
@@ -287,7 +315,7 @@ export async function effect_builder_gm(data) {
             const change = data.growth.change
             let aeData = {
                 changes: [],
-                icon: "modules/swim/assets/icons/effects/m-growth.svg",
+                icon: data.growth.icon ? data.growth.icon : "modules/swim/assets/icons/effects/m-growth.svg",
                 label: game.i18n.localize("SWIM.power-growth"),
                 duration: {
                     rounds: data.growth.duration,
@@ -320,7 +348,7 @@ export async function effect_builder_gm(data) {
             const change = data.shrink.change
             let aeData = {
                 changes: [],
-                icon: "modules/swim/assets/icons/effects/m-shrink.svg",
+                icon: data.shrink.icon ? data.shrink.icon : "modules/swim/assets/icons/effects/m-shrink.svg",
                 label: game.i18n.localize("SWIM.power-shrink"),
                 duration: {
                     rounds: data.shrink.duration,
@@ -352,7 +380,7 @@ export async function effect_builder_gm(data) {
             const quickness = data.speed.quickness
             let aeData = {
                 changes: [{ key: `data.stats.speed.value`, mode: 5, priority: undefined, value: target.actor.data.data.stats.speed.value * change }],
-                icon: quickness ? "modules/swim/assets/icons/effects/m-quickness.svg" : "modules/swim/assets/icons/effects/m-speed.svg",
+                icon: data.speed.icon ? data.speed.icon : quickness ? "modules/swim/assets/icons/effects/m-quickness.svg" : "modules/swim/assets/icons/effects/m-speed.svg",
                 label: quickness ? game.i18n.localize("SWIM.power-speedQuickness") : game.i18n.localize("SWIM.power-speed"),
                 duration: {
                     rounds: data.speed.duration,
@@ -372,7 +400,7 @@ export async function effect_builder_gm(data) {
             const change = data.sloth.change
             let aeData = {
                 changes: [{ key: `data.stats.speed.value`, mode: 5, priority: undefined, value: Math.round(target.actor.data.data.stats.speed.value * change) }],
-                icon: "modules/swim/assets/icons/effects/m-sloth.svg",
+                icon: data.sloth.icon ? data.sloth.icon : "modules/swim/assets/icons/effects/m-sloth.svg",
                 label: game.i18n.localize("SWIM.power-sloth"),
                 duration: {
                     rounds: data.sloth.duration,
