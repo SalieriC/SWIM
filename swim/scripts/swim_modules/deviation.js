@@ -1,16 +1,20 @@
 /*******************************************
  * Unshake macro for SWD
- * version 2.0.0
+ * version 2.1.0
  * (c): brunocalado; altered by SalieriC.
  ******************************************/
 
-export async function deviation_script() {
+export async function deviation_script(weapontype = false, range = false) {
     const chatimage = "https://raw.githubusercontent.com/brunocalado/mestre-digital/master/Foundry%20VTT/Macros/Savage%20Worlds/icons/clock.webp";
 
     let coreRules = false;
     if (game.modules.get("swade-core-rules")?.active) { coreRules = true; }
 
-    getRequirements();
+    if (weapontype && range) {
+        rollForIt()
+    } else {
+        getRequirements();
+    }
 
     function getRequirements() {
         let template = `
@@ -38,16 +42,16 @@ export async function deviation_script() {
                 ok: {
                     label: "Go!",
                     callback: async (html) => {
-                        rollForIt(html);
+                        weapontype = html.find('input[name="weapontype"]:checked').val();
+                        range = html.find('input[name="range"]:checked').val();
+                        rollForIt();
                     },
                 }
             },
         }).render(true);
     }
 
-    function rollForIt(html) {
-        const weapontype = html.find('input[name="weapontype"]:checked').val();
-        const range = html.find('input[name="range"]:checked').val();
+    function rollForIt() {
         let deviation;
 
         if (weapontype == 'thrown') {
