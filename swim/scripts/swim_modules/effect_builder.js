@@ -37,7 +37,9 @@ export async function effect_builder() {
         <option value="lower">${game.i18n.localize("SWIM.power-lowerTrait")}</option>
         <option value="protection">${game.i18n.localize("SWIM.power-protection")}</option>
         <option value="shrink">${game.i18n.localize("SWIM.power-shrink")}</option>
+        <option value="sloth">${game.i18n.localize("SWIM.power-sloth")}</option>
         <option value="smite">${game.i18n.localize("SWIM.power-smite")}</option>
+        <option value="speed">${game.i18n.localize("SWIM.power-speed")}</option>
     `
 
     // Boost/Lower trait options
@@ -155,6 +157,28 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "sloth") {
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: "sloth",
+                            sloth: {
+                                change: 0.5,
+                                duration: 1
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "speed") {
+                        const quickness = html.find(`#quickness`)[0].checked;
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: "speed",
+                            speed: {
+                                change: 2,
+                                duration: duration,
+                                quickness: quickness
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
                     }
                 }
             }
@@ -197,6 +221,10 @@ export async function effect_builder() {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderGrowth")
                 } else if (selectedPower === "shrink") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderShrink")
+                } else if (selectedPower === "sloth") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
+                } else if (selectedPower === "speed") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderSpeed")
                 }
             });
         },
@@ -315,6 +343,47 @@ export async function effect_builder_gm(data) {
             if (target.actor.data.data.details.autoCalcToughness === false) {
                 aeData.changes.push({ key: `data.stats.toughness.value`, mode: 2, priority: undefined, value: change })
             }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
+    } else if (type === "speed") {
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            const change = data.speed.change
+            const quickness = data.speed.quickness
+            let aeData = {
+                changes: [{ key: `data.stats.speed.value`, mode: 5, priority: undefined, value: target.actor.data.data.stats.speed.value * change }],
+                icon: quickness ? "modules/swim/assets/icons/effects/m-quickness.svg" : "modules/swim/assets/icons/effects/m-speed.svg",
+                label: quickness ? game.i18n.localize("SWIM.power-speedQuickness") : game.i18n.localize("SWIM.power-speed"),
+                duration: {
+                    rounds: data.speed.duration,
+                },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    }
+                }
+            }
+            if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
+    } else if (type === "sloth") {
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            const change = data.sloth.change
+            let aeData = {
+                changes: [{ key: `data.stats.speed.value`, mode: 5, priority: undefined, value: Math.round(target.actor.data.data.stats.speed.value * change) }],
+                icon: "modules/swim/assets/icons/effects/m-sloth.svg",
+                label: game.i18n.localize("SWIM.power-sloth"),
+                duration: {
+                    rounds: data.sloth.duration,
+                },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    }
+                }
+            }
+            if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
     }
