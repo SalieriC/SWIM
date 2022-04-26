@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Incapacitation and Bleeding Out are added as overlays instead of small icons now. Inc. will be set as small icon if Bleeding Out is applied.
 ### Fixed
 - Various errors in the personal health center that prevented chat messages from being created.
+- Incorrectly named translation string.
 
 ## [0.17.0] - 2022-04-21
 ### Added
