@@ -7,13 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Mighty Summoner: Summoned Creatures now get an Active Effect with the appropriate duration. Duration is doubled if the summoner has the Concentration Edge.
-- New asset: Pentagram icon for the summoned creature duration.
+- New assets (see ReadMe for credits, all altered by SalieriC#8263): 
+- - Pentagram icon for the summoned creature duration.
+- - Weight, Feather, Speed, Rabbit, Tortoise and growth.
 - New translation strings.
 - New Macro: Power Effect Builder. Opens a dialogue to add active effects for boost/lower trait, protection and smite (more to come) depending on user input for *every* target. This makes heavy use of the new effect updater by SUCC. **Make sure to update SUCC, unless you want total carnage.**
+- Added growth/shrink to Power Effect Builder.  
+- Added sloth/speed to Power Effect Builder.  
+- Localisation for:
+- - Fear Table function.
+- - Mark Dead function.
+- Various new localisation strings.
 ### Changed
 - Incapacitation and Bleeding Out are added as overlays instead of small icons now. Inc. will be set as small icon if Bleeding Out is applied.
 ### Fixed
 - Various errors in the personal health center that prevented chat messages from being created.
+- Incorrectly named translation string.
 
 ## [0.17.0] - 2022-04-21
 ### Added

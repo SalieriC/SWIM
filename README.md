@@ -32,8 +32,14 @@ You can reach me on Discord with general questions as well: SalieriC#8263
 
 ### Current Assets
 In this repository you can find a number of assets already.  
-- **Icons:** [Game-Icons.net](https://game-icons.net/).  
+- **Icons:** [Game-Icons.net](https://game-icons.net/) (all of them altered by SalieriC#8263).  
 - - Summon Creature Duration: [Pentacle by Skoll](https://game-icons.net/1x1/skoll/pentacle.html)  
+- - Growth/Shrink: [Growth by Delapouite](https://game-icons.net/1x1/delapouite/growth.html)  
+- - Sloth: [Tortoise by Delapouite](https://game-icons.net/1x1/delapouite/tortoise.html)  
+- - Speed: [Rabbit by Delapouite](https://game-icons.net/1x1/delapouite/rabbit.html)  
+- - Quickness: [Speed by Lorc](https://game-icons.net/1x1/lorc/sprint.html)  
+- - Burden: [Weight by Delapouite](https://game-icons.net/1x1/delapouite/weight.html)  
+- - Ease Burden: [Feather by Lorc](https://game-icons.net/1x1/lorc/feather.html)  
 - **SFX:** (see their file name for origin)
 - - [Fesliyan Studios](www.fesliyanstudios.com), all used with explicit permission (thank you so much), [see their License here](https://www.fesliyanstudios.com/policy).  
 - - [Orange Free Sounds](https://orangefreesounds.com/), all used unter the [CC BY-NC 4.0 License](https://creativecommons.org/licenses/by-nc/4.0/), converted to *.ogg and possibly altered (see file name), Author is in the file names as well.  
@@ -305,7 +311,7 @@ When stopping (deleting) the combat, the game will automatically stop the combat
 - [SUCC](https://github.com/SalieriC/SUCC)  
 **Immersion setting:** None atm.  
 **Description:**  
-An immensely powerful way of setting up Active Effects for the smite, protection and boost/lower powers (more to come) on multiple targets. It sets the AE up with the appropriate duration (also respecting the concentration edge if the caster (selected token) has it), end of turn message and so on.  
+An immensely powerful way of setting up Active Effects for the smite, protection, growth/shrink, sloth/speed and boost/lower powers (more to come) on multiple targets. It sets the AE up with the appropriate duration (also respecting the concentration edge if the caster (selected token) has it), end of turn message and so on.  
 It makes use of the very powerfull API provided by [Warp Gate](https://github.com/trioderegion/warpgate) and [SUCC](https://github.com/SalieriC/SUCC) to apply the effect even on tokens the user doesn't have permission to edit. Make sure your SUCC and Warp Gate installations are up to date.  
 <p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/power_effect_builder_showcase.gif?raw=true"> </p>  
 (Assets used in the scene are from JB2A, ForgottenAdventures, The Elder Scrolls and Adellos and not part of SWIM.)  

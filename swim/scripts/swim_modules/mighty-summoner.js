@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 1.1.2
+ * v. 1.1.3
  * By SalieriC
  ******************************************************/
  export async function summoner_script() {
