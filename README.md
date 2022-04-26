@@ -32,12 +32,14 @@ You can reach me on Discord with general questions as well: SalieriC#8263
 
 ### Current Assets
 In this repository you can find a number of assets already.  
-- **Icons:** [Game-Icons.net](https://game-icons.net/).  
+- **Icons:** [Game-Icons.net](https://game-icons.net/) (all of them altered by SalieriC#8263).  
 - - Summon Creature Duration: [Pentacle by Skoll](https://game-icons.net/1x1/skoll/pentacle.html)  
 - - Growth/Shrink: [Growth by Delapouite](https://game-icons.net/1x1/delapouite/growth.html)  
 - - Sloth: [Tortoise by Delapouite](https://game-icons.net/1x1/delapouite/tortoise.html)  
 - - Speed: [Rabbit by Delapouite](https://game-icons.net/1x1/delapouite/rabbit.html)  
-- - Quickness [Speed by Lorc](https://game-icons.net/1x1/lorc/sprint.html)  
+- - Quickness: [Speed by Lorc](https://game-icons.net/1x1/lorc/sprint.html)  
+- - Burden: [Weight by Delapouite](https://game-icons.net/1x1/delapouite/weight.html)  
+- - Ease Burden: [Feather by Lorc](https://game-icons.net/1x1/lorc/feather.html)  
 - **SFX:** (see their file name for origin)
 - - [Fesliyan Studios](www.fesliyanstudios.com), all used with explicit permission (thank you so much), [see their License here](https://www.fesliyanstudios.com/policy).  
 - - [Orange Free Sounds](https://orangefreesounds.com/), all used unter the [CC BY-NC 4.0 License](https://creativecommons.org/licenses/by-nc/4.0/), converted to *.ogg and possibly altered (see file name), Author is in the file names as well.  

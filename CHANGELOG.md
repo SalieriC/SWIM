@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Mighty Summoner: Summoned Creatures now get an Active Effect with the appropriate duration. Duration is doubled if the summoner has the Concentration Edge.
-- New asset: Pentagram icon for the summoned creature duration.
+- New assets (see ReadMe for credits, all altered by SalieriC#8263): 
+- - Pentagram icon for the summoned creature duration.
+- - Weight, Feather, Speed, Rabbit, Tortoise and growth.
 - New translation strings.
 - New Macro: Power Effect Builder. Opens a dialogue to add active effects for boost/lower trait, protection and smite (more to come) depending on user input for *every* target. This makes heavy use of the new effect updater by SUCC. **Make sure to update SUCC, unless you want total carnage.**
 - Added growth/shrink to Power Effect Builder.  
