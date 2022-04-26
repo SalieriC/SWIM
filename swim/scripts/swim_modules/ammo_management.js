@@ -431,6 +431,7 @@ export async function ammo_management_script() {
                     },
                     content: game.i18n.format("SWIM.chatMessage-reloadWeaponWithoutAmmoName", {weaponIMG: item_weapon.img, name: token.name, itemWeaponName: item_weapon.name})
                 })
+                let sfx_reload
                 if (item_weapon.data.data.additionalStats.sfx) {
                     let sfx = item_weapon.data.data.additionalStats.sfx.value.split(`|`);
                     sfx_reload = sfx[0];
