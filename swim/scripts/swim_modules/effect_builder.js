@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 0.0.0
+ * v. 1.0.0
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  ******************************************************/
 
@@ -33,6 +33,7 @@ export async function effect_builder() {
 
     const options = `
         <option value="boost">${game.i18n.localize("SWIM.power-boostTrait")}</option>
+        <option value="burden">${game.i18n.localize("SWIM.power-easeBurden-tes")}</option>
         <option value="growth">${game.i18n.localize("SWIM.power-growth")}</option>
         <option value="lower">${game.i18n.localize("SWIM.power-lowerTrait")}</option>
         <option value="protection">${game.i18n.localize("SWIM.power-protection")}</option>
@@ -204,6 +205,25 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "burden") {
+                        const change = Number(html.find(`#die_steps`)[0].value)
+                        if (change === 0) {
+                            ui.notifications.warn(game.i18n.localize("SWIM.notififaction.enterNumberUnequalZero"))
+                            return
+                        }
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-burden-tes").toLowerCase()))
+                        const icon = power ? power.img : false
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: "burden",
+                            burden: {
+                                change: change,
+                                duration: duration,
+                                durationNoCombat: concentration ? 20*60 : 10*60,
+                                icon: usePowerIcons ? icon : false
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
                     }
                 }
             }
@@ -250,6 +270,8 @@ export async function effect_builder() {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
                 } else if (selectedPower === "speed") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderSpeed")
+                } else if (selectedPower === "burden") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderBurden")
                 }
             });
         },
@@ -412,6 +434,27 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
+    } else if (type === "burden") {
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            const change = data.burden.change
+            let aeData = {
+                changes: [{ key: `data.attributes.strength.encumbranceSteps`, mode: 2, priority: undefined, value: change }],
+                icon: data.burden.icon ? data.burden.icon : change > 0 ? "modules/swim/assets/icons/effects/m-ease_burden.svg" : "modules/swim/assets/icons/effects/m-burden.svg",
+                label: change > 0 ? game.i18n.localize("SWIM.power-easeBurden-tes") : game.i18n.localize("SWIM.power-burden-tes"),
+                duration: {
+                    rounds: data.burden.duration,
+                },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    }
+                }
+            }
+            if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
+            else { aeData.duration.seconds = data.burden.durationNoCombat }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
     }
