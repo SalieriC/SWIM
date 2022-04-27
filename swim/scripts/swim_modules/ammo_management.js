@@ -352,7 +352,7 @@ export async function ammo_management_script() {
                     // When changing Ammo type, remaining shots should not become the new Ammo Type.
                     amountToRecharge = parseInt(item_weapon.data.data.shots);
                     //Change the amount to recharge to 1 if singleReload is checked.
-                    if (singleReload === true) { amountToRecharge = 1; }
+                    if (singleReload === true) { amountToRecharge = 1 }
                     newCharges = amountToRecharge;
                     newAmmo = availableAmmo - amountToRecharge;
                     oldAmmoRefill = oldAmmoQuantity + currentCharges;
@@ -361,7 +361,13 @@ export async function ammo_management_script() {
                     // If the quantity of ammo is less than the amount required, use whatever is left.
                     amountToRecharge = Math.min(availableAmmo, requiredCharges);
                     //Change the amount to recharge to 1 if singleReload is checked.
-                    if (singleReload === true) { amountToRecharge = 1; }
+                    if (singleReload === true) { 
+                        amountToRecharge = currentCharges >= maxCharges ? 0 : 1
+                        if (amountToRecharge === 0) {
+                            ui.notifications.error(game.i18n.localize("SWIM.notification-weaponAlreadyFull"))
+                            return
+                        }
+                    }
                     newCharges = currentCharges + amountToRecharge;
                     newAmmo = availableAmmo - amountToRecharge;
                 }
