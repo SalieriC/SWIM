@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 2.0.1
+ * v. 2.0.2
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  ******************************************************/
 
@@ -33,6 +33,7 @@ export async function effect_builder() {
 
     const options = `
         <option value="boost">${game.i18n.localize("SWIM.power-boostTrait")}</option>
+        <option value="beast_friend">${game.i18n.localize("SWIM.power-beastFriend")}</option>
         <option value="burden">${game.i18n.localize("SWIM.power-easeBurden-tes")}</option>
         <option value="growth">${game.i18n.localize("SWIM.power-growth")}</option>
         <option value="lower">${game.i18n.localize("SWIM.power-lowerTrait")}</option>
@@ -219,6 +220,23 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "beast_friend") {
+                        const raise = html.find(`#raise`)[0].checked
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-boost").toLowerCase()))
+                        const icon = power ? power.img : false
+                        let degree = "success"
+                        if (raise === true) { degree = "raise" }
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: selectedPower,
+                            beastFriend: {
+                                degree: degree,
+                                caster: game.canvas.tokens.controlled[0].name,
+                                durationNoCombat: concentration ? 20*60 : 10*60,
+                                icon: usePowerIcons ? icon : false
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
                     }
                 }
             }
@@ -267,6 +285,8 @@ export async function effect_builder() {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderSpeed")
                 } else if (selectedPower === "burden") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderBurden")
+                } else if (selectedPower === "beast_friend") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 }
             });
         },
@@ -450,6 +470,24 @@ export async function effect_builder_gm(data) {
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             else { aeData.duration.seconds = data.burden.durationNoCombat }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
+    } else if (type === "beast_friend") {
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            let aeData = {
+                changes: [],
+                icon: data.beastFriend.icon ? data.beastFriend.icon : "modules/swim/assets/icons/effects/m-beast_friend.svg",
+                label: data.beastFriend.degree === "raise" ? `${data.beastFriend.caster}'s ${game.i18n.localize("SWIM.power-beastFriend")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${data.beastFriend.caster}'s ${game.i18n.localize("SWIM.power-beastFriend")}`,
+                duration: {
+                    seconds: data.beastFriend.durationNoCombat,
+                },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    }
+                }
+            }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
     }

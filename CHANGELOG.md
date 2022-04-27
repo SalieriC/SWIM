@@ -14,7 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New translation strings.
 - New Macro: Power Effect Builder. Opens a dialogue to add active effects for boost/lower trait, protection and smite (more to come) depending on user input for *every* target. This makes heavy use of the new effect updater by SUCC. **Make sure to update SUCC, unless you want total carnage.**
 - Added growth/shrink to Power Effect Builder.  
-- Added sloth/speed to Power Effect Builder.  
+- Added sloth/speed to Power Effect Builder. 
+- Added Beast Friend to Power Effect Builder.   
 - Localisation for:
 - - Fear Table function.
 - - Mark Dead function.

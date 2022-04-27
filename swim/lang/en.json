@@ -278,5 +278,8 @@
   "SWIM.notififaction.enterNumberUnequalZero": "Please enter a number <i>other</i> than zero.",
   "SWIM.ammoMgm-defaultSingleReloadName": "Single Reload by default:",
   "SWIM.ammoMgm-defaultSingleReloadHint": "If enabled, the single reload checkbox in the ammo management will be checked by default.",
-  "SWIM.notification-noNeedToReload": "This weapon does not require a reload action."
+  "SWIM.notification-noNeedToReload": "This weapon does not require a reload action.",
+  "SWIM.power-beastFriend": "Beast Friend",
+  "SWIM.raise": "Raise",
+  "SWIM.dialogue-optionCastWithRaise": "<div class='form-group'><label for='raise'><p>Cast with a raise: </p></label><input id='raise' name='raiseBox' type='checkbox'></input></div></div>"
 }
