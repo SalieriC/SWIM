@@ -23,6 +23,9 @@ export async function ammo_management_script() {
         });
     }
 
+    const defaultChecked = game.settings.get("swim", "ammoMgm-defaultSingleReload") ? " checked" : ""
+
+
     async function weaponDialog() {
         if (!token) return ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"));
 
@@ -108,7 +111,7 @@ export async function ammo_management_script() {
         </div>
         <div class="form-group">
           <label for="singleReload">Can only reload one at a time: </label>
-          <input id="singleReload" name="Single Reload" type="checkbox"></input>
+          <input id="singleReload" name="Single Reload" type="checkbox"${defaultChecked}></input>
         </div>
       </form>
       `
