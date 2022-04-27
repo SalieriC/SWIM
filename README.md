@@ -40,6 +40,8 @@ In this repository you can find a number of assets already.
 - - Quickness: [Speed by Lorc](https://game-icons.net/1x1/lorc/sprint.html)  
 - - Burden: [Weight by Delapouite](https://game-icons.net/1x1/delapouite/weight.html)  
 - - Ease Burden: [Feather by Lorc](https://game-icons.net/1x1/lorc/feather.html)  
+- - Beast Friend: [Beast eye by Lorc](https://game-icons.net/1x1/lorc/beast-eye.html)  
+- - Puppet: <a href="https://www.flaticon.com/free-icons/puppet" title="puppet icons">Puppet icons created by Freepik - Flaticon</a>  
 - **SFX:** (see their file name for origin)
 - - [Fesliyan Studios](www.fesliyanstudios.com), all used with explicit permission (thank you so much), [see their License here](https://www.fesliyanstudios.com/policy).  
 - - [Orange Free Sounds](https://orangefreesounds.com/), all used unter the [CC BY-NC 4.0 License](https://creativecommons.org/licenses/by-nc/4.0/), converted to *.ogg and possibly altered (see file name), Author is in the file names as well.  
