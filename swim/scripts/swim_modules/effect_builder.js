@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 2.0.0
+ * v. 2.0.1
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  ******************************************************/
 
@@ -63,11 +63,12 @@ export async function effect_builder() {
             for (let skill of targetSkills) {
                 skillOptions = skillOptions + `<option value="${skill.name}">${game.i18n.localize("SUCC.dialogue.skill")} ${skill.name}</option>`
             }
-            traitOptions += skillOptions
+            let targetOptions = traitOptions + skillOptions
+            //traitOptions += skillOptions
             let html = `
                 <div class='form-group'>
-                    <label for='${target.id}'><p>${game.i18n.localize("SWIM.dialogue-powerEffectBuilderAffectedTraitOf")} ${target.name}:</p></label>
-                    <select id='${target.id}'>${traitOptions}</select>
+                    <label for='${target.id}'><p>${game.i18n.localize("SWIM.dialogue-powerEffectBuilderAffectedTraitOf")} (${target.name}):</p></label>
+                    <select id='${target.id}'>${targetOptions}</select>
                 </div>
             `
             allHTML = allHTML += html

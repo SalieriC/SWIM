@@ -268,7 +268,7 @@
   "SWIM.dialogue-powerEffectBuilderBoostLower": "{allHTML}<div class='form-group'><label for='raise'><p>Cast with a raise: </p></label><input id='raise' name='raiseBox' type='checkbox'></input></div></div>",
   "SWIM.dialogue-powerEffectBuilderProtection": "<div style='display:flex'><p style='flex:3'>{amountText}</p><input type='number' id='protectionAmount' value='2' min='1' style='flex:1'/></input></div><div class='form-group'><label for='armour'><p>Armour: </p></label><input id='armour' name='type_choice' type='radio' value='armor' checked='true'></input><label for='toughness'><p>Toughness: </p></label><input id='toughness' name='type_choice' type='radio' value='toughness'></input></div></div>",
   "SWIM.dialogue-powerEffectBuilderSmiteWeaponOf": "Weapon of",
-  "SWIM.dialogue-powerEffectBuilderAffectedTraitOf": "Affected Trait of",
+  "SWIM.dialogue-powerEffectBuilderAffectedTraitOf": "Trait",
   "SWIM.dialogue-powerEffectBuilderSmite": "{allHTML}<div style='display:flex'><p style='flex:3'>{increaseText}</p><input type='number' id='damageBonus' value='2' min='1' style='flex:1'/></input></div></div>",
   "SWIM.dialogue-powerEffectBuilderGrowth": "<div style='display:flex'><p style='flex:3'>Increase in Size steps: </p><input type='number' id='sizeAmount' value='1' min='1' style='flex:1'/></input></div></div>",
   "SWIM.dialogue-powerEffectBuilderShrink": "<div style='display:flex'><p style='flex:3'>Decrease in Size steps: </p></label><input type='number' id='sizeAmount' value='-1' max='-1' style='flex:1'/></input></div></div>",
