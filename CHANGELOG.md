@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.17.1] - 2022-04-27
+### Fixed
+- Faulty Translation string in Ammo Management (@Razortide)  
+
 ## [0.17.0] - 2022-04-21
 ### Added
 - Combat Setup Button in the Token Actions:
