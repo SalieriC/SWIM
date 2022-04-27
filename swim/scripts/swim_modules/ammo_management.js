@@ -286,6 +286,7 @@ export async function ammo_management_script() {
 
         async function reload(html) {
             let [shots, weapon, ammo, singleReload] = getValues(html);
+            const autoReload = item_weapon.data.data.autoReload
             // If no ammo left throw an error message.
             if (!ammo && actor.type === 'character' && npcAmmo === false || !ammo && npcAmmo === true) {
                 return ui.notifications.error(game.i18n.localize("SWIM.notification-outOfAmmo"));
@@ -311,6 +312,10 @@ export async function ammo_management_script() {
                 let chgType = false;
                 if (item_oldAmmo != item_ammo) {
                     chgType = true;
+                }
+                if (chgType === false && autoReload) {
+                    ui.notifications.notify(game.i18n.localize("SWIM.notification-noNeedToReload"))
+                    return
                 }
                 // Getting the sfx from the selected weapon
                 let sfx_reload;
@@ -353,6 +358,7 @@ export async function ammo_management_script() {
                     amountToRecharge = parseInt(item_weapon.data.data.shots);
                     //Change the amount to recharge to 1 if singleReload is checked.
                     if (singleReload === true) { amountToRecharge = 1 }
+                    if (autoReload === true) { amountToRecharge = 0 }
                     newCharges = amountToRecharge;
                     newAmmo = availableAmmo - amountToRecharge;
                     oldAmmoRefill = oldAmmoQuantity + currentCharges;

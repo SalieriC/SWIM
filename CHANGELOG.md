@@ -25,6 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Various errors in the personal health center that prevented chat messages from being created.
 - Incorrectly named translation string.
+- Fixed a bug in the ammo management where single reloading a weapon which is full would overflow the weapons capacity.
+- Fixed a bug that caused weapons which do not require reloading actions to reload anyway.
 
 ## [0.17.1] - 2022-04-27
 ### Fixed

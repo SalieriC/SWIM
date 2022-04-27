@@ -277,5 +277,6 @@
   "SWIM.dialogue-powerEffectBuilderBurden": "<p>This in- or decreases the carry weight die type without touching the Strength die type. Enter a value below; it's exact die steps so 1 would increase it from d6 to d8 for example.</p><div style='display:flex'><p style='flex:3'>Die type steps: </p><input type='number' id='die_steps' value='1' style='flex:1'/></input></div></div>",
   "SWIM.notififaction.enterNumberUnequalZero": "Please enter a number <i>other</i> than zero.",
   "SWIM.ammoMgm-defaultSingleReloadName": "Single Reload by default:",
-  "SWIM.ammoMgm-defaultSingleReloadHint": "If enabled, the single reload checkbox in the ammo management will be checked by default."
+  "SWIM.ammoMgm-defaultSingleReloadHint": "If enabled, the single reload checkbox in the ammo management will be checked by default.",
+  "SWIM.notification-noNeedToReload": "This weapon does not require a reload action."
 }
