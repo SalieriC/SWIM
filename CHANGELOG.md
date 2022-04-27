@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Mighty Summoner: Summoned Creatures now get an Active Effect with the appropriate duration. Duration is doubled if the summoner has the Concentration Edge.
 - New assets (see ReadMe for credits, all altered by SalieriC#8263): 
@@ -23,6 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Various errors in the personal health center that prevented chat messages from being created.
 - Incorrectly named translation string.
+
+## [0.17.1] - 2022-04-27
+### Fixed
+- Faulty Translation string in Ammo Management (@Razortide)  
 
 ## [0.17.0] - 2022-04-21
 ### Added
