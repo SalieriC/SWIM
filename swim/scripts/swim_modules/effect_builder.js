@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 1.0.0
+ * v. 2.0.0
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  ******************************************************/
 
@@ -51,34 +51,46 @@ export async function effect_builder() {
         <option value="strength">${game.i18n.localize("SUCC.dialogue.attribute")} ${game.i18n.localize("SWADE.AttrStr")}</option>
         <option value="vigor">${game.i18n.localize("SUCC.dialogue.attribute")} ${game.i18n.localize("SWADE.AttrVig")}</option>
     `
-    // Getting traits of each target, reducing the options to only those traits every one of them has:
-    let skills = []
     let targetIDs = []
+    let allHTML = []
     for (let target of targets) {
-        const targetSkills = target.actor.items.filter(s => s.type === "skill")
-        for (let targetSkill of targetSkills) {
-            skills.push(targetSkill.name)
-        }
         targetIDs.push(target.id)
+        let targetSkills = target.actor.items.filter(s => s.type === "skill")
+        if (targetSkills.length >= 1) {
+            //Sort alphabetically
+            targetSkills = targetSkills.sort(function (a, b) {return a.length - b.length})
+            let skillOptions
+            for (let skill of targetSkills) {
+                skillOptions = skillOptions + `<option value="${skill.name}">${game.i18n.localize("SUCC.dialogue.skill")} ${skill.name}</option>`
+            }
+            traitOptions += skillOptions
+            let html = `
+                <div class='form-group'>
+                    <label for='${target.id}'><p>${game.i18n.localize("SWIM.dialogue-powerEffectBuilderAffectedTraitOf")} ${target.name}:</p></label>
+                    <select id='${target.id}'>${traitOptions}</select>
+                </div>
+            `
+            allHTML = allHTML += html
+        }
     }
-    const skillsFiltered = skills.filter((a, i, aa) => aa.indexOf(a) === i && aa.lastIndexOf(a) !== i);
-    for (let each of skillsFiltered) {
-        traitOptions = traitOptions + `<option value="${each.toLowerCase()}">${game.i18n.localize("SUCC.dialogue.skill")} ${each}</option>`
-    }
-
-    let text = game.i18n.format("SWIM.dialogue-powerEffectBuilderBoost", { trait: game.i18n.localize("SUCC.dialogue.trait"), traitOptions: traitOptions })
+    const boostLowerContent = game.i18n.format("SWIM.dialogue-powerEffectBuilderBoostLower", { allHTML: allHTML })
 
     new Dialog({
         title: game.i18n.localize("SWIM.dialogue-powerEffectBuilderTitle"),
-        content: game.i18n.format("SWIM.dialogue-powerEffectBuilderContent", { class: officialClass, options: options, text: text }),
+        content: game.i18n.format("SWIM.dialogue-powerEffectBuilderContent", { class: officialClass, options: options, text: boostLowerContent }),
         buttons: {
             one: {
                 label: `<i class="fas fa-magic"></i> Proceed`,
                 callback: async (html) => {
                     const selectedPower = html.find(`#selected_power`)[0].value
                     const usePowerIcons = game.settings.get("swim", "effectBuilder-usePowerIcons")
-                    if (selectedPower === "boost") {
-                        const selectedTrait = html.find(`#selected_trait`)[0].value
+                    if (selectedPower === "boost" || selectedPower === "lower") {
+                        //const selectedTrait = html.find(`#selected_trait`)[0].value
+                        let traits = []
+                        for (let target of targets) {
+                            const targetTraitName = html.find(`#${target.id}`)[0].value
+                            traits.push({ targetID: target.id, traitName: targetTraitName })
+                        }
                         const raise = html.find(`#raise`)[0].checked
                         const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-boost").toLowerCase()))
                         const icon = power ? power.img : false
@@ -86,28 +98,10 @@ export async function effect_builder() {
                         if (raise === true) { degree = "raise" }
                         const data = {
                             targetIDs: targetIDs,
-                            type: "boost",
-                            boost: {
+                            type: selectedPower,
+                            [selectedPower]: {
                                 degree: degree,
-                                trait: selectedTrait,
-                                duration: duration,
-                                icon: usePowerIcons ? icon : false
-                            }
-                        }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
-                    } else if (selectedPower === "lower") {
-                        const selectedTrait = html.find(`#selected_trait`)[0].value
-                        const raise = html.find(`#raise`)[0].checked
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-lower").toLowerCase()))
-                        const icon = power ? power.img : false
-                        let degree = "success"
-                        if (raise === true) { degree = "raise" }
-                        const data = {
-                            targetIDs: targetIDs,
-                            type: "lower",
-                            lower: {
-                                degree: degree,
-                                trait: selectedTrait,
+                                trait: traits,
                                 duration: duration,
                                 icon: usePowerIcons ? icon : false
                             }
@@ -236,8 +230,8 @@ export async function effect_builder() {
                 const form = textInput.closest("form")
                 const effectContent = form.querySelector(".effectContent");
                 const selectedPower = form.querySelector('select[id="selected_power"]').value;
-                if (selectedPower === "boost") {
-                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderBoost", { trait: game.i18n.localize("SUCC.dialogue.trait"), traitOptions: traitOptions })
+                if (selectedPower === "boost" || selectedPower === "lower") {
+                    effectContent.innerHTML = boostLowerContent
                 } else if (selectedPower === "lower") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderLower", { trait: game.i18n.localize("SUCC.dialogue.trait"), traitOptions: traitOptions })
                 } else if (selectedPower === "protection") {
@@ -284,28 +278,28 @@ export async function effect_builder() {
 export async function effect_builder_gm(data) {
     const type = data.type
     if (type === "boost") {
-        for (let target of data.targetIDs) {
+        for (let target of data.boost.trait) {
             const boostData = {
                 boost: {
                     degree: data.boost.degree,
-                    trait: data.boost.trait,
+                    trait: target.traitName,
                     duration: data.boost.duration,
                     icon: data.boost.icon
                 }
             }
-            await succ.apply_status(target, 'boost', true, false, boostData)
+            await succ.apply_status(target.targetID, 'boost', true, false, boostData)
         }
     } else if (type === "lower") {
-        for (let target of data.targetIDs) {
+        for (let target of data.lower.trait) {
             const lowerData = {
                 lower: {
                     degree: data.lower.degree,
-                    trait: data.lower.trait,
+                    trait: target.traitName,
                     duration: data.lower.duration,
                     icon: data.lower.icon
                 }
             }
-            await succ.apply_status(target, 'lower', true, false, lowerData)
+            await succ.apply_status(target.targetID, 'lower', true, false, lowerData)
         }
     } else if (type === "protection") {
         for (let target of data.targetIDs) {
