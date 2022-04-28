@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - - Mark Dead function.
 - Various new localisation strings.
 - New setting to check single reload by default.
+- Make tokens invisible (no player owner) or half transparent (player owner) whne the invisibility condition is applied.
 ### Changed
 - Incapacitation and Bleeding Out are added as overlays instead of small icons now. Inc. will be set as small icon if Bleeding Out is applied.
 ### Fixed

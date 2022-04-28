@@ -119,6 +119,41 @@ Hooks.on(`ready`, () => {
     warpgate.event.watch("SWIM.deleteActor", gm_relay.gmDeleteActor, swim.is_first_gm)
 });
 
+// Hooks on conditions
+Hooks.on(`createActiveEffect`, async (condition, _, userID) => {
+    const actor = condition.parent
+    if (actor.hasPlayerOwner && swim.is_first_gm() && condition.data.flags?.core?.statusId === "invisible") {
+        if (actor.token) {
+            const token = actor.token
+            token.document.update({ "alpha": 0.5 })
+        } else {
+            const tokens = actor.getActiveTokens()
+            for (let token of tokens) {
+                token.document.update({ "alpha": 0.5 })
+            }
+        }
+    } else if (!actor.hasPlayerOwner && swim.is_first_gm() && condition.data.flags?.core?.statusId === "invisible") {
+        const tokens = actor.getActiveTokens()
+        for (let token of tokens) {
+            if (token.data.hidden === false) { await token.toggleVisibility() }
+        }
+    }
+})
+Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
+    const actor = condition.parent
+    if (actor.hasPlayerOwner && swim.is_first_gm() && condition.data.flags?.core?.statusId === "invisible") {
+        const tokens = actor.getActiveTokens()
+        for (let token of tokens) {
+            token.document.update({ "alpha": 1 })
+        }
+    } else if (!actor.hasPlayerOwner && swim.is_first_gm() && condition.data.flags?.core?.statusId === "invisible") {
+        const tokens = actor.getActiveTokens()
+        for (let token of tokens) {
+            if (token.data.hidden === true) { await token.toggleVisibility() }
+        }
+    }
+})
+
 // Combat setup playlist handling
 Hooks.on("preUpdateCombat", async (combat, update, options, userId) => {
     if (game.settings.get("swim", "combatPlaylistManagement") === true && combat.round === 0 && update.round === 1) {
