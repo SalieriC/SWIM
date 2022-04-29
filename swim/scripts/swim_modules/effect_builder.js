@@ -523,6 +523,9 @@ export async function effect_builder_gm(data) {
                 flags: {
                     swade: {
                         expiration: 3
+                    },
+                    succ: {
+                        updatedAE: true
                     }
                 }
             }
