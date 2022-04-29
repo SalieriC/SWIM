@@ -282,5 +282,6 @@
   "SWIM.power-beastFriend": "Beast Friend",
   "SWIM.raise": "Raise",
   "SWIM.dialogue-optionCastWithRaise": "<div class='form-group'><label for='raise'><p>Cast with a raise: </p></label><input id='raise' name='raiseBox' type='checkbox'></input></div></div>",
-  "SWIM.power-invisibility": "Invisibility"
+  "SWIM.power-invisibility": "Invisibility",
+  "SWIM.power-confusion": "Confusion"
 }

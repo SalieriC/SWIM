@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added sloth/speed to Power Effect Builder. 
 - Added Beast Friend to Power Effect Builder.   
 - Added Invisibility to Power Effect Builder.  
+- Added Confusion to Power Effect Builder.
 - Localisation for:
 - - Fear Table function.
 - - Mark Dead function.

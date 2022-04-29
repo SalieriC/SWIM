@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 2.0.3
+ * v. 2.0.4
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  ******************************************************/
 
@@ -34,6 +34,7 @@ export async function effect_builder() {
     const options = `
         <option value="boost">${game.i18n.localize("SWIM.power-boostTrait")}</option>
         <option value="beast_friend">${game.i18n.localize("SWIM.power-beastFriend")}</option>
+        <option value="confusion">${game.i18n.localize("SWIM.power-confusion")}</option>
         <option value="burden">${game.i18n.localize("SWIM.power-easeBurden-tes")}</option>
         <option value="growth">${game.i18n.localize("SWIM.power-growth")}</option>
         <option value="invisibility">${game.i18n.localize("SWIM.power-invisibility")}</option>
@@ -60,7 +61,7 @@ export async function effect_builder() {
         let targetSkills = target.actor.items.filter(s => s.type === "skill")
         if (targetSkills.length >= 1) {
             //Sort alphabetically
-            targetSkills = targetSkills.sort(function (a, b) {return a.length - b.length})
+            targetSkills = targetSkills.sort(function (a, b) { return a.length - b.length })
             let skillOptions
             for (let skill of targetSkills) {
                 skillOptions = skillOptions + `<option value="${skill.name}">${game.i18n.localize("SUCC.dialogue.skill")} ${skill.name}</option>`
@@ -216,7 +217,7 @@ export async function effect_builder() {
                             burden: {
                                 change: change,
                                 duration: duration,
-                                durationNoCombat: concentration ? 20*60 : 10*60,
+                                durationNoCombat: concentration ? 20 * 60 : 10 * 60,
                                 icon: usePowerIcons ? icon : false
                             }
                         }
@@ -233,7 +234,7 @@ export async function effect_builder() {
                             beastFriend: {
                                 degree: degree,
                                 caster: game.canvas.tokens.controlled[0].name,
-                                durationNoCombat: concentration ? 20*60 : 10*60,
+                                durationNoCombat: concentration ? 20 * 60 : 10 * 60,
                                 icon: usePowerIcons ? icon : false
                             }
                         }
@@ -250,6 +251,17 @@ export async function effect_builder() {
                             invisibility: {
                                 degree: degree,
                                 duration: duration,
+                                icon: usePowerIcons ? icon : false
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "confusion") {
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-confusion").toLowerCase()))
+                        const icon = power ? power.img : false
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: selectedPower,
+                            [selectedPower]: {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
@@ -306,6 +318,8 @@ export async function effect_builder() {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 } else if (selectedPower === "invisibility") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
+                } else if (selectedPower === "confusion") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
                 }
             });
         },
@@ -383,14 +397,14 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
-            const targetStr = target.actor.data.data.attributes.strength.die.sides + change*2
+            const targetStr = target.actor.data.data.attributes.strength.die.sides + change * 2
             if (targetStr <= 12) {
-                aeData.changes.push({ key: `data.attributes.strength.die.sides`, mode: 2, priority: undefined, value: change*2 })
+                aeData.changes.push({ key: `data.attributes.strength.die.sides`, mode: 2, priority: undefined, value: change * 2 })
             } else {
                 const toMax = 12 - target.actor.data.data.attributes.strength.die.sides
-                const rest = change - (toMax/2)
+                const rest = change - (toMax / 2)
                 aeData.changes.push({ key: `data.attributes.strength.die.sides`, mode: 2, priority: undefined, value: toMax },
-                { key: `data.attributes.strength.die.modifier`, mode: 2, priority: undefined, value: rest })
+                    { key: `data.attributes.strength.die.modifier`, mode: 2, priority: undefined, value: rest })
             }
             aeData.changes.push({ key: `data.stats.size`, mode: 2, priority: undefined, value: change })
             if (target.actor.data.data.details.autoCalcToughness === false) {
@@ -416,12 +430,12 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
-            const targetStr = target.actor.data.data.attributes.strength.die.sides + change*2
+            const targetStr = target.actor.data.data.attributes.strength.die.sides + change * 2
             if (targetStr <= 4) {
                 const toMin = 4 - target.actor.data.data.attributes.strength.die.sides
                 aeData.changes.push({ key: `data.attributes.strength.die.sides`, mode: 2, priority: undefined, value: toMin })
             } else {
-                aeData.changes.push({ key: `data.attributes.strength.die.sides`, mode: 2, priority: undefined, value: change*2 })
+                aeData.changes.push({ key: `data.attributes.strength.die.sides`, mode: 2, priority: undefined, value: change * 2 })
             }
             aeData.changes.push({ key: `data.stats.size`, mode: 2, priority: undefined, value: change })
             if (target.actor.data.data.details.autoCalcToughness === false) {
@@ -531,6 +545,44 @@ export async function effect_builder_gm(data) {
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             await condition.update(aeData)
+        }
+    } else if (type === "confusion") {
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            // Want to show the icon but in theory it has no duration and since duration 1 turn means end of second turn (instead of next) we need to be a bit hacky:
+            let duration = {}
+            if (target.combatant != null) {
+                duration = {
+                    rounds: 0,
+                    startRound: game.combat.data.round,
+                    startTurn: 0,
+                    /*
+                     * This is the hacky part. Setting start turn to zero, combined with duration 1 turn ensures that 
+                     * a) it is shown on the target (duration 0 turns does not show the effect) and 
+                     * b) ends after the targets NEXT turn. If the targets turn is 0 however,
+                     * it will not end immediately but after its turn next round as it should. This only works if the
+                     * proper SWADE flag (end of turn, automatic) is set however because that ignores the real turn order
+                     * and always forces the AE owners turn. SWADE is a bit weird about that. Without the SWADE flag FVTT
+                     * would do it as one would expect by counting real turns, instead of AE owner turns.
+                    */
+                    turns: 1
+                }
+            }
+            let aeData = {
+                changes: [
+                    { key: `data.status.isDistracted`, mode: 5, priority: undefined, value: true },
+                    { key: `data.status.isDistracted`, mode: 5, priority: undefined, value: true }
+                ],
+                icon: data.confusion.icon ? data.confusion.icon : "modules/swim/assets/icons/effects/m-confusion.svg",
+                label: game.i18n.localize("SWIM.power-confusion"),
+                duration: duration,
+                flags: {
+                    swade: {
+                        expiration: 2
+                    }
+                }
+            }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
     }
 }
