@@ -281,5 +281,6 @@
   "SWIM.notification-noNeedToReload": "This weapon does not require a reload action.",
   "SWIM.power-beastFriend": "Beast Friend",
   "SWIM.raise": "Raise",
-  "SWIM.dialogue-optionCastWithRaise": "<div class='form-group'><label for='raise'><p>Cast with a raise: </p></label><input id='raise' name='raiseBox' type='checkbox'></input></div></div>"
+  "SWIM.dialogue-optionCastWithRaise": "<div class='form-group'><label for='raise'><p>Cast with a raise: </p></label><input id='raise' name='raiseBox' type='checkbox'></input></div></div>",
+  "SWIM.power-invisibility": "Invisibility"
 }

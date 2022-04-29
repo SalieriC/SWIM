@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 2.0.2
+ * v. 2.0.3
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  ******************************************************/
 
@@ -36,6 +36,7 @@ export async function effect_builder() {
         <option value="beast_friend">${game.i18n.localize("SWIM.power-beastFriend")}</option>
         <option value="burden">${game.i18n.localize("SWIM.power-easeBurden-tes")}</option>
         <option value="growth">${game.i18n.localize("SWIM.power-growth")}</option>
+        <option value="invisibility">${game.i18n.localize("SWIM.power-invisibility")}</option>
         <option value="lower">${game.i18n.localize("SWIM.power-lowerTrait")}</option>
         <option value="protection">${game.i18n.localize("SWIM.power-protection")}</option>
         <option value="shrink">${game.i18n.localize("SWIM.power-shrink")}</option>
@@ -222,7 +223,7 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "beast_friend") {
                         const raise = html.find(`#raise`)[0].checked
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-boost").toLowerCase()))
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-beastFriend").toLowerCase()))
                         const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
@@ -233,6 +234,22 @@ export async function effect_builder() {
                                 degree: degree,
                                 caster: game.canvas.tokens.controlled[0].name,
                                 durationNoCombat: concentration ? 20*60 : 10*60,
+                                icon: usePowerIcons ? icon : false
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "invisibility") {
+                        const raise = html.find(`#raise`)[0].checked
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-invisibility").toLowerCase()))
+                        const icon = power ? power.img : false
+                        let degree = "success"
+                        if (raise === true) { degree = "raise" }
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: selectedPower,
+                            invisibility: {
+                                degree: degree,
+                                duration: duration,
                                 icon: usePowerIcons ? icon : false
                             }
                         }
@@ -286,6 +303,8 @@ export async function effect_builder() {
                 } else if (selectedPower === "burden") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderBurden")
                 } else if (selectedPower === "beast_friend") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
+                } else if (selectedPower === "invisibility") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 }
             });
@@ -489,6 +508,26 @@ export async function effect_builder_gm(data) {
                 }
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
+    } else if (type === "invisibility") {
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            const condition = await succ.apply_status(target, 'invisible', true, false)
+            let aeData = {
+                changes: [],
+                icon: data.invisibility.icon ? data.invisibility.icon : "modules/succ/assets/icons/m-invisible.svg",
+                label: data.invisibility.degree === "raise" ? `${condition.data.label} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${condition.data.label}`,
+                duration: {
+                    rounds: data.invisibility.duration,
+                },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    }
+                }
+            }
+            if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
+            await condition.update(aeData)
         }
     }
 }
