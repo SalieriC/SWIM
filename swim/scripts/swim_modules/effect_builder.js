@@ -35,6 +35,7 @@ export async function effect_builder() {
         <option value="boost">${game.i18n.localize("SWIM.power-boostTrait")}</option>
         <option value="beast_friend">${game.i18n.localize("SWIM.power-beastFriend")}</option>
         <option value="confusion">${game.i18n.localize("SWIM.power-confusion")}</option>
+        <option value="deflection">${game.i18n.localize("SWIM.power-deflection")}</option>
         <option value="burden">${game.i18n.localize("SWIM.power-easeBurden-tes")}</option>
         <option value="growth">${game.i18n.localize("SWIM.power-growth")}</option>
         <option value="invisibility">${game.i18n.localize("SWIM.power-invisibility")}</option>
@@ -266,6 +267,22 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "deflection") {
+                        const raise = html.find(`#raise`)[0].checked
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-deflection").toLowerCase()))
+                        const icon = power ? power.img : false
+                        let degree = "success"
+                        if (raise === true) { degree = "raise" }
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: selectedPower,
+                            [selectedPower]: {
+                                degree: degree,
+                                duration: duration,
+                                icon: usePowerIcons ? icon : false
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
                     }
                 }
             }
@@ -320,6 +337,8 @@ export async function effect_builder() {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 } else if (selectedPower === "confusion") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
+                } else if (selectedPower === "deflection") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 }
             });
         },
@@ -331,6 +350,13 @@ export async function effect_builder() {
 
 export async function effect_builder_gm(data) {
     const type = data.type
+
+    /* Make duration dependent on caster, not yet thought about how to properly implement that though
+    const casterID = "many ways to get the Token's Id"
+    const Combatants = game.combat.turns;
+    const turnNo = Combatants.findIndex(i => i.data.tokenId === `${casterID}`);
+    */
+
     if (type === "boost") {
         for (let target of data.boost.trait) {
             const boostData = {
@@ -582,6 +608,28 @@ export async function effect_builder_gm(data) {
                     }
                 }
             }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
+    } else if (type === "deflection") {
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            let aeData = {
+                changes: [],
+                icon: data.deflection.icon ? data.deflection.icon : "modules/swim/assets/icons/effects/m-deflection.svg",
+                label: data.deflection.degree === "raise" ? `${game.i18n.localize("SWIM.power-deflection")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-deflection")}`,
+                duration: {
+                    rounds: data.deflection.duration,
+                },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    },
+                    succ: {
+                        updatedAE: true
+                    }
+                }
+            }
+            if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
     }
