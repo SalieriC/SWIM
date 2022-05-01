@@ -1,6 +1,6 @@
 /*******************************************
  * Soak Damage
- * v. 4.1.3
+ * v. 4.1.4
  * Code by SalieriC#8263.
  *******************************************/
 export async function soak_damage_script() {
@@ -126,7 +126,7 @@ export async function soak_damage_script() {
             } else if (rounded >= numberWounds) {
                 chatData += game.i18n.localize("SWIM.chatMessage-soakAllWounds");
                 if (soakSFX) { AudioHelper.play({ src: `${soakSFX}` }, true); }
-                if (token.actor.data.data.status.isShaken === true) {
+                if (await succ.check_status(token, 'shaken') === true) {
                     await succ.apply_status(token, 'shaken', false)
                 }
             }

@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Incorrectly named translation string.
 - Fixed a bug in the ammo management where single reloading a weapon which is full would overflow the weapons capacity.
 - Fixed a bug that caused weapons which do not require reloading actions to reload anyway.
+- Fixed a bug that prevented the removal of Shaken if all Wounds were soaked.  
 
 ## [0.17.1] - 2022-04-27
 ### Fixed
