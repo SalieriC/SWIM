@@ -33,6 +33,7 @@ export async function effect_builder() {
 
     const options = `
         <option value="boost">${game.i18n.localize("SWIM.power-boostTrait")}</option>
+        <option value="arcane_protection">${game.i18n.localize("SWIM.power-arcaneProtection")}</option>
         <option value="beast_friend">${game.i18n.localize("SWIM.power-beastFriend")}</option>
         <option value="confusion">${game.i18n.localize("SWIM.power-confusion")}</option>
         <option value="deflection">${game.i18n.localize("SWIM.power-deflection")}</option>
@@ -283,6 +284,22 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "arcane_protection") {
+                        const raise = html.find(`#raise`)[0].checked
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-arcaneProtection").toLowerCase()))
+                        const icon = power ? power.img : false
+                        let degree = "success"
+                        if (raise === true) { degree = "raise" }
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: selectedPower,
+                            [selectedPower]: {
+                                degree: degree,
+                                duration: duration,
+                                icon: usePowerIcons ? icon : false
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
                     }
                 }
             }
@@ -338,6 +355,8 @@ export async function effect_builder() {
                 } else if (selectedPower === "confusion") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
                 } else if (selectedPower === "deflection") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
+                } else if (selectedPower === "arcane_protection") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 }
             });
@@ -619,6 +638,28 @@ export async function effect_builder_gm(data) {
                 label: data.deflection.degree === "raise" ? `${game.i18n.localize("SWIM.power-deflection")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-deflection")}`,
                 duration: {
                     rounds: data.deflection.duration,
+                },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    },
+                    succ: {
+                        updatedAE: true
+                    }
+                }
+            }
+            if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
+    } else if (type === "arcane_protection") {
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            let aeData = {
+                changes: [],
+                icon: data.arcane_protection.icon ? data.arcane_protection.icon : "modules/swim/assets/icons/effects/m-arcane_protection.svg",
+                label: data.arcane_protection.degree === "raise" ? `${game.i18n.localize("SWIM.power-arcaneProtection")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-arcaneProtection")}`,
+                duration: {
+                    rounds: data.arcane_protection.duration,
                 },
                 flags: {
                     swade: {

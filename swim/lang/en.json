@@ -284,5 +284,6 @@
   "SWIM.dialogue-optionCastWithRaise": "<div class='form-group'><label for='raise'><p>Cast with a raise: </p></label><input id='raise' name='raiseBox' type='checkbox'></input></div></div>",
   "SWIM.power-invisibility": "Invisibility",
   "SWIM.power-confusion": "Confusion",
-  "SWIM.power-deflection": "Deflection"
+  "SWIM.power-deflection": "Deflection",
+  "SWIM.power-arcaneProtection": "Arcane Protection"
 }
