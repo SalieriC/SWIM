@@ -285,5 +285,8 @@
   "SWIM.power-invisibility": "Invisibility",
   "SWIM.power-confusion": "Confusion",
   "SWIM.power-deflection": "Deflection",
-  "SWIM.power-arcaneProtection": "Arcane Protection"
+  "SWIM.power-arcaneProtection": "Arcane Protection",
+  "SWIM.power-burrow": "Burrow",
+  "SWIM.dialogue-optionStrongModifier": "<div class='form-group'><label for='strong'><p>Cast with Strong Modifier: </p></label><input id='strong' name='strongBox' type='checkbox'></input></div></div>",
+  "SWIM.modifierStrong": "Strong"
 }

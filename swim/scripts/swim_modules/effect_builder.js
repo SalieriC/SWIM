@@ -35,6 +35,7 @@ export async function effect_builder() {
         <option value="boost">${game.i18n.localize("SWIM.power-boostTrait")}</option>
         <option value="arcane_protection">${game.i18n.localize("SWIM.power-arcaneProtection")}</option>
         <option value="beast_friend">${game.i18n.localize("SWIM.power-beastFriend")}</option>
+        <option value="burrow">${game.i18n.localize("SWIM.power-burrow")}</option>
         <option value="confusion">${game.i18n.localize("SWIM.power-confusion")}</option>
         <option value="deflection">${game.i18n.localize("SWIM.power-deflection")}</option>
         <option value="burden">${game.i18n.localize("SWIM.power-easeBurden-tes")}</option>
@@ -300,6 +301,24 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "burrow") {
+                        const raise = html.find(`#raise`)[0].checked
+                        const strong = html.find(`#strong`)[0].checked
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-burrow").toLowerCase()))
+                        const icon = power ? power.img : false
+                        let degree = "success"
+                        if (raise === true) { degree = "raise" }
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: selectedPower,
+                            [selectedPower]: {
+                                degree: degree,
+                                duration: duration,
+                                icon: usePowerIcons ? icon : false,
+                                strong: strong
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
                     }
                 }
             }
@@ -358,6 +377,8 @@ export async function effect_builder() {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 } else if (selectedPower === "arcane_protection") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
+                } else if (selectedPower === "burrow") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise") + game.i18n.format("SWIM.dialogue-optionStrongModifier")
                 }
             });
         },
@@ -660,6 +681,34 @@ export async function effect_builder_gm(data) {
                 label: data.arcane_protection.degree === "raise" ? `${game.i18n.localize("SWIM.power-arcaneProtection")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-arcaneProtection")}`,
                 duration: {
                     rounds: data.arcane_protection.duration,
+                },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    },
+                    succ: {
+                        updatedAE: true
+                    }
+                }
+            }
+            if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
+    } else if (type === "burrow") {
+        let label = game.i18n.localize("SWIM.power-burrow")
+        if (data.burrow.degree === "raise") {
+            label = label + ` (${game.i18n.localize("SWIM.raise").toLowerCase()})`
+        } if (data.burrow.strong === true) {
+            label = label + ` (${game.i18n.localize("SWIM.modifierStrong").toLowerCase()})`
+        }
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            let aeData = {
+                changes: [],
+                icon: data.burrow.icon ? data.burrow.icon : "modules/swim/assets/icons/effects/m-burrow.svg",
+                label: label,
+                duration: {
+                    rounds: data.burrow.duration,
                 },
                 flags: {
                     swade: {
