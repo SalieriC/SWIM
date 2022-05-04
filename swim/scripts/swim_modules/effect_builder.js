@@ -38,6 +38,7 @@ export async function effect_builder() {
         <option value="burrow">${game.i18n.localize("SWIM.power-burrow")}</option>
         <option value="confusion">${game.i18n.localize("SWIM.power-confusion")}</option>
         <option value="damage_field">${game.i18n.localize("SWIM.power-damageField")}</option>
+        <option value="darksight">${game.i18n.localize("SWIM.power-darksight")}</option>
         <option value="deflection">${game.i18n.localize("SWIM.power-deflection")}</option>
         <option value="burden">${game.i18n.localize("SWIM.power-easeBurden-tes")}</option>
         <option value="growth">${game.i18n.localize("SWIM.power-growth")}</option>
@@ -334,6 +335,22 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "darksight") {
+                        const raise = html.find(`#raise`)[0].checked
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-darksight").toLowerCase()))
+                        const icon = power ? power.img : false
+                        let degree = "success"
+                        if (raise === true) { degree = "raise" }
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: selectedPower,
+                            [selectedPower]: {
+                                degree: degree,
+                                duration: concentration ? Number(120*60) : Number(60*60),
+                                icon: usePowerIcons ? icon : false
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
                     }
                 }
             }
@@ -396,6 +413,8 @@ export async function effect_builder() {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise") + game.i18n.format("SWIM.dialogue-optionStrongModifier")
                 } else if (selectedPower === "damage_field") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionDamageModifier")
+                } else if (selectedPower === "darksight") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 }
             });
         },
@@ -761,5 +780,27 @@ export async function effect_builder_gm(data) {
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
-    } 
+    } else if (type === "darksight") {
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            let aeData = {
+                changes: [],
+                icon: data.darksight.icon ? data.darksight.icon : "modules/swim/assets/icons/effects/m-darksight.svg",
+                label: data.darksight.degree === "raise" ? `${game.i18n.localize("SWIM.power-darksight")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-darksight")}`,
+                duration: {
+                    seconds: data.darksight.duration,
+                },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    },
+                    succ: {
+                        updatedAE: true
+                    }
+                }
+            }
+            if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
+    }
 }
