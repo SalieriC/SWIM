@@ -33,7 +33,7 @@ You'll need two World Global Actions for this, set them up like this:
     "defaultChecked": "on",
     "group": "Target"
 }
-´´´
+```
 
 and this:  
 
