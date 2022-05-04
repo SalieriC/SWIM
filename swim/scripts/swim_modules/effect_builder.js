@@ -6,13 +6,14 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 2.0.12
+ * v. 2.0.13
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  * 
  * Powers on hold for now:
  * - Elemental Manipulation
  * - Empathy
  * - Entangle (as it may get much easier by the system soon)
+ * - Illusion (want something in conjunction with WarpGate similar to the summoner but need to check how exactly that could work out first.
  ******************************************************/
 
 export async function effect_builder() {
@@ -53,6 +54,7 @@ export async function effect_builder() {
         <option value="farsight">${game.i18n.localize("SWIM.power-farsight")}</option>
         <option value="fly">${game.i18n.localize("SWIM.power-fly")}</option>
         <option value="growth">${game.i18n.localize("SWIM.power-growth")}</option>
+		<option value="intangibility">${game.i18n.localize("SWIM.power-intangibility")}</option>
         <option value="invisibility">${game.i18n.localize("SWIM.power-invisibility")}</option>
         <option value="lower">${game.i18n.localize("SWIM.power-lowerTrait")}</option>
         <option value="protection">${game.i18n.localize("SWIM.power-protection")}</option>
@@ -452,6 +454,19 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "intangibility") {
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-intangibility").toLowerCase()))
+                        const icon = power ? power.img : false
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: selectedPower,
+                            [selectedPower]: {
+                                degree: degree,
+                                duration: duration,
+                                icon: usePowerIcons ? icon : false
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
                     }
                 }
             }
@@ -528,6 +543,8 @@ export async function effect_builder() {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 } else if (selectedPower === "fly") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
+                } else if (selectedPower === "intangibility") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
                 }
             });
         },
@@ -1047,6 +1064,28 @@ export async function effect_builder_gm(data) {
             if (data.fly.icon) {aeData.icon = data.fly.icon}
             const effect = await succ.apply_status(target, "flying", true, false)
             await effect.update(aeData)
+        }
+    } else if (type === "intangibility") {
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            let aeData = {
+                changes: [],
+                icon: data.intangibility.icon ? data.intangibility.icon : "modules/swim/assets/icons/effects/m-intangibility.svg",
+                label: game.i18n.localize("SWIM.power-intangibility"),
+                duration: {
+                    rounds: data.intangibility.duration,
+                },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    },
+                    succ: {
+                        updatedAE: true
+                    }
+                }
+            }
+            if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
     }
 }
