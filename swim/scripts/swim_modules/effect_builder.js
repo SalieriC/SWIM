@@ -6,8 +6,13 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 2.0.9
+ * v. 2.0.10
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
+ * 
+ * Powers on hold for now:
+ * - Elemental Manipulation
+ * - Empathy
+ * - Entangle (as it may get much easier by the system soon)
  ******************************************************/
 
 export async function effect_builder() {
@@ -44,6 +49,7 @@ export async function effect_builder() {
         <option value="disguise">${game.i18n.localize("SWIM.power-disguise")}</option>
         <option value="detect_arcana">${game.i18n.localize("SWIM.power-detectArcana")}</option>
         <option value="burden">${game.i18n.localize("SWIM.power-easeBurden-tes")}</option>
+        <option value="environmental_protection">${game.i18n.localize("SWIM.power-environmentalProtection")}</option>
         <option value="growth">${game.i18n.localize("SWIM.power-growth")}</option>
         <option value="invisibility">${game.i18n.localize("SWIM.power-invisibility")}</option>
         <option value="lower">${game.i18n.localize("SWIM.power-lowerTrait")}</option>
@@ -400,6 +406,18 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "environmental_protection") {
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-environmentalProtection").toLowerCase()))
+                        const icon = power ? power.img : false
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: selectedPower,
+                            [selectedPower]: {
+                                duration: concentration ? Number(120*60) : Number(60*60),
+                                icon: usePowerIcons ? icon : false
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
                     }
                 }
             }
@@ -470,6 +488,8 @@ export async function effect_builder() {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 } else if (selectedPower === "disguise") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
+                } else if (selectedPower === "environmental_protection") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
                 }
             });
         },
@@ -910,6 +930,28 @@ export async function effect_builder_gm(data) {
                 label: data.disguise.degree === "raise" ? `${game.i18n.localize("SWIM.power-disguise")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-disguise")}`,
                 duration: {
                     seconds: data.disguise.duration,
+                },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    },
+                    succ: {
+                        updatedAE: true
+                    }
+                }
+            }
+            if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
+    } else if (type === "environmental_protection") {
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            let aeData = {
+                changes: [],
+                icon: data.environmental_protection.icon ? data.environmental_protection.icon : "modules/swim/assets/icons/effects/m-environmental_protection.svg",
+                label: game.i18n.localize("SWIM.power-environmentalProtection"),
+                duration: {
+                    seconds: data.environmental_protection.duration,
                 },
                 flags: {
                     swade: {

@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Darksight to Power Effect Builder.
 - Added Detect/Conceal Arcana to Power Effect Builder.
 - Added Disguise to Power Effect Builder.
+- Added Environmental Protection to Power Effect Builder.
 - Localisation for:
 - - Fear Table function.
 - - Mark Dead function.
