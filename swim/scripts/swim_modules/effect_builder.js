@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 2.0.10
+ * v. 2.0.11
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  * 
  * Powers on hold for now:
@@ -50,6 +50,7 @@ export async function effect_builder() {
         <option value="detect_arcana">${game.i18n.localize("SWIM.power-detectArcana")}</option>
         <option value="burden">${game.i18n.localize("SWIM.power-easeBurden-tes")}</option>
         <option value="environmental_protection">${game.i18n.localize("SWIM.power-environmentalProtection")}</option>
+        <option value="farsight">${game.i18n.localize("SWIM.power-farsight")}</option>
         <option value="growth">${game.i18n.localize("SWIM.power-growth")}</option>
         <option value="invisibility">${game.i18n.localize("SWIM.power-invisibility")}</option>
         <option value="lower">${game.i18n.localize("SWIM.power-lowerTrait")}</option>
@@ -418,6 +419,22 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "farsight") {
+                        const raise = html.find(`#raise`)[0].checked
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-farsight").toLowerCase()))
+                        const icon = power ? power.img : false
+                        let degree = "success"
+                        if (raise === true) { degree = "raise" }
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: selectedPower,
+                            [selectedPower]: {
+                                degree: degree,
+                                duration: duration,
+                                icon: usePowerIcons ? icon : false
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
                     }
                 }
             }
@@ -490,6 +507,8 @@ export async function effect_builder() {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 } else if (selectedPower === "environmental_protection") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
+                } else if (selectedPower === "farsight") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 }
             });
         },
@@ -952,6 +971,28 @@ export async function effect_builder_gm(data) {
                 label: game.i18n.localize("SWIM.power-environmentalProtection"),
                 duration: {
                     seconds: data.environmental_protection.duration,
+                },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    },
+                    succ: {
+                        updatedAE: true
+                    }
+                }
+            }
+            if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
+    } else if (type === "farsight") {
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            let aeData = {
+                changes: [],
+                icon: data.farsight.icon ? data.farsight.icon : "modules/swim/assets/icons/effects/m-farsight.svg",
+                label: data.farsight.degree === "raise" ? `${game.i18n.localize("SWIM.power-farsight")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-farsight")}`,
+                duration: {
+                    rounds: data.farsight.duration,
                 },
                 flags: {
                     swade: {

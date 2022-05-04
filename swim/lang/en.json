@@ -297,5 +297,6 @@
   "SWIM.power-detect": "Detect",
   "SWIM.power-conceal": "Conceal",
   "SWIM.power-disguise": "Disguise",
-  "SWIM.power-environmentalProtection": "Environmental Protection"
+  "SWIM.power-environmentalProtection": "Environmental Protection",
+  "SWIM.power-farsight": "Farsight"
 }
