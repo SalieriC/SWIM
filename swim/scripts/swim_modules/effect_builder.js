@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 2.0.4
+ * v. 2.0.7
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  ******************************************************/
 
@@ -37,6 +37,7 @@ export async function effect_builder() {
         <option value="beast_friend">${game.i18n.localize("SWIM.power-beastFriend")}</option>
         <option value="burrow">${game.i18n.localize("SWIM.power-burrow")}</option>
         <option value="confusion">${game.i18n.localize("SWIM.power-confusion")}</option>
+        <option value="damage_field">${game.i18n.localize("SWIM.power-damageField")}</option>
         <option value="deflection">${game.i18n.localize("SWIM.power-deflection")}</option>
         <option value="burden">${game.i18n.localize("SWIM.power-easeBurden-tes")}</option>
         <option value="growth">${game.i18n.localize("SWIM.power-growth")}</option>
@@ -319,6 +320,20 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "damage_field") {
+                        const damage = html.find(`#damage`)[0].checked
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-damageField").toLowerCase()))
+                        const icon = power ? power.img : false
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: selectedPower,
+                            [selectedPower]: {
+                                damage: damage,
+                                duration: duration,
+                                icon: usePowerIcons ? icon : false
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
                     }
                 }
             }
@@ -379,6 +394,8 @@ export async function effect_builder() {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 } else if (selectedPower === "burrow") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise") + game.i18n.format("SWIM.dialogue-optionStrongModifier")
+                } else if (selectedPower === "damage_field") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionDamageModifier")
                 }
             });
         },
@@ -722,5 +739,27 @@ export async function effect_builder_gm(data) {
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
-    }
+    } else if (type === "damage_field") {
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            let aeData = {
+                changes: [],
+                icon: data.damage_field.icon ? data.damage_field.icon : "modules/swim/assets/icons/effects/m-damage_field.svg",
+                label: data.damage_field.damage === true ? `${game.i18n.localize("SWIM.power-damageField")} (2d6)` : `${game.i18n.localize("SWIM.power-arcaneProtection")} (2d4)`,
+                duration: {
+                    rounds: data.damage_field.duration,
+                },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    },
+                    succ: {
+                        updatedAE: true
+                    }
+                }
+            }
+            if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
+    } 
 }

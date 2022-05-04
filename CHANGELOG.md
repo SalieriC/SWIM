@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Deflection to Power Effect Builder.
 - Added Arcane Protection to Power Effect Builder.
 - Added Burrow to Power Effect Builder.
+- Added Damage Field to Power Effect Builder.
 - Localisation for:
 - - Fear Table function.
 - - Mark Dead function.

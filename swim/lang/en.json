@@ -288,5 +288,7 @@
   "SWIM.power-arcaneProtection": "Arcane Protection",
   "SWIM.power-burrow": "Burrow",
   "SWIM.dialogue-optionStrongModifier": "<div class='form-group'><label for='strong'><p>Cast with Strong Modifier: </p></label><input id='strong' name='strongBox' type='checkbox'></input></div></div>",
-  "SWIM.modifierStrong": "Strong"
+  "SWIM.modifierStrong": "Strong",
+  "SWIM.power-damageField": "Damage Field",
+  "SWIM.dialogue-optionDamageModifier": "<div class='form-group'><label for='damage'><p>Cast with Damage Modifier: </p></label><input id='damage' name='damageBox' type='checkbox'></input></div></div>"
 }
