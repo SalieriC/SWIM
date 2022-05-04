@@ -51,6 +51,7 @@ In this repository you can find a number of assets already.
 - - Detect Arcana: [All Seeing Eye by Delapouite](https://game-icons.net/1x1/delapouite/all-seeing-eye.html)
 - - Conceil Arcana: [Temple Door by Delapouite](https://game-icons.net/1x1/delapouite/temple-door.html)
 - - Darksight: [Double face mask by Lorc](https://game-icons.net/1x1/lorc/double-face-mask.html)
+- - Environmental Protection: [Embraced energy by Lorc](https://game-icons.net/1x1/lorc/embrassed-energy.html)
 - **SFX:** (see their file name for origin)
 - - [Fesliyan Studios](www.fesliyanstudios.com), all used with explicit permission (thank you so much), [see their License here](https://www.fesliyanstudios.com/policy).  
 - - [Orange Free Sounds](https://orangefreesounds.com/), all used unter the [CC BY-NC 4.0 License](https://creativecommons.org/licenses/by-nc/4.0/), converted to *.ogg and possibly altered (see file name), Author is in the file names as well.  
