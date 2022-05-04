@@ -41,6 +41,7 @@ export async function effect_builder() {
         <option value="damage_field">${game.i18n.localize("SWIM.power-damageField")}</option>
         <option value="darksight">${game.i18n.localize("SWIM.power-darksight")}</option>
         <option value="deflection">${game.i18n.localize("SWIM.power-deflection")}</option>
+        <option value="disguise">${game.i18n.localize("SWIM.power-disguise")}</option>
         <option value="detect_arcana">${game.i18n.localize("SWIM.power-detectArcana")}</option>
         <option value="burden">${game.i18n.localize("SWIM.power-easeBurden-tes")}</option>
         <option value="growth">${game.i18n.localize("SWIM.power-growth")}</option>
@@ -383,6 +384,22 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "disguise") {
+                        const raise = html.find(`#raise`)[0].checked
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-disguise").toLowerCase()))
+                        const icon = power ? power.img : false
+                        let degree = "success"
+                        if (raise === true) { degree = "raise" }
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: selectedPower,
+                            [selectedPower]: {
+                                degree: degree,
+                                duration: concentration ? Number(20*60) : Number(10*60),
+                                icon: usePowerIcons ? icon : false
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
                     }
                 }
             }
@@ -450,6 +467,8 @@ export async function effect_builder() {
                 } else if (selectedPower === "conceal_arcana") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionStrongModifier")
                 } else if (selectedPower === "detect_arcana") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
+                } else if (selectedPower === "disguise") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 }
             });
@@ -869,6 +888,28 @@ export async function effect_builder_gm(data) {
                 label: data.conceal_arcana.strong === true ? `${game.i18n.localize("SWIM.power-concealArcana")} (${game.i18n.localize("SWIM.modifierStrong").toLowerCase()})` : `${game.i18n.localize("SWIM.power-concealArcana")}`,
                 duration: {
                     seconds: data.conceal_arcana.duration,
+                },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    },
+                    succ: {
+                        updatedAE: true
+                    }
+                }
+            }
+            if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
+    } else if (type === "disguise") {
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            let aeData = {
+                changes: [],
+                icon: data.disguise.icon ? data.disguise.icon : "modules/swim/assets/icons/effects/m-disguise.svg",
+                label: data.disguise.degree === "raise" ? `${game.i18n.localize("SWIM.power-disguise")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-disguise")}`,
+                duration: {
+                    seconds: data.disguise.duration,
                 },
                 flags: {
                     swade: {
