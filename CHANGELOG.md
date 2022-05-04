@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Disguise to Power Effect Builder.
 - Added Environmental Protection to Power Effect Builder.
 - Added Farsight to Power Effect Builder.
+- Added Fly to Power Effect Builder.
 - Localisation for:
 - - Fear Table function.
 - - Mark Dead function.
