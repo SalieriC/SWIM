@@ -34,7 +34,9 @@ You'll need two World Global Actions for this, set them up like this:
     "group": "Target"
 }
 ´´´
+
 and this:  
+
 ```json
 {
     "id": "DEFLECTION-RAISE",
