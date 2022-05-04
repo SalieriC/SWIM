@@ -57,7 +57,7 @@ and this:
     "group": "Target"
 }
 ```
-Those two will ensure that BR2 automatically subtracts the appropriate amount (-2 and -4 respectively) from attack rolls that are from weapon type items. As per the SWADE core rules this should be everything. Certain powers *could* fall under that rule but that is left unclear in the rules. If you want to include the *bolt* power for example you can easily do this by adding the following *inside* the `and_selector`:  
+Those two will ensure that BR2 automatically subtracts the appropriate amount (-2 and -4 respectively) from attack rolls that are from weapon type items. As per the SWADE core rules this should be everything. Certain powers *could* fall under that rule but that is left unclear in the rules and most importantly: *arcane protection* handles exactly that. If you want to include the *bolt* power for example you can easily do this by adding the following *inside* the `and_selector`:  
 ```json
 {"selector_type":"item_name",
 "selector_value":"bolt"},
@@ -67,3 +67,56 @@ Place it just after the `,` below `weapon`. I would advice against it however. I
 2. the rules are very unclear about it and it likely would come down to the setting.  
 
 Thanks @grendel111111 for helping with the World Global Actions.
+
+### Automating Arcane Protection
+It works exactly like the (in my experience much more common) Deflection setup above. Just paste these two:  
+```json
+{
+    "id": "ARCANE_PROTECTION",
+    "name": "Arcane Protection",
+    "button_name": "has Arcane Protection",
+    "skillMod": "-2",
+    "and_selector": [
+        {
+            "selector_type": "item_type",
+            "selector_value": "power"
+        },
+        {
+            "selector_type": "target_has_effect",
+            "selector_value": "Arcane Protection"
+        },
+        {
+            "not_selector": [
+                {
+                    "selector_type": "target_has_effect",
+                    "selector_value": "Arcane Protection (raise)"
+                }
+            ]
+        }
+    ],
+    "defaultChecked": "on",
+    "group": "Target"
+}
+```
+  
+```json
+{
+    "id": "ARCANE_PROTECTION-RAISE",
+    "name": "Arcane Protection (raise)",
+    "button_name": "has Arcane Protection",
+    "skillMod": "-4",
+    "and_selector": [
+        {
+            "selector_type": "item_type",
+            "selector_value": "power"
+        },
+        {
+            "selector_type": "target_has_effect",
+            "selector_value": "Arcane Protection (raise)"
+        }
+    ],
+    "defaultChecked": "on",
+    "group": "Target"
+}
+```
+**Please note** that this will also affect friendly powers! Sadly there currently is no way to exclude friendly powers from it. This may change in the future so make sure to check back here frequently.
