@@ -44,6 +44,7 @@ In this repository you can find a number of assets already.
 - - Puppet: <a href="https://www.flaticon.com/free-icons/puppet" title="puppet icons">Puppet icons created by Freepik - Flaticon</a>  
 - - Confusion: [Star swirl by Lorc](https://game-icons.net/1x1/lorc/star-swirl.html)  
 - - Deflection: [Divert by Lorc](https://game-icons.net/1x1/lorc/divert.html)  
+- - Arcane Protection: [Magic Palm by Lorc](https://game-icons.net/1x1/lorc/magic-palm.html)  
 - **SFX:** (see their file name for origin)
 - - [Fesliyan Studios](www.fesliyanstudios.com), all used with explicit permission (thank you so much), [see their License here](https://www.fesliyanstudios.com/policy).  
 - - [Orange Free Sounds](https://orangefreesounds.com/), all used unter the [CC BY-NC 4.0 License](https://creativecommons.org/licenses/by-nc/4.0/), converted to *.ogg and possibly altered (see file name), Author is in the file names as well.  
@@ -315,7 +316,7 @@ When stopping (deleting) the combat, the game will automatically stop the combat
 - [SUCC](https://github.com/SalieriC/SUCC)  
 **Immersion setting:** None atm.  
 **Description:**  
-An immensely powerful way of setting up Active Effects for the smite, protection, growth/shrink, deflection, sloth/speed, invisibility, confusion, beast friend and boost/lower powers (more to come) on multiple targets. It sets the AE up with the appropriate duration (also respecting the concentration edge if the caster (selected token) has it), end of turn message and so on.  
+An immensely powerful way of setting up Active Effects for the smite, arcane protection, protection, growth/shrink, deflection, sloth/speed, invisibility, confusion, beast friend and boost/lower powers (more to come) on multiple targets. It sets the AE up with the appropriate duration (also respecting the concentration edge if the caster (selected token) has it), end of turn message and so on.  
 It makes use of the very powerfull API provided by [Warp Gate](https://github.com/trioderegion/warpgate) and [SUCC](https://github.com/SalieriC/SUCC) to apply the effect even on tokens the user doesn't have permission to edit. Make sure your SUCC and Warp Gate installations are up to date.  
 <p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/power_effect_builder_showcase.gif?raw=true"> </p>  
 (Assets used in the scene are from JB2A, ForgottenAdventures, The Elder Scrolls and Adellos and not part of SWIM.)  
