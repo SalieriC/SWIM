@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 2.0.7
+ * v. 2.0.9
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  ******************************************************/
 
@@ -36,10 +36,12 @@ export async function effect_builder() {
         <option value="arcane_protection">${game.i18n.localize("SWIM.power-arcaneProtection")}</option>
         <option value="beast_friend">${game.i18n.localize("SWIM.power-beastFriend")}</option>
         <option value="burrow">${game.i18n.localize("SWIM.power-burrow")}</option>
+        <option value="conceal_arcana">${game.i18n.localize("SWIM.power-concealArcana")}</option>
         <option value="confusion">${game.i18n.localize("SWIM.power-confusion")}</option>
         <option value="damage_field">${game.i18n.localize("SWIM.power-damageField")}</option>
         <option value="darksight">${game.i18n.localize("SWIM.power-darksight")}</option>
         <option value="deflection">${game.i18n.localize("SWIM.power-deflection")}</option>
+        <option value="detect_arcana">${game.i18n.localize("SWIM.power-detectArcana")}</option>
         <option value="burden">${game.i18n.localize("SWIM.power-easeBurden-tes")}</option>
         <option value="growth">${game.i18n.localize("SWIM.power-growth")}</option>
         <option value="invisibility">${game.i18n.localize("SWIM.power-invisibility")}</option>
@@ -351,6 +353,36 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "conceal_arcana") {
+                        const strong = html.find(`#strong`)[0].checked
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-conceal").toLowerCase()))
+                        const icon = power ? power.img : false
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: selectedPower,
+                            [selectedPower]: {
+                                duration: concentration ? Number(120*60) : Number(60*60),
+                                icon: usePowerIcons ? icon : false,
+                                strong: strong
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "detect_arcana") {
+                        const raise = html.find(`#raise`)[0].checked
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-detect").toLowerCase()))
+                        const icon = power ? power.img : false
+                        let degree = "success"
+                        if (raise === true) { degree = "raise" }
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: selectedPower,
+                            [selectedPower]: {
+                                degree: degree,
+                                duration: duration,
+                                icon: usePowerIcons ? icon : false
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
                     }
                 }
             }
@@ -414,6 +446,10 @@ export async function effect_builder() {
                 } else if (selectedPower === "damage_field") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionDamageModifier")
                 } else if (selectedPower === "darksight") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
+                } else if (selectedPower === "conceal_arcana") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionStrongModifier")
+                } else if (selectedPower === "detect_arcana") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 }
             });
@@ -789,6 +825,50 @@ export async function effect_builder_gm(data) {
                 label: data.darksight.degree === "raise" ? `${game.i18n.localize("SWIM.power-darksight")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-darksight")}`,
                 duration: {
                     seconds: data.darksight.duration,
+                },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    },
+                    succ: {
+                        updatedAE: true
+                    }
+                }
+            }
+            if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
+    } else if (type === "detect_arcana") {
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            let aeData = {
+                changes: [],
+                icon: data.detect_arcana.icon ? data.detect_arcana.icon : "modules/swim/assets/icons/effects/m-detect_arcana.svg",
+                label: data.detect_arcana.degree === "raise" ? `${game.i18n.localize("SWIM.power-detectArcana")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-detectArcana")}`,
+                duration: {
+                    rounds: data.detect_arcana.duration,
+                },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    },
+                    succ: {
+                        updatedAE: true
+                    }
+                }
+            }
+            if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
+    } else if (type === "conceal_arcana") {
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            let aeData = {
+                changes: [],
+                icon: data.conceal_arcana.icon ? data.conceal_arcana.icon : "modules/swim/assets/icons/effects/m-conceal_arcana.svg",
+                label: data.conceal_arcana.strong === true ? `${game.i18n.localize("SWIM.power-concealArcana")} (${game.i18n.localize("SWIM.modifierStrong").toLowerCase()})` : `${game.i18n.localize("SWIM.power-concealArcana")}`,
+                duration: {
+                    seconds: data.conceal_arcana.duration,
                 },
                 flags: {
                     swade: {

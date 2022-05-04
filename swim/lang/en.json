@@ -291,5 +291,9 @@
   "SWIM.modifierStrong": "Strong",
   "SWIM.power-damageField": "Damage Field",
   "SWIM.dialogue-optionDamageModifier": "<div class='form-group'><label for='damage'><p>Cast with Damage Modifier: </p></label><input id='damage' name='damageBox' type='checkbox'></input></div></div>",
-  "SWIM.power-darksight": "Darksight"
+  "SWIM.power-darksight": "Darksight",
+  "SWIM.power-detectArcana": "Detect Arcana",
+  "SWIM.power-concealArcana": "Conceal Arcana",
+  "SWIM.power-detect": "Detect",
+  "SWIM.power-conceal": "Conceal"
 }

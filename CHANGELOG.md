@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Burrow to Power Effect Builder.
 - Added Damage Field to Power Effect Builder.
 - Added Darksight to Power Effect Builder.
+- Added Detect/Conceal Arcana to Power Effect Builder.
 - Localisation for:
 - - Fear Table function.
 - - Mark Dead function.
