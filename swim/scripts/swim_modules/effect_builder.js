@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 2.0.15
+ * v. 2.0.16
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  * 
  * Powers on hold for now:
@@ -60,6 +60,7 @@ export async function effect_builder() {
         <option value="lower">${game.i18n.localize("SWIM.power-lowerTrait")}</option>
         <option value="mind_link">${game.i18n.localize("SWIM.power-mindLink")}</option>
         <option value="protection">${game.i18n.localize("SWIM.power-protection")}</option>
+        <option value="puppet">${game.i18n.localize("SWIM.power-puppet")}</option>
         <option value="shrink">${game.i18n.localize("SWIM.power-shrink")}</option>
         <option value="sloth">${game.i18n.localize("SWIM.power-sloth")}</option>
         <option value="smite">${game.i18n.localize("SWIM.power-smite")}</option>
@@ -484,6 +485,23 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "puppet") {
+                        const raise = html.find(`#raise`)[0].checked
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-puppet").toLowerCase()))
+                        const icon = power ? power.img : false
+                        let degree = "success"
+                        if (raise === true) { degree = "raise" }
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: selectedPower,
+                            [selectedPower]: {
+                                degree: degree,
+                                casterName: token.name,
+                                duration: duration,
+                                icon: usePowerIcons ? icon : false
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
                     }
                 }
             }
@@ -563,6 +581,8 @@ export async function effect_builder() {
                 } else if (selectedPower === "intangibility") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
                 } else if (selectedPower === "mind_link") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
+                } else if (selectedPower === "puppet") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 }
             });
@@ -1115,6 +1135,28 @@ export async function effect_builder_gm(data) {
                 label: data[type].degree === "raise" ? `${game.i18n.localize("SWIM.power-mindLink")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-mindLink")}`,
                 duration: {
                     seconds: data[type].duration,
+                },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    },
+                    succ: {
+                        updatedAE: true
+                    }
+                }
+            }
+            if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
+    } else if (type === "puppet") {
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            let aeData = {
+                changes: [],
+                icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
+                label: data[type].degree === "raise" ? `${data.puppet.casterName}'s ${game.i18n.localize("SWIM.power-puppet")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${data.puppet.casterName}'s ${game.i18n.localize("SWIM.power-puppet")}`,
+                duration: {
+                    rounds: data[type].duration,
                 },
                 flags: {
                     swade: {
