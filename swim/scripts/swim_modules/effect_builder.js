@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 2.0.16
+ * v. 2.0.17
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  * 
  * Powers on hold for now:
@@ -63,6 +63,7 @@ export async function effect_builder() {
         <option value="puppet">${game.i18n.localize("SWIM.power-puppet")}</option>
         <option value="shrink">${game.i18n.localize("SWIM.power-shrink")}</option>
         <option value="sloth">${game.i18n.localize("SWIM.power-sloth")}</option>
+        <option value="slumber">${game.i18n.localize("SWIM.power-slumber")}</option>
         <option value="smite">${game.i18n.localize("SWIM.power-smite")}</option>
         <option value="speed">${game.i18n.localize("SWIM.power-speed")}</option>
     `
@@ -502,6 +503,18 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "slumber") {
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-slumber").toLowerCase()))
+                        const icon = power ? power.img : false
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: selectedPower,
+                            [selectedPower]: {
+                                duration: concentration ? Number(120*60) : Number(60*60),
+                                icon: usePowerIcons ? icon : false
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
                     }
                 }
             }
@@ -584,6 +597,8 @@ export async function effect_builder() {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 } else if (selectedPower === "puppet") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
+                } else if (selectedPower === "slumber") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
                 }
             });
         },
@@ -1157,6 +1172,28 @@ export async function effect_builder_gm(data) {
                 label: data[type].degree === "raise" ? `${data.puppet.casterName}'s ${game.i18n.localize("SWIM.power-puppet")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${data.puppet.casterName}'s ${game.i18n.localize("SWIM.power-puppet")}`,
                 duration: {
                     rounds: data[type].duration,
+                },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    },
+                    succ: {
+                        updatedAE: true
+                    }
+                }
+            }
+            if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
+    } else if (type === "slumber") {
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            let aeData = {
+                changes: [],
+                icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
+                label: game.i18n.localize("SWIM.power-slumber"),
+                duration: {
+                    seconds: data[type].duration,
                 },
                 flags: {
                     swade: {
