@@ -122,15 +122,11 @@ Hooks.on(`ready`, () => {
 // Hooks on conditions
 Hooks.on(`createActiveEffect`, async (condition, _, userID) => {
     const actor = condition.parent
-    if (actor.hasPlayerOwner && swim.is_first_gm() && condition.data.flags?.core?.statusId === "invisible") {
-        if (actor.token) {
-            const token = actor.token
-            token.document.update({ "alpha": 0.5 })
-        } else {
-            const tokens = actor.getActiveTokens()
-            for (let token of tokens) {
-                token.document.update({ "alpha": 0.5 })
-            }
+    if (((actor.hasPlayerOwner && condition.data.flags?.core?.statusId === "invisible") || condition.data.label.toLowerCase() === game.i18n.localize("SWIM.power-intangibility").toLowerCase()) && swim.is_first_gm()) {
+        const tokens = actor.getActiveTokens()
+        for (let token of tokens) {
+            if (condition.data.flags?.core?.statusId === "invisible") { await token.document.update({ "alpha": 0.5 }) }
+            else if (condition.data.label.toLowerCase() === game.i18n.localize("SWIM.power-intangibility").toLowerCase()) { await token.document.update({ "alpha": 0.75 }) }
         }
     } else if (!actor.hasPlayerOwner && swim.is_first_gm() && condition.data.flags?.core?.statusId === "invisible") {
         const tokens = actor.getActiveTokens()
@@ -141,10 +137,10 @@ Hooks.on(`createActiveEffect`, async (condition, _, userID) => {
 })
 Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
     const actor = condition.parent
-    if (actor.hasPlayerOwner && swim.is_first_gm() && condition.data.flags?.core?.statusId === "invisible") {
+    if (((actor.hasPlayerOwner && condition.data.flags?.core?.statusId === "invisible") || condition.data.label.toLowerCase() === game.i18n.localize("SWIM.power-intangibility").toLowerCase()) && swim.is_first_gm()) {
         const tokens = actor.getActiveTokens()
         for (let token of tokens) {
-            token.document.update({ "alpha": 1 })
+            await token.document.update({ "alpha": 1 })
         }
     } else if (!actor.hasPlayerOwner && swim.is_first_gm() && condition.data.flags?.core?.statusId === "invisible") {
         const tokens = actor.getActiveTokens()
