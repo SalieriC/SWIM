@@ -54,6 +54,7 @@ In this repository you can find a number of assets already.
 - - Environmental Protection: [Embraced energy by Lorc](https://game-icons.net/1x1/lorc/embrassed-energy.html)
 - - Farsight: [Eye target by Delapouite](https://game-icons.net/1x1/delapouite/eye-target.html)
 - - Intangibility: [Ghost ally by Lorc](https://game-icons.net/1x1/lorc/ghost-ally.html)
+- - Ming Link: [Telepathy by Lorc](https://game-icons.net/1x1/lorc/telepathy.html)
 - **SFX:** (see their file name for origin)
 - - [Fesliyan Studios](www.fesliyanstudios.com), all used with explicit permission (thank you so much), [see their License here](https://www.fesliyanstudios.com/policy).  
 - - [Orange Free Sounds](https://orangefreesounds.com/), all used unter the [CC BY-NC 4.0 License](https://creativecommons.org/licenses/by-nc/4.0/), converted to *.ogg and possibly altered (see file name), Author is in the file names as well.  
