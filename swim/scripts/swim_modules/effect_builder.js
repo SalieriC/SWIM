@@ -461,7 +461,6 @@ export async function effect_builder() {
                             targetIDs: targetIDs,
                             type: selectedPower,
                             [selectedPower]: {
-                                degree: degree,
                                 duration: duration,
                                 icon: usePowerIcons ? icon : false
                             }
