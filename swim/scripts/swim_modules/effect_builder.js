@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 2.0.19
+ * v. 2.0.20
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  * 
  * Powers on hold for now:
@@ -15,6 +15,7 @@
  * - Entangle (as it may get much easier by the system soon)
  * - Illusion (want something in conjunction with WarpGate similar to the summoner but need to check how exactly that could work out first.
  * - Light (as I'm not sure if it isn't better suited in the token vision macro)
+ * - Telekinesis (because of the unwilling targets problem)
  ******************************************************/
 
 export async function effect_builder() {
@@ -68,6 +69,7 @@ export async function effect_builder() {
         <option value="smite">${game.i18n.localize("SWIM.power-smite")}</option>
         <option value="speak_language">${game.i18n.localize("SWIM.power-speakLanguage")}</option>
         <option value="speed">${game.i18n.localize("SWIM.power-speed")}</option>
+        <option value="wall_walker">${game.i18n.localize("SWIM.power-wallWalker")}</option>
     `
 
     // Boost/Lower trait options
@@ -549,6 +551,22 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "wall_walker") {
+                        const raise = html.find(`#raise`)[0].checked
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-wallWalker").toLowerCase()))
+                        const icon = power ? power.img : false
+                        let degree = "success"
+                        if (raise === true) { degree = "raise" }
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: selectedPower,
+                            [selectedPower]: {
+                                degree: degree,
+                                duration: duration,
+                                icon: usePowerIcons ? icon : false
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
                     }
                 }
             }
@@ -636,6 +654,8 @@ export async function effect_builder() {
                 } else if (selectedPower === "silence") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 } else if (selectedPower === "speak_language") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
+                } else if (selectedPower === "wall_walker") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 }
             });
@@ -1276,6 +1296,28 @@ export async function effect_builder_gm(data) {
                 label: data[type].degree === "raise" ? `${game.i18n.localize("SWIM.power-speakLanguage")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-speakLanguage")}`,
                 duration: {
                     seconds: data[type].duration,
+                },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    },
+                    succ: {
+                        updatedAE: true
+                    }
+                }
+            }
+            if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
+    } else if (type === "wall_walker") {
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            let aeData = {
+                changes: [],
+                icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
+                label: data[type].degree === "raise" ? `${game.i18n.localize("SWIM.power-wallWalker")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-wallWalker")}`,
+                duration: {
+                    rounds: data[type].duration,
                 },
                 flags: {
                     swade: {
