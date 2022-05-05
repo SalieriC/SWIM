@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 2.0.13
+ * v. 2.0.15
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  * 
  * Powers on hold for now:
@@ -58,6 +58,7 @@ export async function effect_builder() {
 		<option value="intangibility">${game.i18n.localize("SWIM.power-intangibility")}</option>
         <option value="invisibility">${game.i18n.localize("SWIM.power-invisibility")}</option>
         <option value="lower">${game.i18n.localize("SWIM.power-lowerTrait")}</option>
+        <option value="mind_link">${game.i18n.localize("SWIM.power-mindLink")}</option>
         <option value="protection">${game.i18n.localize("SWIM.power-protection")}</option>
         <option value="shrink">${game.i18n.localize("SWIM.power-shrink")}</option>
         <option value="sloth">${game.i18n.localize("SWIM.power-sloth")}</option>
@@ -467,6 +468,22 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "mind_link") {
+                        const raise = html.find(`#raise`)[0].checked
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-mindLink").toLowerCase()))
+                        const icon = power ? power.img : false
+                        let degree = "success"
+                        if (raise === true) { degree = "raise" }
+                        const data = {
+                            targetIDs: targetIDs,
+                            type: selectedPower,
+                            [selectedPower]: {
+                                degree: degree,
+                                duration: concentration ? Number(60*60) : Number(30*60),
+                                icon: usePowerIcons ? icon : false
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
                     }
                 }
             }
@@ -545,6 +562,8 @@ export async function effect_builder() {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 } else if (selectedPower === "intangibility") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
+                } else if (selectedPower === "mind_link") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 }
             });
         },
@@ -1074,6 +1093,28 @@ export async function effect_builder_gm(data) {
                 label: game.i18n.localize("SWIM.power-intangibility"),
                 duration: {
                     rounds: data.intangibility.duration,
+                },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    },
+                    succ: {
+                        updatedAE: true
+                    }
+                }
+            }
+            if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
+    } else if (type === "mind_link") {
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            let aeData = {
+                changes: [],
+                icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
+                label: data[type].degree === "raise" ? `${game.i18n.localize("SWIM.power-mindLink")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-mindLink")}`,
+                duration: {
+                    seconds: data[type].duration,
                 },
                 flags: {
                     swade: {
