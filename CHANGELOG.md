@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Mind Link to Power Effect Builder.
 - Added Puppet to Power Effect Builder.
 - Added Slumber to Power Effect Builder.
+- Added Silence to Power Effect Builder.
 - Localisation for:
 - - Fear Table function.
 - - Mark Dead function.
