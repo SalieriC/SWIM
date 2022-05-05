@@ -14,6 +14,7 @@
  * - Empathy
  * - Entangle (as it may get much easier by the system soon)
  * - Illusion (want something in conjunction with WarpGate similar to the summoner but need to check how exactly that could work out first.
+ * - Light (as I'm not sure if it isn't better suited in the token vision macro)
  ******************************************************/
 
 export async function effect_builder() {
