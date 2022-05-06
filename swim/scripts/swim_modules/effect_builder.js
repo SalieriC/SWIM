@@ -1190,7 +1190,7 @@ export async function effect_builder_gm(data) {
                         expiration: 2
                     },
                     swim: {
-                        maintainedPower: true,
+                        maintainedPower: false,
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
