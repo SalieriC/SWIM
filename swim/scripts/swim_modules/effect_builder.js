@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 2.1.0
+ * v. 3.0.0
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  * 
  * Powers on hold for now:
@@ -17,6 +17,17 @@
  * - Light (as I'm not sure if it isn't better suited in the token vision macro)
  * - Telekinesis (because of the unwilling targets problem)
  ******************************************************/
+
+function generate_id (length = 16) {
+    var result           = 'SWIM-';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * 
+      charactersLength));
+    }
+   return result;
+  }
 
 export async function effect_builder() {
     if (!game.modules.get("warpgate")?.active) {
@@ -31,6 +42,10 @@ export async function effect_builder() {
         ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleTargetMultiToken"))
         return
     }
+
+    //Get an ID for this maintenance
+    const maintID = generate_id()
+    console.log(maintID)
 
     //Checking if caster is also the target:
     const targetsArray = Array.from(game.user.targets)
@@ -126,7 +141,7 @@ export async function effect_builder() {
                         if (power) {
                             const skillName = power.data.data.actions.skill
                             let aeData = {
-                                changes: [{ key: `@Skill{${skillName}}[data.die.modifier]`, mode: 2, priority: undefined, value: -1 }],
+                                changes: [],
                                 icon: power.img,
                                 label: game.i18n.format("SWIM.label-maintaining", {powerName: power.name}),
                                 flags: {
@@ -136,12 +151,17 @@ export async function effect_builder() {
                                     swim: {
                                         maintainedPower: true,
                                         maintaining: game.i18n.localize(`SWIM.power-${selectedPower}`),
-                                        targets: targetIDs
+                                        targets: targetIDs,
+                                        maintenanceID: maintID,
+                                        owner: true
                                     }
                                 }
                             }
+                            if (noPP) {
+                                aeData.changes.push({ key: `@Skill{${skillName}}[data.die.modifier]`, mode: 2, priority: undefined, value: -1 })
+                            }
                             if (token.actor.data.data.additionalStats?.maintainedPowers) {
-                                changes.push({ key: `data.additionalStats.maintainedPowers`, mode: 2, priority: undefined, value: 1 })
+                                aeData.changes.push({ key: `data.additionalStats.maintainedPowers.value`, mode: 2, priority: undefined, value: 1 })
                             }
                             await token.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
                         }
@@ -161,6 +181,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
                                 degree: degree,
@@ -178,6 +199,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: "protection",
                             protection: {
                                 bonus: bonus,
@@ -199,6 +221,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: "smite",
                             smite: {
                                 bonus: bonus,
@@ -215,6 +238,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: "growth",
                             growth: {
                                 change: change,
@@ -230,6 +254,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: "shrink",
                             shrink: {
                                 change: change,
@@ -244,6 +269,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: "sloth",
                             sloth: {
                                 change: 0.5,
@@ -259,6 +285,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: "speed",
                             speed: {
                                 change: 2,
@@ -279,6 +306,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: "burden",
                             burden: {
                                 change: change,
@@ -297,6 +325,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: selectedPower,
                             beastFriend: {
                                 degree: degree,
@@ -315,6 +344,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: selectedPower,
                             invisibility: {
                                 degree: degree,
@@ -329,6 +359,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
                                 icon: usePowerIcons ? icon : false
@@ -344,6 +375,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
                                 degree: degree,
@@ -361,6 +393,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
                                 degree: degree,
@@ -379,6 +412,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
                                 degree: degree,
@@ -395,6 +429,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
                                 damage: damage,
@@ -412,6 +447,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
                                 degree: degree,
@@ -427,6 +463,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
                                 duration: concentration ? Number(120*60) : Number(60*60),
@@ -444,6 +481,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
                                 degree: degree,
@@ -461,6 +499,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
                                 degree: degree,
@@ -475,6 +514,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
                                 duration: concentration ? Number(120*60) : Number(60*60),
@@ -491,6 +531,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
                                 degree: degree,
@@ -508,6 +549,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
                                 degree: degree,
@@ -522,6 +564,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
                                 duration: duration,
@@ -538,6 +581,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
                                 degree: degree,
@@ -555,6 +599,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
                                 degree: degree,
@@ -570,6 +615,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
                                 duration: concentration ? Number(120*60) : Number(60*60),
@@ -586,6 +632,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
                                 degree: degree,
@@ -603,6 +650,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
                                 degree: degree,
@@ -620,6 +668,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
                                 degree: degree,
@@ -637,6 +686,7 @@ export async function effect_builder() {
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
+                            maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
                                 degree: degree,
@@ -762,6 +812,14 @@ export async function effect_builder_gm(data) {
         }
     }
 
+    const flags = {
+        maintainedPower: true,
+        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+        targets: data.targetIDs,
+        maintenanceID: data.maintenanceID,
+        owner: false
+    }
+
     /* Make duration dependent on caster, not yet thought about how to properly implement that though
     const casterID = "many ways to get the Token's Id"
     const Combatants = game.combat.turns;
@@ -779,7 +837,9 @@ export async function effect_builder_gm(data) {
                     additionalChanges: target.targetID === casterID ? additionalChange : false
                 }
             }
-            await succ.apply_status(target.targetID, 'boost', true, false, boostData)
+            const ae = await succ.apply_status(target.targetID, 'boost', true, false, boostData)
+            if (target.targetID === casterID) { flags.owner = true }
+            await ae.update({flags: {swim: flags}})
         }
     } else if (type === "lower") {
         for (let target of data.lower.trait) {
@@ -792,7 +852,9 @@ export async function effect_builder_gm(data) {
                     additionalChanges: target.targetID === casterID ? additionalChange : false
                 }
             }
-            await succ.apply_status(target.targetID, 'lower', true, false, lowerData)
+            const ae = await succ.apply_status(target.targetID, 'lower', true, false, lowerData)
+            if (target.targetID === casterID) { flags.owner = true }
+            await ae.update({flags: {swim: flags}})
         }
     } else if (type === "protection") {
         for (let target of data.targetIDs) {
@@ -805,7 +867,9 @@ export async function effect_builder_gm(data) {
                     additionalChanges: target.targetID === casterID ? additionalChange : false
                 }
             }
-            await succ.apply_status(target, 'protection', true, false, protectionData)
+            const ae = await succ.apply_status(target, 'protection', true, false, protectionData)
+            if (target.targetID === casterID) { flags.owner = true }
+            await ae.update({flags: {swim: flags}})
         }
     } else if (type === "smite") {
         for (let target of data.smite.weapon) {
@@ -818,7 +882,9 @@ export async function effect_builder_gm(data) {
                     additionalChanges: target.targetID === casterID ? additionalChange : false
                 }
             }
-            await succ.apply_status(target.targetID, 'smite', true, false, smiteData)
+            const ae = await succ.apply_status(target.targetID, 'smite', true, false, smiteData)
+            if (target.targetID === casterID) { flags.owner = true }
+            await ae.update({flags: {swim: flags}})
         }
     } else if (type === "growth") {
         for (let targetID of data.targetIDs) {
@@ -834,7 +900,8 @@ export async function effect_builder_gm(data) {
                 flags: {
                     swade: {
                         expiration: 3
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -853,6 +920,7 @@ export async function effect_builder_gm(data) {
             }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -870,7 +938,8 @@ export async function effect_builder_gm(data) {
                 flags: {
                     swade: {
                         expiration: 3
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -887,6 +956,7 @@ export async function effect_builder_gm(data) {
             }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -905,12 +975,14 @@ export async function effect_builder_gm(data) {
                 flags: {
                     swade: {
                         expiration: 3
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -928,12 +1000,14 @@ export async function effect_builder_gm(data) {
                 flags: {
                     swade: {
                         expiration: 3
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -951,13 +1025,15 @@ export async function effect_builder_gm(data) {
                 flags: {
                     swade: {
                         expiration: 3
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             else { aeData.duration.seconds = noPP ? Number(999999999999999) : data.burden.durationNoCombat }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -974,11 +1050,13 @@ export async function effect_builder_gm(data) {
                 flags: {
                     swade: {
                         expiration: 3
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -999,12 +1077,14 @@ export async function effect_builder_gm(data) {
                     },
                     succ: {
                         updatedAE: true
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await condition.update(aeData)
         }
@@ -1041,11 +1121,13 @@ export async function effect_builder_gm(data) {
                 flags: {
                     swade: {
                         expiration: 2
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1065,12 +1147,14 @@ export async function effect_builder_gm(data) {
                     },
                     succ: {
                         updatedAE: true
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1090,12 +1174,14 @@ export async function effect_builder_gm(data) {
                     },
                     succ: {
                         updatedAE: true
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1121,12 +1207,14 @@ export async function effect_builder_gm(data) {
                     },
                     succ: {
                         updatedAE: true
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1146,12 +1234,14 @@ export async function effect_builder_gm(data) {
                     },
                     succ: {
                         updatedAE: true
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1171,12 +1261,14 @@ export async function effect_builder_gm(data) {
                     },
                     succ: {
                         updatedAE: true
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1196,12 +1288,14 @@ export async function effect_builder_gm(data) {
                     },
                     succ: {
                         updatedAE: true
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1221,12 +1315,14 @@ export async function effect_builder_gm(data) {
                     },
                     succ: {
                         updatedAE: true
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1246,12 +1342,14 @@ export async function effect_builder_gm(data) {
                     },
                     succ: {
                         updatedAE: true
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1271,12 +1369,14 @@ export async function effect_builder_gm(data) {
                     },
                     succ: {
                         updatedAE: true
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1296,12 +1396,14 @@ export async function effect_builder_gm(data) {
                     },
                     succ: {
                         updatedAE: true
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1320,13 +1422,15 @@ export async function effect_builder_gm(data) {
                     },
                     succ: {
                         updatedAE: true
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             if (data.fly.icon) {aeData.icon = data.fly.icon}
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             const effect = await succ.apply_status(target, "flying", true, false)
             await effect.update(aeData)
@@ -1347,12 +1451,14 @@ export async function effect_builder_gm(data) {
                     },
                     succ: {
                         updatedAE: true
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1372,12 +1478,14 @@ export async function effect_builder_gm(data) {
                     },
                     succ: {
                         updatedAE: true
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1397,12 +1505,14 @@ export async function effect_builder_gm(data) {
                     },
                     succ: {
                         updatedAE: true
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1422,12 +1532,14 @@ export async function effect_builder_gm(data) {
                     },
                     succ: {
                         updatedAE: true
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1447,12 +1559,14 @@ export async function effect_builder_gm(data) {
                     },
                     succ: {
                         updatedAE: true
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1472,12 +1586,14 @@ export async function effect_builder_gm(data) {
                     },
                     succ: {
                         updatedAE: true
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1497,12 +1613,14 @@ export async function effect_builder_gm(data) {
                     },
                     succ: {
                         updatedAE: true
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1522,12 +1640,14 @@ export async function effect_builder_gm(data) {
                     },
                     succ: {
                         updatedAE: true
-                    }
+                    },
+                    swim: flags
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             if (additionalChange && targetID === casterID) {
                 aeData.changes.push(additionalChange[0])
+                aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
