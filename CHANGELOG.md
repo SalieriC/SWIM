@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Silence to Power Effect Builder.
 - Added Speak Language to Power Effect Builder.
 - Added Wall Walker to Power Effect Builder.
+- Added Warrior's Gift to Power Effect Builder.
 - Localisation for:
 - - Fear Table function.
 - - Mark Dead function.
