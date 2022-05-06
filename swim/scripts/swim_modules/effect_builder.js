@@ -834,12 +834,19 @@ export async function effect_builder_gm(data) {
                     trait: target.traitName,
                     duration: noPP ? Number(999999999999999) : data.boost.duration,
                     icon: data.boost.icon,
-                    additionalChanges: target.targetID === casterID ? additionalChange : false
+                    additionalChanges: target.targetID === casterID ? additionalChange : false,
+                    flags: {swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }}
                 }
             }
-            const ae = await succ.apply_status(target.targetID, 'boost', true, false, boostData)
-            if (target.targetID === casterID) { flags.owner = true }
-            await ae.update({flags: {swim: flags}})
+            console.log(target.targetID, casterID)
+            if (target.targetID === casterID) { boostData.boost.flags.swim.owner = true }
+            await succ.apply_status(target.targetID, 'boost', true, false, boostData)
         }
     } else if (type === "lower") {
         for (let target of data.lower.trait) {
@@ -849,12 +856,18 @@ export async function effect_builder_gm(data) {
                     trait: target.traitName,
                     duration: noPP ? Number(999999999999999) : data.lower.duration,
                     icon: data.lower.icon,
-                    additionalChanges: target.targetID === casterID ? additionalChange : false
+                    additionalChanges: target.targetID === casterID ? additionalChange : false,
+                    flags: {swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }}
                 }
             }
-            const ae = await succ.apply_status(target.targetID, 'lower', true, false, lowerData)
-            if (target.targetID === casterID) { flags.owner = true }
-            await ae.update({flags: {swim: flags}})
+            if (target.targetID === casterID) { lowerData.lower.flags.swim.owner = true }
+            await succ.apply_status(target.targetID, 'lower', true, false, lowerData)
         }
     } else if (type === "protection") {
         for (let target of data.targetIDs) {
@@ -864,12 +877,18 @@ export async function effect_builder_gm(data) {
                     type: data.protection.type,
                     duration: noPP ? Number(999999999999999) : data.protection.duration,
                     icon: data.protection.icon,
-                    additionalChanges: target.targetID === casterID ? additionalChange : false
+                    additionalChanges: target.targetID === casterID ? additionalChange : false,
+                    flags: {swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }}
                 }
             }
-            const ae = await succ.apply_status(target, 'protection', true, false, protectionData)
-            if (target.targetID === casterID) { flags.owner = true }
-            await ae.update({flags: {swim: flags}})
+            if (target.targetID === casterID) { protectionData.protection.flags.swim.owner = true }
+            await succ.apply_status(target, 'protection', true, false, protectionData)
         }
     } else if (type === "smite") {
         for (let target of data.smite.weapon) {
@@ -879,12 +898,18 @@ export async function effect_builder_gm(data) {
                     weapon: target.weaponName,
                     duration: noPP ? Number(999999999999999) : data.smite.duration,
                     icon: data.smite.icon,
-                    additionalChanges: target.targetID === casterID ? additionalChange : false
+                    additionalChanges: target.targetID === casterID ? additionalChange : false,
+                    flags: {swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }}
                 }
             }
-            const ae = await succ.apply_status(target.targetID, 'smite', true, false, smiteData)
-            if (target.targetID === casterID) { flags.owner = true }
-            await ae.update({flags: {swim: flags}})
+            if (target.targetID === casterID) { smiteData.smite.flags.swim.owner = true }
+            await succ.apply_status(target.targetID, 'smite', true, false, smiteData)
         }
     } else if (type === "growth") {
         for (let targetID of data.targetIDs) {
@@ -901,7 +926,13 @@ export async function effect_builder_gm(data) {
                     swade: {
                         expiration: 3
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -939,7 +970,13 @@ export async function effect_builder_gm(data) {
                     swade: {
                         expiration: 3
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -976,7 +1013,13 @@ export async function effect_builder_gm(data) {
                     swade: {
                         expiration: 3
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -1001,7 +1044,13 @@ export async function effect_builder_gm(data) {
                     swade: {
                         expiration: 3
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -1026,7 +1075,13 @@ export async function effect_builder_gm(data) {
                     swade: {
                         expiration: 3
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -1051,7 +1106,13 @@ export async function effect_builder_gm(data) {
                     swade: {
                         expiration: 3
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (targetID === casterID) {
@@ -1078,7 +1139,13 @@ export async function effect_builder_gm(data) {
                     succ: {
                         updatedAE: true
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -1122,7 +1189,13 @@ export async function effect_builder_gm(data) {
                     swade: {
                         expiration: 2
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (targetID === casterID) {
@@ -1150,7 +1223,13 @@ export async function effect_builder_gm(data) {
                     succ: {
                         updatedAE: true
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -1177,7 +1256,13 @@ export async function effect_builder_gm(data) {
                     succ: {
                         updatedAE: true
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -1210,7 +1295,13 @@ export async function effect_builder_gm(data) {
                     succ: {
                         updatedAE: true
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -1237,7 +1328,13 @@ export async function effect_builder_gm(data) {
                     succ: {
                         updatedAE: true
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -1264,7 +1361,13 @@ export async function effect_builder_gm(data) {
                     succ: {
                         updatedAE: true
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -1291,7 +1394,13 @@ export async function effect_builder_gm(data) {
                     succ: {
                         updatedAE: true
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -1318,7 +1427,13 @@ export async function effect_builder_gm(data) {
                     succ: {
                         updatedAE: true
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -1345,7 +1460,13 @@ export async function effect_builder_gm(data) {
                     succ: {
                         updatedAE: true
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -1372,7 +1493,13 @@ export async function effect_builder_gm(data) {
                     succ: {
                         updatedAE: true
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -1399,7 +1526,13 @@ export async function effect_builder_gm(data) {
                     succ: {
                         updatedAE: true
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -1425,7 +1558,13 @@ export async function effect_builder_gm(data) {
                     succ: {
                         updatedAE: true
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -1454,7 +1593,13 @@ export async function effect_builder_gm(data) {
                     succ: {
                         updatedAE: true
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -1481,7 +1626,13 @@ export async function effect_builder_gm(data) {
                     succ: {
                         updatedAE: true
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -1508,7 +1659,13 @@ export async function effect_builder_gm(data) {
                     succ: {
                         updatedAE: true
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -1535,7 +1692,13 @@ export async function effect_builder_gm(data) {
                     succ: {
                         updatedAE: true
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -1562,7 +1725,13 @@ export async function effect_builder_gm(data) {
                     succ: {
                         updatedAE: true
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -1589,7 +1758,13 @@ export async function effect_builder_gm(data) {
                     succ: {
                         updatedAE: true
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -1616,7 +1791,13 @@ export async function effect_builder_gm(data) {
                     succ: {
                         updatedAE: true
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
@@ -1643,7 +1824,13 @@ export async function effect_builder_gm(data) {
                     succ: {
                         updatedAE: true
                     },
-                    swim: flags
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
