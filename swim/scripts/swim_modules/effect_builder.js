@@ -136,7 +136,7 @@ export async function effect_builder() {
                                     swim: {
                                         maintainedPower: true,
                                         maintaining: game.i18n.localize(`SWIM.power-${selectedPower}`),
-                                        targets: targets
+                                        targets: targetIDs
                                     }
                                 }
                             }
