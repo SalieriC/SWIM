@@ -309,5 +309,5 @@
   "SWIM.power-wallWalker": "Wall Walker",
   "SWIM.power-warriorsGift": "Warrior's Gift",
   "SWIM.noPowerPointsName": "No Power Points Setting Rule",
-  "SWIM.noPowerPointsHint": "This will change how effects are built in the Power Effect Builder. (Powers will get a near-infinite duration.)"
+  "SWIM.noPowerPointsHint": "This will change how effects are built in the Power Effect Builder. (Powers will get a near-infinite duration and the caster a -1 to the spellcasting roll if the power is found and has the skill in the power set up properly.)"
 }

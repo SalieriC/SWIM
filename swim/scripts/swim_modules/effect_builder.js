@@ -32,6 +32,11 @@ export async function effect_builder() {
         return
     }
 
+    //Checking if caster is also the target:
+    const targetsArray = Array.from(game.user.targets)
+    const casterIsTarget = targetsArray.find(t => t.id === token.id)
+    const noPP = game.settings.get("swim", "noPowerPoints")
+
     //Set div class based on enabled official module:
     const officialClass = await swim.get_official_class()
 
@@ -41,25 +46,25 @@ export async function effect_builder() {
 
     const options = `
         <option value="boost">${game.i18n.localize("SWIM.power-boostTrait")}</option>
-        <option value="arcane_protection">${game.i18n.localize("SWIM.power-arcaneProtection")}</option>
-        <option value="beast_friend">${game.i18n.localize("SWIM.power-beastFriend")}</option>
+        <option value="arcaneProtection">${game.i18n.localize("SWIM.power-arcaneProtection")}</option>
+        <option value="beastFriend">${game.i18n.localize("SWIM.power-beastFriend")}</option>
         <option value="burrow">${game.i18n.localize("SWIM.power-burrow")}</option>
-        <option value="conceal_arcana">${game.i18n.localize("SWIM.power-concealArcana")}</option>
+        <option value="concealArcana">${game.i18n.localize("SWIM.power-concealArcana")}</option>
         <option value="confusion">${game.i18n.localize("SWIM.power-confusion")}</option>
-        <option value="damage_field">${game.i18n.localize("SWIM.power-damageField")}</option>
+        <option value="damageField">${game.i18n.localize("SWIM.power-damageField")}</option>
         <option value="darksight">${game.i18n.localize("SWIM.power-darksight")}</option>
         <option value="deflection">${game.i18n.localize("SWIM.power-deflection")}</option>
         <option value="disguise">${game.i18n.localize("SWIM.power-disguise")}</option>
-        <option value="detect_arcana">${game.i18n.localize("SWIM.power-detectArcana")}</option>
+        <option value="detectArcana">${game.i18n.localize("SWIM.power-detectArcana")}</option>
         <option value="burden">${game.i18n.localize("SWIM.power-easeBurden-tes")}</option>
-        <option value="environmental_protection">${game.i18n.localize("SWIM.power-environmentalProtection")}</option>
+        <option value="environmentalProtection">${game.i18n.localize("SWIM.power-environmentalProtection")}</option>
         <option value="farsight">${game.i18n.localize("SWIM.power-farsight")}</option>
         <option value="fly">${game.i18n.localize("SWIM.power-fly")}</option>
         <option value="growth">${game.i18n.localize("SWIM.power-growth")}</option>
 		<option value="intangibility">${game.i18n.localize("SWIM.power-intangibility")}</option>
         <option value="invisibility">${game.i18n.localize("SWIM.power-invisibility")}</option>
         <option value="lower">${game.i18n.localize("SWIM.power-lowerTrait")}</option>
-        <option value="mind_link">${game.i18n.localize("SWIM.power-mindLink")}</option>
+        <option value="mindLink">${game.i18n.localize("SWIM.power-mindLink")}</option>
         <option value="protection">${game.i18n.localize("SWIM.power-protection")}</option>
         <option value="puppet">${game.i18n.localize("SWIM.power-puppet")}</option>
         <option value="shrink">${game.i18n.localize("SWIM.power-shrink")}</option>
@@ -67,10 +72,10 @@ export async function effect_builder() {
         <option value="sloth">${game.i18n.localize("SWIM.power-sloth")}</option>
         <option value="slumber">${game.i18n.localize("SWIM.power-slumber")}</option>
         <option value="smite">${game.i18n.localize("SWIM.power-smite")}</option>
-        <option value="speak_language">${game.i18n.localize("SWIM.power-speakLanguage")}</option>
+        <option value="speakLanguage">${game.i18n.localize("SWIM.power-speakLanguage")}</option>
         <option value="speed">${game.i18n.localize("SWIM.power-speed")}</option>
-        <option value="wall_walker">${game.i18n.localize("SWIM.power-wallWalker")}</option>
-        <option value="warriors_gift">${game.i18n.localize("SWIM.power-warriorsGift")}</option>
+        <option value="wallWalker">${game.i18n.localize("SWIM.power-wallWalker")}</option>
+        <option value="warriorsGift">${game.i18n.localize("SWIM.power-warriorsGift")}</option>
     `
 
     // Boost/Lower trait options
@@ -115,6 +120,10 @@ export async function effect_builder() {
                 callback: async (html) => {
                     const selectedPower = html.find(`#selected_power`)[0].value
                     const usePowerIcons = game.settings.get("swim", "effectBuilder-usePowerIcons")
+                    // If caster is not the target and noPP setting rule active, give the caster a -1 to its spellcasting:
+                    if (!casterIsTarget && noPP) {
+                        //
+                    }
                     if (selectedPower === "boost" || selectedPower === "lower") {
                         //const selectedTrait = html.find(`#selected_trait`)[0].value
                         let traits = []
@@ -249,7 +258,7 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
-                    } else if (selectedPower === "beast_friend") {
+                    } else if (selectedPower === "beastFriend") {
                         const raise = html.find(`#raise`)[0].checked
                         const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-beastFriend").toLowerCase()))
                         const icon = power ? power.img : false
@@ -309,7 +318,7 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
-                    } else if (selectedPower === "arcane_protection") {
+                    } else if (selectedPower === "arcaneProtection") {
                         const raise = html.find(`#raise`)[0].checked
                         const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-arcaneProtection").toLowerCase()))
                         const icon = power ? power.img : false
@@ -343,7 +352,7 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
-                    } else if (selectedPower === "damage_field") {
+                    } else if (selectedPower === "damageField") {
                         const damage = html.find(`#damage`)[0].checked
                         const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-damageField").toLowerCase()))
                         const icon = power ? power.img : false
@@ -373,7 +382,7 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
-                    } else if (selectedPower === "conceal_arcana") {
+                    } else if (selectedPower === "concealArcana") {
                         const strong = html.find(`#strong`)[0].checked
                         const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-conceal").toLowerCase()))
                         const icon = power ? power.img : false
@@ -387,7 +396,7 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
-                    } else if (selectedPower === "detect_arcana") {
+                    } else if (selectedPower === "detectArcana") {
                         const raise = html.find(`#raise`)[0].checked
                         const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-detect").toLowerCase()))
                         const icon = power ? power.img : false
@@ -419,7 +428,7 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
-                    } else if (selectedPower === "environmental_protection") {
+                    } else if (selectedPower === "environmentalProtection") {
                         const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-environmentalProtection").toLowerCase()))
                         const icon = power ? power.img : false
                         const data = {
@@ -475,7 +484,7 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
-                    } else if (selectedPower === "mind_link") {
+                    } else if (selectedPower === "mindLink") {
                         const raise = html.find(`#raise`)[0].checked
                         const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-mindLink").toLowerCase()))
                         const icon = power ? power.img : false
@@ -536,7 +545,7 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
-                    } else if (selectedPower === "speak_language") {
+                    } else if (selectedPower === "speakLanguage") {
                         const raise = html.find(`#raise`)[0].checked
                         const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-speakLanguage").toLowerCase()))
                         const icon = power ? power.img : false
@@ -552,7 +561,7 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
-                    } else if (selectedPower === "wall_walker") {
+                    } else if (selectedPower === "wallWalker") {
                         const raise = html.find(`#raise`)[0].checked
                         const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-wallWalker").toLowerCase()))
                         const icon = power ? power.img : false
@@ -568,7 +577,7 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
-                    } else if (selectedPower === "warriors_gift") {
+                    } else if (selectedPower === "warriorsGift") {
                         const raise = html.find(`#raise`)[0].checked
                         const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-warriorsGift").toLowerCase()))
                         const icon = power ? power.img : false
@@ -632,7 +641,7 @@ export async function effect_builder() {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderSpeed")
                 } else if (selectedPower === "burden") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderBurden")
-                } else if (selectedPower === "beast_friend") {
+                } else if (selectedPower === "beastFriend") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 } else if (selectedPower === "invisibility") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
@@ -640,21 +649,21 @@ export async function effect_builder() {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
                 } else if (selectedPower === "deflection") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-                } else if (selectedPower === "arcane_protection") {
+                } else if (selectedPower === "arcaneProtection") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 } else if (selectedPower === "burrow") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise") + game.i18n.format("SWIM.dialogue-optionStrongModifier")
-                } else if (selectedPower === "damage_field") {
+                } else if (selectedPower === "damageField") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionDamageModifier")
                 } else if (selectedPower === "darksight") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-                } else if (selectedPower === "conceal_arcana") {
+                } else if (selectedPower === "concealArcana") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionStrongModifier")
-                } else if (selectedPower === "detect_arcana") {
+                } else if (selectedPower === "detectArcana") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 } else if (selectedPower === "disguise") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-                } else if (selectedPower === "environmental_protection") {
+                } else if (selectedPower === "environmentalProtection") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
                 } else if (selectedPower === "farsight") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
@@ -662,7 +671,7 @@ export async function effect_builder() {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 } else if (selectedPower === "intangibility") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
-                } else if (selectedPower === "mind_link") {
+                } else if (selectedPower === "mindLink") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 } else if (selectedPower === "puppet") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
@@ -670,11 +679,11 @@ export async function effect_builder() {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
                 } else if (selectedPower === "silence") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-                } else if (selectedPower === "speak_language") {
+                } else if (selectedPower === "speakLanguage") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-                } else if (selectedPower === "wall_walker") {
+                } else if (selectedPower === "wallWalker") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-                } else if (selectedPower === "warriors_gift") {
+                } else if (selectedPower === "warriorsGift") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 }
             });
@@ -869,12 +878,12 @@ export async function effect_builder_gm(data) {
             else { aeData.duration.seconds = data.burden.durationNoCombat }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
-    } else if (type === "beast_friend") {
+    } else if (type === "beastFriend") {
         for (let targetID of data.targetIDs) {
             const target = game.canvas.tokens.get(targetID)
             let aeData = {
                 changes: [],
-                icon: data.beastFriend.icon ? data.beastFriend.icon : "modules/swim/assets/icons/effects/m-beast_friend.svg",
+                icon: data.beastFriend.icon ? data.beastFriend.icon : "modules/swim/assets/icons/effects/m-beastFriend.svg",
                 label: data.beastFriend.degree === "raise" ? `${data.beastFriend.caster}'s ${game.i18n.localize("SWIM.power-beastFriend")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${data.beastFriend.caster}'s ${game.i18n.localize("SWIM.power-beastFriend")}`,
                 duration: {
                     seconds: noPP ? Number(999999999999999) : data.beastFriend.durationNoCombat,
@@ -970,15 +979,15 @@ export async function effect_builder_gm(data) {
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
-    } else if (type === "arcane_protection") {
+    } else if (type === "arcaneProtection") {
         for (let targetID of data.targetIDs) {
             const target = game.canvas.tokens.get(targetID)
             let aeData = {
                 changes: [],
-                icon: data.arcane_protection.icon ? data.arcane_protection.icon : "modules/swim/assets/icons/effects/m-arcane_protection.svg",
-                label: data.arcane_protection.degree === "raise" ? `${game.i18n.localize("SWIM.power-arcaneProtection")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-arcaneProtection")}`,
+                icon: data.arcaneProtection.icon ? data.arcaneProtection.icon : "modules/swim/assets/icons/effects/m-arcaneProtection.svg",
+                label: data.arcaneProtection.degree === "raise" ? `${game.i18n.localize("SWIM.power-arcaneProtection")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-arcaneProtection")}`,
                 duration: {
-                    rounds: noPP ? Number(999999999999999) : data.arcane_protection.duration,
+                    rounds: noPP ? Number(999999999999999) : data.arcaneProtection.duration,
                 },
                 flags: {
                     swade: {
@@ -1020,15 +1029,15 @@ export async function effect_builder_gm(data) {
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
-    } else if (type === "damage_field") {
+    } else if (type === "damageField") {
         for (let targetID of data.targetIDs) {
             const target = game.canvas.tokens.get(targetID)
             let aeData = {
                 changes: [],
-                icon: data.damage_field.icon ? data.damage_field.icon : "modules/swim/assets/icons/effects/m-damage_field.svg",
-                label: data.damage_field.damage === true ? `${game.i18n.localize("SWIM.power-damageField")} (2d6)` : `${game.i18n.localize("SWIM.power-arcaneProtection")} (2d4)`,
+                icon: data.damageField.icon ? data.damageField.icon : "modules/swim/assets/icons/effects/m-damageField.svg",
+                label: data.damageField.damage === true ? `${game.i18n.localize("SWIM.power-damageField")} (2d6)` : `${game.i18n.localize("SWIM.power-arcaneProtection")} (2d4)`,
                 duration: {
-                    rounds: noPP ? Number(999999999999999) : data.damage_field.duration,
+                    rounds: noPP ? Number(999999999999999) : data.damageField.duration,
                 },
                 flags: {
                     swade: {
@@ -1064,15 +1073,15 @@ export async function effect_builder_gm(data) {
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
-    } else if (type === "detect_arcana") {
+    } else if (type === "detectArcana") {
         for (let targetID of data.targetIDs) {
             const target = game.canvas.tokens.get(targetID)
             let aeData = {
                 changes: [],
-                icon: data.detect_arcana.icon ? data.detect_arcana.icon : "modules/swim/assets/icons/effects/m-detect_arcana.svg",
-                label: data.detect_arcana.degree === "raise" ? `${game.i18n.localize("SWIM.power-detectArcana")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-detectArcana")}`,
+                icon: data.detectArcana.icon ? data.detectArcana.icon : "modules/swim/assets/icons/effects/m-detectArcana.svg",
+                label: data.detectArcana.degree === "raise" ? `${game.i18n.localize("SWIM.power-detectArcana")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-detectArcana")}`,
                 duration: {
-                    rounds: noPP ? Number(999999999999999) : data.detect_arcana.duration,
+                    rounds: noPP ? Number(999999999999999) : data.detectArcana.duration,
                 },
                 flags: {
                     swade: {
@@ -1086,15 +1095,15 @@ export async function effect_builder_gm(data) {
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
-    } else if (type === "conceal_arcana") {
+    } else if (type === "concealArcana") {
         for (let targetID of data.targetIDs) {
             const target = game.canvas.tokens.get(targetID)
             let aeData = {
                 changes: [],
-                icon: data.conceal_arcana.icon ? data.conceal_arcana.icon : "modules/swim/assets/icons/effects/m-conceal_arcana.svg",
-                label: data.conceal_arcana.strong === true ? `${game.i18n.localize("SWIM.power-concealArcana")} (${game.i18n.localize("SWIM.modifierStrong").toLowerCase()})` : `${game.i18n.localize("SWIM.power-concealArcana")}`,
+                icon: data.concealArcana.icon ? data.concealArcana.icon : "modules/swim/assets/icons/effects/m-concealArcana.svg",
+                label: data.concealArcana.strong === true ? `${game.i18n.localize("SWIM.power-concealArcana")} (${game.i18n.localize("SWIM.modifierStrong").toLowerCase()})` : `${game.i18n.localize("SWIM.power-concealArcana")}`,
                 duration: {
-                    seconds: noPP ? Number(999999999999999) : data.conceal_arcana.duration,
+                    seconds: noPP ? Number(999999999999999) : data.concealArcana.duration,
                 },
                 flags: {
                     swade: {
@@ -1130,15 +1139,15 @@ export async function effect_builder_gm(data) {
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
-    } else if (type === "environmental_protection") {
+    } else if (type === "environmentalProtection") {
         for (let targetID of data.targetIDs) {
             const target = game.canvas.tokens.get(targetID)
             let aeData = {
                 changes: [],
-                icon: data.environmental_protection.icon ? data.environmental_protection.icon : "modules/swim/assets/icons/effects/m-environmental_protection.svg",
+                icon: data.environmentalProtection.icon ? data.environmentalProtection.icon : "modules/swim/assets/icons/effects/m-environmentalProtection.svg",
                 label: game.i18n.localize("SWIM.power-environmentalProtection"),
                 duration: {
-                    seconds: noPP ? Number(999999999999999) : data.environmental_protection.duration,
+                    seconds: noPP ? Number(999999999999999) : data.environmentalProtection.duration,
                 },
                 flags: {
                     swade: {
@@ -1219,7 +1228,7 @@ export async function effect_builder_gm(data) {
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
-    } else if (type === "mind_link") {
+    } else if (type === "mindLink") {
         for (let targetID of data.targetIDs) {
             const target = game.canvas.tokens.get(targetID)
             let aeData = {
@@ -1307,7 +1316,7 @@ export async function effect_builder_gm(data) {
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
-    } else if (type === "speak_language") {
+    } else if (type === "speakLanguage") {
         for (let targetID of data.targetIDs) {
             const target = game.canvas.tokens.get(targetID)
             let aeData = {
@@ -1329,7 +1338,7 @@ export async function effect_builder_gm(data) {
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
-    } else if (type === "wall_walker") {
+    } else if (type === "wallWalker") {
         for (let targetID of data.targetIDs) {
             const target = game.canvas.tokens.get(targetID)
             let aeData = {
@@ -1351,7 +1360,7 @@ export async function effect_builder_gm(data) {
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
-    } else if (type === "warriors_gift") {
+    } else if (type === "warriorsGift") {
         for (let targetID of data.targetIDs) {
             const target = game.canvas.tokens.get(targetID)
             let aeData = {
