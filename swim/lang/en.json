@@ -307,5 +307,7 @@
   "SWIM.power-silence": "Silence",
   "SWIM.power-speakLanguage": "Speak Language",
   "SWIM.power-wallWalker": "Wall Walker",
-  "SWIM.power-warriorsGift": "Warrior's Gift"
+  "SWIM.power-warriorsGift": "Warrior's Gift",
+  "SWIM.noPowerPointsName": "No Power Points Setting Rule",
+  "SWIM.noPowerPointsHint": "This will change how effects are built in the Power Effect Builder. (Powers will get a near-infinite duration.)"
 }

@@ -7,6 +7,7 @@ export const settingVariables = [
     {id: 'grittyDamageNPC', config_type: Boolean, tab: "Setting Rules", default: false},
     {id: 'natHeal_Time', config_type: String, tab: "Setting Rules", default: 'five days'},
     {id: 'npcAmmo', config_type: Boolean, tab: "Setting Rules",  default: false},
+    {id: 'noPowerPoints', config_type: Boolean, tab: "Setting Rules",  default: false},
     {id: 'healthPotionOptions', config_type: String, tab: "Item Options",
         default: 'Minor Health Potion|Health Potion|Greater Health Potion|Minor Healing Potion|Healing Potion|Greater Healing Potion'},
     {id: 'fatiguePotionOptions', config_type: String, tab: "Item Options",
