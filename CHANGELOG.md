@@ -11,7 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Various new assets (see ReadMe for credits, all altered by SalieriC#8263):  
 - New translation strings.
 - New Setting rule: No Power Points. This enables near-infinite duration and a -1 to the spellcasting roll on the caster. SWIM does not use the systems setting rule in case that gets changed to do other things as well.
-- New Macro: Power Effect Builder. Opens a dialogue to add active effects for boost/lower trait, protection and smite (more to come) depending on user input for *every* target. This makes heavy use of the new effect updater by SUCC. **Make sure to update SUCC, unless you want total carnage.**
+- New Macro: Power Effect Builder. Opens a dialogue to add active effects for almost all maintained core powers. This makes heavy use of the new effect updater by SUCC. **Make sure to update SUCC, unless you want total carnage.**
+
+<details>
+<summary>Currently supported Powers</summary>
+
+- - Added boost/lower trait to Power Effect Builder.  
+- - Added protection to Power Effect Builder.  
+- - Added smite trait to Power Effect Builder.  
 - - Added growth/shrink to Power Effect Builder.  
 - - Added sloth/speed to Power Effect Builder. 
 - - Added Beast Friend to Power Effect Builder.   
@@ -35,6 +42,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - - Added Speak Language to Power Effect Builder.
 - - Added Wall Walker to Power Effect Builder.
 - - Added Warrior's Gift to Power Effect Builder.
+</details>  
+
 - - Enabled near-infinite duration on powers if no power points setting rule active.
 - - Add an AE to the caster if he is not the target, that gives the casters spellcasting trait a -1 for maintaining the power if the power is found and no power points is active.
 - Localisation for:
