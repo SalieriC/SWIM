@@ -10,30 +10,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Mighty Summoner: Summoned Creatures now get an Active Effect with the appropriate duration. Duration is doubled if the summoner has the Concentration Edge.
 - Various new assets (see ReadMe for credits, all altered by SalieriC#8263):  
 - New translation strings.
+- New Setting rule: No Power Points. This enables near-infinite duration and a -1 to the spellcasting roll on the caster. SWIM does not use the systems setting rule in case that gets changed to do other things as well.
 - New Macro: Power Effect Builder. Opens a dialogue to add active effects for boost/lower trait, protection and smite (more to come) depending on user input for *every* target. This makes heavy use of the new effect updater by SUCC. **Make sure to update SUCC, unless you want total carnage.**
-- Added growth/shrink to Power Effect Builder.  
-- Added sloth/speed to Power Effect Builder. 
-- Added Beast Friend to Power Effect Builder.   
-- Added Invisibility to Power Effect Builder.  
-- Added Confusion to Power Effect Builder.
-- Added Deflection to Power Effect Builder.
-- Added Arcane Protection to Power Effect Builder.
-- Added Burrow to Power Effect Builder.
-- Added Damage Field to Power Effect Builder.
-- Added Darksight to Power Effect Builder.
-- Added Detect/Conceal Arcana to Power Effect Builder.
-- Added Disguise to Power Effect Builder.
-- Added Environmental Protection to Power Effect Builder.
-- Added Farsight to Power Effect Builder.
-- Added Fly to Power Effect Builder.
-- Added Intangibility to Power Effect Builder.
-- Added Mind Link to Power Effect Builder.
-- Added Puppet to Power Effect Builder.
-- Added Slumber to Power Effect Builder.
-- Added Silence to Power Effect Builder.
-- Added Speak Language to Power Effect Builder.
-- Added Wall Walker to Power Effect Builder.
-- Added Warrior's Gift to Power Effect Builder.
+- - Added growth/shrink to Power Effect Builder.  
+- - Added sloth/speed to Power Effect Builder. 
+- - Added Beast Friend to Power Effect Builder.   
+- - Added Invisibility to Power Effect Builder.  
+- - Added Confusion to Power Effect Builder.
+- - Added Deflection to Power Effect Builder.
+- - Added Arcane Protection to Power Effect Builder.
+- - Added Burrow to Power Effect Builder.
+- - Added Damage Field to Power Effect Builder.
+- - Added Darksight to Power Effect Builder.
+- - Added Detect/Conceal Arcana to Power Effect Builder.
+- - Added Disguise to Power Effect Builder.
+- - Added Environmental Protection to Power Effect Builder.
+- - Added Farsight to Power Effect Builder.
+- - Added Fly to Power Effect Builder.
+- - Added Intangibility to Power Effect Builder.
+- - Added Mind Link to Power Effect Builder.
+- - Added Puppet to Power Effect Builder.
+- - Added Slumber to Power Effect Builder.
+- - Added Silence to Power Effect Builder.
+- - Added Speak Language to Power Effect Builder.
+- - Added Wall Walker to Power Effect Builder.
+- - Added Warrior's Gift to Power Effect Builder.
+- - Enabled near-infinite duration on powers if no power points setting rule active.
 - Localisation for:
 - - Fear Table function.
 - - Mark Dead function.

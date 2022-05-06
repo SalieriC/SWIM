@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 2.0.21
+ * v. 2.1.0
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  * 
  * Powers on hold for now:
@@ -686,6 +686,7 @@ export async function effect_builder() {
 }
 
 export async function effect_builder_gm(data) {
+    const noPP = game.settings.get("swim", "noPowerPoints")
     const type = data.type
 
     /* Make duration dependent on caster, not yet thought about how to properly implement that though
@@ -724,7 +725,7 @@ export async function effect_builder_gm(data) {
                 protection: {
                     bonus: data.protection.bonus,
                     type: data.protection.type,
-                    duration: data.protection.duration,
+                    duration: noPP ? Number(999999999999999) : data.protection.duration,
                     icon: data.protection.icon
                 }
             }
@@ -736,7 +737,7 @@ export async function effect_builder_gm(data) {
                 smite: {
                     bonus: data.smite.bonus,
                     weapon: target.weaponName,
-                    duration: data.smite.duration,
+                    duration: noPP ? Number(999999999999999) : data.smite.duration,
                     icon: data.smite.icon
                 }
             }
@@ -751,7 +752,7 @@ export async function effect_builder_gm(data) {
                 icon: data.growth.icon ? data.growth.icon : "modules/swim/assets/icons/effects/m-growth.svg",
                 label: game.i18n.localize("SWIM.power-growth"),
                 duration: {
-                    rounds: data.growth.duration,
+                    rounds: noPP ? Number(999999999999999) : data.growth.duration,
                 },
                 flags: {
                     swade: {
@@ -784,7 +785,7 @@ export async function effect_builder_gm(data) {
                 icon: data.shrink.icon ? data.shrink.icon : "modules/swim/assets/icons/effects/m-shrink.svg",
                 label: game.i18n.localize("SWIM.power-shrink"),
                 duration: {
-                    rounds: data.shrink.duration,
+                    rounds: noPP ? Number(999999999999999) : data.shrink.duration,
                 },
                 flags: {
                     swade: {
@@ -816,7 +817,7 @@ export async function effect_builder_gm(data) {
                 icon: data.speed.icon ? data.speed.icon : quickness ? "modules/swim/assets/icons/effects/m-quickness.svg" : "modules/swim/assets/icons/effects/m-speed.svg",
                 label: quickness ? game.i18n.localize("SWIM.power-speedQuickness") : game.i18n.localize("SWIM.power-speed"),
                 duration: {
-                    rounds: data.speed.duration,
+                    rounds: noPP ? Number(999999999999999) : data.speed.duration,
                 },
                 flags: {
                     swade: {
@@ -836,7 +837,7 @@ export async function effect_builder_gm(data) {
                 icon: data.sloth.icon ? data.sloth.icon : "modules/swim/assets/icons/effects/m-sloth.svg",
                 label: game.i18n.localize("SWIM.power-sloth"),
                 duration: {
-                    rounds: data.sloth.duration,
+                    rounds: noPP ? Number(999999999999999) : data.sloth.duration,
                 },
                 flags: {
                     swade: {
@@ -856,7 +857,7 @@ export async function effect_builder_gm(data) {
                 icon: data.burden.icon ? data.burden.icon : change > 0 ? "modules/swim/assets/icons/effects/m-ease_burden.svg" : "modules/swim/assets/icons/effects/m-burden.svg",
                 label: change > 0 ? game.i18n.localize("SWIM.power-easeBurden-tes") : game.i18n.localize("SWIM.power-burden-tes"),
                 duration: {
-                    rounds: data.burden.duration,
+                    rounds: noPP ? Number(999999999999999) : data.burden.duration,
                 },
                 flags: {
                     swade: {
@@ -876,7 +877,7 @@ export async function effect_builder_gm(data) {
                 icon: data.beastFriend.icon ? data.beastFriend.icon : "modules/swim/assets/icons/effects/m-beast_friend.svg",
                 label: data.beastFriend.degree === "raise" ? `${data.beastFriend.caster}'s ${game.i18n.localize("SWIM.power-beastFriend")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${data.beastFriend.caster}'s ${game.i18n.localize("SWIM.power-beastFriend")}`,
                 duration: {
-                    seconds: data.beastFriend.durationNoCombat,
+                    seconds: noPP ? Number(999999999999999) : data.beastFriend.durationNoCombat,
                 },
                 flags: {
                     swade: {
@@ -895,7 +896,7 @@ export async function effect_builder_gm(data) {
                 icon: data.invisibility.icon ? data.invisibility.icon : "modules/succ/assets/icons/m-invisible.svg",
                 label: data.invisibility.degree === "raise" ? `${condition.data.label} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${condition.data.label}`,
                 duration: {
-                    rounds: data.invisibility.duration,
+                    rounds: noPP ? Number(999999999999999) : data.invisibility.duration,
                 },
                 flags: {
                     swade: {
@@ -955,7 +956,7 @@ export async function effect_builder_gm(data) {
                 icon: data.deflection.icon ? data.deflection.icon : "modules/swim/assets/icons/effects/m-deflection.svg",
                 label: data.deflection.degree === "raise" ? `${game.i18n.localize("SWIM.power-deflection")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-deflection")}`,
                 duration: {
-                    rounds: data.deflection.duration,
+                    rounds: noPP ? Number(999999999999999) : data.deflection.duration,
                 },
                 flags: {
                     swade: {
@@ -977,7 +978,7 @@ export async function effect_builder_gm(data) {
                 icon: data.arcane_protection.icon ? data.arcane_protection.icon : "modules/swim/assets/icons/effects/m-arcane_protection.svg",
                 label: data.arcane_protection.degree === "raise" ? `${game.i18n.localize("SWIM.power-arcaneProtection")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-arcaneProtection")}`,
                 duration: {
-                    rounds: data.arcane_protection.duration,
+                    rounds: noPP ? Number(999999999999999) : data.arcane_protection.duration,
                 },
                 flags: {
                     swade: {
@@ -1005,7 +1006,7 @@ export async function effect_builder_gm(data) {
                 icon: data.burrow.icon ? data.burrow.icon : "modules/swim/assets/icons/effects/m-burrow.svg",
                 label: label,
                 duration: {
-                    rounds: data.burrow.duration,
+                    rounds: noPP ? Number(999999999999999) : data.burrow.duration,
                 },
                 flags: {
                     swade: {
@@ -1027,7 +1028,7 @@ export async function effect_builder_gm(data) {
                 icon: data.damage_field.icon ? data.damage_field.icon : "modules/swim/assets/icons/effects/m-damage_field.svg",
                 label: data.damage_field.damage === true ? `${game.i18n.localize("SWIM.power-damageField")} (2d6)` : `${game.i18n.localize("SWIM.power-arcaneProtection")} (2d4)`,
                 duration: {
-                    rounds: data.damage_field.duration,
+                    rounds: noPP ? Number(999999999999999) : data.damage_field.duration,
                 },
                 flags: {
                     swade: {
@@ -1049,7 +1050,7 @@ export async function effect_builder_gm(data) {
                 icon: data.darksight.icon ? data.darksight.icon : "modules/swim/assets/icons/effects/m-darksight.svg",
                 label: data.darksight.degree === "raise" ? `${game.i18n.localize("SWIM.power-darksight")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-darksight")}`,
                 duration: {
-                    seconds: data.darksight.duration,
+                    seconds: noPP ? Number(999999999999999) : data.darksight.duration,
                 },
                 flags: {
                     swade: {
@@ -1071,7 +1072,7 @@ export async function effect_builder_gm(data) {
                 icon: data.detect_arcana.icon ? data.detect_arcana.icon : "modules/swim/assets/icons/effects/m-detect_arcana.svg",
                 label: data.detect_arcana.degree === "raise" ? `${game.i18n.localize("SWIM.power-detectArcana")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-detectArcana")}`,
                 duration: {
-                    rounds: data.detect_arcana.duration,
+                    rounds: noPP ? Number(999999999999999) : data.detect_arcana.duration,
                 },
                 flags: {
                     swade: {
@@ -1093,7 +1094,7 @@ export async function effect_builder_gm(data) {
                 icon: data.conceal_arcana.icon ? data.conceal_arcana.icon : "modules/swim/assets/icons/effects/m-conceal_arcana.svg",
                 label: data.conceal_arcana.strong === true ? `${game.i18n.localize("SWIM.power-concealArcana")} (${game.i18n.localize("SWIM.modifierStrong").toLowerCase()})` : `${game.i18n.localize("SWIM.power-concealArcana")}`,
                 duration: {
-                    seconds: data.conceal_arcana.duration,
+                    seconds: noPP ? Number(999999999999999) : data.conceal_arcana.duration,
                 },
                 flags: {
                     swade: {
@@ -1115,7 +1116,7 @@ export async function effect_builder_gm(data) {
                 icon: data.disguise.icon ? data.disguise.icon : "modules/swim/assets/icons/effects/m-disguise.svg",
                 label: data.disguise.degree === "raise" ? `${game.i18n.localize("SWIM.power-disguise")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-disguise")}`,
                 duration: {
-                    seconds: data.disguise.duration,
+                    seconds: noPP ? Number(999999999999999) : data.disguise.duration,
                 },
                 flags: {
                     swade: {
@@ -1137,7 +1138,7 @@ export async function effect_builder_gm(data) {
                 icon: data.environmental_protection.icon ? data.environmental_protection.icon : "modules/swim/assets/icons/effects/m-environmental_protection.svg",
                 label: game.i18n.localize("SWIM.power-environmentalProtection"),
                 duration: {
-                    seconds: data.environmental_protection.duration,
+                    seconds: noPP ? Number(999999999999999) : data.environmental_protection.duration,
                 },
                 flags: {
                     swade: {
@@ -1159,7 +1160,7 @@ export async function effect_builder_gm(data) {
                 icon: data.farsight.icon ? data.farsight.icon : "modules/swim/assets/icons/effects/m-farsight.svg",
                 label: data.farsight.degree === "raise" ? `${game.i18n.localize("SWIM.power-farsight")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-farsight")}`,
                 duration: {
-                    rounds: data.farsight.duration,
+                    rounds: noPP ? Number(999999999999999) : data.farsight.duration,
                 },
                 flags: {
                     swade: {
@@ -1180,7 +1181,7 @@ export async function effect_builder_gm(data) {
                 changes: [],
                 label: data.fly.degree === "raise" ? `${game.i18n.localize("SWADE.Flying")} (24")` : `${game.i18n.localize("SWADE.Flying")} (12")`,
                 duration: {
-                    rounds: data.fly.duration,
+                    rounds: noPP ? Number(999999999999999) : data.fly.duration,
                 },
                 flags: {
                     swade: {
@@ -1204,7 +1205,7 @@ export async function effect_builder_gm(data) {
                 icon: data.intangibility.icon ? data.intangibility.icon : "modules/swim/assets/icons/effects/m-intangibility.svg",
                 label: game.i18n.localize("SWIM.power-intangibility"),
                 duration: {
-                    rounds: data.intangibility.duration,
+                    rounds: noPP ? Number(999999999999999) : data.intangibility.duration,
                 },
                 flags: {
                     swade: {
@@ -1226,7 +1227,7 @@ export async function effect_builder_gm(data) {
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
                 label: data[type].degree === "raise" ? `${game.i18n.localize("SWIM.power-mindLink")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-mindLink")}`,
                 duration: {
-                    seconds: data[type].duration,
+                    seconds: noPP ? Number(999999999999999) : data[type].duration,
                 },
                 flags: {
                     swade: {
@@ -1248,7 +1249,7 @@ export async function effect_builder_gm(data) {
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
                 label: data[type].degree === "raise" ? `${data.puppet.casterName}'s ${game.i18n.localize("SWIM.power-puppet")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${data.puppet.casterName}'s ${game.i18n.localize("SWIM.power-puppet")}`,
                 duration: {
-                    rounds: data[type].duration,
+                    rounds: noPP ? Number(999999999999999) : data[type].duration,
                 },
                 flags: {
                     swade: {
@@ -1270,7 +1271,7 @@ export async function effect_builder_gm(data) {
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
                 label: game.i18n.localize("SWIM.power-slumber"),
                 duration: {
-                    seconds: data[type].duration,
+                    seconds: noPP ? Number(999999999999999) : data[type].duration,
                 },
                 flags: {
                     swade: {
@@ -1292,7 +1293,7 @@ export async function effect_builder_gm(data) {
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
                 label: data[type].degree === "raise" ? `${game.i18n.localize("SWIM.power-silence")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-silence")}`,
                 duration: {
-                    rounds: data[type].duration,
+                    rounds: noPP ? Number(999999999999999) : data[type].duration,
                 },
                 flags: {
                     swade: {
@@ -1314,7 +1315,7 @@ export async function effect_builder_gm(data) {
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
                 label: data[type].degree === "raise" ? `${game.i18n.localize("SWIM.power-speakLanguage")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-speakLanguage")}`,
                 duration: {
-                    seconds: data[type].duration,
+                    seconds: noPP ? Number(999999999999999) : data[type].duration,
                 },
                 flags: {
                     swade: {
@@ -1336,7 +1337,7 @@ export async function effect_builder_gm(data) {
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
                 label: data[type].degree === "raise" ? `${game.i18n.localize("SWIM.power-wallWalker")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-wallWalker")}`,
                 duration: {
-                    rounds: data[type].duration,
+                    rounds: noPP ? Number(999999999999999) : data[type].duration,
                 },
                 flags: {
                     swade: {
@@ -1358,7 +1359,7 @@ export async function effect_builder_gm(data) {
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
                 label: data[type].degree === "raise" ? `${game.i18n.localize("SWIM.power-warriorsGift")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-warriorsGift")}`,
                 duration: {
-                    rounds: data[type].duration,
+                    rounds: noPP ? Number(999999999999999) : data[type].duration,
                 },
                 flags: {
                     swade: {
