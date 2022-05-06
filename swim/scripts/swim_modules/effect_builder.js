@@ -1198,10 +1198,12 @@ export async function effect_builder_gm(data) {
                     }
                 }
             }
+            /* Don't want to use that for instant powers.
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
+            */
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
     } else if (type === "deflection") {
