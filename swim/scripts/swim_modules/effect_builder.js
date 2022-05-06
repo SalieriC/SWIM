@@ -918,8 +918,8 @@ export async function effect_builder_gm(data) {
             if (target.actor.data.data.details.autoCalcToughness === false) {
                 aeData.changes.push({ key: `data.stats.toughness.value`, mode: 2, priority: undefined, value: change })
             }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -954,8 +954,8 @@ export async function effect_builder_gm(data) {
             if (target.actor.data.data.details.autoCalcToughness === false) {
                 aeData.changes.push({ key: `data.stats.toughness.value`, mode: 2, priority: undefined, value: change })
             }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -980,8 +980,8 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -1005,8 +1005,8 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -1031,8 +1031,8 @@ export async function effect_builder_gm(data) {
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             else { aeData.duration.seconds = noPP ? Number(999999999999999) : data.burden.durationNoCombat }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -1054,8 +1054,8 @@ export async function effect_builder_gm(data) {
                     swim: flags
                 }
             }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -1082,8 +1082,8 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await condition.update(aeData)
@@ -1125,8 +1125,8 @@ export async function effect_builder_gm(data) {
                     swim: flags
                 }
             }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -1134,6 +1134,8 @@ export async function effect_builder_gm(data) {
     } else if (type === "deflection") {
         for (let targetID of data.targetIDs) {
             const target = game.canvas.tokens.get(targetID)
+            console.log(targetID)
+            console.log(casterID)
             let aeData = {
                 changes: [],
                 icon: data.deflection.icon ? data.deflection.icon : "modules/swim/assets/icons/effects/m-deflection.svg",
@@ -1152,8 +1154,8 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -1179,8 +1181,8 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -1212,8 +1214,8 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -1239,8 +1241,8 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -1266,8 +1268,8 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -1293,8 +1295,8 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -1320,8 +1322,8 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -1347,8 +1349,8 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -1374,8 +1376,8 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -1401,8 +1403,8 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -1428,8 +1430,8 @@ export async function effect_builder_gm(data) {
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
             if (data.fly.icon) {aeData.icon = data.fly.icon}
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             const effect = await succ.apply_status(target, "flying", true, false)
@@ -1456,8 +1458,8 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -1483,8 +1485,8 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -1510,8 +1512,8 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -1537,8 +1539,8 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -1564,8 +1566,8 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -1591,8 +1593,8 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -1618,8 +1620,8 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -1645,8 +1647,8 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
-            if (additionalChange && targetID === casterID) {
-                aeData.changes.push(additionalChange[0])
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
