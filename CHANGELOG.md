@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - - Added Wall Walker to Power Effect Builder.
 - - Added Warrior's Gift to Power Effect Builder.
 - - Enabled near-infinite duration on powers if no power points setting rule active.
+- - Add an AE to the caster if he is not the target, that gives the casters spellcasting trait a -1 for maintaining the power if the power is found and no power points is active.
 - Localisation for:
 - - Fear Table function.
 - - Mark Dead function.
