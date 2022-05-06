@@ -342,3 +342,15 @@ export class api {
 
   //In the Check for Bennies function, don't forget Coup (50F) which always adds a Benny even if it is an Extra.
 }
+
+// Unexposed stuff
+export function generate_id (length = 16) {
+  var result           = 'SWIM-';
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < length; i++ ) {
+    result += characters.charAt(Math.floor(Math.random() * 
+    charactersLength));
+  }
+ return result;
+}
