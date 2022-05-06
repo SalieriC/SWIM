@@ -43,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Make tokens slightly less visible if an effect called "Intangibility" (or their localised counterpart) is applied.
 ### Changed
 - Incapacitation and Bleeding Out are added as overlays instead of small icons now. Inc. will be set as small icon if Bleeding Out is applied.
+- Changed and fixed Deviation link to be future proof.
 ### Fixed
 - Various errors in the personal health center that prevented chat messages from being created.
 - Incorrectly named translation string.
