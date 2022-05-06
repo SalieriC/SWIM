@@ -123,8 +123,8 @@ export async function effect_builder() {
                     // If caster is not the target and noPP setting rule active, give the caster a -1 to its spellcasting:
                     if (!casterIsTarget && noPP) {
                         const power = token.actor.items.find(p => p.name.toLowerCase().includes(game.i18n.localize(`SWIM.power-${selectedPower}`).toLowerCase()) )
-                        const skillName = power.data.data.actions.skill
                         if (power) {
+                            const skillName = power.data.data.actions.skill
                             let aeData = {
                                 changes: [{ key: `@Skill{${skillName}}[data.die.modifier]`, mode: 2, priority: undefined, value: -1 }],
                                 icon: power.img,
