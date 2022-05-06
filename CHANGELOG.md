@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New Macro: Power Effect Builder. Opens a dialogue to add active effects for almost all maintained core powers. This makes heavy use of the new effect updater by SUCC. **Make sure to update SUCC, unless you want total carnage.**
 
 - - <details>
-<summary>Currently supported Powers</summary>
+- - <summary>Currently supported Powers</summary>
 
 - - Added boost/lower trait to Power Effect Builder.  
 - - Added protection to Power Effect Builder.  
