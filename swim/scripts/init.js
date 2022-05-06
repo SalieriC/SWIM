@@ -148,6 +148,15 @@ Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
             if (token.data.hidden === true) { await token.toggleVisibility() }
         }
     }
+    if (condition.data.flags?.swim?.maintainedPower === true && condition.data.flags?.swim?.owner === true && swim.is_first_gm()) {
+        for (let targetID of condition.data.flags.swim.targets) {
+            const token = game.canvas.tokens.get(targetID)
+            const effect = token.actor.data.effects.find(ae => ae.data.flags?.swim?.maintenanceID === condition.data.flags?.swim?.maintenanceID)
+            if (effect) {
+                await effect.delete()
+            }
+        }
+    }
 })
 
 // Combat setup playlist handling
