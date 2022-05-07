@@ -60,6 +60,7 @@ In this repository you can find a number of assets already.
 - - Speak Language: [Talk by Skoll](https://game-icons.net/1x1/skoll/talk.html)
 - - Wall Walker: [Brick wall by Delapouite](https://game-icons.net/1x1/delapouite/brick-wall.html) and [Footprint by Lorc](https://game-icons.net/1x1/lorc/footprint.html)
 - - Warrior's Gift: [Axe sword by Delapouite](https://game-icons.net/1x1/delapouite/axe-sword.html)
+- - Empathy: [Shaking hands by Delapouite](https://game-icons.net/1x1/delapouite/shaking-hands.html)
 - **SFX:** (see their file name for origin)
 - - [Fesliyan Studios](www.fesliyanstudios.com), all used with explicit permission (thank you so much), [see their License here](https://www.fesliyanstudios.com/policy).  
 - - [Orange Free Sounds](https://orangefreesounds.com/), all used unter the [CC BY-NC 4.0 License](https://creativecommons.org/licenses/by-nc/4.0/), converted to *.ogg and possibly altered (see file name), Author is in the file names as well.  
