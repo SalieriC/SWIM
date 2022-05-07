@@ -805,9 +805,7 @@ export async function effect_builder_gm(data) {
     let additionalChange = false
     if (data.targetIDs.find(t => t === casterID) && noPP === true) {
         casterIsTarget = true
-        console.log(game.i18n.localize(`SWIM.power-${type}`))
         const power = caster.actor.items.find(p => p.name.toLowerCase().includes(game.i18n.localize(`SWIM.power-${type}`).toLowerCase()) && p.type === "power" )
-        console.log(power)
         if (power) {
             const skillName = power.data.data.actions.skill
             additionalChange = [{ key: `@Skill{${skillName}}[data.die.modifier]`, mode: 2, priority: undefined, value: -1 }]
