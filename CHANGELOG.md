@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - - Added Speak Language to Power Effect Builder.
 - - Added Wall Walker to Power Effect Builder.
 - - Added Warrior's Gift to Power Effect Builder.
+- - Added Empathy to Power Effect Builder.
 </details>  
 
 - - Enabled near-infinite duration on powers if no power points setting rule active.
