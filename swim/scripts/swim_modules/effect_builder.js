@@ -10,7 +10,6 @@
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  * 
  * Powers on hold for now:
- * - Elemental Manipulation
  * - Entangle (as it may get much easier by the system soon)
  * - Illusion (want something in conjunction with WarpGate similar to the summoner but need to check how exactly that could work out first.
  * - Light (as I'm not sure if it isn't better suited in the token vision macro)
@@ -71,6 +70,7 @@ export async function effect_builder() {
         <option value="disguise">${game.i18n.localize("SWIM.power-disguise")}</option>
         <option value="detectArcana">${game.i18n.localize("SWIM.power-detectArcana")}</option>
         <option value="burden">${game.i18n.localize("SWIM.power-easeBurden-tes")}</option>
+        <option value="elementalManipulation">${game.i18n.localize("SWIM.power-elementalManipulation")}</option>
         <option value="empathy">${game.i18n.localize("SWIM.power-empathy")}</option>
         <option value="environmentalProtection">${game.i18n.localize("SWIM.power-environmentalProtection")}</option>
         <option value="farsight">${game.i18n.localize("SWIM.power-farsight")}</option>
@@ -508,6 +508,24 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "elementalManipulation") {
+                        const raise = html.find(`#raise`)[0].checked
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-elementalManipulation").toLowerCase()))
+                        const icon = power ? power.img : false
+                        let degree = "success"
+                        if (raise === true) { degree = "raise" }
+                        const data = {
+                            targetIDs: targetIDs,
+                            casterID: token.id,
+                            maintenanceID: maintID,
+                            type: selectedPower,
+                            [selectedPower]: {
+                                degree: degree,
+                                duration: duration,
+                                icon: usePowerIcons ? icon : false
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "empathy") {
                         const raise = html.find(`#raise`)[0].checked
                         const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-empathy").toLowerCase()))
@@ -782,6 +800,8 @@ export async function effect_builder() {
                 } else if (selectedPower === "detectArcana") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 } else if (selectedPower === "disguise") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
+                } else if (selectedPower === "elementalManipulation") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 } else if (selectedPower === "empathy") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
@@ -1863,6 +1883,39 @@ export async function effect_builder_gm(data) {
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
     } else if (type === "empathy") {
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            let aeData = {
+                changes: [],
+                icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
+                label: data[type].degree === "raise" ? `${game.i18n.localize(`SWIM.power-${type}`)} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize(`SWIM.power-${type}`)}`,
+                duration: {
+                    rounds: noPP ? Number(999999999999999) : data[type].duration,
+                },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    },
+                    succ: {
+                        updatedAE: true
+                    },
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
+                }
+            }
+            if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                aeData.flags.swim.owner = true
+            }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
+    } else if (type === "elementalManipulation") {
         for (let targetID of data.targetIDs) {
             const target = game.canvas.tokens.get(targetID)
             let aeData = {
