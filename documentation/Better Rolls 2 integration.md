@@ -213,3 +213,151 @@ As above, just for the empathy power this time.
     "group": "Target"
 }
 ```
+
+### Automating Invisibility
+As above, just for the empathy power this time.  
+```json
+{
+    "id": "INVISIBLE",
+    "name": "Invisible",
+    "button_name": "is Invisible",
+    "skillMod": "-4",
+    "and_selector": [
+        {
+            "or_selector": [
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Shooting"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Fighting"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Athletics"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Healing"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Notice"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Repair"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Thievery"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Faith"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Spellcasting"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Weird Science"
+                },
+                {
+                    "selector_type": "item_type",
+                    "selector_value": "weapon"
+                },
+                {
+                    "selector_type": "item_type",
+                    "selector_value": "power"
+                }
+            ]
+        },
+        {
+            "selector_type": "target_has_effect",
+            "selector_value": "Invisible"
+        },
+        {
+            "not_selector": [
+                {
+                    "selector_type": "target_has_effect",
+                    "selector_value": "Invisible (raise)"
+                }
+            ]
+        }
+    ],
+    "defaultChecked": "on",
+    "group": "Target"
+}
+```
+
+```json
+{
+    "id": "INVISIBLE",
+    "name": "Invisible",
+    "button_name": "is Invisible",
+    "skillMod": "-6",
+    "and_selector": [
+        {
+            "or_selector": [
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Shooting"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Fighting"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Athletics"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Healing"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Notice"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Repair"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Thievery"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Faith"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Spellcasting"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Weird Science"
+                },
+                {
+                    "selector_type": "item_type",
+                    "selector_value": "weapon"
+                },
+                {
+                    "selector_type": "item_type",
+                    "selector_value": "power"
+                }
+            ]
+        },
+        {
+            "selector_type": "target_has_effect",
+            "selector_value": "Invisible (raise)"
+        }       
+    ],
+    "defaultChecked": "on",
+    "group": "Target"
+}
+```
