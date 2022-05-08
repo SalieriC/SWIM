@@ -745,7 +745,7 @@ export async function effect_builder() {
                                 label: game.i18n.format("SWIM.label-maintaining", {powerName: game.i18n.localize(`SWIM.power-${selectedPower}`)}),
                                 duration: {
                                     seconds: noPP ? Number(999999999999999) : durationSeconds,
-                                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                                    startRound: token.combatant != null ? game.combat.data.round : 0,
                                     rounds: noPP ? Number(999999999999999) : durationRounds,
                                 },
                                 flags: {
