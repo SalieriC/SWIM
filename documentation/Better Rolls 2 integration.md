@@ -7,6 +7,8 @@ Below is a list of global actions provided to you. The module also comes with an
 
 ### Automating Deflection
 You'll need two World Global Actions for this, set them up like this:  
+<details>
+<summary>Deflection</summary>
 ```json
 {
     "id": "DEFLECTION",
@@ -35,9 +37,10 @@ You'll need two World Global Actions for this, set them up like this:
     "group": "Target"
 }
 ```
-
+</details>
 and this:  
-
+<details>
+<summary>Deflection (raise)</summary>
 ```json
 {
     "id": "DEFLECTION-RAISE",
@@ -58,10 +61,13 @@ and this:
     "group": "Target"
 }
 ```
+</details>
 Those two will ensure that BR2 automatically subtracts the appropriate amount (-2 and -4 respectively) from attack rolls that are from weapon type items. As per the SWADE core rules this should be everything.
 
 ### Automating Arcane Protection
 It works exactly like the (in my experience much more common) Deflection setup above. Just paste these two:  
+<details>
+<summary>Arcane Protection</summary>
 ```json
 {
     "id": "ARCANE_PROTECTION",
@@ -91,6 +97,8 @@ It works exactly like the (in my experience much more common) Deflection setup a
 }
 ```
   
+<details>
+<summary>Arcane Protection (raise)</summary>  
 ```json
 {
     "id": "ARCANE_PROTECTION-RAISE",
@@ -111,10 +119,13 @@ It works exactly like the (in my experience much more common) Deflection setup a
     "group": "Target"
 }
 ```
+</details>
 **Please note** that this will also affect friendly powers! Sadly there currently is no way to exclude friendly powers from it. This may change in the future so make sure to check back here frequently.
 
 ### Automating Empathy
 As above, just for the empathy power this time.  
+<details>
+<summary>Empathy</summary>
 ```json
 {
     "id": "EMPATHY",
@@ -163,7 +174,9 @@ As above, just for the empathy power this time.
     "group": "Target"
 }
 ```
-
+</details>
+<details>
+<summary>Empathy (raise)</summary>
 ```json
 {
     "id": "EMPATHY-RAISE",
@@ -204,9 +217,12 @@ As above, just for the empathy power this time.
     "group": "Target"
 }
 ```
+</details>
 
 ### Automating Invisibility
 As above, just for the empathy power this time.  
+<details>
+<summary>Invisibility</summary>
 ```json
 {
     "id": "INVISIBLE",
@@ -283,7 +299,9 @@ As above, just for the empathy power this time.
     "group": "Target"
 }
 ```
-
+</details>
+<details>
+<summary>Invisibility (raise)</summary>
 ```json
 {
     "id": "INVISIBLE-RAISE",
@@ -352,5 +370,5 @@ As above, just for the empathy power this time.
     "group": "Target"
 }
 ```
-
+</details>
 Thanks @grendel111111 for helping with the World Global Actions.
