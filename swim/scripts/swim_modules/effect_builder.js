@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 4.0.1
+ * v. 4.1.1
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  * 
  * Powers on hold for now:
@@ -14,9 +14,6 @@
  * - Illusion (want something in conjunction with WarpGate similar to the summoner but need to check how exactly that could work out first.
  * - Light (as I'm not sure if it isn't better suited in the token vision macro)
  * - Telekinesis (because of the unwilling targets problem)
- * 
- * Bugs:
- * - Growth applies 99999999999 as duration for no apparent reason
  ******************************************************/
 
 function generate_id (length = 16) {
@@ -1045,9 +1042,9 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) {
                     aeData.changes.push(additionalChange[0])
-                    aeData.duration.rounds = noPP ? Number(999999999999999) : data.growth.duration
                 }
                 aeData.flags.swim.owner = true
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data.speed.duration
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
