@@ -58,16 +58,7 @@ and this:
     "group": "Target"
 }
 ```
-Those two will ensure that BR2 automatically subtracts the appropriate amount (-2 and -4 respectively) from attack rolls that are from weapon type items. As per the SWADE core rules this should be everything. Certain powers *could* fall under that rule but that is left unclear in the rules and most importantly: *arcane protection* handles exactly that. If you want to include the *bolt* power for example you can easily do this by adding the following *inside* the `and_selector`:  
-```json
-{"selector_type":"item_name",
-"selector_value":"bolt"},
-```
-Place it just after the `,` below `weapon`. I would advice against it however. It introduces several problems:  
-1. It won't catch custom power names (which are encouraged to do by the rules) and
-2. the rules are very unclear about it and it likely would come down to the setting.  
-
-Thanks @grendel111111 for helping with the World Global Actions.
+Those two will ensure that BR2 automatically subtracts the appropriate amount (-2 and -4 respectively) from attack rolls that are from weapon type items. As per the SWADE core rules this should be everything.
 
 ### Automating Arcane Protection
 It works exactly like the (in my experience much more common) Deflection setup above. Just paste these two:  
@@ -361,3 +352,5 @@ As above, just for the empathy power this time.
     "group": "Target"
 }
 ```
+
+Thanks @grendel111111 for helping with the World Global Actions.
