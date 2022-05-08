@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 4.0.0
+ * v. 4.0.1
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  * 
  * Powers on hold for now:
@@ -1208,6 +1208,7 @@ export async function effect_builder_gm(data) {
                 label: data.beastFriend.degree === "raise" ? `${data.beastFriend.caster}'s ${game.i18n.localize("SWIM.power-beastFriend")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${data.beastFriend.caster}'s ${game.i18n.localize("SWIM.power-beastFriend")}`,
                 duration: {
                     seconds: power || noPP ? Number(999999999999999) : data.beastFriend.durationNoCombat,
+                    rounds: power || noPP ? Number(999999999999999) : data[type].duration / 6,
                 },
                 flags: {
                     swade: {
@@ -1226,6 +1227,7 @@ export async function effect_builder_gm(data) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
                 aeData.duration.seconds = noPP ? Number(999999999999999) : data.beastFriend.durationNoCombat
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration / 6
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1466,6 +1468,7 @@ export async function effect_builder_gm(data) {
                 label: data.darksight.degree === "raise" ? `${game.i18n.localize("SWIM.power-darksight")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-darksight")}`,
                 duration: {
                     seconds: power || noPP ? Number(999999999999999) : data.darksight.duration,
+                    rounds: power || noPP ? Number(999999999999999) : data[type].duration / 6,
                 },
                 flags: {
                     swade: {
@@ -1488,6 +1491,7 @@ export async function effect_builder_gm(data) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
                 aeData.duration.seconds = noPP ? Number(999999999999999) : data.darksight.duration
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration / 6
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1568,6 +1572,7 @@ export async function effect_builder_gm(data) {
                 label: data.disguise.degree === "raise" ? `${game.i18n.localize("SWIM.power-disguise")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-disguise")}`,
                 duration: {
                     seconds: power || noPP ? Number(999999999999999) : data.disguise.duration,
+                    rounds: power || noPP ? Number(999999999999999) : data[type].duration / 6,
                 },
                 flags: {
                     swade: {
@@ -1590,6 +1595,7 @@ export async function effect_builder_gm(data) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
                 aeData.duration.seconds = noPP ? Number(999999999999999) : data.disguise.duration
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration / 6
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1602,6 +1608,7 @@ export async function effect_builder_gm(data) {
                 label: game.i18n.localize("SWIM.power-environmentalProtection"),
                 duration: {
                     seconds: power || noPP ? Number(999999999999999) : data.environmentalProtection.duration,
+                    rounds: power || noPP ? Number(999999999999999) : data[type].duration / 6,
                 },
                 flags: {
                     swade: {
@@ -1624,6 +1631,7 @@ export async function effect_builder_gm(data) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
                 aeData.duration.seconds = noPP ? Number(999999999999999) : data.environmentalProtection.duration
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration / 6
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1739,6 +1747,7 @@ export async function effect_builder_gm(data) {
                 label: data[type].degree === "raise" ? `${game.i18n.localize("SWIM.power-mindLink")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-mindLink")}`,
                 duration: {
                     seconds: power || noPP ? Number(999999999999999) : data[type].duration,
+                    rounds: power || noPP ? Number(999999999999999) : data[type].duration / 6,
                 },
                 flags: {
                     swade: {
@@ -1761,6 +1770,7 @@ export async function effect_builder_gm(data) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
                 aeData.duration.seconds = noPP ? Number(999999999999999) : data[type].duration
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration / 6
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1807,6 +1817,7 @@ export async function effect_builder_gm(data) {
                 label: game.i18n.localize("SWIM.power-slumber"),
                 duration: {
                     seconds: power || noPP ? Number(999999999999999) : data[type].duration,
+                    rounds: power || noPP ? Number(999999999999999) : data[type].duration / 6,
                 },
                 flags: {
                     swade: {
@@ -1829,6 +1840,7 @@ export async function effect_builder_gm(data) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
                 aeData.duration.seconds = noPP ? Number(999999999999999) : data[type].duration
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration / 6
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1875,6 +1887,7 @@ export async function effect_builder_gm(data) {
                 label: data[type].degree === "raise" ? `${game.i18n.localize("SWIM.power-speakLanguage")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-speakLanguage")}`,
                 duration: {
                     seconds: power || noPP ? Number(999999999999999) : data[type].duration,
+                    rounds: power || noPP ? Number(999999999999999) : data[type].duration / 6,
                 },
                 flags: {
                     swade: {
@@ -1897,6 +1910,7 @@ export async function effect_builder_gm(data) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
                 aeData.duration.seconds = noPP ? Number(999999999999999) : data[type].duration
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration / 6
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
