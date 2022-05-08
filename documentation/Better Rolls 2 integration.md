@@ -157,16 +157,12 @@ As above, just for the empathy power this time.
         },
         {
             "selector_type": "actor_has_effect",
-            "selector_value": "Empathy"
+            "selector_value": "Maintaining Empathy"
         },
         {
             "not_selector": [
                 {
                     "selector_type": "target_has_effect",
-                    "selector_value": "Empathy (raise)"
-                },
-                {
-                    "selector_type": "actor_has_effect",
                     "selector_value": "Empathy (raise)"
                 }
             ]
@@ -210,7 +206,7 @@ As above, just for the empathy power this time.
         },
         {
             "selector_type": "actor_has_effect",
-            "selector_value": "Empathy (raise)"
+            "selector_value": "Maintaining Empathy"
         }
     ],
     "defaultChecked": "on",
