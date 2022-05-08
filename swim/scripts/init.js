@@ -134,6 +134,9 @@ Hooks.on(`createActiveEffect`, async (condition, _, userID) => {
             if (token.data.hidden === false) { await token.toggleVisibility() }
         }
     }
+    if (condition.data.flags?.core?.statusId === "torch" && game.user.id === userID) {
+        swim.token_vision()
+    }
 })
 Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
     const actor = condition.parent
@@ -156,6 +159,9 @@ Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
                 await effect.delete()
             }
         }
+    }
+    if (condition.data.flags?.core?.statusId === "torch" && game.user.id === userID) {
+        swim.token_vision()
     }
 })
 
