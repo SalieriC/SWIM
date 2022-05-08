@@ -49,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - - Enabled near-infinite duration on powers if no power points setting rule active.
 - - Add an AE to the caster if he is not the target, that gives the casters spellcasting trait a -1 for maintaining the power if the power is found and no power points is active. In case no power points is not used, an AE is added to the caster (if the power is found) thats sole purpose is to track and cancel maintained powers.
+- - If there is no active combat, start round of the effects will be set to 0 which ensures that the duration will work if combat starts while the AE is applied.
 - If a power effect is set up using the power effect builder, the caster gains the ability to delete the AE on all actors he previously added it to. That means if the caster drops the power (or the duration runs out) it will be dropped on each actor, giving full control over maintenance to the player.
 - Localisation for:
 - - Fear Table function.
