@@ -120,3 +120,99 @@ It works exactly like the (in my experience much more common) Deflection setup a
 }
 ```
 **Please note** that this will also affect friendly powers! Sadly there currently is no way to exclude friendly powers from it. This may change in the future so make sure to check back here frequently.
+
+### Automating Empathy
+As above, just for the empathy power this time.  
+```json
+{
+    "id": "EMPATHY",
+    "name": "Empathy",
+    "button_name": "has Empathy",
+    "skillMod": "+1",
+    "and_selector": [
+        {
+            "or_selector": [
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Intimidation"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Persuasion"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Performance"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Taunt"
+                }
+            ]
+        },
+        {
+            "selector_type": "target_has_effect",
+            "selector_value": "Empathy"
+        },
+        {
+            "selector_type": "actor_has_effect",
+            "selector_value": "Empathy"
+        },
+        {
+            "not_selector": [
+                {
+                    "selector_type": "target_has_effect",
+                    "selector_value": "Empathy (raise)"
+                },
+                {
+                    "selector_type": "actor_has_effect",
+                    "selector_value": "Empathy (raise)"
+                }
+            ]
+        }
+    ],
+    "defaultChecked": "on",
+    "group": "Target"
+}
+```
+
+```json
+{
+    "id": "EMPATHY-RAISE",
+    "name": "Empathy (raise)",
+    "button_name": "has Empathy (raise)",
+    "skillMod": "+2",
+    "and_selector": [
+        {
+            "or_selector": [
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Intimidation"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Persuasion"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Performance"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Taunt"
+                }
+            ]
+        },
+        {
+            "selector_type": "target_has_effect",
+            "selector_value": "Empathy (raise)"
+        },
+        {
+            "selector_type": "actor_has_effect",
+            "selector_value": "Empathy (raise)"
+        }
+    ],
+    "defaultChecked": "on",
+    "group": "Target"
+}
+```
