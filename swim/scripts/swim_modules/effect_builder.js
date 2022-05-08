@@ -884,10 +884,9 @@ export async function effect_builder_gm(data) {
     if (data.targetIDs.find(t => t === casterID)) {
         casterIsTarget = true
     }
+    const power = caster.actor.items.find(p => p.name.toLowerCase().includes(game.i18n.localize(`SWIM.power-${type}`).toLowerCase()) && p.type === "power" )
     let additionalChange = false
     if (casterIsTarget && noPP === true && !(type === "blind" || type === "confusion" || selectedPower === "sloth")) {
-        casterIsTarget = true
-        const power = caster.actor.items.find(p => p.name.toLowerCase().includes(game.i18n.localize(`SWIM.power-${type}`).toLowerCase()) && p.type === "power" )
         if (power) {
             const skillName = power.data.data.actions.skill
             additionalChange = [{ key: `@Skill{${skillName}}[data.die.modifier]`, mode: 2, priority: undefined, value: -1 }]
@@ -914,7 +913,7 @@ export async function effect_builder_gm(data) {
                 boost: {
                     degree: data.boost.degree,
                     trait: target.traitName,
-                    duration: noPP ? Number(999999999999999) : data.boost.duration,
+                    duration: power || noPP ? Number(999999999999999) : data.boost.duration,
                     icon: data.boost.icon,
                     additionalChanges: target.targetID === casterID ? additionalChange : false,
                     flags: {swim: {
@@ -926,7 +925,10 @@ export async function effect_builder_gm(data) {
                     }}
                 }
             }
-            if (target.targetID === casterID) { boostData.boost.flags.swim.owner = true }
+            if (target.targetID === casterID) {
+                boostData.boost.flags.swim.owner = true
+                boostData.boost.duration = noPP ? Number(999999999999999) : data.boost.duration
+            }
             await succ.apply_status(target.targetID, 'boost', true, false, boostData)
         }
     } else if (type === "lower") {
@@ -935,7 +937,7 @@ export async function effect_builder_gm(data) {
                 lower: {
                     degree: data.lower.degree,
                     trait: target.traitName,
-                    duration: noPP ? Number(999999999999999) : data.lower.duration,
+                    duration: power || noPP ? Number(999999999999999) : data.lower.duration,
                     icon: data.lower.icon,
                     additionalChanges: target.targetID === casterID ? additionalChange : false,
                     flags: {swim: {
@@ -947,7 +949,10 @@ export async function effect_builder_gm(data) {
                     }}
                 }
             }
-            if (target.targetID === casterID) { lowerData.lower.flags.swim.owner = true }
+            if (target.targetID === casterID) {
+                lowerData.lower.flags.swim.owner = true
+                lowerData.lower.duration = noPP ? Number(999999999999999) : data.lower.duration
+            }
             await succ.apply_status(target.targetID, 'lower', true, false, lowerData)
         }
     } else if (type === "protection") {
@@ -956,7 +961,7 @@ export async function effect_builder_gm(data) {
                 protection: {
                     bonus: data.protection.bonus,
                     type: data.protection.type,
-                    duration: noPP ? Number(999999999999999) : data.protection.duration,
+                    duration: power || noPP ? Number(999999999999999) : data.protection.duration,
                     icon: data.protection.icon,
                     additionalChanges: target.targetID === casterID ? additionalChange : false,
                     flags: {swim: {
@@ -968,7 +973,10 @@ export async function effect_builder_gm(data) {
                     }}
                 }
             }
-            if (target.targetID === casterID) { protectionData.protection.flags.swim.owner = true }
+            if (target.targetID === casterID) {
+                protectionData.protection.flags.swim.owner = true
+                protectionData.protection.duration = noPP ? Number(999999999999999) : data.protection.duration
+            }
             await succ.apply_status(target, 'protection', true, false, protectionData)
         }
     } else if (type === "smite") {
@@ -977,7 +985,7 @@ export async function effect_builder_gm(data) {
                 smite: {
                     bonus: data.smite.bonus,
                     weapon: target.weaponName,
-                    duration: noPP ? Number(999999999999999) : data.smite.duration,
+                    duration: power || noPP ? Number(999999999999999) : data.smite.duration,
                     icon: data.smite.icon,
                     additionalChanges: target.targetID === casterID ? additionalChange : false,
                     flags: {swim: {
@@ -989,7 +997,10 @@ export async function effect_builder_gm(data) {
                     }}
                 }
             }
-            if (target.targetID === casterID) { smiteData.smite.flags.swim.owner = true }
+            if (target.targetID === casterID) {
+                smiteData.smite.flags.swim.owner = true
+                smiteData.smite.duration = noPP ? Number(999999999999999) : data.smite.duration
+            }
             await succ.apply_status(target.targetID, 'smite', true, false, smiteData)
         }
     } else if (type === "growth") {
@@ -1001,7 +1012,7 @@ export async function effect_builder_gm(data) {
                 icon: data.growth.icon ? data.growth.icon : "modules/swim/assets/icons/effects/m-growth.svg",
                 label: game.i18n.localize("SWIM.power-growth"),
                 duration: {
-                    rounds: noPP ? Number(999999999999999) : data.growth.duration,
+                    rounds: power || noPP ? Number(999999999999999) : data.growth.duration,
                 },
                 flags: {
                     swade: {
@@ -1031,7 +1042,10 @@ export async function effect_builder_gm(data) {
                 aeData.changes.push({ key: `data.stats.toughness.value`, mode: 2, priority: undefined, value: change })
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) {
+                    aeData.changes.push(additionalChange[0])
+                    aeData.duration.rounds = noPP ? Number(999999999999999) : data.growth.duration
+                }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -1045,7 +1059,7 @@ export async function effect_builder_gm(data) {
                 icon: data.shrink.icon ? data.shrink.icon : "modules/swim/assets/icons/effects/m-shrink.svg",
                 label: game.i18n.localize("SWIM.power-shrink"),
                 duration: {
-                    rounds: noPP ? Number(999999999999999) : data.shrink.duration,
+                    rounds: power || noPP ? Number(999999999999999) : data.shrink.duration,
                 },
                 flags: {
                     swade: {
@@ -1075,6 +1089,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data.shrink.duration
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1088,7 +1103,7 @@ export async function effect_builder_gm(data) {
                 icon: data.speed.icon ? data.speed.icon : quickness ? "modules/swim/assets/icons/effects/m-quickness.svg" : "modules/swim/assets/icons/effects/m-speed.svg",
                 label: quickness ? game.i18n.localize("SWIM.power-speedQuickness") : game.i18n.localize("SWIM.power-speed"),
                 duration: {
-                    rounds: noPP ? Number(999999999999999) : data.speed.duration,
+                    rounds: power || noPP ? Number(999999999999999) : data.speed.duration,
                 },
                 flags: {
                     swade: {
@@ -1107,6 +1122,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data.speed.duration
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1114,13 +1130,21 @@ export async function effect_builder_gm(data) {
         for (let targetID of data.targetIDs) {
             const target = game.canvas.tokens.get(targetID)
             const change = data.sloth.change
+            let duration = {}
+            if (target.combatant != null) {
+                duration = {
+                    rounds: 0,
+                    startRound: game.combat.data.round,
+                    startTurn: 0,
+                    // Same trickery as with confusion
+                    turns: 1
+                }
+            }
             let aeData = {
                 changes: [{ key: `data.stats.speed.value`, mode: 5, priority: undefined, value: Math.round(target.actor.data.data.stats.speed.value * change) }],
                 icon: data.sloth.icon ? data.sloth.icon : "modules/swim/assets/icons/effects/m-sloth.svg",
                 label: game.i18n.localize("SWIM.power-sloth"),
-                duration: {
-                    rounds: noPP ? Number(999999999999999) : data.sloth.duration,
-                },
+                duration: duration,
                 flags: {
                     swade: {
                         expiration: 3
@@ -1150,7 +1174,7 @@ export async function effect_builder_gm(data) {
                 icon: data.burden.icon ? data.burden.icon : change > 0 ? "modules/swim/assets/icons/effects/m-ease_burden.svg" : "modules/swim/assets/icons/effects/m-burden.svg",
                 label: change > 0 ? game.i18n.localize("SWIM.power-easeBurden-tes") : game.i18n.localize("SWIM.power-burden-tes"),
                 duration: {
-                    rounds: noPP ? Number(999999999999999) : data.burden.duration,
+                    rounds: power || noPP ? Number(999999999999999) : data.burden.duration,
                 },
                 flags: {
                     swade: {
@@ -1166,10 +1190,12 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
-            else { aeData.duration.seconds = noPP ? Number(999999999999999) : data.burden.durationNoCombat }
+            else { aeData.duration.seconds = power || noPP ? Number(999999999999999) : data.burden.durationNoCombat }
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data.burden.duration
+                aeData.duration.seconds = noPP ? Number(999999999999999) : data.burden.durationNoCombat
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1181,7 +1207,7 @@ export async function effect_builder_gm(data) {
                 icon: data.beastFriend.icon ? data.beastFriend.icon : "modules/swim/assets/icons/effects/m-beastFriend.svg",
                 label: data.beastFriend.degree === "raise" ? `${data.beastFriend.caster}'s ${game.i18n.localize("SWIM.power-beastFriend")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${data.beastFriend.caster}'s ${game.i18n.localize("SWIM.power-beastFriend")}`,
                 duration: {
-                    seconds: noPP ? Number(999999999999999) : data.beastFriend.durationNoCombat,
+                    seconds: power || noPP ? Number(999999999999999) : data.beastFriend.durationNoCombat,
                 },
                 flags: {
                     swade: {
@@ -1199,6 +1225,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.seconds = noPP ? Number(999999999999999) : data.beastFriend.durationNoCombat
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1211,7 +1238,7 @@ export async function effect_builder_gm(data) {
                 icon: data.invisibility.icon ? data.invisibility.icon : "modules/succ/assets/icons/m-invisible.svg",
                 label: data.invisibility.degree === "raise" ? `${condition.data.label} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${condition.data.label}`,
                 duration: {
-                    rounds: noPP ? Number(999999999999999) : data.invisibility.duration,
+                    rounds: power || noPP ? Number(999999999999999) : data.invisibility.duration,
                 },
                 flags: {
                     swade: {
@@ -1233,6 +1260,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data.invisibility.duration
             }
             await condition.update(aeData)
         }
@@ -1295,7 +1323,7 @@ export async function effect_builder_gm(data) {
                 icon: data.deflection.icon ? data.deflection.icon : "modules/swim/assets/icons/effects/m-deflection.svg",
                 label: data.deflection.degree === "raise" ? `${game.i18n.localize("SWIM.power-deflection")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-deflection")}`,
                 duration: {
-                    rounds: noPP ? Number(999999999999999) : data.deflection.duration,
+                    rounds: power || noPP ? Number(999999999999999) : data.deflection.duration,
                 },
                 flags: {
                     swade: {
@@ -1317,6 +1345,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data.deflection.duration
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1328,7 +1357,7 @@ export async function effect_builder_gm(data) {
                 icon: data.arcaneProtection.icon ? data.arcaneProtection.icon : "modules/swim/assets/icons/effects/m-arcaneProtection.svg",
                 label: data.arcaneProtection.degree === "raise" ? `${game.i18n.localize("SWIM.power-arcaneProtection")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-arcaneProtection")}`,
                 duration: {
-                    rounds: noPP ? Number(999999999999999) : data.arcaneProtection.duration,
+                    rounds: power || noPP ? Number(999999999999999) : data.arcaneProtection.duration,
                 },
                 flags: {
                     swade: {
@@ -1350,6 +1379,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data.arcaneProtection.duration
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1367,7 +1397,7 @@ export async function effect_builder_gm(data) {
                 icon: data.burrow.icon ? data.burrow.icon : "modules/swim/assets/icons/effects/m-burrow.svg",
                 label: label,
                 duration: {
-                    rounds: noPP ? Number(999999999999999) : data.burrow.duration,
+                    rounds: power || noPP ? Number(999999999999999) : data.burrow.duration,
                 },
                 flags: {
                     swade: {
@@ -1389,6 +1419,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data.burrow.duration
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1400,7 +1431,7 @@ export async function effect_builder_gm(data) {
                 icon: data.damageField.icon ? data.damageField.icon : "modules/swim/assets/icons/effects/m-damageField.svg",
                 label: data.damageField.damage === true ? `${game.i18n.localize("SWIM.power-damageField")} (2d6)` : `${game.i18n.localize("SWIM.power-arcaneProtection")} (2d4)`,
                 duration: {
-                    rounds: noPP ? Number(999999999999999) : data.damageField.duration,
+                    rounds: power || noPP ? Number(999999999999999) : data.damageField.duration,
                 },
                 flags: {
                     swade: {
@@ -1422,6 +1453,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data.damageField.duration
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1433,7 +1465,7 @@ export async function effect_builder_gm(data) {
                 icon: data.darksight.icon ? data.darksight.icon : "modules/swim/assets/icons/effects/m-darksight.svg",
                 label: data.darksight.degree === "raise" ? `${game.i18n.localize("SWIM.power-darksight")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-darksight")}`,
                 duration: {
-                    seconds: noPP ? Number(999999999999999) : data.darksight.duration,
+                    seconds: power || noPP ? Number(999999999999999) : data.darksight.duration,
                 },
                 flags: {
                     swade: {
@@ -1455,6 +1487,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.seconds = noPP ? Number(999999999999999) : data.darksight.duration
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1466,7 +1499,7 @@ export async function effect_builder_gm(data) {
                 icon: data.detectArcana.icon ? data.detectArcana.icon : "modules/swim/assets/icons/effects/m-detectArcana.svg",
                 label: data.detectArcana.degree === "raise" ? `${game.i18n.localize("SWIM.power-detectArcana")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-detectArcana")}`,
                 duration: {
-                    rounds: noPP ? Number(999999999999999) : data.detectArcana.duration,
+                    rounds: power || noPP ? Number(999999999999999) : data.detectArcana.duration,
                 },
                 flags: {
                     swade: {
@@ -1488,6 +1521,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data.detectArcana.duration
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1499,7 +1533,7 @@ export async function effect_builder_gm(data) {
                 icon: data.concealArcana.icon ? data.concealArcana.icon : "modules/swim/assets/icons/effects/m-concealArcana.svg",
                 label: data.concealArcana.strong === true ? `${game.i18n.localize("SWIM.power-concealArcana")} (${game.i18n.localize("SWIM.modifierStrong").toLowerCase()})` : `${game.i18n.localize("SWIM.power-concealArcana")}`,
                 duration: {
-                    seconds: noPP ? Number(999999999999999) : data.concealArcana.duration,
+                    seconds: power || noPP ? Number(999999999999999) : data.concealArcana.duration,
                 },
                 flags: {
                     swade: {
@@ -1521,6 +1555,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.seconds = noPP ? Number(999999999999999) : data.concealArcana.duration
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1532,7 +1567,7 @@ export async function effect_builder_gm(data) {
                 icon: data.disguise.icon ? data.disguise.icon : "modules/swim/assets/icons/effects/m-disguise.svg",
                 label: data.disguise.degree === "raise" ? `${game.i18n.localize("SWIM.power-disguise")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-disguise")}`,
                 duration: {
-                    seconds: noPP ? Number(999999999999999) : data.disguise.duration,
+                    seconds: power || noPP ? Number(999999999999999) : data.disguise.duration,
                 },
                 flags: {
                     swade: {
@@ -1554,6 +1589,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.seconds = noPP ? Number(999999999999999) : data.disguise.duration
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1565,7 +1601,7 @@ export async function effect_builder_gm(data) {
                 icon: data.environmentalProtection.icon ? data.environmentalProtection.icon : "modules/swim/assets/icons/effects/m-environmentalProtection.svg",
                 label: game.i18n.localize("SWIM.power-environmentalProtection"),
                 duration: {
-                    seconds: noPP ? Number(999999999999999) : data.environmentalProtection.duration,
+                    seconds: power || noPP ? Number(999999999999999) : data.environmentalProtection.duration,
                 },
                 flags: {
                     swade: {
@@ -1587,6 +1623,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.seconds = noPP ? Number(999999999999999) : data.environmentalProtection.duration
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1598,7 +1635,7 @@ export async function effect_builder_gm(data) {
                 icon: data.farsight.icon ? data.farsight.icon : "modules/swim/assets/icons/effects/m-farsight.svg",
                 label: data.farsight.degree === "raise" ? `${game.i18n.localize("SWIM.power-farsight")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-farsight")}`,
                 duration: {
-                    rounds: noPP ? Number(999999999999999) : data.farsight.duration,
+                    rounds: power || noPP ? Number(999999999999999) : data.farsight.duration,
                 },
                 flags: {
                     swade: {
@@ -1620,6 +1657,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data.farsight.duration
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1630,7 +1668,7 @@ export async function effect_builder_gm(data) {
                 changes: [],
                 label: data.fly.degree === "raise" ? `${game.i18n.localize("SWADE.Flying")} (24")` : `${game.i18n.localize("SWADE.Flying")} (12")`,
                 duration: {
-                    rounds: noPP ? Number(999999999999999) : data.fly.duration,
+                    rounds: power || noPP ? Number(999999999999999) : data.fly.duration,
                 },
                 flags: {
                     swade: {
@@ -1653,6 +1691,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data.fly.duration
             }
             const effect = await succ.apply_status(target, "flying", true, false)
             await effect.update(aeData)
@@ -1665,7 +1704,7 @@ export async function effect_builder_gm(data) {
                 icon: data.intangibility.icon ? data.intangibility.icon : "modules/swim/assets/icons/effects/m-intangibility.svg",
                 label: game.i18n.localize("SWIM.power-intangibility"),
                 duration: {
-                    rounds: noPP ? Number(999999999999999) : data.intangibility.duration,
+                    rounds: power || noPP ? Number(999999999999999) : data.intangibility.duration,
                 },
                 flags: {
                     swade: {
@@ -1687,6 +1726,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data.intangibility.duration
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1698,7 +1738,7 @@ export async function effect_builder_gm(data) {
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
                 label: data[type].degree === "raise" ? `${game.i18n.localize("SWIM.power-mindLink")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-mindLink")}`,
                 duration: {
-                    seconds: noPP ? Number(999999999999999) : data[type].duration,
+                    seconds: power || noPP ? Number(999999999999999) : data[type].duration,
                 },
                 flags: {
                     swade: {
@@ -1720,6 +1760,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.seconds = noPP ? Number(999999999999999) : data[type].duration
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1731,7 +1772,7 @@ export async function effect_builder_gm(data) {
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
                 label: data[type].degree === "raise" ? `${data.puppet.casterName}'s ${game.i18n.localize("SWIM.power-puppet")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${data.puppet.casterName}'s ${game.i18n.localize("SWIM.power-puppet")}`,
                 duration: {
-                    rounds: noPP ? Number(999999999999999) : data[type].duration,
+                    rounds: power || noPP ? Number(999999999999999) : data[type].duration,
                 },
                 flags: {
                     swade: {
@@ -1753,6 +1794,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1764,7 +1806,7 @@ export async function effect_builder_gm(data) {
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
                 label: game.i18n.localize("SWIM.power-slumber"),
                 duration: {
-                    seconds: noPP ? Number(999999999999999) : data[type].duration,
+                    seconds: power || noPP ? Number(999999999999999) : data[type].duration,
                 },
                 flags: {
                     swade: {
@@ -1786,6 +1828,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.seconds = noPP ? Number(999999999999999) : data[type].duration
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1797,7 +1840,7 @@ export async function effect_builder_gm(data) {
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
                 label: data[type].degree === "raise" ? `${game.i18n.localize("SWIM.power-silence")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-silence")}`,
                 duration: {
-                    rounds: noPP ? Number(999999999999999) : data[type].duration,
+                    rounds: power || noPP ? Number(999999999999999) : data[type].duration,
                 },
                 flags: {
                     swade: {
@@ -1819,6 +1862,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1830,7 +1874,7 @@ export async function effect_builder_gm(data) {
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
                 label: data[type].degree === "raise" ? `${game.i18n.localize("SWIM.power-speakLanguage")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-speakLanguage")}`,
                 duration: {
-                    seconds: noPP ? Number(999999999999999) : data[type].duration,
+                    seconds: power || noPP ? Number(999999999999999) : data[type].duration,
                 },
                 flags: {
                     swade: {
@@ -1852,6 +1896,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.seconds = noPP ? Number(999999999999999) : data[type].duration
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1863,7 +1908,7 @@ export async function effect_builder_gm(data) {
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
                 label: data[type].degree === "raise" ? `${game.i18n.localize("SWIM.power-wallWalker")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-wallWalker")}`,
                 duration: {
-                    rounds: noPP ? Number(999999999999999) : data[type].duration,
+                    rounds: power || noPP ? Number(999999999999999) : data[type].duration,
                 },
                 flags: {
                     swade: {
@@ -1885,6 +1930,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1896,7 +1942,7 @@ export async function effect_builder_gm(data) {
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
                 label: data[type].degree === "raise" ? `${game.i18n.localize("SWIM.power-warriorsGift")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-warriorsGift")}`,
                 duration: {
-                    rounds: noPP ? Number(999999999999999) : data[type].duration,
+                    rounds: power || noPP ? Number(999999999999999) : data[type].duration,
                 },
                 flags: {
                     swade: {
@@ -1918,6 +1964,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1929,7 +1976,7 @@ export async function effect_builder_gm(data) {
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
                 label: data[type].degree === "raise" ? `${game.i18n.localize(`SWIM.power-${type}`)} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize(`SWIM.power-${type}`)}`,
                 duration: {
-                    rounds: noPP ? Number(999999999999999) : data[type].duration,
+                    rounds: power || noPP ? Number(999999999999999) : data[type].duration,
                 },
                 flags: {
                     swade: {
@@ -1951,6 +1998,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
@@ -1962,7 +2010,7 @@ export async function effect_builder_gm(data) {
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
                 label: data[type].degree === "raise" ? `${game.i18n.localize(`SWIM.power-${type}`)} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize(`SWIM.power-${type}`)}`,
                 duration: {
-                    rounds: noPP ? Number(999999999999999) : data[type].duration,
+                    rounds: power || noPP ? Number(999999999999999) : data[type].duration,
                 },
                 flags: {
                     swade: {
@@ -1984,6 +2032,7 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
