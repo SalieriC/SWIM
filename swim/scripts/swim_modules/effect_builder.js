@@ -61,6 +61,7 @@ export async function effect_builder() {
         <option value="boost">${game.i18n.localize("SWIM.power-boostTrait")}</option>
         <option value="arcaneProtection">${game.i18n.localize("SWIM.power-arcaneProtection")}</option>
         <option value="beastFriend">${game.i18n.localize("SWIM.power-beastFriend")}</option>
+        <option value="blind">${game.i18n.localize("SWIM.power-blind")}</option>
         <option value="burrow">${game.i18n.localize("SWIM.power-burrow")}</option>
         <option value="concealArcana">${game.i18n.localize("SWIM.power-concealArcana")}</option>
         <option value="confusion">${game.i18n.localize("SWIM.power-confusion")}</option>
@@ -136,14 +137,16 @@ export async function effect_builder() {
                     const selectedPower = html.find(`#selected_power`)[0].value
                     const usePowerIcons = game.settings.get("swim", "effectBuilder-usePowerIcons")
                     // If caster is not the target and noPP setting rule active, give the caster a -1 to its spellcasting:
-                    if (!casterIsTarget && noPP) {
+                    console.log(selectedPower)
+                    if (!casterIsTarget && !(selectedPower === "confusion" || selectedPower === "blind")) {
+                        console.log("I AM HERE")
                         const power = token.actor.items.find(p => p.name.toLowerCase().includes(game.i18n.localize(`SWIM.power-${selectedPower}`).toLowerCase()) )
                         if (power) {
                             const skillName = power.data.data.actions.skill
                             let aeData = {
                                 changes: [],
                                 icon: power.img,
-                                label: game.i18n.format("SWIM.label-maintaining", {powerName: power.name}),
+                                label: game.i18n.format("SWIM.label-maintaining", {powerName: game.i18n.localize(`SWIM.power-${selectedPower}`)}),
                                 flags: {
                                     swade: {
                                         expiration: 3
@@ -731,6 +734,24 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "blind") {
+                        const raise = html.find(`#raise`)[0].checked
+                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-blind").toLowerCase()))
+                        const icon = power ? power.img : false
+                        let degree = "success"
+                        if (raise === true) { degree = "raise" }
+                        const data = {
+                            targetIDs: targetIDs,
+                            casterID: token.id,
+                            maintenanceID: maintID,
+                            type: selectedPower,
+                            [selectedPower]: {
+                                degree: degree,
+                                duration: duration,
+                                icon: usePowerIcons ? icon : false
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
                     }
                 }
             }
@@ -827,6 +848,8 @@ export async function effect_builder() {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 } else if (selectedPower === "warriorsGift") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
+                } else if (selectedPower === "blind") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 }
             });
         },
@@ -842,8 +865,11 @@ export async function effect_builder_gm(data) {
     const casterID = data.casterID
     const caster = canvas.tokens.get(casterID)
     let casterIsTarget = false
+    if (data.targetIDs.find(t => t === casterID)) {
+        casterIsTarget = true
+    }
     let additionalChange = false
-    if (data.targetIDs.find(t => t === casterID) && noPP === true) {
+    if (casterIsTarget && noPP === true && !(type === "blind" || type === "confusion")) {
         casterIsTarget = true
         const power = caster.actor.items.find(p => p.name.toLowerCase().includes(game.i18n.localize(`SWIM.power-${type}`).toLowerCase()) && p.type === "power" )
         if (power) {
@@ -1925,6 +1951,47 @@ export async function effect_builder_gm(data) {
                 duration: {
                     rounds: noPP ? Number(999999999999999) : data[type].duration,
                 },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    },
+                    succ: {
+                        updatedAE: true
+                    },
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false
+                    }
+                }
+            }
+            if (target.combatant != null) { aeData.duration.startRound = game.combat.data.round }
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                aeData.flags.swim.owner = true
+            }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
+    } else if (type === "blind") {
+        for (let targetID of data.targetIDs) {
+            const target = game.canvas.tokens.get(targetID)
+            let duration = {}
+            if (target.combatant != null) {
+                duration = {
+                    rounds: 0,
+                    startRound: game.combat.data.round,
+                    startTurn: 0,
+                    // Same trickery as with confusion
+                    turns: 1
+                }
+            }
+            let aeData = {
+                changes: [],
+                icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
+                label: data[type].degree === "raise" ? `${game.i18n.localize(`SWIM.power-${type}`)} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize(`SWIM.power-${type}`)}`,
+                duration: duration,
                 flags: {
                     swade: {
                         expiration: 3
