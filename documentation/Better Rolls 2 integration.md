@@ -295,8 +295,8 @@ As above, just for the empathy power this time.
 
 ```json
 {
-    "id": "INVISIBLE",
-    "name": "Invisible",
+    "id": "INVISIBLE-RAISE",
+    "name": "Invisible (raise)",
     "button_name": "is Invisible",
     "skillMod": "-6",
     "and_selector": [
