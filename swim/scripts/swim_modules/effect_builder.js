@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 3.0.1
+ * v. 3.1.0
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  * 
  * Powers on hold for now:
@@ -43,7 +43,6 @@ export async function effect_builder() {
 
     //Get an ID for this maintenance
     const maintID = generate_id()
-    console.log(maintID)
 
     //Checking if caster is also the target:
     const targetsArray = Array.from(game.user.targets)
@@ -136,39 +135,8 @@ export async function effect_builder() {
                 callback: async (html) => {
                     const selectedPower = html.find(`#selected_power`)[0].value
                     const usePowerIcons = game.settings.get("swim", "effectBuilder-usePowerIcons")
-                    // If caster is not the target and noPP setting rule active, give the caster a -1 to its spellcasting:
-                    console.log(selectedPower)
-                    if (!casterIsTarget && !(selectedPower === "confusion" || selectedPower === "blind")) {
-                        console.log("I AM HERE")
-                        const power = token.actor.items.find(p => p.name.toLowerCase().includes(game.i18n.localize(`SWIM.power-${selectedPower}`).toLowerCase()) )
-                        if (power) {
-                            const skillName = power.data.data.actions.skill
-                            let aeData = {
-                                changes: [],
-                                icon: power.img,
-                                label: game.i18n.format("SWIM.label-maintaining", {powerName: game.i18n.localize(`SWIM.power-${selectedPower}`)}),
-                                flags: {
-                                    swade: {
-                                        expiration: 3
-                                    },
-                                    swim: {
-                                        maintainedPower: true,
-                                        maintaining: game.i18n.localize(`SWIM.power-${selectedPower}`),
-                                        targets: targetIDs,
-                                        maintenanceID: maintID,
-                                        owner: true
-                                    }
-                                }
-                            }
-                            if (noPP) {
-                                aeData.changes.push({ key: `@Skill{${skillName}}[data.die.modifier]`, mode: 2, priority: undefined, value: -1 })
-                            }
-                            if (token.actor.data.data.additionalStats?.maintainedPowers) {
-                                aeData.changes.push({ key: `data.additionalStats.maintainedPowers.value`, mode: 2, priority: undefined, value: 1 })
-                            }
-                            await token.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
-                        }
-                    }
+                    let durationSeconds
+                    let durationRounds = duration
                     if (selectedPower === "boost" || selectedPower === "lower") {
                         //const selectedTrait = html.find(`#selected_trait`)[0].value
                         let traits = []
@@ -207,7 +175,7 @@ export async function effect_builder() {
                             protection: {
                                 bonus: bonus,
                                 type: selectedType,
-                                duration: 1,
+                                duration: duration,
                                 icon: usePowerIcons ? icon : false
                             }
                         }
@@ -306,6 +274,7 @@ export async function effect_builder() {
                         }
                         const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-burden-tes").toLowerCase()))
                         const icon = power ? power.img : false
+                        durationSeconds = concentration ? 20 * 60 : 10 * 60
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
@@ -314,7 +283,7 @@ export async function effect_builder() {
                             burden: {
                                 change: change,
                                 duration: duration,
-                                durationNoCombat: concentration ? 20 * 60 : 10 * 60,
+                                durationNoCombat: durationSeconds,
                                 icon: usePowerIcons ? icon : false
                             }
                         }
@@ -325,6 +294,7 @@ export async function effect_builder() {
                         const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
+                        durationSeconds = concentration ? 20 * 60 : 10 * 60
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
@@ -333,7 +303,7 @@ export async function effect_builder() {
                             beastFriend: {
                                 degree: degree,
                                 caster: game.canvas.tokens.controlled[0].name,
-                                durationNoCombat: concentration ? 20 * 60 : 10 * 60,
+                                durationNoCombat: durationSeconds,
                                 icon: usePowerIcons ? icon : false
                             }
                         }
@@ -447,6 +417,7 @@ export async function effect_builder() {
                         const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
+                        durationSeconds = concentration ? Number(120*60) : Number(60*60)
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
@@ -454,7 +425,7 @@ export async function effect_builder() {
                             type: selectedPower,
                             [selectedPower]: {
                                 degree: degree,
-                                duration: concentration ? Number(120*60) : Number(60*60),
+                                duration: durationSeconds,
                                 icon: usePowerIcons ? icon : false
                             }
                         }
@@ -463,13 +434,14 @@ export async function effect_builder() {
                         const strong = html.find(`#strong`)[0].checked
                         const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-conceal").toLowerCase()))
                         const icon = power ? power.img : false
+                        durationSeconds = concentration ? Number(120*60) : Number(60*60)
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
-                                duration: concentration ? Number(120*60) : Number(60*60),
+                                duration: durationSeconds,
                                 icon: usePowerIcons ? icon : false,
                                 strong: strong
                             }
@@ -499,6 +471,7 @@ export async function effect_builder() {
                         const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
+                        durationSeconds = concentration ? Number(20*60) : Number(10*60)
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
@@ -506,7 +479,7 @@ export async function effect_builder() {
                             type: selectedPower,
                             [selectedPower]: {
                                 degree: degree,
-                                duration: concentration ? Number(20*60) : Number(10*60),
+                                duration: durationSeconds,
                                 icon: usePowerIcons ? icon : false
                             }
                         }
@@ -550,13 +523,14 @@ export async function effect_builder() {
                     } else if (selectedPower === "environmentalProtection") {
                         const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-environmentalProtection").toLowerCase()))
                         const icon = power ? power.img : false
+                        durationSeconds = concentration ? Number(120*60) : Number(60*60)
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
-                                duration: concentration ? Number(120*60) : Number(60*60),
+                                duration: durationSeconds,
                                 icon: usePowerIcons ? icon : false
                             }
                         }
@@ -617,6 +591,7 @@ export async function effect_builder() {
                         const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
+                        durationSeconds = concentration ? Number(60*60) : Number(30*60)
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
@@ -624,7 +599,7 @@ export async function effect_builder() {
                             type: selectedPower,
                             [selectedPower]: {
                                 degree: degree,
-                                duration: concentration ? Number(60*60) : Number(30*60),
+                                duration: durationSeconds,
                                 icon: usePowerIcons ? icon : false
                             }
                         }
@@ -651,13 +626,14 @@ export async function effect_builder() {
                     } else if (selectedPower === "slumber") {
                         const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-slumber").toLowerCase()))
                         const icon = power ? power.img : false
+                        durationSeconds = concentration ? Number(120*60) : Number(60*60)
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
-                                duration: concentration ? Number(120*60) : Number(60*60),
+                                duration: durationSeconds,
                                 icon: usePowerIcons ? icon : false
                             }
                         }
@@ -686,6 +662,7 @@ export async function effect_builder() {
                         const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
+                        durationSeconds = concentration ? Number(20*60) : Number(10*60)
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
@@ -693,7 +670,7 @@ export async function effect_builder() {
                             type: selectedPower,
                             [selectedPower]: {
                                 degree: degree,
-                                duration: concentration ? Number(20*60) : Number(10*60),
+                                duration: durationSeconds,
                                 icon: usePowerIcons ? icon : false
                             }
                         }
@@ -747,11 +724,50 @@ export async function effect_builder() {
                             type: selectedPower,
                             [selectedPower]: {
                                 degree: degree,
-                                duration: duration,
+                                //duration: duration,
                                 icon: usePowerIcons ? icon : false
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
+                    }
+
+                    // If caster is not the target and noPP setting rule active, give the caster a -1 to its spellcasting:
+                    if (!casterIsTarget && !(selectedPower === "confusion" || selectedPower === "blind" || selectedPower === "sloth")) {
+                        const power = token.actor.items.find(p => p.name.toLowerCase().includes(game.i18n.localize(`SWIM.power-${selectedPower}`).toLowerCase()) )
+                        if (power) {
+                            const skillName = power.data.data.actions.skill
+                            let aeData = {
+                                changes: [],
+                                icon: power.img,
+                                label: game.i18n.format("SWIM.label-maintaining", {powerName: game.i18n.localize(`SWIM.power-${selectedPower}`)}),
+                                duration: {
+                                    seconds: noPP ? Number(999999999999999) : durationSeconds,
+                                },
+                                flags: {
+                                    swade: {
+                                        expiration: 3
+                                    },
+                                    swim: {
+                                        maintainedPower: true,
+                                        maintaining: game.i18n.localize(`SWIM.power-${selectedPower}`),
+                                        targets: targetIDs,
+                                        maintenanceID: maintID,
+                                        owner: true
+                                    }
+                                }
+                            }
+                            if (token.combatant != null) {
+                                aeData.duration.startRound = game.combat.data.round
+                                aeData.duration.rounds = noPP ? Number(999999999999999) : durationRounds
+                            }
+                            if (noPP) {
+                                aeData.changes.push({ key: `@Skill{${skillName}}[data.die.modifier]`, mode: 2, priority: undefined, value: -1 })
+                            }
+                            if (token.actor.data.data.additionalStats?.maintainedPowers) {
+                                aeData.changes.push({ key: `data.additionalStats.maintainedPowers.value`, mode: 2, priority: undefined, value: 1 })
+                            }
+                            await token.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+                        }
                     }
                 }
             }
@@ -869,7 +885,7 @@ export async function effect_builder_gm(data) {
         casterIsTarget = true
     }
     let additionalChange = false
-    if (casterIsTarget && noPP === true && !(type === "blind" || type === "confusion")) {
+    if (casterIsTarget && noPP === true && !(type === "blind" || type === "confusion" || selectedPower === "sloth")) {
         casterIsTarget = true
         const power = caster.actor.items.find(p => p.name.toLowerCase().includes(game.i18n.localize(`SWIM.power-${type}`).toLowerCase()) && p.type === "power" )
         if (power) {
@@ -910,7 +926,6 @@ export async function effect_builder_gm(data) {
                     }}
                 }
             }
-            console.log(target.targetID, casterID)
             if (target.targetID === casterID) { boostData.boost.flags.swim.owner = true }
             await succ.apply_status(target.targetID, 'boost', true, false, boostData)
         }
@@ -1275,8 +1290,6 @@ export async function effect_builder_gm(data) {
     } else if (type === "deflection") {
         for (let targetID of data.targetIDs) {
             const target = game.canvas.tokens.get(targetID)
-            console.log(targetID)
-            console.log(casterID)
             let aeData = {
                 changes: [],
                 icon: data.deflection.icon ? data.deflection.icon : "modules/swim/assets/icons/effects/m-deflection.svg",
