@@ -61,6 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Token Vision macro opens up if the torch condition is applied or removed.
 - The Holding condition makes the token indeed holding in the combat tracker. Removing the condition prompts the player with a dialogue to choose between acting now or after current turn. The initiative is then set appropriately. This gives the player more control over their own initiative and alleviates GM workload.
 - On world load SWIM will set the round time to 6 seconds as appropriate to the setting. This is a temporary implementation and will be removed as soon as the system covers this by itself.
+- Added plea for support on SWIM config menu.
 ### Changed
 - Incapacitation and Bleeding Out are added as overlays instead of small icons now. Inc. will be set as small icon if Bleeding Out is applied.
 - Changed and fixed Deviation link to be future proof.
@@ -70,6 +71,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug in the ammo management where single reloading a weapon which is full would overflow the weapons capacity.
 - Fixed a bug that caused weapons which do not require reloading actions to reload anyway.
 - Fixed a bug that prevented the removal of Shaken if all Wounds were soaked.  
+
+<a href="https://ko-fi.com/salieric"><img style="border: 0px; display: block; margin-left: auto; margin-right: auto;" src="https://www.ko-fi.com/img/githubbutton_sm.svg" width="223" height="30" /></a>
 
 ## [0.17.1] - 2022-04-27
 ### Fixed
