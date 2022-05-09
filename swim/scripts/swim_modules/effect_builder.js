@@ -899,12 +899,6 @@ export async function effect_builder_gm(data) {
         owner: false
     }
 
-    /* Make duration dependent on caster, not yet thought about how to properly implement that though
-    const casterID = "many ways to get the Token's Id"
-    const Combatants = game.combat.turns;
-    const turnNo = Combatants.findIndex(i => i.data.tokenId === `${casterID}`);
-    */
-
     if (type === "boost") {
         for (let target of data.boost.trait) {
             const boostData = {
