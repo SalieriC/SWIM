@@ -19,6 +19,8 @@ Hooks.on('getSceneControlButtons', function (hudButtons) {
 Hooks.on('setup', api.registerFunctions)
 
 Hooks.on(`ready`, () => {
+    // Set round time to 6 as appropriate to the system:
+    if (CONFIG.time.roundTime != 6 && swim.is_first_gm()) { CONFIG.time.roundTime = 6 }
     // Check Dependencies
     if (!game.modules.get('settings-extender')?.active && game.user.isGM) {
         let key = "install and activate";
