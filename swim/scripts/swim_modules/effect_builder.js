@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 4.1.1
+ * v. 4.1.2
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  * 
  * Powers on hold for now:
@@ -62,14 +62,14 @@ export async function effect_builder() {
         <option value="beastFriend">${game.i18n.localize("SWIM.power-beastFriend")}</option>
         <option value="blind">${game.i18n.localize("SWIM.power-blind")}</option>
         <option value="burrow">${game.i18n.localize("SWIM.power-burrow")}</option>
-        <option value="concealArcana">${game.i18n.localize("SWIM.power-concealArcana")}</option>
+        <option value="conceal">${game.i18n.localize("SWIM.power-concealArcana")}</option>
         <option value="confusion">${game.i18n.localize("SWIM.power-confusion")}</option>
         <option value="damageField">${game.i18n.localize("SWIM.power-damageField")}</option>
         <option value="darksight">${game.i18n.localize("SWIM.power-darksight")}</option>
         <option value="deflection">${game.i18n.localize("SWIM.power-deflection")}</option>
         <option value="disguise">${game.i18n.localize("SWIM.power-disguise")}</option>
-        <option value="detectArcana">${game.i18n.localize("SWIM.power-detectArcana")}</option>
-        <option value="burden">${game.i18n.localize("SWIM.power-easeBurden-tes")}</option>
+        <option value="detect">${game.i18n.localize("SWIM.power-detectArcana")}</option>
+        <option value="burden-tes">${game.i18n.localize("SWIM.power-easeBurden-tes")}</option>
         <option value="elementalManipulation">${game.i18n.localize("SWIM.power-elementalManipulation")}</option>
         <option value="empathy">${game.i18n.localize("SWIM.power-empathy")}</option>
         <option value="environmentalProtection">${game.i18n.localize("SWIM.power-environmentalProtection")}</option>
@@ -137,6 +137,9 @@ export async function effect_builder() {
                     const usePowerIcons = game.settings.get("swim", "effectBuilder-usePowerIcons")
                     let durationSeconds
                     let durationRounds = duration
+                    const power = token.actor.items.find(p => p.name.toLowerCase().includes(game.i18n.localize(`SWIM.power-${selectedPower}`).toLowerCase()) && p.type === "power" )
+                    const icon = power ? power.img : false
+
                     if (selectedPower === "boost" || selectedPower === "lower") {
                         //const selectedTrait = html.find(`#selected_trait`)[0].value
                         let traits = []
@@ -145,8 +148,6 @@ export async function effect_builder() {
                             traits.push({ targetID: target.id, traitName: targetTraitName })
                         }
                         const raise = html.find(`#raise`)[0].checked
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-boost").toLowerCase()))
-                        const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
@@ -165,8 +166,6 @@ export async function effect_builder() {
                     } else if (selectedPower === "protection") {
                         const bonus = Number(html.find(`#protectionAmount`)[0].value)
                         const selectedType = html.find("input[name=type_choice]:checked").val()
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-protection").toLowerCase()))
-                        const icon = power ? power.img : false
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
@@ -182,8 +181,6 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "smite") {
                         const bonus = Number(html.find(`#damageBonus`)[0].value)
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-smite").toLowerCase()))
-                        const icon = power ? power.img : false
                         let weapons = []
                         for (let target of targets) {
                             const targetWeaponName = html.find(`#${target.id}`)[0].value
@@ -204,8 +201,6 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "growth") {
                         const change = Number(html.find(`#sizeAmount`)[0].value)
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-growth").toLowerCase()))
-                        const icon = power ? power.img : false
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
@@ -220,8 +215,6 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "shrink") {
                         const change = Number(html.find(`#sizeAmount`)[0].value)
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-shrink").toLowerCase()))
-                        const icon = power ? power.img : false
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
@@ -235,8 +228,6 @@ export async function effect_builder() {
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "sloth") {
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-sloth").toLowerCase()))
-                        const icon = power ? power.img : false
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
@@ -251,8 +242,6 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "speed") {
                         const quickness = html.find(`#quickness`)[0].checked;
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-speed").toLowerCase()))
-                        const icon = power ? power.img : false
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
@@ -266,14 +255,12 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
-                    } else if (selectedPower === "burden") {
+                    } else if (selectedPower === "burden-tes") {
                         const change = Number(html.find(`#die_steps`)[0].value)
                         if (change === 0) {
                             ui.notifications.warn(game.i18n.localize("SWIM.notififaction.enterNumberUnequalZero"))
                             return
                         }
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-burden-tes").toLowerCase()))
-                        const icon = power ? power.img : false
                         durationSeconds = concentration ? 20 * 60 : 10 * 60
                         const data = {
                             targetIDs: targetIDs,
@@ -290,8 +277,6 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "beastFriend") {
                         const raise = html.find(`#raise`)[0].checked
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-beastFriend").toLowerCase()))
-                        const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         durationSeconds = concentration ? 20 * 60 : 10 * 60
@@ -310,8 +295,6 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "invisibility") {
                         const raise = html.find(`#raise`)[0].checked
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-invisibility").toLowerCase()))
-                        const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
@@ -327,8 +310,6 @@ export async function effect_builder() {
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "confusion") {
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-confusion").toLowerCase()))
-                        const icon = power ? power.img : false
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
@@ -341,8 +322,6 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "deflection") {
                         const raise = html.find(`#raise`)[0].checked
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-deflection").toLowerCase()))
-                        const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
@@ -359,8 +338,6 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "arcaneProtection") {
                         const raise = html.find(`#raise`)[0].checked
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-arcaneProtection").toLowerCase()))
-                        const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
@@ -378,8 +355,6 @@ export async function effect_builder() {
                     } else if (selectedPower === "burrow") {
                         const raise = html.find(`#raise`)[0].checked
                         const strong = html.find(`#strong`)[0].checked
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-burrow").toLowerCase()))
-                        const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
@@ -397,8 +372,6 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "damageField") {
                         const damage = html.find(`#damage`)[0].checked
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-damageField").toLowerCase()))
-                        const icon = power ? power.img : false
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
@@ -413,8 +386,6 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "darksight") {
                         const raise = html.find(`#raise`)[0].checked
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-darksight").toLowerCase()))
-                        const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         durationSeconds = concentration ? Number(120*60) : Number(60*60)
@@ -430,35 +401,31 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
-                    } else if (selectedPower === "concealArcana") {
+                    } else if (selectedPower === "conceal") {
                         const strong = html.find(`#strong`)[0].checked
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-conceal").toLowerCase()))
-                        const icon = power ? power.img : false
                         durationSeconds = concentration ? Number(120*60) : Number(60*60)
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
-                            type: selectedPower,
-                            [selectedPower]: {
+                            type: "concealArcana",
+                            concealArcana: {
                                 duration: durationSeconds,
                                 icon: usePowerIcons ? icon : false,
                                 strong: strong
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
-                    } else if (selectedPower === "detectArcana") {
+                    } else if (selectedPower === "detect") {
                         const raise = html.find(`#raise`)[0].checked
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-detect").toLowerCase()))
-                        const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
-                            type: selectedPower,
-                            [selectedPower]: {
+                            type: "detectArcana",
+                            detectArcana: {
                                 degree: degree,
                                 duration: duration,
                                 icon: usePowerIcons ? icon : false
@@ -467,8 +434,6 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "disguise") {
                         const raise = html.find(`#raise`)[0].checked
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-disguise").toLowerCase()))
-                        const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         durationSeconds = concentration ? Number(20*60) : Number(10*60)
@@ -486,8 +451,6 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "elementalManipulation") {
                         const raise = html.find(`#raise`)[0].checked
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-elementalManipulation").toLowerCase()))
-                        const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
@@ -504,8 +467,6 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "empathy") {
                         const raise = html.find(`#raise`)[0].checked
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-empathy").toLowerCase()))
-                        const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
@@ -521,8 +482,6 @@ export async function effect_builder() {
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "environmentalProtection") {
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-environmentalProtection").toLowerCase()))
-                        const icon = power ? power.img : false
                         durationSeconds = concentration ? Number(120*60) : Number(60*60)
                         const data = {
                             targetIDs: targetIDs,
@@ -537,8 +496,6 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "farsight") {
                         const raise = html.find(`#raise`)[0].checked
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-farsight").toLowerCase()))
-                        const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
@@ -555,8 +512,6 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "fly") {
                         const raise = html.find(`#raise`)[0].checked
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-fly").toLowerCase()))
-                        const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
@@ -572,8 +527,6 @@ export async function effect_builder() {
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "intangibility") {
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-intangibility").toLowerCase()))
-                        const icon = power ? power.img : false
                         const data = {
                             targetIDs: targetIDs,
                             casterID: token.id,
@@ -587,8 +540,6 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "mindLink") {
                         const raise = html.find(`#raise`)[0].checked
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-mindLink").toLowerCase()))
-                        const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         durationSeconds = concentration ? Number(60*60) : Number(30*60)
@@ -606,8 +557,6 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "puppet") {
                         const raise = html.find(`#raise`)[0].checked
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-puppet").toLowerCase()))
-                        const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
@@ -624,8 +573,6 @@ export async function effect_builder() {
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "slumber") {
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-slumber").toLowerCase()))
-                        const icon = power ? power.img : false
                         durationSeconds = concentration ? Number(120*60) : Number(60*60)
                         const data = {
                             targetIDs: targetIDs,
@@ -640,8 +587,6 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "silence") {
                         const raise = html.find(`#raise`)[0].checked
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-silence").toLowerCase()))
-                        const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
@@ -658,8 +603,6 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "speakLanguage") {
                         const raise = html.find(`#raise`)[0].checked
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-speakLanguage").toLowerCase()))
-                        const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         durationSeconds = concentration ? Number(20*60) : Number(10*60)
@@ -677,8 +620,6 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "wallWalker") {
                         const raise = html.find(`#raise`)[0].checked
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-wallWalker").toLowerCase()))
-                        const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
@@ -695,8 +636,6 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "warriorsGift") {
                         const raise = html.find(`#raise`)[0].checked
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-warriorsGift").toLowerCase()))
-                        const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
@@ -713,8 +652,6 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "blind") {
                         const raise = html.find(`#raise`)[0].checked
-                        const power = token.actor.items.find(p => p.type === "power" && p.name.toLowerCase().includes(game.i18n.localize("SWIM.power-blind").toLowerCase()))
-                        const icon = power ? power.img : false
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
@@ -733,7 +670,6 @@ export async function effect_builder() {
 
                     // If caster is not the target and noPP setting rule active, give the caster a -1 to its spellcasting:
                     if (!casterIsTarget && !(selectedPower === "confusion" || selectedPower === "blind" || selectedPower === "sloth")) {
-                        const power = token.actor.items.find(p => p.name.toLowerCase().includes(game.i18n.localize(`SWIM.power-${selectedPower}`).toLowerCase()) )
                         if (power) {
                             const skillName = power.data.data.actions.skill
                             let aeData = {
@@ -813,7 +749,7 @@ export async function effect_builder() {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
                 } else if (selectedPower === "speed") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderSpeed")
-                } else if (selectedPower === "burden") {
+                } else if (selectedPower === "burden-tes") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderBurden")
                 } else if (selectedPower === "beastFriend") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
@@ -831,9 +767,9 @@ export async function effect_builder() {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionDamageModifier")
                 } else if (selectedPower === "darksight") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-                } else if (selectedPower === "concealArcana") {
+                } else if (selectedPower === "conceal") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionStrongModifier")
-                } else if (selectedPower === "detectArcana") {
+                } else if (selectedPower === "detect") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 } else if (selectedPower === "disguise") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
