@@ -143,7 +143,7 @@ Hooks.on(`createActiveEffect`, async (condition, _, userID) => {
         swim.token_vision()
     }
     // Hold
-    if (condition.data.flags?.core?.statusId === "holding" && swim.is_first_gm()) {
+    if (condition.data.flags?.core?.statusId === "holding" && swim.is_first_gm() && game.combat) {
         const tokens = actor.getActiveTokens()
         for (let token of tokens) { await token.combatant.update({ "flags.swade.roundHeld": 1 }) }
     }
