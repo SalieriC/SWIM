@@ -754,7 +754,8 @@ export async function effect_builder() {
                                         maintaining: game.i18n.localize(`SWIM.power-${selectedPower}`),
                                         targets: targetIDs,
                                         maintenanceID: maintID,
-                                        owner: true
+                                        owner: true,
+                                        powerID: power.id
                                     }
                                 }
                             }
@@ -913,7 +914,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }}
                 }
             }
@@ -937,7 +939,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }}
                 }
             }
@@ -961,7 +964,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }}
                 }
             }
@@ -985,7 +989,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }}
                 }
             }
@@ -1016,7 +1021,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1063,7 +1069,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1107,7 +1114,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1146,7 +1154,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1178,7 +1187,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1211,7 +1221,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1247,7 +1258,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1297,7 +1309,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1332,7 +1345,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1366,7 +1380,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1406,7 +1421,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1440,7 +1456,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1475,7 +1492,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1510,7 +1528,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1544,7 +1563,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1579,7 +1599,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1615,7 +1636,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1650,7 +1672,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1683,7 +1706,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1719,7 +1743,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1754,7 +1779,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1789,7 +1815,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1824,7 +1851,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1859,7 +1887,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1894,7 +1923,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1929,7 +1959,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1963,7 +1994,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -1997,7 +2029,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -2031,7 +2064,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
@@ -2072,7 +2106,8 @@ export async function effect_builder_gm(data) {
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
-                        owner: false
+                        owner: false,
+                        powerID: power ? power.id : undefined
                     }
                 }
             }
