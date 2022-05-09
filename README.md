@@ -10,7 +10,7 @@ You'll find all the macros in a new compendium delivered by the module. It conta
 **Important:** You might need to update the macros you've imported when you update the module. I hope to find a method to automate this in the future.  
 
 ### SUCC  
-[SUCC (SWADE Ultimate Condition Changer)](https://github.com/SalieriC/SUCC) is a module created by Javier Rivera Castro and myself and is a new dependency for SWIM. It is now completely replacing Combat Utility Belt (CUB) because since SWADE v.1+ the way how conditions are handled by the system changed dramatically. CUB will likely take a long time to be fully compatible with the SWADE system, if it ever will be again. This is why I decided to make a module to do what I need myself (after Javier convinced me). SUCC provides a native support for SWADE and thus is very light on the user configuration. No more complicated CUB setup required. It is required to use SWIM.
+[SUCC (SWADE Ultimate Condition Changer)](https://github.com/SalieriC/SUCC) is a module created by Javier Rivera Castro and myself and is a new dependency for SWIM. It is now completely replacing Combat Utility Belt (CUB) because since SWADE v.1+ the way how conditions are handled by the system changed dramatically. CUB will likely take a long time to be fully compatible with the SWADE system, if it ever will be again. This is why I decided to make a module to do what I need myself (after Javier convinced me). SUCC provides a native support for SWADE and thus is very light on the user configuration. No more complicated CUB setup required. It is required to use SWIM and because makes extended use of it. Because of that it is mandatory to keep SUCC up to date whenever you update SWIM.
 
 ### Health Estimate
 [Health Estimate](https://foundryvtt.com/packages/healthEstimate/) is a cool immersion module and thus works great with SWIM. I highly recomment it as it is so much more immersive to say and read "he is a bit beatin'" than to say/read "he has one Wound". Health Estimate should work fine out of the box once activated but you can easily set it up to your liking if you want.  
@@ -32,7 +32,37 @@ You can reach me on Discord with general questions as well: SalieriC#8263
 
 ### Current Assets
 In this repository you can find a number of assets already.  
-- **Icons:** [Game-Icons.net](https://game-icons.net/).  
+- **Icons:** [Game-Icons.net](https://game-icons.net/) (all of them altered by SalieriC#8263).  
+- - Summon Creature Duration: [Pentacle by Skoll](https://game-icons.net/1x1/skoll/pentacle.html)  
+- - Growth/Shrink: [Growth by Delapouite](https://game-icons.net/1x1/delapouite/growth.html)  
+- - Sloth: [Tortoise by Delapouite](https://game-icons.net/1x1/delapouite/tortoise.html)  
+- - Speed: [Rabbit by Delapouite](https://game-icons.net/1x1/delapouite/rabbit.html)  
+- - Quickness: [Speed by Lorc](https://game-icons.net/1x1/lorc/sprint.html)  
+- - Burden: [Weight by Delapouite](https://game-icons.net/1x1/delapouite/weight.html)  
+- - Ease Burden: [Feather by Lorc](https://game-icons.net/1x1/lorc/feather.html)  
+- - Beast Friend: [Beast eye by Lorc](https://game-icons.net/1x1/lorc/beast-eye.html)  
+- - Puppet: <a href="https://www.flaticon.com/free-icons/puppet" title="puppet icons">Puppet icons created by Freepik - Flaticon</a>  
+- - Confusion: [Star swirl by Lorc](https://game-icons.net/1x1/lorc/star-swirl.html)  
+- - Deflection: [Divert by Lorc](https://game-icons.net/1x1/lorc/divert.html)  
+- - Arcane Protection: [Magic Palm by Lorc](https://game-icons.net/1x1/lorc/magic-palm.html)  
+- - Burrow: [Mole by Caro Asercion](https://game-icons.net/1x1/caro-asercion/mole.html)  
+- - Damage Aura: [Icicles Aura by Lorc](https://game-icons.net/1x1/lorc/icicles-aura.html)
+- - Darksight: [Octogonal Eye by Lorc](https://game-icons.net/1x1/lorc/octogonal-eye.html)
+- - Detect Arcana: [All Seeing Eye by Delapouite](https://game-icons.net/1x1/delapouite/all-seeing-eye.html)
+- - Conceil Arcana: [Temple Door by Delapouite](https://game-icons.net/1x1/delapouite/temple-door.html)
+- - Darksight: [Double face mask by Lorc](https://game-icons.net/1x1/lorc/double-face-mask.html)
+- - Environmental Protection: [Embraced energy by Lorc](https://game-icons.net/1x1/lorc/embrassed-energy.html)
+- - Farsight: [Eye target by Delapouite](https://game-icons.net/1x1/delapouite/eye-target.html)
+- - Intangibility: [Ghost ally by Lorc](https://game-icons.net/1x1/lorc/ghost-ally.html)
+- - Ming Link: [Telepathy by Lorc](https://game-icons.net/1x1/lorc/telepathy.html)
+- - Slumber: [Night sleep by Delapouite](https://game-icons.net/1x1/delapouite/night-sleep.html)
+- - Silence: [Mute by Delapouite](https://game-icons.net/1x1/delapouite/mute.html)
+- - Speak Language: [Talk by Skoll](https://game-icons.net/1x1/skoll/talk.html)
+- - Wall Walker: [Brick wall by Delapouite](https://game-icons.net/1x1/delapouite/brick-wall.html) and [Footprint by Lorc](https://game-icons.net/1x1/lorc/footprint.html)
+- - Warrior's Gift: [Axe sword by Delapouite](https://game-icons.net/1x1/delapouite/axe-sword.html)
+- - Empathy: [Shaking hands by Delapouite](https://game-icons.net/1x1/delapouite/shaking-hands.html)
+- - Elemental Manipulation: <a href="https://www.flaticon.com/free-icons/elements" title="elements icons">Elements icons created by Freepik - Flaticon</a>
+- - Blind: [Sight disabled by Skoll](https://game-icons.net/1x1/skoll/sight-disabled.html)
 - **SFX:** (see their file name for origin)
 - - [Fesliyan Studios](www.fesliyanstudios.com), all used with explicit permission (thank you so much), [see their License here](https://www.fesliyanstudios.com/policy).  
 - - [Orange Free Sounds](https://orangefreesounds.com/), all used unter the [CC BY-NC 4.0 License](https://creativecommons.org/licenses/by-nc/4.0/), converted to *.ogg and possibly altered (see file name), Author is in the file names as well.  
@@ -259,6 +289,7 @@ The macro will search this folder structure for your presets and add them to the
 *Why not creating the folder structure automatically on first starting the world?* - Shape Change isn't the most common power in my experience, thus I don't want to force it on GMs who have no need for it.  
 Here is a short video that showcases the macro (visual effect by JB2A, not included in SWIM):  
 <p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/shape_changer_showcase.gif?raw=true"> </p>  
+(Assets used in the scene are from ForgottenAdventures and PEG Inc. and not part of SWIM.)  
 
 ### Mighty Summoner    
 **Immersion setting:** SFX & VFX
@@ -276,7 +307,8 @@ That's basically everything. It uses the same VFX and SFX as the Shape Changer a
 The function will search the folder structure for your presets and add them to the list of creatures a ssummoner can summon. It then will give the player the selected creature attached to the mouse pointer. On clikc the player places the token on the canvas and give that player permission to control it. It does not create a new actor and thus is only available as a token on the canvas. The sheet can be accessed by double left clicking the token as usual.  
 *Why not creating the folder structure automatically on first starting the world?* - Summon powers aren't the most common powers in my experience, especially not on lower ranks, thus I don't want to force it on GMs who have no need for it.  
 Here is a short video that showcases the macro (visual effect by JB2A, not included in SWIM):  
-<p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/mighty_summoner_showcase.gif?raw=true"> </p>  
+<p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/mighty_summoner_showcase.gif?raw=true"> </p> 
+(Assets used in the scene are from ForgottenAdventures and PEG Inc. and not part of SWIM.)  
 
 ### Common Bond
 **Requirements:** None.  
@@ -295,3 +327,15 @@ Target the token you want to give the Benny to and select the token from which y
 This feature is available from a new button (with the fist icon FVTT uses) in the token controls section on the left (only GMs can see it). The button adds all tokens of the current scene to the combat tracker and prompts a dialogue. The user then has the opportunity to group the tokens as needed. A click on the button of the dialogue starts the combat, draws cards for all combatants/groups and sets the turn to the highes initiative.  
 Additionally, if configured and activated properly in the settings, the game will pause all current playlists and starts a defined combat playlist. This also works when setting up and starting a combat without the combat setup feature. It is possible to configure a folder with playlists that shall not be stopped (i.e. ambient playlists).  
 When stopping (deleting) the combat, the game will automatically stop the combat playlist and resume playing any playlists which were playing before the combat.  
+
+### Power Effect Builder
+**Requirements:**  
+- [Warp Gate](https://github.com/trioderegion/warpgate)  
+- [SUCC](https://github.com/SalieriC/SUCC)  
+**Immersion setting:** None atm.  
+**Description:**  
+An immensely powerful way of setting up Active Effects for the smite, darksight, arcane protection, burrow, damage field, protection, growth/shrink, deflection, sloth/speed, invisibility, confusion, beast friend and boost/lower powers (more to come) on multiple targets. It sets the AE up with the appropriate duration (also respecting the concentration edge if the caster (selected token) has it), end of turn message and so on.  
+It makes use of the very powerfull API provided by [Warp Gate](https://github.com/trioderegion/warpgate) and [SUCC](https://github.com/SalieriC/SUCC) to apply the effect even on tokens the user doesn't have permission to edit. Make sure your SUCC and Warp Gate installations are up to date.  
+**Please note:** To access some specific Features of the Power Effect Builder you need to make sure that all Powers have their original names at least together with their flavour names (i.e. "Deflecting Moonlight (Deflection)") otherwise the Power Effect Builder has no chance to find the power, which is important to set up maintenance modifiers and duration. **The duration for non-casters is always near infinite!** This is by design so that it only ends on the casters turn. If the power is not found on the caster the effect will get a proper duration however.  
+<p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/power_effect_builder_showcase.gif?raw=true"> </p>  
+(Assets used in the scene are from JB2A, ForgottenAdventures, The Elder Scrolls and Adellos and not part of SWIM.)  

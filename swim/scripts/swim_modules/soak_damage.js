@@ -1,6 +1,6 @@
 /*******************************************
  * Soak Damage
- * v. 4.1.1
+ * v. 4.1.4
  * Code by SalieriC#8263.
  *******************************************/
 export async function soak_damage_script() {
@@ -126,7 +126,7 @@ export async function soak_damage_script() {
             } else if (rounded >= numberWounds) {
                 chatData += game.i18n.localize("SWIM.chatMessage-soakAllWounds");
                 if (soakSFX) { AudioHelper.play({ src: `${soakSFX}` }, true); }
-                if (token.actor.data.data.status.isShaken === true) {
+                if (await succ.check_status(token, 'shaken') === true) {
                     await succ.apply_status(token, 'shaken', false)
                 }
             }
@@ -566,17 +566,26 @@ export async function soak_damage_script() {
                     if (rollWithEdge < 4) {
                         //Permanent injury and Bleeding Out
                         let dialogContent = `<p>You've rolled a ${rollWithEdge} as your best result.</p><p>You would receive a permanent Injury and become Bleeding out.</p><p>You have <b>${totalBennies} Bennies</b> left. Do you want to spend one to reroll?</p>`
+                        chatData += "and would receive a permanent Injury and become Bleeding out."
                         incReroll(dialogContent)
                     } else if (rollWithEdge >= 4 && rollWithEdge <= 7) {
                         //Injury until all wounds are healed
                         let dialogContent = `<p>You've rolled a ${rollWithEdge} as your best result.</p><p>You would receive an Injury that sticks until all wounds are healed.</p><p>You have <b>${totalBennies} Bennies</b> left. Do you want to spend one to reroll?</p>`
+                        chatData += "and would receive an Injury that sticks until all wounds are healed."
                         incReroll(dialogContent)
                     }
                 } else if (rollWithEdge < 4) {
                     //Permanent injury and Bleeding Out
                     permanent = true
                     await apply_injury(permanent, combat)
-                    await succ.apply_status(token, 'bleeding-out', true)
+                    if (await succ.check_status(token, 'incapacitated') === true) {
+                        const incCondition = await succ.get_condition_from(token.actor, 'incapacitated')
+                        if (incCondition.data.flags?.core?.overlay === true) {
+                            incCondition.setFlag('succ', 'updatedAE', true)
+                            await incCondition.update({"flags.core.overlay": false})
+                        }
+                    }
+                    await succ.apply_status(token, 'bleeding-out', true, true)
                     chatData += `<p>${actorAlias} receives a permanent injury and is Bleeding Out.<p>`
                 } else if (rollWithEdge >= 4 && rollWithEdge <= 7) {
                     //Injury until all wounds are healed

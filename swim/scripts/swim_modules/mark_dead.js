@@ -3,7 +3,7 @@
  * This Macro works best with Health Estimate installed.
  * It will mark the selected tokens as dead.
  * If the selected token is dead, it will be marked as alive instead.
- * v. 4.0.1 Originally from Health Estimate, altered by SalieriC.
+ * v. 4.0.2 Originally from Health Estimate, altered by SalieriC.
  *******************************************/
 export async function mark_dead_script() {
     const { _, __, ___, token } = await swim.get_macro_variables()
@@ -31,9 +31,9 @@ export async function mark_dead_script() {
         for (let e of canvas.tokens.controlled) {
             let hasAlive = !e.document.getFlag("healthEstimate", "dead")
             e.document.setFlag("healthEstimate", "dead", hasAlive)
-            await succ.toggle_status(e, 'incapacitated', true)
+            await succ.toggle_status(e, 'incapacitated', true, true)
         }
-        ui.notifications.info("Marked as dead/alive.");
+        ui.notifications.info(game.i18n.localize("SWIM.notification.markDeadAlive"));
         AudioHelper.play({ src: `${incapSFX}` }, true);
     }
 }

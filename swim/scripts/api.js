@@ -4,6 +4,7 @@ import { ammo_management_script, br2_ammo_management_script } from './swim_modul
 import { chase_setup_script } from './swim_modules/chase_setup.js'
 import { common_bond_script } from './swim_modules/common_bond.js'
 import { deviation_script } from './swim_modules/deviation.js'
+import { effect_builder } from './swim_modules/effect_builder.js'
 import { falling_damage_script } from './swim_modules/falling_damage.js'
 import { fear_table_script } from './swim_modules/fear_table.js'
 import { loot_o_mat_script } from './swim_modules/loot-o-mat.js'
@@ -17,6 +18,7 @@ import { soak_damage_script } from './swim_modules/soak_damage.js'
 import { token_vision_script } from './swim_modules/token_vision.js'
 import { unshake_swd_script, unshake_swade_script } from './swim_modules/unshake.js'
 import { unstun_script } from './swim_modules/unstun.js'
+//import * as SWIM from './constants.js'
 
 export class api {
 
@@ -46,6 +48,7 @@ export class api {
       chase_setup: api._chase_setup,
       common_bond: api._common_bond,
       deviation: api._deviation,
+      effect_builder: api._effect_builder,
       falling_damage: api._falling_damage,
       fear_table: api._fear_table,
       loot_o_mat: api._loot_o_mat,
@@ -236,6 +239,7 @@ export class api {
    * - Chase Setup
    * - Common Bond
    * - Deviation
+   * - Effect Builder
    * - Falling Damage
    * - Fear Table
    * - Loot-o-Mat
@@ -269,6 +273,57 @@ export class api {
   // Deviation
   static async _deviation() {
     deviation_script()
+  }
+  // Effect Builder
+  static async _effect_builder(message = false, item = false) {
+    /* I honestly don't think this is worth it atm...
+    console.log(message)
+    const renderData = message ? message.getFlag("betterrolls-swade2", "render_data") : false
+    if (renderData && (renderData.trait_roll.is_fumble === true || renderData.trait_roll.old_rolls.length > 0)) { return }
+    let isSupportedPower = false
+    const SUPPORTED_POWERS = [
+      game.i18n.localize("SWIM.power-boost").toLowerCase(),
+      game.i18n.localize("SWIM.power-lower").toLowerCase(),
+      game.i18n.localize("SWIM.power-smite").toLowerCase(),
+      game.i18n.localize("SWIM.power-protection").toLowerCase(),
+      game.i18n.localize("SWIM.power-growth").toLowerCase(),
+      game.i18n.localize("SWIM.power-shrink").toLowerCase(),
+      game.i18n.localize("SWIM.power-sloth").toLowerCase(),
+      game.i18n.localize("SWIM.power-speed").toLowerCase(),
+      game.i18n.localize("SWIM.power-speedQuickness").toLowerCase(),
+      game.i18n.localize("SWIM.power-beastFriend").toLowerCase(),
+      game.i18n.localize("SWIM.power-invisibility").toLowerCase(),
+      game.i18n.localize("SWIM.power-confusion").toLowerCase(),
+      game.i18n.localize("SWIM.power-deflection").toLowerCase(),
+      game.i18n.localize("SWIM.power-arcaneProtection").toLowerCase(),
+      game.i18n.localize("SWIM.power-burrow").toLowerCase(),
+      game.i18n.localize("SWIM.power-damageField").toLowerCase(),
+      game.i18n.localize("SWIM.power-darksight").toLowerCase(),
+      game.i18n.localize("SWIM.power-detectArcana").toLowerCase(),
+      game.i18n.localize("SWIM.power-concealArcana").toLowerCase(),
+      game.i18n.localize("SWIM.power-detect").toLowerCase(),
+      game.i18n.localize("SWIM.power-conceal").toLowerCase(),
+      game.i18n.localize("SWIM.power-disguise").toLowerCase(),
+      game.i18n.localize("SWIM.power-environmentalProtection").toLowerCase(),
+      game.i18n.localize("SWIM.power-farsight").toLowerCase(),
+      game.i18n.localize("SWIM.power-fly").toLowerCase(),
+      game.i18n.localize("SWIM.power-intangibility").toLowerCase(),
+      game.i18n.localize("SWIM.power-mindLink").toLowerCase(),
+      game.i18n.localize("SWIM.power-puppet").toLowerCase(),
+      game.i18n.localize("SWIM.power-slumber").toLowerCase(),
+      game.i18n.localize("SWIM.power-silence").toLowerCase(),
+      game.i18n.localize("SWIM.power-speakLanguage").toLowerCase(),
+      game.i18n.localize("SWIM.power-wallWalker").toLowerCase(),
+      game.i18n.localize("SWIM.power-warriorsGift").toLowerCase(),
+      game.i18n.localize("SWIM.power-empathy").toLowerCase(),
+      game.i18n.localize("SWIM.power-blind").toLowerCase(),
+      game.i18n.localize("SWIM.power-elementalManipulation").toLowerCase(),
+      game.i18n.localize("SWIM.power-easeBurden-tes").toLowerCase(),
+    ]
+    console.log(SUPPORTED_POWERS)
+    for (let power of SUPPORTED_POWERS) if (item.name.toLowerCase().includes(power)) isSupportedPower = true
+    if (isSupportedPower === false) { return }*/
+    effect_builder()
   }
   // Falling Damage
   static async _falling_damage() {

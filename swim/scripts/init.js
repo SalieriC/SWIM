@@ -6,6 +6,7 @@ import { shape_changer_gm } from './swim_modules/shape_changer.js'
 import { summoner_gm } from './swim_modules/mighty-summoner.js'
 import { heal_other_gm } from './swim_modules/personal_health_centre.js'
 import { common_bond_gm } from './swim_modules/common_bond.js'
+import { effect_builder_gm } from './swim_modules/effect_builder.js'
 
 /*Hooks.on('getCardsDirectoryEntryContext', function (stuff) {
     console.log(stuff)
@@ -18,6 +19,8 @@ Hooks.on('getSceneControlButtons', function (hudButtons) {
 Hooks.on('setup', api.registerFunctions)
 
 Hooks.on(`ready`, () => {
+    // Set round time to 6 as appropriate to the system:
+    if (CONFIG.time.roundTime != 6 && swim.is_first_gm()) { CONFIG.time.roundTime = 6 }
     // Check Dependencies
     if (!game.modules.get('settings-extender')?.active && game.user.isGM) {
         let key = "install and activate";
@@ -114,8 +117,109 @@ Hooks.on(`ready`, () => {
     warpgate.event.watch("SWIM.summoner", summoner_gm, swim.is_first_gm)
     warpgate.event.watch("SWIM.healOther", heal_other_gm, swim.is_first_gm)
     warpgate.event.watch("SWIM.commonBond", common_bond_gm, swim.is_first_gm)
+    warpgate.event.watch("SWIM.effectBuilder", effect_builder_gm, swim.is_first_gm)
     warpgate.event.watch("SWIM.deleteActor", gm_relay.gmDeleteActor, swim.is_first_gm)
+    warpgate.event.watch("SWIM.updateCombat-previousTurn", gm_relay.combat_previousTurn, swim.is_first_gm)
 });
+
+// Hooks on conditions
+Hooks.on(`createActiveEffect`, async (condition, _, userID) => {
+    const actor = condition.parent
+    // Invisible
+    if (((actor.hasPlayerOwner && condition.data.flags?.core?.statusId === "invisible") || condition.data.label.toLowerCase() === game.i18n.localize("SWIM.power-intangibility").toLowerCase()) && swim.is_first_gm()) {
+        const tokens = actor.getActiveTokens()
+        for (let token of tokens) {
+            if (condition.data.flags?.core?.statusId === "invisible") { await token.document.update({ "alpha": 0.5 }) }
+            else if (condition.data.label.toLowerCase() === game.i18n.localize("SWIM.power-intangibility").toLowerCase()) { await token.document.update({ "alpha": 0.75 }) }
+        }
+    } else if (!actor.hasPlayerOwner && swim.is_first_gm() && condition.data.flags?.core?.statusId === "invisible") {
+        const tokens = actor.getActiveTokens()
+        for (let token of tokens) {
+            if (token.data.hidden === false) { await token.toggleVisibility() }
+        }
+    }
+    // Light
+    if (condition.data.flags?.core?.statusId === "torch" && game.user.id === userID) {
+        swim.token_vision()
+    }
+    // Hold
+    if (condition.data.flags?.core?.statusId === "holding" && swim.is_first_gm() && game.combat) {
+        const tokens = actor.getActiveTokens()
+        for (let token of tokens) { await token.combatant.update({ "flags.swade.roundHeld": 1 }) }
+    }
+})
+Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
+    const actor = condition.parent
+    // Invisible
+    if (((actor.hasPlayerOwner && condition.data.flags?.core?.statusId === "invisible") || condition.data.label.toLowerCase() === game.i18n.localize("SWIM.power-intangibility").toLowerCase()) && swim.is_first_gm()) {
+        const tokens = actor.getActiveTokens()
+        for (let token of tokens) {
+            await token.document.update({ "alpha": 1 })
+        }
+    } else if (!actor.hasPlayerOwner && swim.is_first_gm() && condition.data.flags?.core?.statusId === "invisible") {
+        const tokens = actor.getActiveTokens()
+        for (let token of tokens) {
+            if (token.data.hidden === true) { await token.toggleVisibility() }
+        }
+    }
+    // Cancel maintained power
+    if (condition.data.flags?.swim?.maintainedPower === true && condition.data.flags?.swim?.owner === true && swim.is_first_gm()) {
+        for (let targetID of condition.data.flags.swim.targets) {
+            const token = game.canvas.tokens.get(targetID)
+            const effect = token.actor.data.effects.find(ae => ae.data.flags?.swim?.maintenanceID === condition.data.flags?.swim?.maintenanceID)
+            if (effect) {
+                await effect.delete()
+            }
+        }
+    }
+    // Light
+    if (condition.data.flags?.core?.statusId === "torch" && game.user.id === userID) {
+        swim.token_vision()
+    }
+    // Hold
+    if (condition.data.flags?.core?.statusId === "holding" && game.user.id === userID) {
+        if (game.combat) {
+            const tokens = actor.getActiveTokens()
+            const currentCardValue = game.combat.combatant.data.flags.swade.cardValue
+            const currentSuitValue = game.combat.combatant.data.flags.swade.suitValue
+            const combatID = game.combat.id
+            new Dialog({
+                title: game.i18n.localize("SWIM.dialogue-takingInitiativeTitle"),
+                content: game.i18n.localize("SWIM.dialogue-takingInitiativeText"),
+                buttons: {
+                    one: {
+                        label: game.i18n.localize("SWIM.dialogue-takingInitiative-ButtonNow"),
+                        callback: async (_) => {
+                            for (let token of tokens) {
+                                await token.combatant.unsetFlag("swade", "roundHeld")
+                                await token.combatant.update({ 
+                                    "flags.swade.cardValue": currentCardValue,
+                                    "flags.swade.suitValue": currentSuitValue + 0.01
+                                })
+                            }
+                            await swim.wait('100') // Needed to give the whole thing some time to prevent issues with jokers.
+                            warpgate.event.notify("SWIM.updateCombat-previousTurn", {combatID: combatID})
+                        }
+                    },
+                    two: {
+                        label: game.i18n.localize("SWIM.dialogue-takingInitiative-ButtonAfter"),
+                        callback: async (_) => {
+                            for (let token of tokens) {
+                                await token.combatant.unsetFlag("swade", "roundHeld")
+                                await token.combatant.update({ 
+                                    "flags.swade.cardValue": currentCardValue,
+                                    "flags.swade.suitValue": currentSuitValue - 0.01
+                                })
+                            }
+                        },
+                    }
+                },
+                //close: { callback: await succ.apply_status(actor, "holding", true) },
+                default: "one"
+            }).render(true)
+        }
+    }
+})
 
 // Combat setup playlist handling
 Hooks.on("preUpdateCombat", async (combat, update, options, userId) => {

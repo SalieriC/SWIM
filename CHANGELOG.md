@@ -6,6 +6,76 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.18.0] - 2022-05-09
+☮️ Peace in the world, or the world in pieces. 🕊️
+### Added
+- Mighty Summoner: Summoned Creatures now get an Active Effect with the appropriate duration. Duration is doubled if the summoner has the Concentration Edge.
+- Various new assets (see ReadMe for credits, all altered by SalieriC#8263):  
+- New translation strings.
+- New Setting rule: No Power Points. This enables near-infinite duration and a -1 to the spellcasting roll on the caster. SWIM does not use the systems setting rule in case that gets changed to do other things as well.
+- New Macro: Power Effect Builder. Opens a dialogue to add active effects for almost all maintained core powers. This makes heavy use of the new effect updater by SUCC. **Make sure to update SUCC, unless you want total carnage.**
+
+<details>
+<summary>Currently supported Powers</summary>
+
+- - Added boost/lower trait to Power Effect Builder.  
+- - Added protection to Power Effect Builder.  
+- - Added smite trait to Power Effect Builder.  
+- - Added growth/shrink to Power Effect Builder.  
+- - Added sloth/speed to Power Effect Builder. 
+- - Added Beast Friend to Power Effect Builder.   
+- - Added Invisibility to Power Effect Builder.  
+- - Added Confusion to Power Effect Builder.
+- - Added Deflection to Power Effect Builder.
+- - Added Arcane Protection to Power Effect Builder.
+- - Added Burrow to Power Effect Builder.
+- - Added Damage Field to Power Effect Builder.
+- - Added Darksight to Power Effect Builder.
+- - Added Detect/Conceal Arcana to Power Effect Builder.
+- - Added Disguise to Power Effect Builder.
+- - Added Environmental Protection to Power Effect Builder.
+- - Added Farsight to Power Effect Builder.
+- - Added Fly to Power Effect Builder.
+- - Added Intangibility to Power Effect Builder.
+- - Added Mind Link to Power Effect Builder.
+- - Added Puppet to Power Effect Builder.
+- - Added Slumber to Power Effect Builder.
+- - Added Silence to Power Effect Builder.
+- - Added Speak Language to Power Effect Builder.
+- - Added Wall Walker to Power Effect Builder.
+- - Added Warrior's Gift to Power Effect Builder.
+- - Added Empathy to Power Effect Builder.
+- - Added Elemental Manipulation to Power Effect Builder.
+- - Added Blind to Power Effect Builder.
+</details>  
+
+- - Enabled near-infinite duration on powers if no power points setting rule active.
+- - Add an AE to the caster if he is not the target, that gives the casters spellcasting trait a -1 for maintaining the power if the power is found and no power points is active. In case no power points is not used, an AE is added to the caster (if the power is found) thats sole purpose is to track and cancel maintained powers.
+- - If there is no active combat, start round of the effects will be set to 0 which ensures that the duration will work if combat starts while the AE is applied.
+- If a power effect is set up using the power effect builder, the caster gains the ability to delete the AE on all actors he previously added it to. That means if the caster drops the power (or the duration runs out) it will be dropped on each actor, giving full control over maintenance to the player.
+- Localisation for:
+- - Fear Table function.
+- - Mark Dead function.
+- Various new localisation strings.
+- New setting to check single reload by default.
+- Make tokens invisible (no player owner) or half transparent (player owner) when the invisibility condition is applied.
+- Make tokens slightly less visible if an effect called "Intangibility" (or their localised counterpart) is applied.
+- Token Vision macro opens up if the torch condition is applied or removed.
+- The Holding condition makes the token indeed holding in the combat tracker. Removing the condition prompts the player with a dialogue to choose between acting now or after current turn. The initiative is then set appropriately. This gives the player more control over their own initiative and alleviates GM workload.
+- On world load SWIM will set the round time to 6 seconds as appropriate to the setting. This is a temporary implementation and will be removed as soon as the system covers this by itself.
+- Added plea for support on SWIM config menu.
+### Changed
+- Incapacitation and Bleeding Out are added as overlays instead of small icons now. Inc. will be set as small icon if Bleeding Out is applied.
+- Changed and fixed Deviation link to be future proof.
+### Fixed
+- Various errors in the personal health center that prevented chat messages from being created.
+- Incorrectly named translation string.
+- Fixed a bug in the ammo management where single reloading a weapon which is full would overflow the weapons capacity.
+- Fixed a bug that caused weapons which do not require reloading actions to reload anyway.
+- Fixed a bug that prevented the removal of Shaken if all Wounds were soaked.  
+
+<a href="https://ko-fi.com/salieric"><img style="border: 0px; display: block; margin-left: auto; margin-right: auto;" src="https://www.ko-fi.com/img/githubbutton_sm.svg" width="223" height="30" /></a>
+
 ## [0.17.1] - 2022-04-27
 ### Fixed
 - Faulty Translation string in Ammo Management (@Razortide)  
