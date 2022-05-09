@@ -313,5 +313,9 @@
   "SWIM.power-elementalManipulation": "Elemental Manipulation",
   "SWIM.noPowerPointsName": "No Power Points Setting Rule",
   "SWIM.noPowerPointsHint": "This will change how effects are built in the Power Effect Builder. (Powers will get a near-infinite duration and the caster a -1 to the spellcasting roll if the power is found and has the skill in the power set up properly.)",
-  "SWIM.label-maintaining": "Maintaining {powerName}"
+  "SWIM.label-maintaining": "Maintaining {powerName}",
+  "SWIM.dialogue-takingInitiativeTitle": "Taking Initiative",
+  "SWIM.dialogue-takingInitiativeText": "Do you want to act immediately (requires a successful opposed Athletics roll) or after the current combatant?",
+  "SWIM.dialogue-takingInitiative-ButtonNow": "Now",
+  "SWIM.dialogue-takingInitiative-ButtonAfter": "After"
 }

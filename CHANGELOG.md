@@ -59,6 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Make tokens invisible (no player owner) or half transparent (player owner) when the invisibility condition is applied.
 - Make tokens slightly less visible if an effect called "Intangibility" (or their localised counterpart) is applied.
 - Token Vision macro opens up if the torch condition is applied or removed.
+- The Holding condition makes the token indeed holding in the combat tracker. Removing the condition prompts the player with a dialogue to choose between acting now or after current turn. The initiative is then set appropriately. This gives the player more control over their own initiative and alleviates GM workload.
 ### Changed
 - Incapacitation and Bleeding Out are added as overlays instead of small icons now. Inc. will be set as small icon if Bleeding Out is applied.
 - Changed and fixed Deviation link to be future proof.
