@@ -6,6 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.18.1] - 2022-05-21
+☮️ Peace in the world, or the world in pieces. 🕊️
+### Added
+- Added a setting that disables the rank requirement for players when using the Shape Changer.
+- Other option for the Power Effect Builder that allows setting up powers and maintaining them even if they're not (yet) added in the PEB. This (currently) doesn't offer the ability to set up any changes (will be added in a future version).
+- New Translation Strings.
+### Changed
+- The Power Effect Builder now works even if GM and player are not on the same scene.
+### Fixed
+- Missing translation string in Effect Builder.
+- Faulty translation String in the Personal Health Centre.
+- Fixed a bug in the ammo management that prevented reloading.
+- Fixed a critical bug in the Power Effect Builder.
+
 ## [0.18.0] - 2022-05-09
 ☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added

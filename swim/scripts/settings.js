@@ -34,6 +34,7 @@ export const settingVariables = [
         min: SWIM.NUM_MORPHS_MIN, max: SWIM.NUM_MORPHS_MAX, step: 1},
     {id: 'effectBuilder-usePowerIcons', config_type: Boolean, tab: "Macro Options", default: false},
     {id: 'ammoMgm-defaultSingleReload', config_type: Boolean, tab: "Macro Options", default: false},
+    {id: 'ignoreShapeChangeSizeRule', config_type: Boolean, tab: "Macro Options", default: false},
     {id: 'br2Support', config_type: Boolean, tab: "SFX & VFX Options", default: false},
     {id: 'sfxDelay', config_type: Number, tab: "SFX & VFX Options", default: '110'},
     {id: 'defaultVolume', config_type: Number, tab: "SFX & VFX Options", default: '1' },

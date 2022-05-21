@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 2.0.5
+ * v. 2.0.6
  * By SalieriC
  ******************************************************/
 
@@ -63,6 +63,7 @@ export async function shape_changer_script() {
             else if (actor.data.data.advances?.value < 12) { maxSize = 2 }
             else if (actor.data.data.advances?.value < 16) { maxSize = 4 }
             else if (actor.data.data.advances?.value >= 16) { maxSize = 10 }
+            else if (game.settings.get("swim", "ignoreShapeChangeSizeRule") === true) { maxSize = 999 }
             //Selection for all shape change presets:
             if (size <= maxSize || game.user.isGM === true) {
                 scOptions = scOptions + `<option value="${each.id}">${each.data.name}</option>`;

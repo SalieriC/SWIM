@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 4.1.2
+ * v. 4.2.0
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  * 
  * Powers on hold for now:
@@ -91,6 +91,7 @@ export async function effect_builder() {
         <option value="speed">${game.i18n.localize("SWIM.power-speed")}</option>
         <option value="wallWalker">${game.i18n.localize("SWIM.power-wallWalker")}</option>
         <option value="warriorsGift">${game.i18n.localize("SWIM.power-warriorsGift")}</option>
+        <option value="other">${game.i18n.localize("SWIM.power-other")}</option>
     `
 
     // Boost/Lower trait options
@@ -131,14 +132,16 @@ export async function effect_builder() {
         content: game.i18n.format("SWIM.dialogue-powerEffectBuilderContent", { class: officialClass, options: options, text: boostLowerContent }),
         buttons: {
             one: {
-                label: `<i class="fas fa-magic"></i> Proceed`,
+                label: `<i class="fas fa-magic"></i> ${game.i18n.localize("SWIM.button-proceed")}`,
                 callback: async (html) => {
                     const selectedPower = html.find(`#selected_power`)[0].value
                     const usePowerIcons = game.settings.get("swim", "effectBuilder-usePowerIcons")
                     let durationSeconds
                     let durationRounds = duration
-                    const power = token.actor.items.find(p => p.name.toLowerCase().includes(game.i18n.localize(`SWIM.power-${selectedPower}`).toLowerCase()) && p.type === "power" )
+                    const powerName = selectedPower === "other" ? html.find(`#power_choice`)[0].value : game.i18n.localize(`SWIM.power-${selectedPower}`)
+                    const power = token.actor.items.find(p => p.name.toLowerCase().includes(powerName.toLowerCase()) && p.type === "power" )
                     const icon = power ? power.img : false
+                    const sceneID = game.scenes.current.id
 
                     if (selectedPower === "boost" || selectedPower === "lower") {
                         //const selectedTrait = html.find(`#selected_trait`)[0].value
@@ -151,6 +154,7 @@ export async function effect_builder() {
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -167,6 +171,7 @@ export async function effect_builder() {
                         const bonus = Number(html.find(`#protectionAmount`)[0].value)
                         const selectedType = html.find("input[name=type_choice]:checked").val()
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -187,6 +192,7 @@ export async function effect_builder() {
                             weapons.push({ targetID: target.id, weaponName: targetWeaponName })
                         }
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -202,6 +208,7 @@ export async function effect_builder() {
                     } else if (selectedPower === "growth") {
                         const change = Number(html.find(`#sizeAmount`)[0].value)
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -216,6 +223,7 @@ export async function effect_builder() {
                     } else if (selectedPower === "shrink") {
                         const change = Number(html.find(`#sizeAmount`)[0].value)
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -229,6 +237,7 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "sloth") {
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -243,6 +252,7 @@ export async function effect_builder() {
                     } else if (selectedPower === "speed") {
                         const quickness = html.find(`#quickness`)[0].checked;
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -263,6 +273,7 @@ export async function effect_builder() {
                         }
                         durationSeconds = concentration ? 20 * 60 : 10 * 60
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -281,6 +292,7 @@ export async function effect_builder() {
                         if (raise === true) { degree = "raise" }
                         durationSeconds = concentration ? 20 * 60 : 10 * 60
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -298,6 +310,7 @@ export async function effect_builder() {
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -311,6 +324,7 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "confusion") {
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -325,6 +339,7 @@ export async function effect_builder() {
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -341,6 +356,7 @@ export async function effect_builder() {
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -358,6 +374,7 @@ export async function effect_builder() {
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -373,6 +390,7 @@ export async function effect_builder() {
                     } else if (selectedPower === "damageField") {
                         const damage = html.find(`#damage`)[0].checked
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -390,6 +408,7 @@ export async function effect_builder() {
                         if (raise === true) { degree = "raise" }
                         durationSeconds = concentration ? Number(120*60) : Number(60*60)
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -405,6 +424,7 @@ export async function effect_builder() {
                         const strong = html.find(`#strong`)[0].checked
                         durationSeconds = concentration ? Number(120*60) : Number(60*60)
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -421,6 +441,7 @@ export async function effect_builder() {
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -438,6 +459,7 @@ export async function effect_builder() {
                         if (raise === true) { degree = "raise" }
                         durationSeconds = concentration ? Number(20*60) : Number(10*60)
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -454,6 +476,7 @@ export async function effect_builder() {
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -470,6 +493,7 @@ export async function effect_builder() {
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -484,6 +508,7 @@ export async function effect_builder() {
                     } else if (selectedPower === "environmentalProtection") {
                         durationSeconds = concentration ? Number(120*60) : Number(60*60)
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -499,6 +524,7 @@ export async function effect_builder() {
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -515,6 +541,7 @@ export async function effect_builder() {
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -528,6 +555,7 @@ export async function effect_builder() {
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "intangibility") {
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -544,6 +572,7 @@ export async function effect_builder() {
                         if (raise === true) { degree = "raise" }
                         durationSeconds = concentration ? Number(60*60) : Number(30*60)
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -560,6 +589,7 @@ export async function effect_builder() {
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -575,6 +605,7 @@ export async function effect_builder() {
                     } else if (selectedPower === "slumber") {
                         durationSeconds = concentration ? Number(120*60) : Number(60*60)
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -590,6 +621,7 @@ export async function effect_builder() {
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -607,6 +639,7 @@ export async function effect_builder() {
                         if (raise === true) { degree = "raise" }
                         durationSeconds = concentration ? Number(20*60) : Number(10*60)
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -623,6 +656,7 @@ export async function effect_builder() {
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -639,6 +673,7 @@ export async function effect_builder() {
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -655,6 +690,7 @@ export async function effect_builder() {
                         let degree = "success"
                         if (raise === true) { degree = "raise" }
                         const data = {
+                            sceneID: sceneID,
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
@@ -663,6 +699,29 @@ export async function effect_builder() {
                                 degree: degree,
                                 //duration: duration,
                                 icon: usePowerIcons ? icon : false
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "other") {
+                        const raise = html.find(`#raise`)[0].checked
+                        durationRounds = noPP ? Number(999999999999999) : Number(html.find(`#duration_rounds`)[0].value)
+                        durationSeconds = noPP ? Number(999999999999999) : (Number(html.find(`#duration_minutes`)[0].value)/60)
+                        if (durationRounds === 0 && durationSeconds > 0) { durationRounds = durationSeconds*6 }
+                        else if (durationSeconds === 0 && durationRounds > 0) { durationSeconds = undefined }
+                        else if (durationRounds === 0 && durationSeconds === 0) { durationRounds = concentration ? 10 : 5; durationSeconds = undefined}
+                        const degree = raise ? "raise" : "success"
+                        const data = {
+                            sceneID: sceneID,
+                            targetIDs: targetIDs,
+                            casterID: token.id,
+                            maintenanceID: maintID,
+                            type: selectedPower,
+                            [selectedPower]: {
+                                degree: degree,
+                                durationRounds: durationRounds,
+                                durationSeconds: durationSeconds,
+                                icon: icon,
+                                powerID: power.id
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
@@ -675,7 +734,7 @@ export async function effect_builder() {
                             let aeData = {
                                 changes: [],
                                 icon: power.img,
-                                label: game.i18n.format("SWIM.label-maintaining", {powerName: game.i18n.localize(`SWIM.power-${selectedPower}`)}),
+                                label: selectedPower === "other" ? game.i18n.format("SWIM.label-maintaining", {powerName: power.name}) : game.i18n.format("SWIM.label-maintaining", {powerName: game.i18n.localize(`SWIM.power-${selectedPower}`)}),
                                 duration: {
                                     seconds: noPP ? Number(999999999999999) : durationSeconds,
                                     startRound: token.combatant != null ? game.combat.data.round : 0,
@@ -801,6 +860,15 @@ export async function effect_builder() {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 } else if (selectedPower === "blind") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
+                } else if (selectedPower === "other") {
+                    let powers = token.actor.items.filter(p => p.type === "power")
+                    let powerOptions
+                    for (let power of powers) {
+                        powerOptions += `<option value="${power.name}">${power.name}</option>`
+                    }
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-otherPower", {options: powerOptions})
+                    if (noPP === false) { effectContent.innerHTML += game.i18n.localize("SWIM.dialogue-duration") }
+                    effectContent.innerHTML += game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 }
             });
         },
@@ -814,14 +882,15 @@ export async function effect_builder_gm(data) {
     const noPP = game.settings.get("swim", "noPowerPoints")
     const type = data.type
     const casterID = data.casterID
-    const caster = canvas.tokens.get(casterID)
+    const playerScene = game.scenes.get(data.sceneID)
+    const caster = playerScene.tokens.get(casterID)
     let casterIsTarget = false
     if (data.targetIDs.find(t => t === casterID)) {
         casterIsTarget = true
     }
-    const power = caster.actor.items.find(p => p.name.toLowerCase().includes(game.i18n.localize(`SWIM.power-${type}`).toLowerCase()) && p.type === "power" )
+    const power = type === "other" ? caster.actor.items.find(p => p.id === data[type].powerID) : caster.actor.items.find(p => p.name.toLowerCase().includes(game.i18n.localize(`SWIM.power-${type}`).toLowerCase()) && p.type === "power" )
     let additionalChange = false
-    if (casterIsTarget && noPP === true && !(type === "blind" || type === "confusion" || selectedPower === "sloth")) {
+    if (casterIsTarget && noPP === true && !(type === "blind" || type === "confusion" || type === "sloth")) {
         if (power) {
             const skillName = power.data.data.actions.skill
             additionalChange = [{ key: `@Skill{${skillName}}[data.die.modifier]`, mode: 2, priority: undefined, value: -1 }]
@@ -859,7 +928,8 @@ export async function effect_builder_gm(data) {
                 boostData.boost.flags.swim.owner = true
                 boostData.boost.duration = noPP ? Number(999999999999999) : data.boost.duration
             }
-            await succ.apply_status(target.targetID, 'boost', true, false, boostData)
+            const targetToken = playerScene.tokens.get(target.targetID)
+            await succ.apply_status(targetToken, 'boost', true, false, boostData)
         }
     } else if (type === "lower") {
         for (let target of data.lower.trait) {
@@ -884,7 +954,8 @@ export async function effect_builder_gm(data) {
                 lowerData.lower.flags.swim.owner = true
                 lowerData.lower.duration = noPP ? Number(999999999999999) : data.lower.duration
             }
-            await succ.apply_status(target.targetID, 'lower', true, false, lowerData)
+            const targetToken = playerScene.tokens.get(target.targetID)
+            await succ.apply_status(targetToken, 'lower', true, false, lowerData)
         }
     } else if (type === "protection") {
         for (let target of data.targetIDs) {
@@ -909,7 +980,8 @@ export async function effect_builder_gm(data) {
                 protectionData.protection.flags.swim.owner = true
                 protectionData.protection.duration = noPP ? Number(999999999999999) : data.protection.duration
             }
-            await succ.apply_status(target, 'protection', true, false, protectionData)
+            const targetToken = playerScene.tokens.get(target)
+            await succ.apply_status(targetToken, 'protection', true, false, protectionData)
         }
     } else if (type === "smite") {
         for (let target of data.smite.weapon) {
@@ -934,11 +1006,12 @@ export async function effect_builder_gm(data) {
                 smiteData.smite.flags.swim.owner = true
                 smiteData.smite.duration = noPP ? Number(999999999999999) : data.smite.duration
             }
-            await succ.apply_status(target.targetID, 'smite', true, false, smiteData)
+            const targetToken = playerScene.tokens.get(target.targetID)
+            await succ.apply_status(targetToken, 'smite', true, false, smiteData)
         }
     } else if (type === "growth") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             const change = data.growth.change
             let aeData = {
                 changes: [],
@@ -986,7 +1059,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "shrink") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             const change = data.shrink.change
             let aeData = {
                 changes: [],
@@ -1030,7 +1103,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "speed") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             const change = data.speed.change
             const quickness = data.speed.quickness
             let aeData = {
@@ -1064,7 +1137,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "sloth") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             const change = data.sloth.change
             let duration = {}
             if (target.combatant != null) {
@@ -1103,7 +1176,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "burden") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             const change = data.burden.change
             let aeData = {
                 changes: [{ key: `data.attributes.strength.encumbranceSteps`, mode: 2, priority: undefined, value: change }],
@@ -1138,7 +1211,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "beastFriend") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             let aeData = {
                 changes: [],
                 icon: data.beastFriend.icon ? data.beastFriend.icon : "modules/swim/assets/icons/effects/m-beastFriend.svg",
@@ -1172,7 +1245,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "invisibility") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             const condition = await succ.apply_status(target, 'invisible', true, false)
             let aeData = {
                 changes: [],
@@ -1208,7 +1281,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "confusion") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             // Want to show the icon but in theory it has no duration and since duration 1 turn means end of second turn (instead of next) we need to be a bit hacky:
             let duration = {}
             if (target.combatant != null) {
@@ -1260,7 +1333,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "deflection") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             let aeData = {
                 changes: [],
                 icon: data.deflection.icon ? data.deflection.icon : "modules/swim/assets/icons/effects/m-deflection.svg",
@@ -1295,7 +1368,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "arcaneProtection") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             let aeData = {
                 changes: [],
                 icon: data.arcaneProtection.icon ? data.arcaneProtection.icon : "modules/swim/assets/icons/effects/m-arcaneProtection.svg",
@@ -1336,7 +1409,7 @@ export async function effect_builder_gm(data) {
             label = label + ` (${game.i18n.localize("SWIM.modifierStrong").toLowerCase()})`
         }
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             let aeData = {
                 changes: [],
                 icon: data.burrow.icon ? data.burrow.icon : "modules/swim/assets/icons/effects/m-burrow.svg",
@@ -1371,7 +1444,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "damageField") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             let aeData = {
                 changes: [],
                 icon: data.damageField.icon ? data.damageField.icon : "modules/swim/assets/icons/effects/m-damageField.svg",
@@ -1406,7 +1479,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "darksight") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             let aeData = {
                 changes: [],
                 icon: data.darksight.icon ? data.darksight.icon : "modules/swim/assets/icons/effects/m-darksight.svg",
@@ -1443,7 +1516,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "detectArcana") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             let aeData = {
                 changes: [],
                 icon: data.detectArcana.icon ? data.detectArcana.icon : "modules/swim/assets/icons/effects/m-detectArcana.svg",
@@ -1478,7 +1551,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "concealArcana") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             let aeData = {
                 changes: [],
                 icon: data.concealArcana.icon ? data.concealArcana.icon : "modules/swim/assets/icons/effects/m-concealArcana.svg",
@@ -1513,7 +1586,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "disguise") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             let aeData = {
                 changes: [],
                 icon: data.disguise.icon ? data.disguise.icon : "modules/swim/assets/icons/effects/m-disguise.svg",
@@ -1550,7 +1623,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "environmentalProtection") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             let aeData = {
                 changes: [],
                 icon: data.environmentalProtection.icon ? data.environmentalProtection.icon : "modules/swim/assets/icons/effects/m-environmentalProtection.svg",
@@ -1587,7 +1660,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "farsight") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             let aeData = {
                 changes: [],
                 icon: data.farsight.icon ? data.farsight.icon : "modules/swim/assets/icons/effects/m-farsight.svg",
@@ -1622,7 +1695,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "fly") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             let aeData = {
                 changes: [],
                 label: data.fly.degree === "raise" ? `${game.i18n.localize("SWADE.Flying")} (24")` : `${game.i18n.localize("SWADE.Flying")} (12")`,
@@ -1658,7 +1731,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "intangibility") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             let aeData = {
                 changes: [],
                 icon: data.intangibility.icon ? data.intangibility.icon : "modules/swim/assets/icons/effects/m-intangibility.svg",
@@ -1693,7 +1766,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "mindLink") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             let aeData = {
                 changes: [],
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
@@ -1730,7 +1803,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "puppet") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             let aeData = {
                 changes: [],
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
@@ -1765,7 +1838,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "slumber") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             let aeData = {
                 changes: [],
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
@@ -1802,7 +1875,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "silence") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             let aeData = {
                 changes: [],
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
@@ -1837,7 +1910,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "speakLanguage") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             let aeData = {
                 changes: [],
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
@@ -1874,7 +1947,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "wallWalker") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             let aeData = {
                 changes: [],
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
@@ -1909,7 +1982,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "warriorsGift") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             let aeData = {
                 changes: [],
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
@@ -1944,7 +2017,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "empathy") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             let aeData = {
                 changes: [],
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
@@ -1979,7 +2052,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "elementalManipulation") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             let aeData = {
                 changes: [],
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
@@ -2014,7 +2087,7 @@ export async function effect_builder_gm(data) {
         }
     } else if (type === "blind") {
         for (let targetID of data.targetIDs) {
-            const target = game.canvas.tokens.get(targetID)
+            const target = playerScene.tokens.get(targetID)
             let duration = {}
             if (target.combatant != null) {
                 duration = {
@@ -2050,6 +2123,42 @@ export async function effect_builder_gm(data) {
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes.push(additionalChange[0]) }
                 aeData.flags.swim.owner = true
+            }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
+    } else if (type === "other") {
+        for (let targetID of data.targetIDs) {
+            const target = playerScene.tokens.get(targetID)
+            let aeData = {
+                changes: [],
+                icon: data[type].icon,
+                label: data[type].degree === "raise" ? `${power.name} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${power.name}`,
+                duration: {
+                    rounds: power || noPP ? Number(999999999999999) : data[type].durationRounds,
+                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    seconds: power || noPP ? Number(999999999999999) : data[type].durationSeconds
+                },
+                flags: {
+                    swade: {
+                        expiration: 3
+                    },
+                    succ: {
+                        updatedAE: true
+                    },
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: power.name,
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false,
+                        powerID: power ? power.id : undefined
+                    }
+                }
+            }
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                aeData.flags.swim.owner = true
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].durationRounds
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }

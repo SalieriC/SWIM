@@ -165,7 +165,8 @@ Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
     // Cancel maintained power
     if (condition.data.flags?.swim?.maintainedPower === true && condition.data.flags?.swim?.owner === true && swim.is_first_gm()) {
         for (let targetID of condition.data.flags.swim.targets) {
-            const token = game.canvas.tokens.get(targetID)
+            const playerScene = game.scenes.get(game.users.get(userID).viewedScene)
+            const token = playerScene.tokens.get(targetID)
             const effect = token.actor.data.effects.find(ae => ae.data.flags?.swim?.maintenanceID === condition.data.flags?.swim?.maintenanceID)
             if (effect) {
                 await effect.delete()

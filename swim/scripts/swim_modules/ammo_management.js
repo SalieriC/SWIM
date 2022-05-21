@@ -1,6 +1,6 @@
 /*******************************************
  * Ammo Management (Enhanced Version)
- * version 5.0.0
+ * version 5.0.1
  * By SalieriC#8263. Dialogue Framework: Kekilla#7036
  *
  * Makes heavy use of SFX set up on the weapon.
@@ -286,12 +286,12 @@ export async function ammo_management_script() {
 
         async function reload(html) {
             let [shots, weapon, ammo, singleReload] = getValues(html);
-            const autoReload = item_weapon.data.data.autoReload
             // If no ammo left throw an error message.
             if (!ammo && actor.type === 'character' && npcAmmo === false || !ammo && npcAmmo === true) {
                 return ui.notifications.error(game.i18n.localize("SWIM.notification-outOfAmmo"));
             }
             let item_weapon = actor.items.get(weapon);
+            const autoReload = item_weapon.data.data.autoReload
             // Only do all the reloading stuff if NPCs use Ammo from Inventory.
             if (actor.type === 'character' && npcAmmo === false || npcAmmo === true) {
                 // Do not allow consumable weapons to be reloaded

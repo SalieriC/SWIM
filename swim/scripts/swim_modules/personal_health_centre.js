@@ -1,6 +1,6 @@
 /*******************************************
  * Personal Health Centre
- * // v.6.2.5
+ * // v.6.2.6
  * By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
  ******************************************/
 export async function personal_health_centre_script() {
@@ -94,7 +94,7 @@ async function healOther(token, target) {
                 }
             },
             three: {
-                label: game.i18n.localize("SWIM.gameTerm.Success"),
+                label: game.i18n.localize("SWIM.gameTerm-Success"),
                 callback: async (html) => {
                     const method = html.find(`#method`)[0].value;
                     const combatHealing = html.find(`#combatHealing`)[0].checked;
