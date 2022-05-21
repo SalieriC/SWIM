@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug in the ammo management that prevented reloading.
 - Fixed a critical bug in the Power Effect Builder.
 
+<a href="https://ko-fi.com/salieric"><img style="border: 0px; display: block; margin-left: auto; margin-right: auto;" src="https://www.ko-fi.com/img/githubbutton_sm.svg" width="223" height="30" /></a>
+
 ## [0.18.0] - 2022-05-09
 ☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
@@ -87,8 +89,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug in the ammo management where single reloading a weapon which is full would overflow the weapons capacity.
 - Fixed a bug that caused weapons which do not require reloading actions to reload anyway.
 - Fixed a bug that prevented the removal of Shaken if all Wounds were soaked.  
-
-<a href="https://ko-fi.com/salieric"><img style="border: 0px; display: block; margin-left: auto; margin-right: auto;" src="https://www.ko-fi.com/img/githubbutton_sm.svg" width="223" height="30" /></a>
 
 ## [0.17.1] - 2022-04-27
 ### Fixed
