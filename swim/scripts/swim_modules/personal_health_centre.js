@@ -1,6 +1,6 @@
 /*******************************************
  * Personal Health Centre
- * // v.6.2.6
+ * // v.6.2.7
  * By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
  ******************************************/
 export async function personal_health_centre_script() {
@@ -247,7 +247,7 @@ export async function heal_other_gm(data) {
                 await removeInjury(targetActor, amount)
                 await apply()
                 if (amount === 2) {
-                    chatContent = game.i18n.format("SWIM.chatMessage-healOtherhealOtherRaise", {tokenName : token.name, targetName : target.name})
+                    chatContent = game.i18n.format("SWIM.chatMessage-healOtherRaise", {tokenName : token.name, targetName : target.name})
                 } else if (amount === 1) {
                     chatContent += game.i18n.format("SWIM.chatMessage-healOtherRaiseContinued", {targetName : target.name})
                 }
@@ -767,7 +767,7 @@ async function healSelf(token, speaker) {
             }
             setWounds = wv - genericHealWounds;
             await token.actor.update({ "data.wounds.value": setWounds });
-            await removeInjury(token.actor, wv)
+            await removeInjury(token.actor, genericHealWounds)
             ui.notifications.notify(`${genericHealWounds} Wound(s) healed.`);
         }
         else {
