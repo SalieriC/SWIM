@@ -206,7 +206,7 @@ As above, just for the empathy power this time.
 ```
 
 ### Automating Invisibility
-As above, just for the empathy power this time.  
+As above, just for the empathy power this time. It will also take the Detect Arcana effect into consideration, negating some of the penalties from invisible. Do accomplish this, three global actions are needed:  
 ```json
 {
     "id": "INVISIBLE",
@@ -255,20 +255,20 @@ As above, just for the empathy power this time.
                 {
                     "selector_type": "skill",
                     "selector_value": "Weird Science"
-                },
-                {
-                    "selector_type": "item_type",
-                    "selector_value": "weapon"
-                },
-                {
-                    "selector_type": "item_type",
-                    "selector_value": "power"
                 }
             ]
         },
         {
             "selector_type": "target_has_effect",
             "selector_value": "Invisible"
+        },
+        {
+            "not_selector": [
+                {
+                    "selector_type": "actor_has_effect",
+                    "selector_value": "Detect Arcane"
+                }
+            ]
         },
         {
             "not_selector": [
@@ -286,10 +286,87 @@ As above, just for the empathy power this time.
 
 ```json
 {
-    "id": "INVISIBLE-RAISE",
-    "name": "Invisible (raise)",
+    "id": "INVISIBLE",
+    "name": "Invisible",
     "button_name": "is Invisible",
-    "skillMod": "-6",
+    "skillMod": "-4",
+    "and_selector": [
+        {
+            "or_selector": [
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Shooting"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Fighting"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Athletics"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Healing"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Notice"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Repair"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Thievery"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Faith"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Spellcasting"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Weird Science"
+                }
+            ]
+        },
+        {
+            "selector_type": "target_has_effect",
+            "selector_value": "Invisible"
+        },
+        {
+            "not_selector": [
+                {
+                    "selector_type": "actor_has_effect",
+                    "selector_value": "Detect Arcane"
+                }
+            ]
+        },
+        {
+            "not_selector": [
+                {
+                    "selector_type": "target_has_effect",
+                    "selector_value": "Invisible (raise)"
+                }
+            ]
+        }
+    ],
+    "defaultChecked": "on",
+    "group": "Target"
+}
+```
+
+```json
+{
+    "id": "INVISIBLE-RAISE (DET)",
+    "name": "Invisible (raise) (DET)",
+    "button_name": "is Invisible",
+    "skillMod": "-2",
     "and_selector": [
         {
             "or_selector": [
@@ -344,9 +421,21 @@ As above, just for the empathy power this time.
             ]
         },
         {
+            "not_selector": [
+                {
+                    "selector_type": "actor_has_effect",
+                    "selector_value": "Detect Arcane (Raise)"
+                }
+            ]
+        },
+        {
             "selector_type": "target_has_effect",
             "selector_value": "Invisible (raise)"
-        }       
+        },
+        {
+            "selector_type": "actor_has_effect",
+            "selector_value": "Detect Arcane"
+        }
     ],
     "defaultChecked": "on",
     "group": "Target"
