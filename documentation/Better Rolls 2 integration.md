@@ -255,6 +255,14 @@ As above, just for the empathy power this time. It will also take the Detect Arc
                 {
                     "selector_type": "skill",
                     "selector_value": "Weird Science"
+                },
+                {
+                    "selector_type": "item_type",
+                    "selector_value": "weapon"
+                },
+                {
+                    "selector_type": "item_type",
+                    "selector_value": "power"
                 }
             ]
         },
@@ -332,6 +340,14 @@ As above, just for the empathy power this time. It will also take the Detect Arc
                 {
                     "selector_type": "skill",
                     "selector_value": "Weird Science"
+                },
+                {
+                    "selector_type": "item_type",
+                    "selector_value": "weapon"
+                },
+                {
+                    "selector_type": "item_type",
+                    "selector_value": "power"
                 }
             ]
         },
@@ -409,6 +425,14 @@ As above, just for the empathy power this time. It will also take the Detect Arc
                 {
                     "selector_type": "skill",
                     "selector_value": "Weird Science"
+                },
+                {
+                    "selector_type": "item_type",
+                    "selector_value": "weapon"
+                },
+                {
+                    "selector_type": "item_type",
+                    "selector_value": "power"
                 },
                 {
                     "selector_type": "item_type",
