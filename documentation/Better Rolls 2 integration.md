@@ -274,7 +274,7 @@ As above, just for the empathy power this time. It will also take the Detect Arc
             "not_selector": [
                 {
                     "selector_type": "actor_has_effect",
-                    "selector_value": "Detect Arcane"
+                    "selector_value": "Detect Arcana"
                 }
             ]
         },
@@ -359,7 +359,7 @@ As above, just for the empathy power this time. It will also take the Detect Arc
             "not_selector": [
                 {
                     "selector_type": "actor_has_effect",
-                    "selector_value": "Detect Arcane"
+                    "selector_value": "Detect Arcana"
                 }
             ]
         },
@@ -448,7 +448,7 @@ As above, just for the empathy power this time. It will also take the Detect Arc
             "not_selector": [
                 {
                     "selector_type": "actor_has_effect",
-                    "selector_value": "Detect Arcane (Raise)"
+                    "selector_value": "Detect Arcana (Raise)"
                 }
             ]
         },
