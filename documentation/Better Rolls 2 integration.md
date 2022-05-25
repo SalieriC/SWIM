@@ -294,10 +294,10 @@ As above, just for the empathy power this time. It will also take the Detect Arc
 
 ```json
 {
-    "id": "INVISIBLE",
-    "name": "Invisible",
+    "id": "INVISIBLE-RAISE",
+    "name": "Invisible (raise)",
     "button_name": "is Invisible",
-    "skillMod": "-4",
+    "skillMod": "-6",
     "and_selector": [
         {
             "or_selector": [
@@ -352,10 +352,6 @@ As above, just for the empathy power this time. It will also take the Detect Arc
             ]
         },
         {
-            "selector_type": "target_has_effect",
-            "selector_value": "Invisible"
-        },
-        {
             "not_selector": [
                 {
                     "selector_type": "actor_has_effect",
@@ -364,12 +360,8 @@ As above, just for the empathy power this time. It will also take the Detect Arc
             ]
         },
         {
-            "not_selector": [
-                {
-                    "selector_type": "target_has_effect",
-                    "selector_value": "Invisible (raise)"
-                }
-            ]
+            "selector_type": "target_has_effect",
+            "selector_value": "Invisible (raise)"
         }
     ],
     "defaultChecked": "on",
