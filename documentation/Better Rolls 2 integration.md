@@ -27,6 +27,10 @@ You'll need two World Global Actions for this, set them up like this:
                 {
                     "selector_type": "target_has_effect",
                     "selector_value": "Deflection (raise)"
+                },
+                {
+                    "selector_type": "target_has_effect",
+                    "selector_value": "Maintaining Deflection"
                 }
             ]
         }
@@ -52,6 +56,14 @@ and this:
         {
             "selector_type": "target_has_effect",
             "selector_value": "Deflection (raise)"
+        },
+        {
+            "not_selector": [
+                {
+                    "selector_type": "target_has_effect",
+                    "selector_value": "Maintaining Deflection"
+                }
+            ]
         }
     ],
     "defaultChecked": "on",
@@ -82,6 +94,10 @@ It works exactly like the (in my experience much more common) Deflection setup a
                 {
                     "selector_type": "target_has_effect",
                     "selector_value": "Arcane Protection (raise)"
+                },
+                {
+                    "selector_type": "target_has_effect",
+                    "selector_value": "Maintaining Arcane Protection"
                 }
             ]
         }
@@ -105,6 +121,14 @@ It works exactly like the (in my experience much more common) Deflection setup a
         {
             "selector_type": "target_has_effect",
             "selector_value": "Arcane Protection (raise)"
+        },
+        {
+            "not_selector": [
+                {
+                    "selector_type": "target_has_effect",
+                    "selector_value": "Maintaining Arcane Protection"
+                }
+            ]
         }
     ],
     "defaultChecked": "on",
@@ -283,6 +307,10 @@ As above, just for the empathy power this time. It will also take the Detect Arc
                 {
                     "selector_type": "target_has_effect",
                     "selector_value": "Invisible (raise)"
+                },
+                {
+                    "selector_type": "target_has_effect",
+                    "selector_value": "Maintaining Invisible"
                 }
             ]
         }
@@ -356,6 +384,10 @@ As above, just for the empathy power this time. It will also take the Detect Arc
                 {
                     "selector_type": "actor_has_effect",
                     "selector_value": "Detect Arcana"
+                },
+                {
+                    "selector_type": "target_has_effect",
+                    "selector_value": "Maintaining Invisible"
                 }
             ]
         },
@@ -441,6 +473,10 @@ As above, just for the empathy power this time. It will also take the Detect Arc
                 {
                     "selector_type": "actor_has_effect",
                     "selector_value": "Detect Arcana (Raise)"
+                },
+                {
+                    "selector_type": "target_has_effect",
+                    "selector_value": "Maintaining Invisible"
                 }
             ]
         },
