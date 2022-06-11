@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.18.2] - 2022-05-21
+## [0.18.2] - 2022-06-11
 ☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Translation update for german language via weblate.
