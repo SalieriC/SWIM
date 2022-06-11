@@ -893,7 +893,7 @@ export async function effect_builder_gm(data) {
         if (power) {
             const skillName = power.data.data.actions.skill
             additionalChange = [{ key: `@Skill{${skillName}}[data.die.modifier]`, mode: 2, priority: undefined, value: -1 }]
-            if (token.actor.data.data.additionalStats?.maintainedPowers) {
+            if (caster.actor.data.data.additionalStats?.maintainedPowers) {
                 additionalChange.push({ key: `data.additionalStats.maintainedPowers.value`, mode: 2, priority: undefined, value: 1 })
             }
         } else if (token.actor.data.data.additionalStats?.maintainedPowers) {
@@ -2160,7 +2160,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes.push(additionalChange[0]); aeData.changes.push(additionalChange[1]) }
                 aeData.flags.swim.owner = true
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].durationRounds
             }
