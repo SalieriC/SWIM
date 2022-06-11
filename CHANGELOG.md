@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Changed the global actions for invisibility to also cover detect arcana (@grendel111111).
+- Changed the PEB to cover the new Deflection rules and new global actions to automate it in BR2.
 ### Fixed
 - Another faulty translation string in the PHC.
 - PHC now passes the correct healed wounds amount to the injury removal function when using generic healing. (It passed the wound value instead of the amount of healed wounds causing it to remove combat injuries if no wounds were healed.)

@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 4.2.0
+ * v. 4.2.1
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  * 
  * Powers on hold for now:
@@ -335,9 +335,7 @@ export async function effect_builder() {
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "deflection") {
-                        const raise = html.find(`#raise`)[0].checked
-                        let degree = "success"
-                        if (raise === true) { degree = "raise" }
+                        const type = html.find(`#deflectionOption`)[0].value
                         const data = {
                             sceneID: sceneID,
                             targetIDs: targetIDs,
@@ -345,7 +343,7 @@ export async function effect_builder() {
                             maintenanceID: maintID,
                             type: selectedPower,
                             [selectedPower]: {
-                                degree: degree,
+                                type: type.charAt(0).toUpperCase() + type.slice(1),
                                 duration: duration,
                                 icon: usePowerIcons ? icon : false
                             }
@@ -817,7 +815,8 @@ export async function effect_builder() {
                 } else if (selectedPower === "confusion") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
                 } else if (selectedPower === "deflection") {
-                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
+                    const optionsDeflection = `<option value="melee">${game.i18n.localize("SWIM.gameTerm-Melee")}</option><option value="range">${game.i18n.localize("SWIM.gameTerm-Range")}</option><option value="raise">${game.i18n.localize("SWIM.gameTerm-Raise")}</option>`
+                    effectContent.innerHTML = game.i18n.format("SWIM.select-deflectionOptions", {options: optionsDeflection})
                 } else if (selectedPower === "arcaneProtection") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 } else if (selectedPower === "burrow") {
@@ -1337,7 +1336,7 @@ export async function effect_builder_gm(data) {
             let aeData = {
                 changes: [],
                 icon: data.deflection.icon ? data.deflection.icon : "modules/swim/assets/icons/effects/m-deflection.svg",
-                label: data.deflection.degree === "raise" ? `${game.i18n.localize("SWIM.power-deflection")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-deflection")}`,
+                label: `${game.i18n.localize("SWIM.power-deflection")} (${game.i18n.localize(`SWIM.gameTerm-${data.deflection.type}`).toLowerCase()})`,
                 duration: {
                     rounds: power || noPP ? Number(999999999999999) : data.deflection.duration,
                     startRound: target.combatant != null ? game.combat.data.round : 0,
