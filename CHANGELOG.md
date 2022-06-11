@@ -5,12 +5,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.18.2] - 2022-05-21
+☮️ Peace in the world, or the world in pieces. 🕊️
+### Added
+- Translation update for german language via weblate.
 ### Changed
 - Changed the global actions for invisibility to also cover detect arcana (@grendel111111).
 - Changed the PEB to cover the new Deflection rules and new global actions to automate it in BR2.
 ### Fixed
 - Another faulty translation string in the PHC.
 - PHC now passes the correct healed wounds amount to the injury removal function when using generic healing. (It passed the wound value instead of the amount of healed wounds causing it to remove combat injuries if no wounds were healed.)
+- PEB now properly applies changes to `maintainedPowers` additional stats if found. This was buggy as of yet.
 
 ## [0.18.1] - 2022-05-21
 ☮️ Peace in the world, or the world in pieces. 🕊️
