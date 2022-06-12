@@ -173,6 +173,52 @@ Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
             }
         }
     }
+    // Cancel Summoned Creature
+    if (condition.data.flags?.swim?.maintainedSummon === true && swim.is_first_gm()) {
+        if (condition.data.flags.swim.owner === false) {
+            for (let each of game.scenes.current.tokens) {
+                const maintEffect = each.actor.data.effects.find(e => e.data.flags?.swim?.maintenanceID === condition.data.flags?.swim?.maintenanceID)
+                if (maintEffect) {
+                    await maintEffect.delete()
+                }
+            }
+            if (actor.sheet.rendered) {
+                actor.sheet.close();
+                await swim.wait('100')
+            }
+            const dismissData = [actor.token.id]
+            await play_sfx(dismissData)
+            await warpgate.dismiss(actor.token.id, game.scenes.current.id)
+        } else if (condition.data.flags.swim.owner === true) {
+            for (let each of game.scenes.current.tokens) {
+                const maintEffect = each.actor.data.effects.find(e => e.data.flags?.swim?.maintenanceID === condition.data.flags?.swim?.maintenanceID)
+                if (maintEffect) {
+                    const dismissData = [each.id]
+                    await play_sfx(dismissData)
+                    await warpgate.dismiss(each.id, game.scenes.current.id)
+                    return
+                }
+            }
+        }
+        async function play_sfx(spawnData) {
+            //Playing VFX & SFX:
+            let spawnSFX = game.settings.get(
+                'swim', 'shapeShiftSFX');
+            let spawnVFX = game.settings.get(
+                'swim', 'shapeShiftVFX');
+            if (spawnSFX) { swim.play_sfx(spawnSFX) }
+            if (game.modules.get("sequencer")?.active && spawnVFX) {
+                let tokenD = canvas.tokens.get(spawnData[0])
+                let sequence = new Sequence()
+                    .effect()
+                    .file(`${spawnVFX}`) //recommendation: "modules/jb2a_patreon/Library/2nd_Level/Misty_Step/MistyStep_01_Regular_Green_400x400.webm"
+                    .atLocation(tokenD)
+                    .scale(1)
+                sequence.play();
+                await swim.wait(`800`);
+            }
+        }
+    }
     // Light
     if (condition.data.flags?.core?.statusId === "torch" && game.user.id === userID) {
         swim.token_vision()

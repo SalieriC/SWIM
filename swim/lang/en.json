@@ -247,6 +247,7 @@
   "SWIM.lightSFXName": "Light SFX:",
   "SWIM.lightSFXHint": "The sound effect to be played when a light source is selected and applied in the Token Vision macro.",
   "SWIM.label-summoned": "Summoned Creature Duration",
+  "SWIM.label-summonedEntity": "Summoned",
   "SWIM.effectBuilder-usePowerIconsName": "Use power icon of caster in Effect Builder:",
   "SWIM.effectBuilder-usePowerIconsHint": "If checked, SWIM will use the power icon of the casters power (if found) as the icon for the active effect. Otherwise those icons provided by SWIM will be used.",
   "SWIM.edge-concentration": "Concentration",

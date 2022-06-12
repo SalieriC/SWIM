@@ -16,9 +16,20 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 1.1.3
+ * v. 1.2.1
  * By SalieriC
  ******************************************************/
+ function generate_id (length = 16) {
+    var result           = 'SWIM-';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * 
+      charactersLength));
+    }
+   return result;
+  }
+
  export async function summoner_script() {
     const { speaker, _, __, token } = await swim.get_macro_variables()
 
@@ -42,6 +53,9 @@
     const actor = token.actor;
     const range = actor.data.data.attributes.smarts.die.sides
 
+    //Get an ID for this maintenance
+    const maintID = generate_id()
+    
     //Set div class based on enabled official module:
     const officialClass = await swim.get_official_class()
 
@@ -52,27 +66,59 @@
         return acc;
     }, content);
 
+    let duration = 5
+    const concentration = token.actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-concentration") && i.type === "edge")
+    if (concentration) { duration = duration * 2 }
+    const noPP = game.settings.get("swim", "noPowerPoints")
+    if (noPP === true) { duration = -1 }
+
     async function main() {
         //Pre-selecting shape change actors based on rank:
         let scOptions;
         for (let each of totalContent) {
             scOptions = scOptions + `<option value="${each.id}">${each.data.name}</option>`;
         }
+        let content = `${officialClass}
+        <p>Please select a creature you want to summon and confirm.</p>
+        <p>Afterwards please select a position on the canvas by clicking anywhere within your range.</p>
+        <div class="form-group">
+            <label for="selected_sc">Creature: </label>
+            <select id="selected_sc">${scOptions}</select>
+        </div>
+        <div class="form-group">
+            <label for="raise"><p>Cast with a raise: </label>
+            <input id="raise" name="raiseBox" type="checkbox"></input></p>
+        </div>`
+        if (noPP === false) {
+            content += `<p>Please select a duration for your power in rounds. (Permanent is -1; an hour is 600.)</p>
+            <div class="form-group">
+            <label for="duration">Duration: </label>
+            <input id="duration" name="duration" type="input", default="${duration}"></input>
+        </div>`
+        } if (noPP) {
+            let skillOptions = ""
+            for (let power of actor.items.filter(p => p.type === "power")) {
+                if (!skillOptions.includes(power.data.data.actions.skill)) {
+                    skillOptions += skillOptions + `<option value="${power.data.data.actions.skill}">${power.data.data.actions.skill}</option>`
+                }
+            }
+            if (!skillOptions) {
+                for (let skill of actor.items.filter(s => s.type === "skill")) {
+                    skillOptions = skillOptions + `<option value="${skill.name}">${skill.name}</option>`
+                }
+            }
+            content += `
+            <div class='form-group'>
+                <label for='skillSelection'><p>Skill used to cast the power:</label>
+                <select id='skillSelection'>${skillOptions}</select></p>
+            </div>
+            </div>`
+        }
+        content += `</div>`
 
         new Dialog({
             title: 'Mighty Summoner',
-            content: `${officialClass}
-            <p>Please select a creature you want to summon and confirm.</p>
-            <p>Afterwards please select a position on the canvas by clicking anywhere within your range.</p>
-            <div class="form-group">
-                <label for="selected_sc">Creature: </label>
-                <select id="selected_sc">${scOptions}</select>
-            </div>
-            <div class="form-group">
-                <label for="raise">Cast with a raise: </label>
-                <input id="raise" name="raiseBox" type="checkbox"></input>
-            </div>
-        </div>`,
+            content: content,
             buttons: {
                 one: {
                     label: `<i class="fas fa-paw"></i> Summon Creature`,
@@ -84,6 +130,9 @@
                         const summonersName = token.name
                         const scActor = game.actors.get(scID)
                         const scName = scActor.data.token.name
+                        //Get Duration:
+                        const duration = noPP ? Number(-1) : html.find(`#duration`)[0].value
+                        const skillName = noPP ? html.find(`#skillSelection`)[0].value : false
 
                         let updates
                         if (raise === false) {
@@ -103,10 +152,58 @@
                         let spawnData = await warpgate.spawn(scActor.name, updates)
                         await play_sfx(spawnData)
 
+                        //Active Effect:
+                        let durationRounds
+                        let durationSeconds
+                        if (duration === -1) { durationRounds = Number(999999999999999); durationSeconds = Number(999999999999999) }
+                        else { durationRounds = duration }
+                        if (duration === 600) { durationSeconds = 3600 }
+
+                        let aeData = {
+                            changes: [],
+                            icon: "modules/swim/assets/icons/effects/0-summoned.svg",
+                            label: `${game.i18n.localize("SWIM.label-summonedEntity")} ${scName}`,
+                            duration: {
+                                rounds: durationRounds,
+                                seconds: durationSeconds
+                            },
+                            flags: {
+                                swade: {
+                                    expiration: 3
+                                },
+                                swim: {
+                                    maintainedSummon: true,
+                                    maintenanceID: maintID,
+                                    owner: true,
+                                    isSummonedCreature: false
+                                }
+                            }
+                        }
+                        if (noPP) {
+                            aeData.changes.push({ key: `@Skill{${skillName}}[data.die.modifier]`, mode: 2, priority: undefined, value: -1 })
+                        }
+                        if (token.actor.data.data.additionalStats?.maintainedPowers) {
+                            aeData.changes.push({ key: `data.additionalStats.maintainedPowers.value`, mode: 2, priority: undefined, value: 1 })
+                        }
+                        await token.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+
                         const data = {
                             summonerID: token.id,
                             scID: scID,
-                            tokenID: spawnData[0]
+                            tokenID: spawnData[0],
+                            maintID: maintID,
+                            duration: duration,
+                            flags: {
+                                swade: {
+                                    expiration: 3
+                                },
+                                swim: {
+                                    maintainedSummon: true,
+                                    maintenanceID: maintID,
+                                    owner: false,
+                                    isSummonedCreature: true
+                                }
+                            }
                         }
                         warpgate.event.notify("SWIM.summoner", data)
                     }
@@ -118,16 +215,24 @@
 
     async function dismiss() {
         new Dialog({
-            title: 'Mighty Summoner',
+            title: 'Mighty Summoner: Dismiss',
             content: game.i18n.format("SWIM.dialogue-dismiss", {officialClass: officialClass, name: token.name}),
             buttons: {
                 one: {
                     label: `<i class="fas fa-paw"></i> Dismiss Creature`,
                     callback: async (_) => {
+                        const tokenMaintEffect = token.actor.data.effects.find(e => e.data.flags?.swim?.isSummonedCreature === true)
+                        const maintenanceID = tokenMaintEffect.data.flags?.swim?.maintenanceID
                         const dismissData = [token.id]
                         await play_sfx(dismissData)
                         await swim.wait(`200`) // delay script execution so that the vfx has time to get the tokens position
                         await warpgate.dismiss(token.id, game.scenes.current.id)
+                        for (let each of game.scenes.current.tokens) {
+                            const maintEffect = each.actor.data.effects.find(e => e.data.flags?.swim?.maintenanceID === maintenanceID)
+                            if (maintEffect) {
+                                await maintEffect.delete()
+                            }
+                        }
                     }
                 }
             },
@@ -166,6 +271,12 @@
     const newToken = canvas.tokens.get(newTokenID)
     const summonerID = data.summonerID
     const summoner = canvas.tokens.get(summonerID)
+    let duration = data.duration
+    let durationRounds
+    let durationSeconds
+    if (duration === -1) { duration = Number(999999999999999); durationSeconds = Number(999999999999999) }
+    if (duration === 600) { durationSeconds = 3600 }
+    durationRounds = duration
 
     // Setting up AE with duration that notifies about the powers end time.
     let aeData = {
@@ -173,13 +284,10 @@
         icon: "modules/swim/assets/icons/effects/0-summoned.svg",
         label: game.i18n.localize("SWIM.label-summoned"),
         duration: {
-            rounds: 5,
+            rounds: durationRounds,
+            seconds: durationSeconds
         },
-        flags: {
-            swade: {
-                expiration: 3
-            }
-        }
+        flags: data.flags
     }
 
     // Double the duration if the caster has concentration:
