@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 1.2.1
+ * v. 1.2.2
  * By SalieriC
  ******************************************************/
  function generate_id (length = 16) {
@@ -271,12 +271,10 @@
     const newToken = canvas.tokens.get(newTokenID)
     const summonerID = data.summonerID
     const summoner = canvas.tokens.get(summonerID)
-    let duration = data.duration
-    let durationRounds
-    let durationSeconds
-    if (duration === -1) { duration = Number(999999999999999); durationSeconds = Number(999999999999999) }
-    if (duration === 600) { durationSeconds = 3600 }
-    durationRounds = duration
+    //let duration = data.duration
+    //Duration is now handled on the summoners AE, no need to do it here.
+    let durationRounds = Number(999999999999999)
+    let durationSeconds = Number(999999999999999)
 
     // Setting up AE with duration that notifies about the powers end time.
     let aeData = {
