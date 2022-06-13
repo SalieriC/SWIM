@@ -90,10 +90,10 @@
             <input id="raise" name="raiseBox" type="checkbox"></input></p>
         </div>`
         if (noPP === false) {
-            content += `<p>Please select a duration for your power in rounds. (Permanent is -1; an hour is 600.)</p>
-            <div class="form-group">
-            <label for="duration">Duration: </label>
-            <input id="duration" name="duration" type="input", default="${duration}"></input>
+            content += `<p>Enter a Duration in rounds. (Permanent is -1; an hour is 600.)</p>
+        <div class="form-group">
+            <label for="duration"><p>Duration: </label>
+            <input id="duration" name="duration" type="number", value="${duration}"></p></input>
         </div>`
         } if (noPP) {
             let skillOptions = ""
@@ -131,7 +131,7 @@
                         const scActor = game.actors.get(scID)
                         const scName = scActor.data.token.name
                         //Get Duration:
-                        const duration = noPP ? Number(-1) : html.find(`#duration`)[0].value
+                        const duration = noPP ? Number(-1) : Number(html.find(`#duration`)[0].value)
                         const skillName = noPP ? html.find(`#skillSelection`)[0].value : false
 
                         let updates
@@ -156,8 +156,7 @@
                         let durationRounds
                         let durationSeconds
                         if (duration === -1) { durationRounds = Number(999999999999999); durationSeconds = Number(999999999999999) }
-                        else { durationRounds = duration }
-                        if (duration === 600) { durationSeconds = 3600 }
+                        else { durationRounds = duration ; durationSeconds = duration * 6 }
 
                         let aeData = {
                             changes: [],
