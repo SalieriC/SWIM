@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.18.3] - 2022-06-13
+☮️ Peace in the world, or the world in pieces. 🕊️
 ## Added
 - Mighty Summoner: Maintenance Active Effects. Upon summoning a creature, the summoned creature and the summoner will gain an active effect containing the duration and some additional data from SWIM. If either of those effects ands and is deleted, the summoned creature will be dismissed. This works both ways. If the no power point setting is chosen, the duration of the power is near infinite and the maintenance AE on the caster incurs a penalty to the skill as per the no power point setting rule.
 
