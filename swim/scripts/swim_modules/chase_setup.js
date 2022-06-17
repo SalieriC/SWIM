@@ -48,20 +48,13 @@
         });
 
         const deckOptions = game.cards.filter(t =>
-            t.type == "deck" && (
-            t.name.includes(`Chase`) ||
-            t.name.includes(`Deck`) ||
-            t.name.includes(`Cards`))
+            t.type == "deck"
             );
         Array.from(deckOptions).map((el) => {
             deckList += `<option value="${el.data.name}">${el.data.name}</option>`
         });
         const pileOptions = game.cards.filter( t =>
-                t.type == "pile" && (
-                t.name.includes(`Chase`) ||
-                t.name.includes(`Deck`) ||
-                t.name.includes(`Cards`) ||
-                t.name.includes(`Action`))
+                t.type == "pile"
         );
         Array.from(pileOptions).map((el) => {
                     pileList += `<option value="${el.data.name}">${el.data.name}</option>`
