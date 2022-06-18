@@ -63,9 +63,9 @@
 
         let template = `
             <p>
-                <input type="radio" name="type" value="Cards" id="cards"  onClick="document.getElementById('deckName').disabled=false;document.getElementById('pileName').disabled=false;document.ge                                                                                                                         tElementById('tableName').disabled=true;">
+                <input type="radio" name="type" value="Cards" id="cards"  onClick="document.getElementById('deckName').disabled=false;document.getElementById('pileName').disabled=false;document.getElementById('tableName').disabled=true;">
                 <label for="cards">Cards</label>
-                <input type="radio" name="type" value="Tables" id="tables" onClick="document.getElementById('deckName').disabled=true;document.getElementById('pileName').disabled=true;document.get                                                                                                                         ElementById('tableName').disabled=false;">
+                <input type="radio" name="type" value="Tables" id="tables" onClick="document.getElementById('deckName').disabled=true;document.getElementById('pileName').disabled=true;document.getElementById('tableName').disabled=false;">
                 <label for="cards">Tables</label>
             </p>
             <p id="pDecks" >Deck to Deal From: <select id="deckName" disabled>${deckList}</select></p>
@@ -148,14 +148,13 @@
                     .drawMany(cardsToDraw, { displayChat: false })
             ).results;
         } else {
-            pileDeck = game.cards.getName(pileName)
+            pileDeck = await game.cards.getName(pileName)
             cardDraws = (
                 await game.cards
                     .find((el) => el.data.name == deckName)
                     .deal([pileDeck],cardsToDraw,{ chatNotification: false })
             );
         }
-
 
         AudioHelper.play({ src: `systems/swade/assets/card-flip.wav` }, true);
 
@@ -168,7 +167,7 @@
             if(isTables) {
                 theImage = cardDraws[i].data.img
             } else {
-                theImage = cardDraws.availableCards[i].img
+                theImage = pileDeck.availableCards[i].img
             }
 
             const tileData = {
@@ -194,7 +193,8 @@
             const table = await game.tables.find((t) => t.data.name === tableName);
             table.reset();
         } else {
-            game.cards.getName(deckName).reset({chatNotification: false});
+            await game.cards.getName(deckName).reset({chatNotification: false});
+            await game.cards.getName(deckName).shuffle({chatNotification: false});
         }
 
         AudioHelper.play({ src: `systems/swade/assets/card-flip.wav` }, true);
