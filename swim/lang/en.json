@@ -327,7 +327,12 @@
   "SWIM.power-other": "Other",
   "SWIM.dialogue-otherPower": "<div class='form-group'><label for='power_choice'><p>Power: </p></label><select id='power_choice'>{options}</select></div></form>",
   "SWIM.dialogue-duration": "<div class='form-group'><label for='duration_rounds'><p>Duration (rounds): </p></label><input type='number' id='duration_rounds' value='0' min='0' style='flex:1'/></input></div></form><div class='form-group'><label for='duration_minutes'><p>Duration (minutes): </p></label><input type='number' id='duration_minutes' value='0' min='0' style='flex:1'/></input></div></form>",
-  "SWIM.select-deflectionOptions": "<div class='form-group'><label for='deflectionOption'><p>Type of attack: </p></label><select id='deflectionOption'>{options}</select></div></div>"
+  "SWIM.select-deflectionOptions": "<div class='form-group'><label for='deflectionOption'><p>Type of attack: </p></label><select id='deflectionOption'>{options}</select></div></div>",
+  "SWIM.chaseSetupTable": "Table to Draw From",
+  "SWIM.chaseSetupDeck": "Deck to Deal From",
+  "SWIM.chaseSetupPile": "Pile Deck to Pass",
+  "SWIM.chaseSetupTablesName": "Tables",
+  "SWIM.chaseSetupCardsName": "Cards"
 }
 
 

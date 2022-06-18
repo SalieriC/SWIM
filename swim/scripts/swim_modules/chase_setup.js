@@ -63,16 +63,17 @@
 
         let template = `
             <p>
-                <input type="radio" name="type" value="Cards" id="cards"  onClick="document.getElementById('deckName').disabled=false;document.getElementById('pileName').disabled=false;document.getElementById('tableName').disabled=true;">
-                <label for="cards">Cards</label>
-                <input type="radio" name="type" value="Tables" id="tables" onClick="document.getElementById('deckName').disabled=true;document.getElementById('pileName').disabled=true;document.getElementById('tableName').disabled=false;">
-                <label for="cards">Tables</label>
+                <input type="radio" name="type" value="Tables" id="rTables" checked>
+                <label for="rTables">${game.i18n.localize("SWIM.chaseSetupTablesName")}</label>
+                <input type="radio" name="type" value="Cards" id="rCards">
+                <label for="rCards">${game.i18n.localize("SWIM.chaseSetupCardsName")}</label>
             </p>
-            <p id="pDecks" >Deck to Deal From: <select id="deckName" disabled>${deckList}</select></p>
-            <p id="pPile"  >Pile Deck: <select id="pileName" disabled>${pileList}</select></p>
-            <p id="pTables">Table to Draw From: <select id="tableName" disabled>${cardsList}</select></p>
+            <hr />
+            <p id="pDecks" >${game.i18n.localize("SWIM.chaseSetupDeck")}: <select id="deckName" >${deckList}</select></p>
+            <p id="pPiles" >${game.i18n.localize("SWIM.chaseSetupPile")}: <select id="pileName" >${pileList}</select></p>
+            <p id="pTables">${game.i18n.localize("SWIM.chaseSetupTable")}: <select id="tableName">${cardsList}</select></p>
             <p>Number of Cards to Draw: <input id="drawAmt" type="number" style="width: 50px;" value=${DEF_NUM_CARDS}></p>
-            <hr>
+            <hr />
             <details>
             <summary>Layout Options</summary>
             <p>Pixel Sizes:</p>
@@ -116,12 +117,29 @@
                     label: `<i class="fas fa-times"></i> Cancel`,
                 },
             },
+            render: ([dialogContent]) => {
+                $("#chase-setup-dialogue").css("height", "auto"); // Adjust the dia
+                $("#pDecks").css("display","none");
+                $("#pPiles").css("display","none");
+                $("#rCards").click(function() {
+                        $("#pDecks").css("display","block");
+                        $("#pPiles").css("display","block");
+                        $("#pTables").css("display","none");
+                });
+                $("#rTables").click(function() {
+                        $("#pDecks").css("display","none");
+                        $("#pPiles").css("display","none");
+                        $("#pTables").css("display","block");
+                });
+            }
+        },{
+            id: "chase-setup-dialogue"
         }).render(true);
     }
 
     async function makeChase(html) {
-        let isCards = html.find("#cards")[0].checked;
-        let isTables = html.find("#tables")[0].checked;
+        let isCards = html.find("#rCards")[0].checked;
+        let isTables = html.find("#rTables")[0].checked;
         let deckName = html.find("#deckName")[0].value;
         let pileName = html.find("#pileName")[0].value;
         let tableName = html.find("#tableName")[0].value;
@@ -183,8 +201,8 @@
     }
 
     async function resetChase(html) {
-        let isCards = html.find("#cards")[0].checked;
-        let isTables = html.find("#tables")[0].checked;
+        let isCards = html.find("#rCards")[0].checked;
+        let isTables = html.find("#rTables")[0].checked;
         let tableName = html.find("#tableName")[0].value;
         let deckName = html.find("#deckName")[0].value;
         let pileName = html.find("#pileName")[0].value;
