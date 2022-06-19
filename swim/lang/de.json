@@ -185,7 +185,7 @@
     "SWIM.chatMessage-shotsFiredWithCurrentAmmoNoRoundsWithoutNewCharges": "<img src=\"{weaponIMG}\" alt=\"\" width=\"25\" height=\"25\" /> {name} feuert <strong>{shots} {currentAmmo}</strong> aus {itemWeaponName}.",
     "SWIM.chatMessage-reloadWeaponWithoutAmmoName": "<img src=\"{weaponIMG}\" alt=\"\" width=\"25\" height=\"25\" /> {name} lädt {itemWeaponName} nach.",
     "SWIM.chatMessage-unshakeBonusOtherActor": "<br/><em>{unShakeBonus} andere Modifikatoren des Akteurs</em>",
-    "SWIM.notification-critFailApplyWounds": "Du hast einen Kritischen Fehlschlag gewürfelt! Wunden werden angewendet...",
+    "SWIM.notification-critFailApplyWounds": "Du hast einen Kritischen Fehlschlag gewürfelt! Wunden werden angewendet…",
     "SWIM.notification-healthEstimateRequired": "Bitte installiere und aktiviere das Health Estimate Modul für dieses Makro.",
     "SWIM.chatMessage-unHolyWarrior": "<br/><em>+ {numberPP}</em> der ausgegebenen Machtpunkte.",
     "SWIM.chatMessage-soakNoWounds": " und konnte keine Wunden wegstecken.",
@@ -265,7 +265,7 @@
     "SWIM.power-easeBurden-tes": "Bürde erleichtern",
     "SWIM.power-burden-tes": "Bürde",
     "SWIM.chatMessage-edgeText": "<br/><em>+ {numberPP}</em> der verwendeten Machtpunkte.",
-    "SWIM.dialogue-nevermind": "Schon gut...",
+    "SWIM.dialogue-nevermind": "Schon gut…",
     "SWIM.power-conceal": "Verbergen",
     "SWIM.power-silence": "Stille",
     "SWIM.noPowerPointsName": "Keine Machtpunkte Settingregel",
@@ -325,5 +325,9 @@
     "SWIM.dialogue-powerEffectBuilderBurden": "<p>Dies erhöht oder senkt den Stärkewürfel für die Traglastberechnung. Trage den Wert unten ein. Jeder Schritt erhöht den Wert um einen Würfel (also z.B. von W6 auf W8.</p><div style='display:flex'><p style='flex:3'>Würfelstufen: </p><input type='number' id='die_steps' value='1' style='flex:1'/></input></div></div>",
     "SWIM.dialogue-optionCastWithRaise": "<div class='form-group'><label for='raise'><p>Mit Steigerung gewirkt: </p></label><input id='raise' name='raiseBox' type='checkbox'></input></div></div>",
     "SWIM.dialogue-optionStrongModifier": "<div class='form-group'><label for='strong'><p>Mit Macht-Modifikator gewirkt: </p></label><input id='strong' name='strongBox' type='checkbox'></input></div></div>",
-    "SWIM.power-detect": "Erkennen"
+    "SWIM.power-detect": "Erkennen",
+    "SWIM.gameTerm-Range": "Fernkampf",
+    "SWIM.label-summonedEntity": "Beschworen",
+    "SWIM.select-deflectionOptions": "<div class='form-group'><label for='deflectionOption'><p>Angriffsart: </p></label><select id='deflectionOption'>{options}</select></div></div>",
+    "SWIM.gameTerm-Melee": "Nahkampf"
 }
