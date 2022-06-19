@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 4.2.3
+ * v. 4.2.4
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  * 
  * Powers on hold for now:
@@ -969,7 +969,7 @@ export async function effect_builder_gm(data) {
                     type: data.protection.type,
                     duration: power || noPP ? Number(999999999999999) : data.protection.duration,
                     icon: data.protection.icon,
-                    additionalChanges: target.targetID === casterID ? additionalChange : false,
+                    additionalChanges: target === casterID ? additionalChange : false,
                     flags: {swim: {
                         maintainedPower: true,
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
