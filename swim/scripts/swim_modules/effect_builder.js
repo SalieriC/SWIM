@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 4.2.2
+ * v. 4.2.3
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  * 
  * Powers on hold for now:
@@ -896,7 +896,7 @@ export async function effect_builder_gm(data) {
             if (caster.actor.data.data.additionalStats?.maintainedPowers) {
                 additionalChange.push({ key: `data.additionalStats.maintainedPowers.value`, mode: 2, priority: undefined, value: 1 })
             }
-        } else if (token.actor.data.data.additionalStats?.maintainedPowers) {
+        } else if (caster.actor.data.data.additionalStats?.maintainedPowers) {
             additionalChange = [{ key: `data.additionalStats.maintainedPowers.value`, mode: 2, priority: undefined, value: 1 }]
         }
     }
