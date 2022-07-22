@@ -6,9 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.18.4] - 2022-07-22
+☮️ Peace in the world, or the world in pieces. 🕊️
+### Added
+- Added FVTT card deck support for the chase setup (thanks a lot @mafamac).
+### Fixed
+- Two bugs in the PEB that caused either not applying additional changes to protection or not adding it at all.
+- Falling damage didn't explode.
+
 ## [0.18.3] - 2022-06-13
 ☮️ Peace in the world, or the world in pieces. 🕊️
-## Added
+### Added
 - Mighty Summoner: Maintenance Active Effects. Upon summoning a creature, the summoned creature and the summoner will gain an active effect containing the duration and some additional data from SWIM. If either of those effects ands and is deleted, the summoned creature will be dismissed. This works both ways. If the no power point setting is chosen, the duration of the power is near infinite and the maintenance AE on the caster incurs a penalty to the skill as per the no power point setting rule.
 
 ## [0.18.2] - 2022-06-11
