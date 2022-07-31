@@ -104,10 +104,10 @@ export async function loot_o_mat_script() {
     }
 
     async function find_treasure(tokens) {
-        // the array contains tokens but we need to get the actor data from token.document._actor.data.data.additionalStats.treasure
+        // the array contains tokens but we need to get the actor data from token.document._actor.system.additionalStats.treasure
         for (let token of tokens) {
-            if (token.document._actor.data.data.additionalStats.treasure) {
-                let lootType = token.document._actor.data.data.additionalStats.treasure.value.toLowerCase();
+            if (token.document._actor.system.additionalStats.treasure) {
+                let lootType = token.document._actor.system.additionalStats.treasure.value.toLowerCase();
                 if (lootType.includes("per") || lootType.includes("/")) {
                     let lootTypeSplit;
                     if (lootType.includes(", per")) { lootTypeSplit = lootType.split(", per ") }

@@ -17,11 +17,11 @@ for (let actor of actors) {
     const edges = actor.data.items.filter(function (item) {
         return edgeNames.includes(item.name.toLowerCase()) && (item.type === "edge" || item.type === "ability");
     });
-    if (actor.data.data.wildcard === false && edges.length === 0) {
+    if (actor.system.wildcard === false && edges.length === 0) {
         await actor.update({"data.bennies.max": 0});
         await actor.update({"data.bennies.value": 0});
     }
-    else if (actor.data.data.wildcard === false && edges.length > 0) {
+    else if (actor.system.wildcard === false && edges.length > 0) {
         let amount = edges.length;
         await actor.update({"data.bennies.max": amount});
         await actor.update({"data.bennies.value": amount});

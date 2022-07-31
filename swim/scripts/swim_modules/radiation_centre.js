@@ -36,7 +36,7 @@ export async function radiation_centre_script() {
         }
         return ui.notifications.error('Your GM has not activated the Irradiation Condition. Ask your GM to do so and try again.')
     }
-    /*else if (!token.actor.data.data.additionalStats.radRes) {
+    /*else if (!token.actor.system.additionalStats.radRes) {
         ui.notifications.error("Activate your Rad Resistance Additional Stat before using this macro.");
         return;
     }*/
@@ -45,11 +45,11 @@ export async function radiation_centre_script() {
     // Setting SFX
     let fatiguedSFX = game.settings.get(
         'swim', 'fatiguedSFX');
-    let radRes = token.actor.data.data.additionalStats.radRes?.value;
+    let radRes = token.actor.system.additionalStats.radRes?.value;
 
     // Declairing variables and constants.
-    const fv = token.actor.data.data.fatigue.value;
-    const fm = token.actor.data.data.fatigue.max;
+    const fv = token.actor.system.fatigue.value;
+    const fm = token.actor.system.fatigue.max;
     const elan = token.actor.data.items.find(function (item) {
         return item.name.toLowerCase() === "elan" && item.type === "edge";
     });
@@ -59,7 +59,7 @@ export async function radiation_centre_script() {
     //Check for actor status and adjust bennies based on edges.
     let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
     let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
-    if ((token.actor.data.data.wildcard === false) && (actorGreatLuck === undefined)) {
+    if ((token.actor.system.wildcard === false) && (actorGreatLuck === undefined)) {
         if ((!(actorLuck === undefined)) && (bennies > 1) && ((actorGreatLuck === undefined))) { bennies = 1; }
         else { bennies = 0; }
     }
@@ -96,7 +96,7 @@ export async function radiation_centre_script() {
         rollWithEdge += radRes;
         let radResVal = `${radRes}`;
         if (radRes >= 1) { radResVal = `+${radRes}`; }
-        if (token.actor.data.data.additionalStats.radRes) { edgeText = edgeText + `<br/><i>including ${radResVal} from current Rad Resistance</i>.`; }
+        if (token.actor.system.additionalStats.radRes) { edgeText = edgeText + `<br/><i>including ${radResVal} from current Rad Resistance</i>.`; }
 
         // Roll Vigor
         let chatData = `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge} </span>`;
@@ -109,7 +109,7 @@ export async function radiation_centre_script() {
 
         // Checking for a Critical Failure.
         let wildCard = true;
-        if (token.actor.data.data.wildcard === false && token.actor.type === "npc") { wildCard = false }
+        if (token.actor.system.wildcard === false && token.actor.type === "npc") { wildCard = false }
         let critFail = await swim.critFail_check(wildCard, r)
         if (critFail === true) {
             ui.notifications.notify("You've rolled a Critical Failure! Applying Fatigue from Radiation now...");

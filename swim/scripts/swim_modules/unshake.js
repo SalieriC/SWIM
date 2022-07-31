@@ -19,8 +19,8 @@ export async function unshake_swd_script() {
     let shakenSFX = game.settings.get(
         'swim', 'shakenSFX');
     let unshakeSFX;
-    if (token.actor.data.data.additionalStats.sfx) {
-        let sfxSequence = token.actor.data.data.additionalStats.sfx.value.split("|");
+    if (token.actor.system.additionalStats.sfx) {
+        let sfxSequence = token.actor.system.additionalStats.sfx.value.split("|");
         shakenSFX = sfxSequence[0];
         unshakeSFX = sfxSequence[2];
     }
@@ -56,7 +56,7 @@ export async function unshake_swd_script() {
             edgeText += `<br/><i>+ 2 <img src="${edge.img}" alt="" width="15" height="15" style="border:0" />${edge.name}</i>`;
         }
         //Get generic actor unshake bonus and check if it is from an AE:
-        const unShakeBonus = token.actor.data.data.attributes.spirit.unShakeBonus;
+        const unShakeBonus = token.actor.system.attributes.spirit.unShakeBonus;
         let effectName = [];
         let effectIcon = [];
         let effectValue = [];
@@ -93,7 +93,7 @@ export async function unshake_swd_script() {
         let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultRoll", {name : actorAlias, rollWithEdge : rollWithEdge})
         // Checking for a Critical Failure.
         let wildCard = true;
-        if (token.actor.data.data.wildcard === false && token.actor.type === "npc") { wildCard = false }
+        if (token.actor.system.wildcard === false && token.actor.type === "npc") { wildCard = false }
         let critFail = await swim.critFail_check(wildCard, r)
         if (critFail === true) {
             ui.notifications.notify(game.i18n.localize("SWIM.notification-critFail"));
@@ -184,8 +184,8 @@ export async function unshake_swade_script() {
     let shakenSFX = game.settings.get(
         'swim', 'shakenSFX');
     let unshakeSFX;
-    if (token.actor.data.data.additionalStats.sfx) {
-        let sfxSequence = token.actor.data.data.additionalStats.sfx.value.split("|");
+    if (token.actor.system.additionalStats.sfx) {
+        let sfxSequence = token.actor.system.additionalStats.sfx.value.split("|");
         shakenSFX = sfxSequence[0];
         unshakeSFX = sfxSequence[2];
     }
@@ -221,7 +221,7 @@ export async function unshake_swade_script() {
             edgeText += `<br/><i>+ 2 <img src="${edge.img}" alt="" width="15" height="15" style="border:0" />${edge.name}</i>`;
         }
         //Get generic actor unshake bonus and check if it is from an AE:
-        const unShakeBonus = token.actor.data.data.attributes.spirit.unShakeBonus;
+        const unShakeBonus = token.actor.system.attributes.spirit.unShakeBonus;
         let effectName = [];
         let effectIcon = [];
         let effectValue = [];
@@ -258,7 +258,7 @@ export async function unshake_swade_script() {
         let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultRoll", {name : actorAlias, rollWithEdge : rollWithEdge});
         // Checking for a Critical Failure.
         let wildCard = true;
-        if (token.actor.data.data.wildcard === false && token.actor.type === "npc") { wildCard = false }
+        if (token.actor.system.wildcard === false && token.actor.type === "npc") { wildCard = false }
         let critFail = await swim.critFail_check(wildCard, r)
         if (critFail === true) {
             ui.notifications.notify(game.i18n.localize("SWIM.notification-critFail"));

@@ -9,8 +9,8 @@
 //Set up
 let incapSFX = game.settings.get(
   'swim', 'incapSFX');
-  if (token.actor.data.data.additionalStats.sfx) {
-    let sfxSequence = token.actor.data.data.additionalStats.sfx.value.split("|");
+  if (token.actor.system.additionalStats.sfx) {
+    let sfxSequence = token.actor.system.additionalStats.sfx.value.split("|");
     incapSFX = sfxSequence[1];
   }
 

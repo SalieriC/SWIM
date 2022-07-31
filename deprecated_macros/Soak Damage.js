@@ -23,8 +23,8 @@ function main() {
     let injuryTable = game.settings.get(
         'swim', 'injuryTable');
     let soakSFX;
-    if (token.actor.data.data.additionalStats.sfx) {
-        let sfxSequence = token.actor.data.data.additionalStats.sfx.value.split("|");
+    if (token.actor.system.additionalStats.sfx) {
+        let sfxSequence = token.actor.system.additionalStats.sfx.value.split("|");
         woundedSFX = sfxSequence[0];
         soakSFX = sfxSequence[3];
     }
@@ -35,20 +35,20 @@ function main() {
     }
 
     // Declairing variables and constants.
-    const wv = token.actor.data.data.wounds.value;
-    const wm = token.actor.data.data.wounds.max;
-    const ppv = token.actor.data.data.powerPoints.value;
+    const wv = token.actor.system.wounds.value;
+    const wm = token.actor.system.wounds.max;
+    const ppv = token.actor.system.powerPoints.value;
     const holyWarr = token.actor.data.items.find(function (item) {
         return ((item.name.toLowerCase() === "holy warrior") || (item.name.toLowerCase() === "unholy warrior")) && item.type === "edge";
     });
     const elan = token.actor.data.items.find(function (item) {
         return item.name.toLowerCase() === "elan" && item.type === "edge";
     });
-    let bennies = token.actor.data.data.bennies.value;
+    let bennies = token.actor.system.bennies.value;
     //Check for actor status and adjust bennies based on edges.
     let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
     let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
-    if ((token.actor.data.data.wildcard === false) && (actorGreatLuck === undefined)) {
+    if ((token.actor.system.wildcard === false) && (actorGreatLuck === undefined)) {
         if ((!(actorLuck === undefined)) && (bennies > 1) && ((actorGreatLuck === undefined))) { bennies = 1; }
         else { bennies = 0; }
     }
@@ -126,7 +126,7 @@ function main() {
             } else if (rounded >= numberWounds) {
                 chatData += ` and soaks all of his Wounds.`;
                 if (soakSFX) { AudioHelper.play({ src: `${soakSFX}` }, true); }
-                if (token.actor.data.data.status.isShaken === true) {
+                if (token.actor.system.status.isShaken === true) {
                     await succ.apply_status(token, 'shaken', false)
                 }
             }
@@ -199,7 +199,7 @@ function main() {
 
     // Check for Bennies
     function checkBennies() {
-        bennies = token.actor.data.data.bennies.value;
+        bennies = token.actor.system.bennies.value;
 
         // Non GM token has <1 bennie OR GM user AND selected token has <1 benny
         if ((!game.user.isGM && bennies < 1) || (game.user.isGM && bennies < 1 && game.user.getFlag("swade", "bennies") < 1)) {
@@ -216,11 +216,11 @@ function main() {
 
     // Spend Benny function
     async function spendBenny() {
-        bennies = token.actor.data.data.bennies.value;
+        bennies = token.actor.system.bennies.value;
         //Check for actor status and adjust bennies based on edges.
         let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
         let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
-        if ((token.actor.data.data.wildcard === false) && (actorGreatLuck === undefined)) {
+        if ((token.actor.system.wildcard === false) && (actorGreatLuck === undefined)) {
             if ((!(actorLuck === undefined)) && (bennies > 1) && ((actorGreatLuck === undefined))) { bennies = 1; }
             else { bennies = 0; }
         }
@@ -405,7 +405,7 @@ function main() {
             if (!slow) {
                 //Actor isn't slow, create AE with minor slow effect = data.stats.speed.runningDie -2 && data.stats.speed.value -1
                 injuryData.label = 'Injury: Leg (Slow)';
-                if (token.actor.data.data.stats.speed.runningDie === 4) {
+                if (token.actor.system.stats.speed.runningDie === 4) {
                     //Running die is a d4 already, alter AE like so: data.stats.speed.runningDie.modifier -1 && data.stats.speed.value -1
                     injuryEffects = {
                         key: 'data.stats.speed.runningDie.modifier',
@@ -428,10 +428,10 @@ function main() {
                         value: -1
                     }
                 }
-            } else if (slow.data.data.major === false) {
+            } else if (slow.system.major === false) {
                 //Actor is minor slow, create AE with major slow effect = data.stats.speed.runningDie -2 && data.stats.speed.value -2 && @Skill{Athletics}[data.die.modifier] -2
                 injuryData.label = 'Injury: Leg (Slow)';
-                if (token.actor.data.data.stats.speed.runningDie === 4) {
+                if (token.actor.system.stats.speed.runningDie === 4) {
                     //Running die is a d4 already, alter AE like so: data.stats.speed.runningDie.modifier -1 && data.stats.speed.value -2
                     injuryEffects = {
                         key: 'data.stats.speed.runningDie.modifier',

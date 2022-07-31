@@ -24,8 +24,8 @@ if (tokenActor === undefined || tokenTarget === undefined) {
 
 
     function rollForIt() {
-        let actorSize = tokenActor.actor.data.data.stats.size;
-        let targetSize = tokenTarget.actor.data.data.stats.size;
+        let actorSize = tokenActor.actor.system.stats.size;
+        let targetSize = tokenTarget.actor.system.stats.size;
         let actorModifier = sizeToModifier(actorSize);
         let targetModifier = sizeToModifier(targetSize);
         let modifier = calc(actorModifier, targetModifier);

@@ -728,7 +728,7 @@ export async function effect_builder() {
                     // If caster is not the target and noPP setting rule active, give the caster a -1 to its spellcasting:
                     if (!casterIsTarget && !(selectedPower === "confusion" || selectedPower === "blind" || selectedPower === "sloth")) {
                         if (power) {
-                            const skillName = power.data.data.actions.skill
+                            const skillName = power.system.actions.skill
                             let aeData = {
                                 changes: [],
                                 icon: power.img,
@@ -755,7 +755,7 @@ export async function effect_builder() {
                             if (noPP) {
                                 aeData.changes.push({ key: `@Skill{${skillName}}[data.die.modifier]`, mode: 2, priority: undefined, value: -1 })
                             }
-                            if (token.actor.data.data.additionalStats?.maintainedPowers) {
+                            if (token.actor.system.additionalStats?.maintainedPowers) {
                                 aeData.changes.push({ key: `data.additionalStats.maintainedPowers.value`, mode: 2, priority: undefined, value: 1 })
                             }
                             await token.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -782,7 +782,7 @@ export async function effect_builder() {
                     //Get weapons for everyone
                     let allHTML = []
                     for (let target of targets) {
-                        const targetWeapons = target.actor.items.filter(w => w.type === "weapon" && w.data.data.quantity >= 1)
+                        const targetWeapons = target.actor.items.filter(w => w.type === "weapon" && w.system.quantity >= 1)
                         if (targetWeapons.length >= 1) {
                             let weaponOptions
                             for (let weapon of targetWeapons) {
@@ -891,12 +891,12 @@ export async function effect_builder_gm(data) {
     let additionalChange = false
     if (casterIsTarget && noPP === true && !(type === "blind" || type === "confusion" || type === "sloth")) {
         if (power) {
-            const skillName = power.data.data.actions.skill
+            const skillName = power.system.actions.skill
             additionalChange = [{ key: `@Skill{${skillName}}[data.die.modifier]`, mode: 2, priority: undefined, value: -1 }]
-            if (caster.actor.data.data.additionalStats?.maintainedPowers) {
+            if (caster.actor.system.additionalStats?.maintainedPowers) {
                 additionalChange.push({ key: `data.additionalStats.maintainedPowers.value`, mode: 2, priority: undefined, value: 1 })
             }
-        } else if (caster.actor.data.data.additionalStats?.maintainedPowers) {
+        } else if (caster.actor.system.additionalStats?.maintainedPowers) {
             additionalChange = [{ key: `data.additionalStats.maintainedPowers.value`, mode: 2, priority: undefined, value: 1 }]
         }
     }
@@ -1039,17 +1039,17 @@ export async function effect_builder_gm(data) {
                     }
                 }
             }
-            const targetStr = target.actor.data.data.attributes.strength.die.sides + change * 2
+            const targetStr = target.actor.system.attributes.strength.die.sides + change * 2
             if (targetStr <= 12) {
                 aeData.changes.push({ key: `data.attributes.strength.die.sides`, mode: 2, priority: undefined, value: change * 2 })
             } else {
-                const toMax = 12 - target.actor.data.data.attributes.strength.die.sides
+                const toMax = 12 - target.actor.system.attributes.strength.die.sides
                 const rest = change - (toMax / 2)
                 aeData.changes.push({ key: `data.attributes.strength.die.sides`, mode: 2, priority: undefined, value: toMax },
                     { key: `data.attributes.strength.die.modifier`, mode: 2, priority: undefined, value: rest })
             }
             aeData.changes.push({ key: `data.stats.size`, mode: 2, priority: undefined, value: change })
-            if (target.actor.data.data.details.autoCalcToughness === false) {
+            if (target.actor.system.details.autoCalcToughness === false) {
                 aeData.changes.push({ key: `data.stats.toughness.value`, mode: 2, priority: undefined, value: change })
             }
             if (targetID === casterID) {
@@ -1087,15 +1087,15 @@ export async function effect_builder_gm(data) {
                     }
                 }
             }
-            const targetStr = target.actor.data.data.attributes.strength.die.sides + change * 2
+            const targetStr = target.actor.system.attributes.strength.die.sides + change * 2
             if (targetStr <= 4) {
-                const toMin = 4 - target.actor.data.data.attributes.strength.die.sides
+                const toMin = 4 - target.actor.system.attributes.strength.die.sides
                 aeData.changes.push({ key: `data.attributes.strength.die.sides`, mode: 2, priority: undefined, value: toMin })
             } else {
                 aeData.changes.push({ key: `data.attributes.strength.die.sides`, mode: 2, priority: undefined, value: change * 2 })
             }
             aeData.changes.push({ key: `data.stats.size`, mode: 2, priority: undefined, value: change })
-            if (target.actor.data.data.details.autoCalcToughness === false) {
+            if (target.actor.system.details.autoCalcToughness === false) {
                 aeData.changes.push({ key: `data.stats.toughness.value`, mode: 2, priority: undefined, value: change })
             }
             if (targetID === casterID) {
@@ -1111,7 +1111,7 @@ export async function effect_builder_gm(data) {
             const change = data.speed.change
             const quickness = data.speed.quickness
             let aeData = {
-                changes: [{ key: `data.stats.speed.value`, mode: 5, priority: undefined, value: target.actor.data.data.stats.speed.value * change }],
+                changes: [{ key: `data.stats.speed.value`, mode: 5, priority: undefined, value: target.actor.system.stats.speed.value * change }],
                 icon: data.speed.icon ? data.speed.icon : quickness ? "modules/swim/assets/icons/effects/m-quickness.svg" : "modules/swim/assets/icons/effects/m-speed.svg",
                 label: quickness ? game.i18n.localize("SWIM.power-speedQuickness") : game.i18n.localize("SWIM.power-speed"),
                 duration: {
@@ -1154,7 +1154,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             let aeData = {
-                changes: [{ key: `data.stats.speed.value`, mode: 5, priority: undefined, value: Math.round(target.actor.data.data.stats.speed.value * change) }],
+                changes: [{ key: `data.stats.speed.value`, mode: 5, priority: undefined, value: Math.round(target.actor.system.stats.speed.value * change) }],
                 icon: data.sloth.icon ? data.sloth.icon : "modules/swim/assets/icons/effects/m-sloth.svg",
                 label: game.i18n.localize("SWIM.power-sloth"),
                 duration: duration,

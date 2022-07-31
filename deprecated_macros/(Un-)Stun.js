@@ -12,8 +12,8 @@ async function main() {
     'swim', 'stunSFX');
 
   let unshakeSFX;
-  if (token.actor.data.data.additionalStats.sfx) {
-    let sfxSequence = token.actor.data.data.additionalStats.sfx.value.split("|");
+  if (token.actor.system.additionalStats.sfx) {
+    let sfxSequence = token.actor.system.additionalStats.sfx.value.split("|");
     unshakeSFX = sfxSequence[2];
   }
 
@@ -57,7 +57,7 @@ async function main() {
     let chatData = `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge} </span>`;
     // Checking for a Critical Failure.
     let wildCard = true;
-    if (token.actor.data.data.wildcard === false && token.actor.type === "npc") { wildCard = false }
+    if (token.actor.system.wildcard === false && token.actor.type === "npc") { wildCard = false }
     let critFail = await swim.critFail_check(wildCard, r)
     if (critFail === true) {
       ui.notifications.notify("You've rolled a Critical Failure!");
@@ -118,7 +118,7 @@ async function main() {
 
   // Check for Bennies
   function checkBennies() {
-    bennies = token.actor.data.data.bennies.value;
+    bennies = token.actor.system.bennies.value;
 
     // Non GM token has <1 bennie OR GM user AND selected token has <1 benny
     if ((!game.user.isGM && bennies < 1) || (game.user.isGM && bennies < 1 && game.user.getFlag("swade", "bennies") < 1)) {
@@ -135,7 +135,7 @@ async function main() {
 
   // Spend Benny function
   async function spendBenny() {
-    bennies = token.actor.data.data.bennies.value;
+    bennies = token.actor.system.bennies.value;
     //Subtract the spend, use GM benny if user is GM and token has no more bennies left or spend token benny if user is player and/or token has bennies left.
     if (game.user.isGM && bennies < 1) {
       game.user.setFlag("swade", "bennies", game.user.getFlag("swade", "bennies") - 1)

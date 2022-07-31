@@ -53,8 +53,8 @@ async function roll_damage(token, fallingDepth, snowDepth, waterSuccess) {
 }
 
 async function calculate_damage(token, damage) {
-    const toughness = token.document._actor.data.data.stats.toughness.value;
-    const isShaken = token.document._actor.data.data.status.isShaken;
+    const toughness = token.document._actor.system.stats.toughness.value;
+    const isShaken = token.document._actor.system.status.isShaken;
     const raises = Math.floor((damage - toughness) / 4);
     const isHardy = token.document._actor.data.items.find(function (item) {
         return ((item.name.toLowerCase() === "hardy") && item.type === "ability");

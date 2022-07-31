@@ -8,14 +8,14 @@ function main() {
     }
 
     for (let token of canvas.tokens.controlled) {
-        let ppv = token.actor.data.data.powerPoints.value;
-        const ppm = token.actor.data.data.powerPoints.max;
+        let ppv = token.actor.system.powerPoints.value;
+        const ppm = token.actor.system.powerPoints.max;
         let bv;
         let bennies;
-        const fv = token.actor.data.data.fatigue.value;
-        const fm = token.actor.data.data.fatigue.max;
-        const wv = token.actor.data.data.wounds.value;
-        const wm = token.actor.data.data.wounds.max;
+        const fv = token.actor.system.fatigue.value;
+        const fm = token.actor.system.fatigue.max;
+        const wv = token.actor.system.wounds.value;
+        const wm = token.actor.system.wounds.max;
         const sDrain = token.actor.data.items.find(function (item) {
             return item.name.toLowerCase() === "soul drain" && item.type === "edge";
         });
@@ -349,11 +349,11 @@ function main() {
 
         // Check for Bennies
         function checkBennies() {
-            bennies = token.actor.data.data.bennies.value;
+            bennies = token.actor.system.bennies.value;
             //Check for actor status and adjust bennies based on edges.
             let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
             let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
-            if ((token.actor.data.data.wildcard === false) && (actorGreatLuck === undefined)) {
+            if ((token.actor.system.wildcard === false) && (actorGreatLuck === undefined)) {
                 if ((!(actorLuck === undefined)) && (bennies > 1) && ((actorGreatLuck === undefined))) { bennies = 1; }
                 else { bennies = 0; }
             }
@@ -373,11 +373,11 @@ function main() {
 
         // Spend Benny function
         async function spendBenny() {
-            bennies = token.actor.data.data.bennies.value;
+            bennies = token.actor.system.bennies.value;
             //Check for actor status and adjust bennies based on edges.
             let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
             let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
-            if ((token.actor.data.data.wildcard === false) && (actorGreatLuck === undefined)) {
+            if ((token.actor.system.wildcard === false) && (actorGreatLuck === undefined)) {
                 if ((!(actorLuck === undefined)) && (bennies > 1) && ((actorGreatLuck === undefined))) { bennies = 1; }
                 else { bennies = 0; }
             }

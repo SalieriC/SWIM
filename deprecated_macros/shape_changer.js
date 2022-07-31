@@ -93,7 +93,7 @@ async function set_tokenSettings(scCopy, pcID) {
             "token.vision": carry.data.token.vision,
             "token.displayBars": carry.data.token.displayBars,
             "token.displayName": carry.data.token.displayName,
-            "data.advances.value": carry.data.data.advances.value
+            "data.advances.value": carry.system.advances.value
         }
     } else {
         updateData = {
@@ -107,7 +107,7 @@ async function set_tokenSettings(scCopy, pcID) {
             "token.vision": pc.data.token.vision,
             "token.displayBars": pc.data.token.displayBars,
             "token.displayName": pc.data.token.displayName,
-            "data.advances.value": pc.data.data.advances.value
+            "data.advances.value": pc.system.advances.value
         }
     }
     await scCopy.update(updateData)
@@ -119,68 +119,68 @@ async function update_preset(scCopy, scSize, raise, pcID) {
         pc = game.actors.get(pcID)
         carry = actor;
     }
-    let maxWounds = pc.data.data.wounds.max;
+    let maxWounds = pc.system.wounds.max;
     /* "The caster does not inherit extra Wounds when transforming[.]" Leaving it here anyway in case s/o wan't to change that.
-    if (scSize >= 4 && scSize <= 7) {maxWounds = pc.data.data.wounds.max + 1}
-    else if (scSize >= 8 && scSize <= 11) {maxWounds = pc.data.data.wounds.max + 2}
-    else if (scSize >= 12) {maxWounds = pc.data.data.wounds.max + 3}
+    if (scSize >= 4 && scSize <= 7) {maxWounds = pc.system.wounds.max + 1}
+    else if (scSize >= 8 && scSize <= 11) {maxWounds = pc.system.wounds.max + 2}
+    else if (scSize >= 12) {maxWounds = pc.system.wounds.max + 3}
     */
     //Higher Die Type in case of a raise:
-    let updateStr = scCopy.data.data.attributes.strength.die.sides;
-    let updateVig = scCopy.data.data.attributes.vigor.die.sides;
+    let updateStr = scCopy.system.attributes.strength.die.sides;
+    let updateVig = scCopy.system.attributes.vigor.die.sides;
     if (raise === true) {
         updateStr = updateStr + 2;
         updateVig = updateVig + 2;
     }
     let updateData = {
-        "data.attributes.smarts.die.sides": pc.data.data.attributes.smarts.die.sides,
-        "data.attributes.spirit.die.sides": pc.data.data.attributes.spirit.die.sides,
+        "data.attributes.smarts.die.sides": pc.system.attributes.smarts.die.sides,
+        "data.attributes.spirit.die.sides": pc.system.attributes.spirit.die.sides,
         "data.attributes.strength.die.sides": updateStr,
         "data.attributes.vigor.die.sides": updateVig,
-        "data.bennies.max": pc.data.data.bennies.max,
-        "data.fatigue.max": pc.data.data.fatigue.max,
+        "data.bennies.max": pc.system.bennies.max,
+        "data.fatigue.max": pc.system.fatigue.max,
         "data.wounds.max": maxWounds,
-        "data.attributes.smarts.animal": pc.data.data.attributes.smarts.animal,
-        "data.powerPoints.value": pc.data.data.powerPoints.value,
-        "data.powerPoints.max": pc.data.data.powerPoints.max,
+        "data.attributes.smarts.animal": pc.system.attributes.smarts.animal,
+        "data.powerPoints.value": pc.system.powerPoints.value,
+        "data.powerPoints.max": pc.system.powerPoints.max,
     }
     if (pcID) {
         let carryUpdates = {
-            "data.bennies.value": carry.data.data.bennies.value,
-            "data.fatigue.value": carry.data.data.fatigue.value,
-            "data.wounds.value": carry.data.data.wounds.value,
-            "data.details.conviction.value": carry.data.data.details.conviction.value,
-            "data.details.conviction.active": carry.data.data.details.conviction.active,
-            "data.powerPoints.value": carry.data.data.powerPoints.value,
+            "data.bennies.value": carry.system.bennies.value,
+            "data.fatigue.value": carry.system.fatigue.value,
+            "data.wounds.value": carry.system.wounds.value,
+            "data.details.conviction.value": carry.system.details.conviction.value,
+            "data.details.conviction.active": carry.system.details.conviction.active,
+            "data.powerPoints.value": carry.system.powerPoints.value,
             "data.details.archetype": `Shape Changed ${carry.data.token.name}`,
-            "data.wildcard": carry.data.data.wildcard,
+            "data.wildcard": carry.system.wildcard,
             "name": `${scCopy.data.name} (${carry.data.name})`
         }
         updateData = Object.assign(updateData, carryUpdates)
     } else {
         let pcUpdates = {
-            "data.bennies.value": pc.data.data.bennies.value,
-            "data.fatigue.value": pc.data.data.fatigue.value,
-            "data.wounds.value": pc.data.data.wounds.value,
+            "data.bennies.value": pc.system.bennies.value,
+            "data.fatigue.value": pc.system.fatigue.value,
+            "data.wounds.value": pc.system.wounds.value,
             "data.details.archetype": `Shape Changed ${pc.data.token.name}`,
-            "data.details.conviction.value": pc.data.data.details.conviction.value,
-            "data.details.conviction.active": pc.data.data.details.conviction.active,
-            "data.wildcard": pc.data.data.wildcard,
+            "data.details.conviction.value": pc.system.details.conviction.value,
+            "data.details.conviction.active": pc.system.details.conviction.active,
+            "data.wildcard": pc.system.wildcard,
             "name": `${scCopy.data.name} (${pc.data.name})`,
-            "data.powerPoints.value": pc.data.data.powerPoints.value
+            "data.powerPoints.value": pc.system.powerPoints.value
         }
         updateData = Object.assign(updateData, pcUpdates)
     }
 
     //Doing Skills:
-    let pcSkills = pc.data.items.filter(i => (i.data.type === "skill" && (i.data.data.attribute === "smarts" || i.data.data.attribute === "spirit")));
-    let scSkills = scCopy.data.items.filter(i => (i.data.type === "skill" && (i.data.data.attribute === "smarts" || i.data.data.attribute === "spirit")));
+    let pcSkills = pc.data.items.filter(i => (i.data.type === "skill" && (i.system.attribute === "smarts" || i.system.attribute === "spirit")));
+    let scSkills = scCopy.data.items.filter(i => (i.data.type === "skill" && (i.system.attribute === "smarts" || i.system.attribute === "spirit")));
     let skillsToCreate = pcSkills;
     for (let skill of scSkills) {
         let originalSkill = pcSkills.find(s => (s.data.name.toLowerCase() === skill.data.name.toLowerCase()));
         if (originalSkill) {
             await skill.update({
-                "data.die.sides": originalSkill.data.data.die.sides
+                "data.die.sides": originalSkill.system.die.sides
             })
             let index = skillsToCreate.indexOf(originalSkill);
             if (index >= 0) {
@@ -196,18 +196,18 @@ async function update_preset(scCopy, scSize, raise, pcID) {
     let itemsToCreate = pc.data.items.filter(i => (i.data.type === "edge" || i.data.type === "hindrance" || i.data.type === "power"));
     //Taking care of these annoying AB specific power points:
     for (let power of itemsToCreate.filter(p => (p.data.type === "power"))) {
-        if (power.data.data.arcane) {
-            let arcaneBackground = power.data.data.arcane;
+        if (power.system.arcane) {
+            let arcaneBackground = power.system.arcane;
             let ppUpdates;
             if (pcID) {
                 ppUpdates = {
-                    ['data.powerPoints.' + arcaneBackground + '.max']: carry.data.data.powerPoints[arcaneBackground].max,
-                    ['data.powerPoints.' + arcaneBackground + '.value']: carry.data.data.powerPoints[arcaneBackground].value
+                    ['data.powerPoints.' + arcaneBackground + '.max']: carry.system.powerPoints[arcaneBackground].max,
+                    ['data.powerPoints.' + arcaneBackground + '.value']: carry.system.powerPoints[arcaneBackground].value
                 }
             } else {
                 ppUpdates = {
-                    ['data.powerPoints.' + arcaneBackground + '.max']: pc.data.data.powerPoints[arcaneBackground].max,
-                    ['data.powerPoints.' + arcaneBackground + '.value']: pc.data.data.powerPoints[arcaneBackground].value
+                    ['data.powerPoints.' + arcaneBackground + '.max']: pc.system.powerPoints[arcaneBackground].max,
+                    ['data.powerPoints.' + arcaneBackground + '.value']: pc.system.powerPoints[arcaneBackground].value
                 }
             }
             updateData = Object.assign(updateData, ppUpdates)
@@ -252,12 +252,12 @@ async function wait(ms) {
 async function update_pc(ownerActor) {
     const npc = actor;
     await ownerActor.update({
-        "data.bennies.value": npc.data.data.bennies.value,
-        "data.fatigue.value": npc.data.data.fatigue.value,
-        "data.wounds.value": npc.data.data.wounds.value,
-        "data.details.conviction.value": npc.data.data.details.conviction.value,
-        "data.details.conviction.active": npc.data.data.details.conviction.active,
-        "data.powerPoints.value": npc.data.data.powerPoints.value,
+        "data.bennies.value": npc.system.bennies.value,
+        "data.fatigue.value": npc.system.fatigue.value,
+        "data.wounds.value": npc.system.wounds.value,
+        "data.details.conviction.value": npc.system.details.conviction.value,
+        "data.details.conviction.active": npc.system.details.conviction.active,
+        "data.powerPoints.value": npc.system.powerPoints.value,
     })
 }
 
@@ -265,13 +265,13 @@ async function main() {
     //Pre-selecting shape change actors based on rank:
     let scOptions;
     for (let each of totalContent) {
-        let size = each.data.data.stats.size;
+        let size = each.system.stats.size;
         let maxSize = 0;
-        if (actor.data.data.advances?.value < 4) { maxSize = -1 }
-        else if (actor.data.data.advances?.value < 8) { maxSize = 0 }
-        else if (actor.data.data.advances?.value < 12) { maxSize = 2 }
-        else if (actor.data.data.advances?.value < 16) { maxSize = 4 }
-        else if (actor.data.data.advances?.value >= 16) { maxSize = 10 }
+        if (actor.system.advances?.value < 4) { maxSize = -1 }
+        else if (actor.system.advances?.value < 8) { maxSize = 0 }
+        else if (actor.system.advances?.value < 12) { maxSize = 2 }
+        else if (actor.system.advances?.value < 16) { maxSize = 4 }
+        else if (actor.system.advances?.value >= 16) { maxSize = 10 }
         //Selection for all shape change presets:
         if (size <= maxSize) {
             scOptions = scOptions + `<option value="${each.id}">${each.data.name}</option>`;
@@ -316,7 +316,7 @@ async function main() {
 
                     //Fetching raise and size:
                     const raise = html.find(`#raise`)[0].checked;
-                    const scSize = scCopy.data.data.stats.size;
+                    const scSize = scCopy.system.stats.size;
 
                     await set_token_size(scCopy, scSize);
                     await set_tokenSettings(scCopy, originalID);

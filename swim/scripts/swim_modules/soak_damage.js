@@ -28,17 +28,17 @@ export async function soak_damage_script() {
     let injuryTable = game.settings.get(
         'swim', 'injuryTable');
     let soakSFX;
-    if (token.actor.data.data.additionalStats.sfx) {
-        let sfxSequence = token.actor.data.data.additionalStats.sfx.value.split("|");
+    if (token.actor.system.additionalStats.sfx) {
+        let sfxSequence = token.actor.system.additionalStats.sfx.value.split("|");
         woundedSFX = sfxSequence[0];
         soakSFX = sfxSequence[3];
     }
     const sendMessage = true
 
     // Declaring variables and constants.
-    const wv = token.actor.data.data.wounds.value;
-    const wm = token.actor.data.data.wounds.max;
-    const ppv = token.actor.data.data.powerPoints.value;
+    const wv = token.actor.system.wounds.value;
+    const wm = token.actor.system.wounds.max;
+    const ppv = token.actor.system.powerPoints.value;
     const holyWarr = token.actor.data.items.find(function (item) {
         return ((item.name.toLowerCase() === game.i18n.localize("SWIM.edge-holyWarrior").toLowerCase()) || (item.name.toLowerCase() === game.i18n.localize("SWIM.edge-unholyWarrior").toLowerCase())) && item.type === "edge";
     });
@@ -97,7 +97,7 @@ export async function soak_damage_script() {
 
         // Checking for a Critical Failure.
         let wildCard = true;
-        if (token.actor.data.data.wildcard === false && token.actor.type === "npc") { wildCard = false }
+        if (token.actor.system.wildcard === false && token.actor.type === "npc") { wildCard = false }
         let critFail = await swim.critFail_check(wildCard, r)
         if (critFail === true) {
             ui.notifications.notify(game.i18n.localize("SWIM.notification-critFailApplyWounds"));
@@ -357,7 +357,7 @@ export async function soak_damage_script() {
             if (!slow) {
                 //Actor isn't slow, create AE with minor slow effect = data.stats.speed.runningDie -2 && data.stats.speed.value -1
                 injuryData.label = game.i18n.localize("SWIM.injury-legSlow");
-                if (token.actor.data.data.stats.speed.runningDie === 4) {
+                if (token.actor.system.stats.speed.runningDie === 4) {
                     //Running die is a d4 already, alter AE like so: data.stats.speed.runningDie.modifier -1 && data.stats.speed.value -1
                     injuryData.changes.push({
                         key: 'data.stats.speed.runningDie.modifier',
@@ -381,10 +381,10 @@ export async function soak_damage_script() {
                         value: -1
                     })
                 }
-            } else if (slow.data.data.major === false) {
+            } else if (slow.system.major === false) {
                 //Actor is minor slow, create AE with major slow effect = data.stats.speed.runningDie -2 && data.stats.speed.value -2 && @Skill{Athletics}[data.die.modifier] -2
                 injuryData.label = game.i18n.localize("SWIM.injury-legSlow");
-                if (token.actor.data.data.stats.speed.runningDie === 4) {
+                if (token.actor.system.stats.speed.runningDie === 4) {
                     //Running die is a d4 already, alter AE like so: data.stats.speed.runningDie.modifier -1 && data.stats.speed.value -2
                     injuryData.changes.push({
                         key: 'data.stats.speed.runningDie.modifier',
@@ -524,7 +524,7 @@ export async function soak_damage_script() {
                 }
 
                 if (hardToKill) {
-                    let hardToKillBonus = token.actor.data.data.wounds.value - token.actor.data.data.wounds.ignored
+                    let hardToKillBonus = token.actor.system.wounds.value - token.actor.system.wounds.ignored
                     rollWithEdge += hardToKillBonus
                     edgeText = edgeText + `<br/><em>+ ${hardToKillBonus} <img src="${hardToKill.img}" alt="" width="15" height="15" style="border:0" />${hardToKill.name}</em>`;
                 }
@@ -539,7 +539,7 @@ export async function soak_damage_script() {
                 chatData = `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge} </span>`;
                 // Checking for a Critical Failure.
                 let wildCard = true;
-                if (token.actor.data.data.wildcard === false && token.actor.type === "npc") { wildCard = false }
+                if (token.actor.system.wildcard === false && token.actor.type === "npc") { wildCard = false }
                 critFail = await swim.critFail_check(wildCard, r)
             }
             if (critFail === true && harderToKill) {

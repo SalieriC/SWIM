@@ -51,7 +51,7 @@
         return;
     }
     const actor = token.actor;
-    const range = actor.data.data.attributes.smarts.die.sides
+    const range = actor.system.attributes.smarts.die.sides
 
     //Get an ID for this maintenance
     const maintID = generate_id()
@@ -98,8 +98,8 @@
         } if (noPP) {
             let skillOptions = ""
             for (let power of actor.items.filter(p => p.type === "power")) {
-                if (!skillOptions.includes(power.data.data.actions.skill)) {
-                    skillOptions += skillOptions + `<option value="${power.data.data.actions.skill}">${power.data.data.actions.skill}</option>`
+                if (!skillOptions.includes(power.system.actions.skill)) {
+                    skillOptions += skillOptions + `<option value="${power.system.actions.skill}">${power.system.actions.skill}</option>`
                 }
             }
             if (!skillOptions) {
@@ -181,7 +181,7 @@
                         if (noPP) {
                             aeData.changes.push({ key: `@Skill{${skillName}}[data.die.modifier]`, mode: 2, priority: undefined, value: -1 })
                         }
-                        if (token.actor.data.data.additionalStats?.maintainedPowers) {
+                        if (token.actor.system.additionalStats?.maintainedPowers) {
                             aeData.changes.push({ key: `data.additionalStats.maintainedPowers.value`, mode: 2, priority: undefined, value: 1 })
                         }
                         await token.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);

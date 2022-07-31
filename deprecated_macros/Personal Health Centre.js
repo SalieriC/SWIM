@@ -24,8 +24,8 @@ function main() {
         'swim', 'looseFatigueSFX');
     let potionSFX = game.settings.get(
         'swim', 'potionSFX');
-    if (token.actor.data.data.additionalStats.sfx) {
-        let sfxSequence = token.actor.data.data.additionalStats.sfx.value.split("|");
+    if (token.actor.system.additionalStats.sfx) {
+        let sfxSequence = token.actor.system.additionalStats.sfx.value.split("|");
         woundedSFX = sfxSequence[0];
         incapSFX = sfxSequence[1];
         healSFX = sfxSequence[2];
@@ -33,10 +33,10 @@ function main() {
     }
 
     // Declairing variables and constants.
-    const wv = token.actor.data.data.wounds.value;
-    const wm = token.actor.data.data.wounds.max;
-    const fv = token.actor.data.data.fatigue.value;
-    const fm = token.actor.data.data.fatigue.max;
+    const wv = token.actor.system.wounds.value;
+    const wm = token.actor.system.wounds.max;
+    const fv = token.actor.system.fatigue.value;
+    const fm = token.actor.system.fatigue.max;
     //Checking for Edges (and Special/Racial Abilities)
     let natHeal_time = game.settings.get(
         'swim', 'natHeal_time');
@@ -60,10 +60,10 @@ function main() {
         'swim', 'healthPotionOptions');
     const healthPotionsSplit = healthPotionOptions.split('|');
     const hasHealthPotion = token.actor.data.items.find(function (item) {
-        return (healthPotionsSplit.includes(item.name) && item.type === "gear" && item.data.data.quantity > 0)
+        return (healthPotionsSplit.includes(item.name) && item.type === "gear" && item.system.quantity > 0)
     });
     //Find owned Health potions.
-    const ownedHealthPotions = healthPotionsSplit.filter(potion => token.actor.data.items.some(item => item.name === potion && item.type === "gear" && item.data.data.quantity > 0));
+    const ownedHealthPotions = healthPotionsSplit.filter(potion => token.actor.data.items.some(item => item.name === potion && item.type === "gear" && item.system.quantity > 0));
     //Set up a list of Health Potions to choose from.
     let healthPotionList;
     for (let healthPotion of ownedHealthPotions) {
@@ -75,21 +75,21 @@ const fatiguePotionOptions = game.settings.get(
     'swim', 'fatiguePotionOptions');
 const fatiguePotionsSplit = fatiguePotionOptions.split('|');
 const hasFatiguePotion = token.actor.data.items.find(function (item) {
-    return (fatiguePotionsSplit.includes(item.name) && item.type === "gear" && item.data.data.quantity > 0)
+    return (fatiguePotionsSplit.includes(item.name) && item.type === "gear" && item.system.quantity > 0)
 });
 //Find owned Fatigue potions.
-const ownedFatiguePotions = fatiguePotionsSplit.filter(potion => token.actor.data.items.some(item => item.name === potion && item.type === "gear" && item.data.data.quantity > 0));
+const ownedFatiguePotions = fatiguePotionsSplit.filter(potion => token.actor.data.items.some(item => item.name === potion && item.type === "gear" && item.system.quantity > 0));
 //Set up a list of Fatigue Potions to choose from.
 let fatiguePotionList;
 for (let fatiguePotion of ownedFatiguePotions) {
     fatiguePotionList += `<option value="${fatiguePotion}">${fatiguePotion}</option>`;
 }
 
-    let bennies = token.actor.data.data.bennies.value;
+    let bennies = token.actor.system.bennies.value;
     //Check for actor status and adjust bennies based on edges.
     let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
     let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
-    if ((token.actor.data.data.wildcard === false) && (actorGreatLuck === undefined)) {
+    if ((token.actor.system.wildcard === false) && (actorGreatLuck === undefined)) {
         if ((!(actorLuck === undefined)) && (bennies > 1) && ((actorGreatLuck === undefined))) { bennies = 1; }
         else { bennies = 0; }
     }
@@ -351,11 +351,11 @@ for (let fatiguePotion of ownedFatiguePotions) {
 
     // Check for Bennies
     function checkBennies() {
-        bennies = token.actor.data.data.bennies.value;
+        bennies = token.actor.system.bennies.value;
         //Check for actor status and adjust bennies based on edges.
         let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
         let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
-        if ((token.actor.data.data.wildcard === false) && (actorGreatLuck === undefined)) {
+        if ((token.actor.system.wildcard === false) && (actorGreatLuck === undefined)) {
             if ((!(actorLuck === undefined)) && (bennies > 1) && ((actorGreatLuck === undefined))) { bennies = 1; }
             else { bennies = 0; }
         }
@@ -407,7 +407,7 @@ for (let fatiguePotion of ownedFatiguePotions) {
 
         // Checking for a Critical Failure.
         let wildCard = true;
-        if (token.actor.data.data.wildcard === false && token.actor.type === "npc") { wildCard = false }
+        if (token.actor.system.wildcard === false && token.actor.type === "npc") { wildCard = false }
         let critFail = await swim.critFail_check(wildCard, r)
         if (critFail === true) {
             ui.notifications.notify("You've rolled a Critical Failure!");
@@ -445,7 +445,7 @@ for (let fatiguePotion of ownedFatiguePotions) {
 
     // Spend Benny function
     async function spendBenny() {
-        bennies = token.actor.data.data.bennies.value;
+        bennies = token.actor.system.bennies.value;
         //Subtract the spend, use GM benny if user is GM and token has no more bennies left or spend token benny if user is player and/or token has bennies left.
         if (game.user.isGM && bennies < 1) {
             game.user.setFlag("swade", "bennies", game.user.getFlag("swade", "bennies") - 1)
@@ -603,10 +603,10 @@ for (let fatiguePotion of ownedFatiguePotions) {
                         let potion_to_update = token.actor.items.find(i => i.name === selectedPotion);
                         let potion_icon = potion_to_update.data.img;
                         const updates = [
-                            {_id: potion_to_update.id, "data.quantity": potion_to_update.data.data.quantity - 1}
+                            {_id: potion_to_update.id, "data.quantity": potion_to_update.system.quantity - 1}
                         ];
                         await token.actor.updateEmbeddedDocuments("Item", updates);
-                        if (potion_to_update.data.data.quantity < 1){
+                        if (potion_to_update.system.quantity < 1){
                           potion_to_update.delete();
                         }
                         ChatMessage.create({
@@ -655,10 +655,10 @@ for (let fatiguePotion of ownedFatiguePotions) {
                         let potion_to_update = token.actor.items.find(i => i.name === selectedPotion);
                         let potion_icon = potion_to_update.data.img;
                         const updates = [
-                            {_id: potion_to_update.id, "data.quantity": potion_to_update.data.data.quantity - 1}
+                            {_id: potion_to_update.id, "data.quantity": potion_to_update.system.quantity - 1}
                         ];
                         await token.actor.updateEmbeddedEntity("Item", updates);
-                        if (potion_to_update.data.data.quantity < 1){
+                        if (potion_to_update.system.quantity < 1){
                           potion_to_update.delete();
                         }
                         ChatMessage.create({

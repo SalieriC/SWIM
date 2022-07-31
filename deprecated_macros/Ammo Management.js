@@ -6,13 +6,13 @@ async function weaponDialog() {
   const actor = token.actor;
   const weapons = actor.items.filter(i =>
     (i.type === "weapon" &&
-      //i.data.data.range !== "0" && i.data.data.range !== "" &&
-      i.data.data.ammo !== "" &&
-      i.data.data.quantity > 0) ||
+      //i.system.range !== "0" && i.system.range !== "" &&
+      i.system.ammo !== "" &&
+      i.system.quantity > 0) ||
     (i.type === "weapon" &&
-      //i.data.data.range !== "0" && i.data.data.range !== "" &&
-      i.data.data.additionalStats.isConsumable.value === true &&
-      i.data.data.quantity > 0)
+      //i.system.range !== "0" && i.system.range !== "" &&
+      i.system.additionalStats.isConsumable.value === true &&
+      i.system.quantity > 0)
   );
 
   if (weapons.length === 0) return ui.notifications.error("You have no reloadable or consumable weapons.");
@@ -46,10 +46,10 @@ async function weaponDialog() {
 
     //Get ammo and filter for the ammo the token actually owns.
     let ammo = weapons
-      .find(w => w.id === selectedWeapon).data.data.ammo.split(`|`)
+      .find(w => w.id === selectedWeapon).system.ammo.split(`|`)
       .filter(a => !!actor.items.getName(a));
 
-    let rate_of_fire = parseInt(weapons.find(w => w.id === selectedWeapon).data.data.rof);
+    let rate_of_fire = parseInt(weapons.find(w => w.id === selectedWeapon).system.rof);
     let defaultShots = 1;
     if (rate_of_fire === 2) { defaultShots = 5; }
     if (rate_of_fire === 3) { defaultShots = 10; }
@@ -116,10 +116,10 @@ async function weaponDialog() {
     const weaponIMG = item_weapon.data.img;
 
     // Calculating shots to expend
-    const currentCharges = parseInt(item_weapon.data.data.currentShots);
+    const currentCharges = parseInt(item_weapon.system.currentShots);
     const newCharges = currentCharges - shots;
-    if (item_weapon.data.data.additionalStats.isConsumable && item_weapon.data.data.additionalStats.isConsumable.value === true) {
-      const currentQuantity = parseInt(item_weapon.data.data.quantity);
+    if (item_weapon.system.additionalStats.isConsumable && item_weapon.system.additionalStats.isConsumable.value === true) {
+      const currentQuantity = parseInt(item_weapon.system.quantity);
       if (currentQuantity <= 0) {
         return ui.notifications.error(`You don't have a ${item_weapon.name} left.`);
       }
@@ -191,12 +191,12 @@ async function weaponDialog() {
     }
     let item_weapon = actor.items.get(weapon);
     // Do not allow consumable weapons to be reloaded
-    if (item_weapon.data.data.additionalStats.isConsumable && item_weapon.data.data.additionalStats.isConsumable.value === true) {
+    if (item_weapon.system.additionalStats.isConsumable && item_weapon.system.additionalStats.isConsumable.value === true) {
       return ui.notifications.error("You cannot reload consumable weapons, please use Shooting instead.");
     }
     let item_ammo = actor.items.getName(`${ammo}`);
     //console.log(weapon, item_weapon, ammo, item_ammo);
-    const oldAmmo = item_weapon.data.data.additionalStats.loadedAmmo.value;
+    const oldAmmo = item_weapon.system.additionalStats.loadedAmmo.value;
     let item_oldAmmo;
     if (!oldAmmo) {
       item_oldAmmo = item_ammo;
@@ -216,26 +216,26 @@ async function weaponDialog() {
     const ammoIMG = item_ammo.data.img;
 
     // Getting current numbers
-    const currentCharges = parseInt(item_weapon.data.data.currentShots);
-    const requiredCharges = parseInt(item_weapon.data.data.shots - currentCharges);
-    const availableAmmo = parseInt(item_ammo.data.data.quantity);
-    const oldAmmoQuantity = parseInt(item_oldAmmo.data.data.quantity);
+    const currentCharges = parseInt(item_weapon.system.currentShots);
+    const requiredCharges = parseInt(item_weapon.system.shots - currentCharges);
+    const availableAmmo = parseInt(item_ammo.system.quantity);
+    const oldAmmoQuantity = parseInt(item_oldAmmo.system.quantity);
     // Variables for recharging procedure
     let amountToRecharge;
     let newCharges;
     let newAmmo;
     let oldAmmoRefill;
     // Checking if the Ammo is a charge pack. If not or additionalStat is not present ignore it. Charge Packs cannot refill so refill chgType is ignored.
-    if (item_ammo.data.data.additionalStats.isPack && item_ammo.data.data.additionalStats.isPack.value === true) {
+    if (item_ammo.system.additionalStats.isPack && item_ammo.system.additionalStats.isPack.value === true) {
       // Charge Packs only use 1 Quantity to fully charge the weapon
-      amountToRecharge = parseInt(item_weapon.data.data.shots);
+      amountToRecharge = parseInt(item_weapon.system.shots);
       newCharges = amountToRecharge;
       newAmmo = availableAmmo - 1;
     }
     // Checking if user selected to change the ammo type. Charge Packs cannot refill so refill from chgType is ignored.
     else if (chgType === true) {
       // When changing Ammo type, remaining shots should not become the new Ammo Type.
-      amountToRecharge = parseInt(item_weapon.data.data.shots);
+      amountToRecharge = parseInt(item_weapon.system.shots);
       newCharges = amountToRecharge;
       newAmmo = availableAmmo - amountToRecharge;
       oldAmmoRefill = oldAmmoQuantity + currentCharges;

@@ -40,7 +40,7 @@ export async function combat_setup() {
         // Process hostile NPCs
         if (token.type === "npc" && token.disposition === -1) {
             // Make wildcards to group leaders
-            if (token.actor.data.data.wildcard === true) {
+            if (token.actor.system.wildcard === true) {
                 // 
             }
         }

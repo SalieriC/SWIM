@@ -56,10 +56,10 @@ let chars = game.actors.entities
     .filter(e => e.data.type === 'character' && e.hasPlayerOwner && e.data.folder===pcActorFolderID);
 
 for(const char of chars) {
-  let maxLP = char.data.data["additionalStats"]["lp"].max;
+  let maxLP = char.system["additionalStats"]["lp"].max;
 
   let total = char.items
-      .map(i => i.data.data.price)
+      .map(i => i.system.price)
       .filter(p => p > 0)
       .reduce((total, curr) => total + curr, 0);
 
@@ -85,7 +85,7 @@ let vehicles = game.actors.entities
 for(const vehicle of vehicles ) {
   // first, the mod points that have been spent on this vehicle
   let totalModPoints = vehicle.items
-     .map(i => i.data.data.mods)
+     .map(i => i.system.mods)
       .filter(m => m > 0)
       .reduce((total, curr) => total + curr, 0);
 
@@ -93,13 +93,13 @@ for(const vehicle of vehicles ) {
 
   // now the LP cost of everything fitted to or carried in the vehicle
   let totalLPCost = vehicle.items
-     .map(i => i.data.data.price)
+     .map(i => i.system.price)
       .filter(p => p > 0)
       .reduce((total, curr) => total + curr, 0);
 
   // finally, the LP cost of the vehicle itself
-  if (vehicle.data.data.additionalStats.lp_cost) {
-    totalLPCost += vehicle.data.data.additionalStats.lp_cost.value;
+  if (vehicle.system.additionalStats.lp_cost) {
+    totalLPCost += vehicle.system.additionalStats.lp_cost.value;
   } else {
     console.log("Vehicle " + vehicle.name + " has no lp_cost defined.")
   }
@@ -120,13 +120,13 @@ for(const drone of drones) {
 
   // first, the stuff it has
   let totalLPCost = drone.items
-      .map(i => i.data.data.price)
+      .map(i => i.system.price)
       .filter(p => p > 0)
       .reduce((total, curr) => total + curr, 0);
 
   // now, the drone itself - if the custom field exists
-  if (drone.data.data.additionalStats.lp_cost) {
-    totalLPCost += drone.data.data.additionalStats.lp_cost.value;
+  if (drone.system.additionalStats.lp_cost) {
+    totalLPCost += drone.system.additionalStats.lp_cost.value;
   } else {
     console.log("Drone " + done.name + " has no lp_cost defined.")
   }

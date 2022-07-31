@@ -17,8 +17,8 @@ async function main() {
     let shakenSFX = game.settings.get(
         'swim', 'shakenSFX');
     let unshakeSFX;
-    if (token.actor.data.data.additionalStats.sfx) {
-        let sfxSequence = token.actor.data.data.additionalStats.sfx.value.split("|");
+    if (token.actor.system.additionalStats.sfx) {
+        let sfxSequence = token.actor.system.additionalStats.sfx.value.split("|");
         shakenSFX = sfxSequence[0];
         unshakeSFX = sfxSequence[2];
     }
@@ -49,7 +49,7 @@ async function main() {
             edgeText += `<br/><i>+ 2 <img src="${edge.img}" alt="" width="15" height="15" style="border:0" />${edge.name}</i>`;
         }
         //Get generic actor unshake bonus and check if it is from an AE:
-        const unShakeBonus = token.actor.data.data.attributes.spirit.unShakeBonus;
+        const unShakeBonus = token.actor.system.attributes.spirit.unShakeBonus;
         let effectName = [];
         let effectIcon = [];
         let effectValue = [];
@@ -86,7 +86,7 @@ async function main() {
         let chatData = `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge} </span>`;
         // Checking for a Critical Failure.
         let wildCard = true;
-        if (token.actor.data.data.wildcard === false && token.actor.type === "npc") { wildCard = false }
+        if (token.actor.system.wildcard === false && token.actor.type === "npc") { wildCard = false }
         let critFail = await swim.critFail_check(wildCard, r)
         if (critFail === true) {
             ui.notifications.notify("You've rolled a Critical Failure!");
@@ -141,11 +141,11 @@ async function main() {
 
     // Check for Bennies
     function checkBennies() {
-        bennies = token.actor.data.data.bennies.value;
+        bennies = token.actor.system.bennies.value;
         //Check for actor status and adjust bennies based on edges.
         let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
         let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
-        if ((token.actor.data.data.wildcard === false) && (actorGreatLuck === undefined)) {
+        if ((token.actor.system.wildcard === false) && (actorGreatLuck === undefined)) {
             if ((!(actorLuck === undefined)) && (bennies > 1) && ((actorGreatLuck === undefined))) { bennies = 1; }
             else { bennies = 0; }
         }
@@ -165,7 +165,7 @@ async function main() {
 
     // Spend Benny function
     async function spendBenny() {
-        bennies = token.actor.data.data.bennies.value;
+        bennies = token.actor.system.bennies.value;
         //Subtract the spend, use GM benny if user is GM and token has no more bennies left or spend token benny if user is player and/or token has bennies left.
         if (game.user.isGM && bennies < 1) {
             game.user.setFlag("swade", "bennies", game.user.getFlag("swade", "bennies") - 1)

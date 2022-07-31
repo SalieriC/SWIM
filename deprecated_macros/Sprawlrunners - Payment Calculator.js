@@ -34,8 +34,8 @@ async function calc() {
     let totalCryptosSplit = numberWithCommas(cryptos);
 
     for (const char of chars) {
-        let currCryptos = char.data.data["additionalStats"]["cryptos"].value;
-        let currKarma = char.data.data["additionalStats"]["karma"].value;
+        let currCryptos = char.system["additionalStats"]["cryptos"].value;
+        let currKarma = char.system["additionalStats"]["karma"].value;
 
         chatData.content += "<li>"
             + char.name

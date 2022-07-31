@@ -29,7 +29,7 @@
 		static getSettingsConfigModules(data) {
 			const below_0_5_3 = data.settings && data.settings.modules;
 			const between_0_5_3_and_0_6_0 = data.modules;
-			const above_0_6_1 = data.data && data.data.modules;
+			const above_0_6_1 = system && system.modules;
 			return above_0_6_1 || between_0_5_3_and_0_6_0 || below_0_5_3;
 		}
 

@@ -127,8 +127,8 @@ async function createEffect(tokens, traits, direction, trait, raise) {
         } else {
             let skill = token.actor.items.filter(s => s.type == "skill").find(s => s.data.name == trait["name"])
             if (skill) {
-                currentdie = skill.data.data.die.sides
-                currentmod = skill.data.data.die.modifier
+                currentdie = skill.system.die.sides
+                currentmod = skill.system.die.modifier
             } 
         }
         if (currentdie == 0) {

@@ -19,8 +19,8 @@ async function main() {
         else {
             //subtracting the ration
             for (const i of racao) {
-                await i.update({ "data.quantity": racao.data.data.quantity - 1 })
-                if (i.data.data.quantity < 1) {
+                await i.update({ "data.quantity": racao.system.quantity - 1 })
+                if (i.system.quantity < 1) {
                     i.delete();
                     return;
                 }

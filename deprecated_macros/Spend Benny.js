@@ -18,11 +18,11 @@ async function main() {
         bennyImage = benny_Back;
     }
 
-    let bennies = token.actor.data.data.bennies.value;
+    let bennies = token.actor.system.bennies.value;
     //Check for actor status and adjust bennies based on edges.
     let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
     let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
-    if ((token.actor.data.data.wildcard === false) && (actorGreatLuck === undefined)) {
+    if ((token.actor.system.wildcard === false) && (actorGreatLuck === undefined)) {
         if ((!(actorLuck === undefined)) && (bennies > 1) && ((actorGreatLuck === undefined))) { bennies = 1; }
         else { bennies = 0; }
     }

@@ -123,14 +123,14 @@ export class api {
   }
   // Check Bennies
   static async _check_bennies(token) {
-    let tokenBennies = token.actor.data.data.bennies.value;
+    let tokenBennies = token.actor.system.bennies.value;
     let gmBennies
     let totalBennies
     //Check for actor status and adjust bennies based on edges.
     let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === game.i18n.localize("SWIM.edge-luck").toLowerCase()) });
     let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === game.i18n.localize("SWIM.edge-greatLuck").toLowerCase()) });
     let actorCoup = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === game.i18n.localize("SWIM.ability-coup-50f").toLowerCase()) });
-    if ((token.actor.data.data.wildcard === false) && (actorGreatLuck === undefined)) {
+    if ((token.actor.system.wildcard === false) && (actorGreatLuck === undefined)) {
       if ((!(actorLuck === undefined)) && (tokenBennies > 1) && ((actorGreatLuck === undefined))) { tokenBennies = 1; }
       else { tokenBennies = 0; }
     }
@@ -210,8 +210,8 @@ export class api {
     let deathSFX
     let unshakeSFX
     let soakSFX
-    if (actor.data.data.additionalStats?.sfx) {
-      let sfxSequence = actor.data.data.additionalStats.sfx.value.split("|")
+    if (actor.system.additionalStats?.sfx) {
+      let sfxSequence = actor.system.additionalStats.sfx.value.split("|")
       shakenSFX = sfxSequence[0]
       deathSFX = sfxSequence[1]
       unshakeSFX = sfxSequence[2]

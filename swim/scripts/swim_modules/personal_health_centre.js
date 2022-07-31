@@ -131,9 +131,9 @@ export async function heal_other_gm(data) {
     const targetID = data.targetID
     const target = canvas.tokens.get(targetID)
     const targetActor = target.actor
-    const targetWounds = targetActor.data.data.wounds.value
-    const targetWoundsMax = targetActor.data.data.wounds.max
-    const targetFatigue = targetActor.data.data.fatigue.value
+    const targetWounds = targetActor.system.wounds.value
+    const targetWoundsMax = targetActor.system.wounds.max
+    const targetFatigue = targetActor.system.fatigue.value
     const targetInc = await succ.check_status(targetActor, 'incapacitated')
     const targetBleedOut = await succ.check_status(targetActor, 'bleeding-out')
     const tokenID = data.tokenID
@@ -297,8 +297,8 @@ async function healSelf(token, speaker) {
         'swim', 'looseFatigueSFX');
     let potionSFX = game.settings.get(
         'swim', 'potionSFX');
-    if (token.actor.data.data.additionalStats.sfx) {
-        let sfxSequence = token.actor.data.data.additionalStats.sfx.value.split("|");
+    if (token.actor.system.additionalStats.sfx) {
+        let sfxSequence = token.actor.system.additionalStats.sfx.value.split("|");
         woundedSFX = sfxSequence[0];
         incapSFX = sfxSequence[1];
         healSFX = sfxSequence[2];
@@ -306,10 +306,10 @@ async function healSelf(token, speaker) {
     }
 
     // Declaring variables and constants.
-    const wv = token.actor.data.data.wounds.value;
-    const wm = token.actor.data.data.wounds.max;
-    const fv = token.actor.data.data.fatigue.value;
-    const fm = token.actor.data.data.fatigue.max;
+    const wv = token.actor.system.wounds.value;
+    const wm = token.actor.system.wounds.max;
+    const fv = token.actor.system.fatigue.value;
+    const fm = token.actor.system.fatigue.max;
     //Checking for Edges (and Special/Racial Abilities)
     let natHeal_time = game.settings.get(
         'swim', 'natHeal_Time');
@@ -333,10 +333,10 @@ async function healSelf(token, speaker) {
         'swim', 'healthPotionOptions');
     const healthPotionsSplit = healthPotionOptions.split('|');
     const hasHealthPotion = token.actor.data.items.find(function (item) {
-        return (healthPotionsSplit.includes(item.name) && item.type === "gear" && item.data.data.quantity > 0)
+        return (healthPotionsSplit.includes(item.name) && item.type === "gear" && item.system.quantity > 0)
     });
     //Find owned Health potions.
-    const ownedHealthPotions = healthPotionsSplit.filter(potion => token.actor.data.items.some(item => item.name === potion && item.type === "gear" && item.data.data.quantity > 0));
+    const ownedHealthPotions = healthPotionsSplit.filter(potion => token.actor.data.items.some(item => item.name === potion && item.type === "gear" && item.system.quantity > 0));
     //Set up a list of Health Potions to choose from.
     let healthPotionList;
     for (let healthPotion of ownedHealthPotions) {
@@ -348,10 +348,10 @@ async function healSelf(token, speaker) {
         'swim', 'fatiguePotionOptions');
     const fatiguePotionsSplit = fatiguePotionOptions.split('|');
     const hasFatiguePotion = token.actor.data.items.find(function (item) {
-        return (fatiguePotionsSplit.includes(item.name) && item.type === "gear" && item.data.data.quantity > 0)
+        return (fatiguePotionsSplit.includes(item.name) && item.type === "gear" && item.system.quantity > 0)
     });
     //Find owned Fatigue potions.
-    const ownedFatiguePotions = fatiguePotionsSplit.filter(potion => token.actor.data.items.some(item => item.name === potion && item.type === "gear" && item.data.data.quantity > 0));
+    const ownedFatiguePotions = fatiguePotionsSplit.filter(potion => token.actor.data.items.some(item => item.name === potion && item.type === "gear" && item.system.quantity > 0));
     //Set up a list of Fatigue Potions to choose from.
     let fatiguePotionList;
     for (let fatiguePotion of ownedFatiguePotions) {
@@ -635,7 +635,7 @@ async function healSelf(token, speaker) {
 
         // Checking for a Critical Failure.
         let wildCard = true;
-        if (token.actor.data.data.wildcard === false && token.actor.type === "npc") { wildCard = false }
+        if (token.actor.system.wildcard === false && token.actor.type === "npc") { wildCard = false }
         let critFail = await swim.critFail_check(wildCard, r)
         if (critFail === true) {
             ui.notifications.notify("You've rolled a Critical Failure!");
@@ -860,10 +860,10 @@ async function healSelf(token, speaker) {
                         let potion_to_update = token.actor.items.find(i => i.name === selectedPotion);
                         let potion_icon = potion_to_update.data.img;
                         const updates = [
-                            { _id: potion_to_update.id, "data.quantity": potion_to_update.data.data.quantity - 1 }
+                            { _id: potion_to_update.id, "data.quantity": potion_to_update.system.quantity - 1 }
                         ];
                         await token.actor.updateEmbeddedDocuments("Item", updates);
-                        if (potion_to_update.data.data.quantity < 1) {
+                        if (potion_to_update.system.quantity < 1) {
                             potion_to_update.delete();
                         }
                         ChatMessage.create({
@@ -912,10 +912,10 @@ async function healSelf(token, speaker) {
                         let potion_to_update = token.actor.items.find(i => i.name === selectedPotion);
                         let potion_icon = potion_to_update.data.img;
                         const updates = [
-                            { _id: potion_to_update.id, "data.quantity": potion_to_update.data.data.quantity - 1 }
+                            { _id: potion_to_update.id, "data.quantity": potion_to_update.system.quantity - 1 }
                         ];
                         await token.actor.updateEmbeddedEntity("Item", updates);
-                        if (potion_to_update.data.data.quantity < 1) {
+                        if (potion_to_update.system.quantity < 1) {
                             potion_to_update.delete();
                         }
                         ChatMessage.create({
@@ -1034,7 +1034,7 @@ async function removeInjury(actor, healedWounds) {
             }
         } else if (permanent === false && combat === false) {
             // Is a temorary injury from Inc.
-            if (actor.data.data.wounds.value === 0) {
+            if (actor.system.wounds.value === 0) {
                 // Remove the injury if all Wounds are healed.
                 aeIDsToRemove.push(injury.id)
             }
