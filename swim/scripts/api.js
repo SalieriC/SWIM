@@ -224,12 +224,12 @@ export class api {
     return { shakenSFX, deathSFX, unshakeSFX, soakSFX }
   }
   // Play SFX
-  static async _play_sfx(sfx, volume) {
+  static async _play_sfx(sfx, volume, playForAll = true) {
     if (!volume) {
       volume = game.settings.get(
         'swim', 'defaultVolume')
     }
-    AudioHelper.play({ src: `${sfx}`, volume: volume, loop: false }, true);
+    AudioHelper.play({ src: `${sfx}`, volume: volume, loop: false }, playForAll);
   }
 
   /*******************************************

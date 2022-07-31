@@ -65,9 +65,10 @@ Returns the four sfx file paths. Best used like this:
 
 ### Play SFX
 This just plays the sfx with the provided settings for everyone.  
-`swim.play_sfx(sfx, volume)`  
+`swim.play_sfx(sfx, volume, playForAll)`  
 - `sfx` {string}: The file path to the audio file.  
 - `volume` {number}: The volume level on which to play the audio between 0 and 1. Will use default settings of SWIM if undefined.  
+- `playForAll` {boolean}: Determines whether or not the SFX should be played for everyone (true) or just the current user (false). It defaults to true.
 
 ## Feature Functions
 The following functions present the core features of SWIM. They are probably less useful for macro and module devs but presented here anyway in case you want to utilise them.  
