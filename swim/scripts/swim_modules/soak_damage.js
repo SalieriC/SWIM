@@ -735,19 +735,19 @@ export async function soak_damage_script() {
                         ui.notifications.notify(`You've rolled ${rollWithEdge} but made your ${harderToKill.name} roll! You will survive <em>somehow</em>...`);
                         let chatData = `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge}, but made the ${harderToKill.name} roll, is Incapacitated but survives, <em>somehow</em>. </span>`;
                         ChatMessage.create({ content: chatData });
-                        await succ.apply_status(actor, "bleeding-out", false)
-                        await succ.apply_status(actor, "incapacitated", true, true)
+                        await succ.apply_status(token, "bleeding-out", false)
+                        await succ.apply_status(token, "incapacitated", true, true)
                     }
                 } else if (rollWithEdge < 4) {
                     chatData += `<p>${actorAlias} perishes.<p>`
-                    await succ.apply_status(actor, "bleeding-out", false)
-                    await succ.apply_status(actor, "incapacitated", true, true)
+                    await succ.apply_status(token, "bleeding-out", false)
+                    await succ.apply_status(token, "incapacitated", true, true)
                 } else if (rollWithEdge >= 4 && rollWithEdge <= 7) {
                     chatData += `<p>${actorAlias} is still bleeding out.</p>`
                 } else if (rollWithEdge >= 8) {
                     chatData += `<p>${actorAlias} stabilises.</p>`
-                    await succ.apply_status(actor, "bleeding-out", false)
-                    await succ.apply_status(actor, "incapacitated", true, true)
+                    await succ.apply_status(token, "bleeding-out", false)
+                    await succ.apply_status(token, "incapacitated", true, true)
                 }
                 chatData += ` ${edgeText}`;
             }
