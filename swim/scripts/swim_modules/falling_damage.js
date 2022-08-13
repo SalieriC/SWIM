@@ -2,7 +2,7 @@
  * Falling Damage Macro.
  * This macro automatically calculates falling damage for all selected tokens.
  * It is capable of factoring in water and snow/soft surfaces as per the core rules.
- * v. 2.0.1 by SalieriC#8263, CSS of the dialogue by Kyane von Schnitzel#8654
+ * v. 2.0.2 by SalieriC#8263, CSS of the dialogue by Kyane von Schnitzel#8654
  * (Do not remove credits, even if editing.)
  *******************************************/
 
@@ -36,7 +36,7 @@ export async function falling_damage_script() {
     //rol the damage the character takes based on the distance:
     async function roll_damage(token, fallingDepth, snowDepth, waterSuccess) {
         let halvedDepth = Math.ceil(fallingDepth / 2); //damage per 2"
-        let damageFormula = `(1d6x+1)*${halvedDepth}`;
+        let damageFormula = halvedDepth >= 10 ? `(1d6x+1)*10` : `(1d6x+1)*${halvedDepth}`; //cap falling damage at 10d6+10
         let rollDamage = await new Roll(`${damageFormula}`).evaluate({ async: false });
         let damage = rollDamage.total;
         let waterRaise = false;
