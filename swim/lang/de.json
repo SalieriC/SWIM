@@ -186,7 +186,6 @@
     "SWIM.chatMessage-reloadWeaponWithoutAmmoName": "<img src=\"{weaponIMG}\" alt=\"\" width=\"25\" height=\"25\" /> {name} lädt {itemWeaponName} nach.",
     "SWIM.chatMessage-unshakeBonusOtherActor": "<br/><em>{unShakeBonus} andere Modifikatoren des Akteurs</em>",
     "SWIM.notification-critFailApplyWounds": "Du hast einen Kritischen Fehlschlag gewürfelt! Wunden werden angewendet…",
-    "SWIM.notification-healthEstimateRequired": "Bitte installiere und aktiviere das Health Estimate Modul für dieses Makro.",
     "SWIM.chatMessage-unHolyWarrior": "<br/><em>+ {numberPP}</em> der ausgegebenen Machtpunkte.",
     "SWIM.chatMessage-soakNoWounds": " und konnte keine Wunden wegstecken.",
     "SWIM.chatMessage-soakAllWounds": " und steckt alle Wunden weg.",

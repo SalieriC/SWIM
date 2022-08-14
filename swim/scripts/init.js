@@ -48,7 +48,7 @@ Hooks.on(`ready`, () => {
     }
 
     // Set Health Estimate up
-    if (game.modules.get('healthEstimate')?.active) {
+    if (game.modules.get('healthEstimate')?.active && swim.is_first_gm()) {
         let incapIcon = CONFIG.SWADE.statusEffects.filter(e => e.id === "incapacitated").icon
         if (game.settings.get("healthEstimate", "core.deathMarker") != incapIcon) {game.settings.set("healthEstimate", "core.deathMarker", incapIcon)}
     }

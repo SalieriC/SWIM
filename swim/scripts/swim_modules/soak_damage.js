@@ -1,15 +1,12 @@
 /*******************************************
  * Soak Damage
- * v. 5.1.0
+ * v. 5.1.1
  * Code by SalieriC#8263.
  *******************************************/
 export async function soak_damage_script() {
     const { speaker, _, __, token } = await swim.get_macro_variables()
     const actor = token.actor
-    if (!game.modules.get("healthEstimate")?.active) {
-        ui.notifications.error(game.i18n.localize("SWIM.notification-healthEstimateRequired"));
-        return;
-    }
+    
     // Checking if at least one token is defined.
     if (!token || canvas.tokens.controlled.length > 1) {
         ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"));

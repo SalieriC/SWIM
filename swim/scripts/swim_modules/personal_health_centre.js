@@ -1,15 +1,12 @@
 /*******************************************
  * Personal Health Centre
- * // v.6.2.7
+ * // v.6.2.8
  * By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
  ******************************************/
 export async function personal_health_centre_script() {
     const { speaker, _, __, token } = await swim.get_macro_variables()
     const target = Array.from(game.user.targets)[0]
-    if (!game.modules.get("healthEstimate")?.active) {
-        ui.notifications.error(game.i18n.localize("SWIM.notification-healthEstimateRequired"));
-        return;
-    }
+    
     // Check if a token is selected.
     if (!token || canvas.tokens.controlled.length > 1 || game.user.targets.size > 1) {
         ui.notifications.error(game.i18n.localize("SWIM.notification-selectOrTargetOneOrMoreTokens"));
@@ -200,7 +197,6 @@ export async function heal_other_gm(data) {
                 chatContent = game.i18n.format("SWIM.chatMessage-healOtherCureBleetOut", {tokenName : token.name, targetName : target.name})
             } else if (targetInc) {
                 await succ.toggle_status(targetActor, 'incapacitated', false)
-                if (target.data.flags?.healthEstimate?.dead) { target.document.unsetFlag("healthEstimate", "dead") }
                 chatContent = game.i18n.format("SWIM.chatMessage-healOtherCureIncap", {tokenName : token.name, targetName : target.name}) //Incapacitation: Healing at least one Wound on an Incapacitated patient removes that state (and restores consciousness if he was knocked out). -> so a Wound is healed in any case(?).
                 if (combatHealing === false) {
                     amount = 1
@@ -756,7 +752,6 @@ async function healSelf(token, speaker) {
                     genericHealWounds = genericHealWounds -1
                 } if (inc === true && genericHealWounds > 0) {
                     await succ.toggle_status(token, 'incapacitated', false)
-                    if (token.data.flags?.healthEstimate?.dead) { token.document.unsetFlag("healthEstimate", "dead") }
                     genericHealWounds = genericHealWounds -1
                 }
                 ui.notifications.notify(`Bleeding out and Incapacitation will be removed before any Wounds.`);
@@ -778,7 +773,6 @@ async function healSelf(token, speaker) {
                     rounded = rounded -1
                 } if (inc === true && rounded > 0) {
                     await succ.toggle_status(token, 'incapacitated', false)
-                    if (token.data.flags?.healthEstimate?.dead) { token.document.unsetFlag("healthEstimate", "dead") }
                     rounded = rounded -1
                 }
                 ui.notifications.notify(`Bleeding out and Incapacitation will be removed before any Wounds.`);
