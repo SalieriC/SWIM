@@ -194,6 +194,8 @@
   "SWIM.dialogue-outOfBenniesApplyWounds":"You have no more Bennies, Wounds will be applied now.",
   "SWIM.dialogue-incapacitationRoll":"Incapacitation Roll",
   "SWIM.dialogue-incapacitationRollText":"<form><p>You became incapacitated by damage.</p><p>You need to make an immediate Vigor roll. On a Critical Failure you will perish.</p></form>",
+  "SWIM.dialogue-bleedingOutRoll":"Bleeding Out Roll",
+  "SWIM.dialogue-bleedingOutRollText":"<form><p>You are Bleeding Out.</p><p>You need to make a Vigor roll each turn or minute while out of combat. On a Failure you will perish.</p></form>",
   "SWIM.dialogue-rollVigor":"Roll Vigor",
   "SWIM.dialogue-healOther":"Heal other",
   "SWIM.dialogue.healOtherContent":"{officialClass}<h3>Heal someone else.</h3><p>You have targeted another token. Do you wish to heal that token?</p><p>If you wish to heal yourself instead, please remove the target.</p></div>",

@@ -1,9 +1,9 @@
 /*******************************************
  * Soak Damage
- * v. 4.1.4
+ * v. 5.1.0
  * Code by SalieriC#8263.
  *******************************************/
-export async function soak_damage_script() {
+ export async function soak_damage_script() {
     const { speaker, _, __, token } = await swim.get_macro_variables()
     const actor = token.actor
     if (!game.modules.get("healthEstimate")?.active) {
@@ -52,6 +52,7 @@ export async function soak_damage_script() {
     let elanBonus;
     let newWounds;
     let { ___, ____, totalBennies } = await swim.check_bennies(token)
+    const bleedingOut = await succ.check_status(token, 'bleeding-out')
     const inc = await succ.check_status(token, 'incapacitated')
 
     // This is the main function that handles the Vigor roll.
@@ -77,7 +78,7 @@ export async function soak_damage_script() {
         // If Holy Warrior or Unholy Warrior is used: Include the amount of PPs used as a bonus to the roll.
         if (typeof numberPP === "number") {
             rollWithEdge += numberPP;
-            edgeText = edgeText + game.i18n.format("SWIM.chatMessage-edgeText", {numberPP : numberPP});
+            edgeText = edgeText + game.i18n.format("SWIM.chatMessage-edgeText", { numberPP: numberPP });
         }
 
         // Apply +2 if Elan is present and if it is a reroll.
@@ -87,7 +88,7 @@ export async function soak_damage_script() {
         }
 
         // Roll Vigor including +2 if Iron Jaw is present, amount of PPs used as modifier if Holy Warrior or Unholy Warrior was used and another +2 if this is a reroll.
-        let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultRoll", {name : actorAlias, rollWithEdge: rollWithEdge});
+        let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultRoll", { name: actorAlias, rollWithEdge: rollWithEdge });
         rounded = Math.floor(rollWithEdge / 4);
 
         // Making rounded 0 if it would be negative.
@@ -101,7 +102,7 @@ export async function soak_damage_script() {
         let critFail = await swim.critFail_check(wildCard, r)
         if (critFail === true) {
             ui.notifications.notify(game.i18n.localize("SWIM.notification-critFailApplyWounds"));
-            let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultCritFail", {name : actorAlias});
+            let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultCritFail", { name: actorAlias });
             applyWounds();
             ChatMessage.create({ content: chatData });
         } else {
@@ -115,7 +116,7 @@ export async function soak_damage_script() {
                     dialogReroll();
                 }
             } else if (rounded < numberWounds) {
-                chatData += game.i18n.format("SWIM.chatMessage-soakSomeWounds", {rounded : rounded});
+                chatData += game.i18n.format("SWIM.chatMessage-soakSomeWounds", { rounded: rounded });
                 if (soakSFX) { AudioHelper.play({ src: `${soakSFX}` }, true); }
                 if (totalBennies < 1) {
                     applyWounds();
@@ -268,7 +269,8 @@ export async function soak_damage_script() {
         }
     }
 
-    if (inc === true) { incVigor() }
+    if (bleedingOut === true) { bleedVigor() }
+    else if (inc === true) { incVigor() }
     else {
         // Main Dialogue
         //Translate ToDo
@@ -297,7 +299,7 @@ export async function soak_damage_script() {
             let currWounds = numberWounds - rounded;
             new Dialog({
                 title: game.i18n.localize("SWIM.dialogue-reroll"),
-                content: game.i18n.format("SWIM.dialogue-rerollText", {rounded : rounded, currWounds : currWounds, totalBennies : totalBennies}),
+                content: game.i18n.format("SWIM.dialogue-rerollText", { rounded: rounded, currWounds: currWounds, totalBennies: totalBennies }),
                 buttons: {
                     one: {
                         label: game.i18n.localize("SWIM.dialogue-reroll"),
@@ -582,7 +584,7 @@ export async function soak_damage_script() {
                         const incCondition = await succ.get_condition_from(token.actor, 'incapacitated')
                         if (incCondition.data.flags?.core?.overlay === true) {
                             incCondition.setFlag('succ', 'updatedAE', true)
-                            await incCondition.update({"flags.core.overlay": false})
+                            await incCondition.update({ "flags.core.overlay": false })
                         }
                     }
                     await succ.apply_status(token, 'bleeding-out', true, true)
@@ -611,6 +613,165 @@ export async function soak_damage_script() {
             }
             new Dialog({
                 title: 'Incapacitation Reroll',
+                content: dialog_content,
+                buttons: {
+                    one: {
+                        label: "Roll Vigor",
+                        callback: async (_) => {
+                            rerollDeclined = false
+                            rollVigor()
+                            let sendMessage = true
+                            swim.spend_benny(token, sendMessage)
+                        }
+                    },
+                    two: {
+                        label: "Apply result",
+                        callback: async (_) => {
+                            rerollDeclined = true
+                            rollVigor()
+                        }
+                    }
+                },
+                default: "one",
+            }).render(true);
+        }
+    }
+    async function bleedVigor() {
+        let permanent = false
+        let combat = false
+        elanBonus = undefined
+        let bestResult = -1
+        let rerollDeclined = false
+        let rollWithEdge
+        let chatData
+        let critFail
+        const harderToKill = token.actor.data.items.find(function (item) {
+            return item.name.toLowerCase() === game.i18n.localize("SWIM.edge-harderToKill").toLowerCase() && item.type === "edge";
+        });
+
+        new Dialog({
+            title: game.i18n.localize("SWIM.dialogue-bleedingOutRoll"),
+            content: game.i18n.localize("SWIM.dialogue-bleedingOutRollText"),
+            buttons: {
+                one: {
+                    label: game.i18n.localize("SWIM.dialogue-rollVigor"),
+                    callback: async (_) => {
+                        rollVigor()
+                    }
+                }
+            },
+            default: "one",
+        }).render(true);
+
+        async function rollVigor() {
+            const edgeNames = [];
+            const actorAlias = speaker.alias;
+            let edgeText = "";
+            if (rerollDeclined === false) {
+                // Roll Vigor and check for Iron Jaw.
+                const r = await token.actor.rollAttribute('vigor');
+                const edges = token.actor.data.items.filter(function (item) {
+                    return edgeNames.includes(item.name.toLowerCase()) && (item.type === "edge" || item.type === "ability");
+                });
+
+                rollWithEdge = r.total;
+                for (let edge of edges) {
+                    rollWithEdge += 2;
+                    edgeText += `<br/><em>+ 2 <img src="${edge.img}" alt="" width="15" height="15" style="border:0" />${edge.name}</em>`;
+                }
+
+                // Apply +2 if Elan is present and if it is a reroll.
+                if (typeof elanBonus === "number") {
+                    rollWithEdge += 2;
+                    edgeText = edgeText + `<br/><em>+ Elan</em>.`;
+                }
+
+                // Roll Vigor
+                chatData = `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge} </span>`;
+                // Checking for a Critical Failure.
+                let wildCard = true;
+                if (token.actor.data.data.wildcard === false && token.actor.type === "npc") { wildCard = false }
+                critFail = await swim.critFail_check(wildCard, r)
+            }
+            if (critFail === true && harderToKill) {
+                const harderToKillRoll = await new Roll(`1d2`).evaluate({ async: false });
+                if (harderToKillRoll.total === 1) {
+                    ui.notifications.notify(`You've rolled a Critical Failure and failed your ${harderToKill.name} roll! You will die now...`);
+                    let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure, didn't make the ${harderToKill.name} roll and perishes! </span>`;
+                    ChatMessage.create({ content: chatData });
+                } else if (harderToKillRoll.total === 2) {
+                    ui.notifications.notify(`You've rolled a Critical Failure but made your ${harderToKill.name} roll! You will survive <em>somehow</em>...`);
+                    let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure, but made the ${harderToKill.name} roll, is Incapacitated but survives, <em>somehow</em>. </span>`;
+                    ChatMessage.create({ content: chatData });
+                }
+            } else if (critFail === true) {
+                ui.notifications.notify("You've rolled a Critical Failure! You will die now...");
+                let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure and perishes! </span>`;
+                ChatMessage.create({ content: chatData });
+            } else {
+                let { _, __, totalBennies } = await swim.check_bennies(token)
+                if (bestResult <= rollWithEdge) { bestResult = rollWithEdge }
+                else if (bestResult > rollWithEdge) { rollWithEdge = bestResult }
+                if ((totalBennies > 0 && rollWithEdge < 8) && rerollDeclined === false) {
+                    //Use Benny
+                    if (rollWithEdge < 4) {
+                        //Permanent injury and Bleeding Out
+                        let dialogContent = `<p>You've rolled a ${rollWithEdge} as your best result.</p><p>You would perish now.</p><p>You have <b>${totalBennies} Bennies</b> left. Do you want to spend one to reroll?</p>`
+                        chatData += "and would perish now."
+                        bleedReroll(dialogContent)
+                    } else if (rollWithEdge >= 4 && rollWithEdge <= 7) {
+                        //Injury until all wounds are healed
+                        let dialogContent = `<p>You've rolled a ${rollWithEdge} as your best result.</p><p>You would survive but need to another roll on your next turn or every minute while out of combat.</p><p>You have <b>${totalBennies} Bennies</b> left. Do you want to spend one to reroll?</p>`
+                        chatData += "and would survive but must roll again next turn or every minute while out of combat."
+                        bleedReroll(dialogContent)
+                    }
+                } else if (rollWithEdge < 4 && harderToKill) {
+                    const harderToKillRoll = await new Roll(`1d2`).evaluate({ async: false });
+                    if (harderToKillRoll.total === 1) {
+                        ui.notifications.notify(`You've rolled ${rollWithEdge} and failed your ${harderToKill.name} roll! You will die now...`);
+                        let chatData = `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge}, didn't make the ${harderToKill.name} roll and perishes! </span>`;
+                        ChatMessage.create({ content: chatData });
+                    } else if (harderToKillRoll.total === 2) {
+                        ui.notifications.notify(`You've rolled ${rollWithEdge} but made your ${harderToKill.name} roll! You will survive <em>somehow</em>...`);
+                        let chatData = `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge}, but made the ${harderToKill.name} roll, is Incapacitated but survives, <em>somehow</em>. </span>`;
+                        ChatMessage.create({ content: chatData });
+                        await succ.apply_status(actor, "bleeding-out", false)
+                        await applyIncOverlay()
+                    }
+                } else if (rollWithEdge < 4) {
+                    chatData += `<p>${actorAlias} perishes.<p>`
+                    await succ.apply_status(actor, "bleeding-out", false)
+                    await applyIncOverlay()
+                } else if (rollWithEdge >= 4 && rollWithEdge <= 7) {
+                    chatData += `<p>${actorAlias} is still bleeding out.</p>`
+                } else if (rollWithEdge >= 8) {
+                    chatData += `<p>${actorAlias} stabilises.</p>`
+                    await succ.apply_status(actor, "bleeding-out", false)
+                    await applyIncOverlay()
+                }
+                chatData += ` ${edgeText}`;
+            }
+            ChatMessage.create({ content: chatData });
+        }
+
+        async function applyIncOverlay() {
+            if (await succ.check_status(token, 'incapacitated') === true) {
+                const incCondition = await succ.get_condition_from(token.actor, 'incapacitated')
+                if (incCondition.data.flags?.core?.overlay === false) {
+                    incCondition.setFlag('succ', 'updatedAE', true)
+                    await incCondition.update({ "flags.core.overlay": true })
+                }
+            } else { await succ.apply_status(token, "incapacitated", true, true) }
+        }
+
+        async function bleedReroll(dialog_content) {
+            dialog_content += `<p>Unless you roll a Critical Failure, your best result will be kept.</p>`
+            if (elan) {
+                elanBonus = 2
+                dialog_content += `<p>You will get your Elan bonus on a reroll.</p>`
+            }
+            new Dialog({
+                title: 'Bleeding Out Reroll',
                 content: dialog_content,
                 buttons: {
                     one: {
