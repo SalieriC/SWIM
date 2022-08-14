@@ -47,6 +47,12 @@ Hooks.on(`ready`, () => {
         CONFIG.statusEffects.push({ id: "irradiated", label: "Irradiated", icon: "modules/succ/assets/icons/0-irradiated.svg" });
     }
 
+    // Set Health Estimate up
+    if (game.modules.get('healthEstimate')?.active) {
+        let incapIcon = CONFIG.SWADE.statusEffects.filter(e => e.id === "incapacitated").icon
+        if (game.settings.get("healthEstimate", "core.deathMarker") != incapIcon) {game.settings.set("healthEstimate", "core.deathMarker", incapIcon)}
+    }
+
     // First Login warning
     if (game.settings.get('swim', 'docRead') === false) {
         new Dialog({
