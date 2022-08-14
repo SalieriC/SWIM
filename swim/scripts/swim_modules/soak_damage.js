@@ -1,6 +1,6 @@
 /*******************************************
  * Soak Damage
- * v. 5.0.0
+ * v. 5.1.0
  * Code by SalieriC#8263.
  *******************************************/
 export async function soak_damage_script() {
@@ -736,22 +736,32 @@ export async function soak_damage_script() {
                         let chatData = `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge}, but made the ${harderToKill.name} roll, is Incapacitated but survives, <em>somehow</em>. </span>`;
                         ChatMessage.create({ content: chatData });
                         await succ.apply_status(token, "bleeding-out", false)
-                        await succ.apply_status(token, "incapacitated", true, true)
+                        await applyIncOverlay()
                     }
                 } else if (rollWithEdge < 4) {
                     chatData += `<p>${actorAlias} perishes.<p>`
                     await succ.apply_status(token, "bleeding-out", false)
-                    await succ.apply_status(token, "incapacitated", true, true)
+                    await applyIncOverlay()
                 } else if (rollWithEdge >= 4 && rollWithEdge <= 7) {
                     chatData += `<p>${actorAlias} is still bleeding out.</p>`
                 } else if (rollWithEdge >= 8) {
                     chatData += `<p>${actorAlias} stabilises.</p>`
                     await succ.apply_status(token, "bleeding-out", false)
-                    await succ.apply_status(token, "incapacitated", true, true)
+                    await applyIncOverlay()
                 }
                 chatData += ` ${edgeText}`;
             }
             ChatMessage.create({ content: chatData });
+        }
+
+        async function applyIncOverlay() {
+            if (await succ.check_status(token, 'incapacitated') === true) {
+                const incCondition = await succ.get_condition_from(token.actor, 'incapacitated')
+                if (incCondition.data.flags?.core?.overlay === false) {
+                    incCondition.setFlag('succ', 'updatedAE', true)
+                    await incCondition.update({ "flags.core.overlay": true })
+                }
+            } else { await succ.apply_status(token, "incapacitated", true, true) }
         }
 
         async function bleedReroll(dialog_content) {
