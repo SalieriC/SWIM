@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `play_sfx` function now accepts a boolean to determine whether the SFX should be played for everyone (true) or just the current user (false). It defaults to true.
 - Adjusted property paths to support FoundryVTT v10.
 ### Fixed
-- Falling damage now caps at 10d6+6.
+- Falling damage now caps at 10d6+10.
 
 ## [0.18.4] - 2022-07-22
 ☮️ Peace in the world, or the world in pieces. 🕊️
