@@ -339,8 +339,3 @@ It makes use of the very powerfull API provided by [Warp Gate](https://github.co
 **Please note:** To access some specific Features of the Power Effect Builder you need to make sure that all Powers have their original names at least together with their flavour names (i.e. "Deflecting Moonlight (Deflection)") otherwise the Power Effect Builder has no chance to find the power, which is important to set up maintenance modifiers and duration. **The duration for non-casters is always near infinite!** This is by design so that it only ends on the casters turn. If the power is not found on the caster the effect will get a proper duration however.  
 <p align="center"> <img src="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/img/macros/power_effect_builder_showcase.gif?raw=true"> </p>  
 (Assets used in the scene are from JB2A, ForgottenAdventures, The Elder Scrolls and Adellos and not part of SWIM.)  
-
-
-
-https://user-images.githubusercontent.com/1230041/184658399-b29e4ab1-e100-4d14-afa2-319f12da2db0.mov
-
