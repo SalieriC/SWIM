@@ -81,7 +81,7 @@ export async function soak_damage_script() {
         // Apply +2 if Elan is present and if it is a reroll.
         if (typeof elanBonus === "number") {
             rollWithEdge += 2;
-            edgeText = edgeText + `<br/><em>+ game.i18n.localize("SWIM.edge-elan")</em>.`;
+            edgeText = edgeText + `<br/><em>+ ${game.i18n.localize("SWIM.edge-elan")}</em>.`;
         }
 
         // Roll Vigor including +2 if Iron Jaw is present, amount of PPs used as modifier if Holy Warrior or Unholy Warrior was used and another +2 if this is a reroll.
@@ -142,7 +142,7 @@ export async function soak_damage_script() {
             title: game.i18n.localize("SWIM.dialogue-applyWounds"),
             content: `<form>
              <div class="form-group">
-                 <label for="applWounds">Wounds to apply:</label>
+                 <label for="applWounds">${game.i18n.localize("SWIM.dialogue-woundsToApply")}</label>
                  <input id="applWounds" name="num" type="number" min="0" value="${newWounds}"></input>
              </div>
              </form>`,
@@ -221,16 +221,7 @@ export async function soak_damage_script() {
             //Translate ToDo
             new Dialog({
                 title: game.i18n.localize("SWIM.dialogue-soakWounds"),
-                content: `<form>
-             <div class="form-group">
-                 <form>
-                 You can spend a <b>maximum of 4 Power Points</b> to add a bonus to your Soaking Roll equal to the amount of Power Points used.
-                 </br>You have <b>${ppv} Power Points</b> left.
-                 </form>
-                 <label for="numPP">Power Points to spend: </label>
-                 <input id="numPP" name="num" type="number" min="1" max="4" value="1"></input>
-             </div>
-             </form>`,
+                content: game.i18n.format("SWIM.dialogue-soakWoundsWithUnHolyWarriorContent", { ppv: ppv }),
                 buttons: {
                     one: {
                         label: game.i18n.localize("SWIM.dialogue-soakWounds"),
@@ -273,13 +264,7 @@ export async function soak_damage_script() {
         //Translate ToDo
         new Dialog({
             title: game.i18n.localize("SWIM.dialogue-soakWounds"),
-            content: `<form>
-         <p>You currently have <b>${wv}/${wm}</b> Wounds and <b>${totalBennies}</b> Bennies.</p>
-     <div class="form-group">
-         <label for="numWounds">Amount of Wounds: </label>
-         <input id="numWounds" name="num" type="number" min="0" value="1"></input>
-     </div>
-     </form>`,
+            content: game.i18n.format("SWIM.dialogue-soakWoundsMainContent", { wv: wv, wm: wm, totalBennies: totalBennies }),
             buttons: buttonsMain,
             default: "one",
             render: ([dialogContent]) => {
@@ -531,7 +516,7 @@ export async function soak_damage_script() {
                 // Apply +2 if Elan is present and if it is a reroll.
                 if (typeof elanBonus === "number") {
                     rollWithEdge += 2;
-                    edgeText = edgeText + `<br/><em>+ Elan</em>.`;
+                    edgeText = edgeText + `<br/><em>+ ${elan.name}</em>.`;
                 }
 
                 // Roll Vigor
@@ -544,12 +529,12 @@ export async function soak_damage_script() {
             if (critFail === true && harderToKill) {
                 const harderToKillRoll = await new Roll(`1d2`).evaluate({ async: false });
                 if (harderToKillRoll.total === 1) {
-                    ui.notifications.notify(`You've rolled a Critical Failure and failed your ${harderToKill.name} roll! You will die now...`);
-                    let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure, didn't make the ${harderToKill.name} roll and perishes! </span>`;
+                    ui.notifications.notify(game.i18n.format("SWIM.notification.critFailHarderToKillFail", { harderToKillName: harderToKill.name }));
+                    let chatData = game.i18n.format("SWIM.chat.critFailHarderToKillFail", { actorAlias: actorAlias, harderToKillName: harderToKill.name });
                     ChatMessage.create({ content: chatData });
                 } else if (harderToKillRoll.total === 2) {
-                    ui.notifications.notify(`You've rolled a Critical Failure but made your ${harderToKill.name} roll! You will survive <em>somehow</em>...`);
-                    let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure, but made the ${harderToKill.name} roll, is Incapacitated but survives, <em>somehow</em>. </span>`;
+                    ui.notifications.notify(game.i18n.format("SWIM.notification.critFailHarderToKillSuccess", { harderToKillName: harderToKill.name }));
+                    let chatData = game.i18n.format("SWIM.chat.critFailHarderToKillSuccess", { actorAlias: actorAlias, harderToKillName: harderToKill.name });
                     ChatMessage.create({ content: chatData });
                 }
             } else if (critFail === true) {
