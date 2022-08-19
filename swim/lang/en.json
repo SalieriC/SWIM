@@ -182,11 +182,14 @@
   "SWIM.chatMessage-soakSomeWounds":" and soaks {rounded} of his Wounds.",
   "SWIM.chatMessage-soakAllWounds":" and soaks all of his Wounds.",
   "SWIM.dialogue-applyWounds":"Applying Wounds",
+  "SWIM.dialogue-woundsToApply":"Wounds to apply:",
   "SWIM.dialogue-soakWounds":"Soak Wounds",
+  "SWIM.dialogue-soakWoundsMainContent": "<form><p>You currently have <b>{wv}/{wm}</b> Wounds and <b>{totalBennies}</b> Bennies.</p><div class='form-group'><label for='numWounds'>Amount of Wounds: </label><input id='numWounds' name='num' type='number' min='0' value='1'></input></div></form>",
   "SWIM.dialogue-soakWoundsWithUnHolyWarrior":"Soak with (Un)Holy Warrior",
   "SWIM.dialogue-applyDmg":"Apply Damage",
   "SWIM.dialogue-insufficientPowerPoints":"You have insufficient Power Points.",
   "SWIM.dialogue-cannotUseMoreThanFourPP":"You can't use more than 4 Power Points.",
+  "SWIM.dialogue-soakWoundsWithUnHolyWarriorContent": "<form><div class='form-group'><form>You can spend a <b>maximum of 4 Power Points</b> to add a bonus to your Soaking Roll equal to the amount of Power Points used.</br>You have <b>{ppv} Power Points</b> left.</form><label for='numPP'>Power Points to spend: </label><input id='numPP' name='num' type='number' min='1' max='4' value='1'></input></div></form>",
   "SWIM.dialogue-reroll":"Reroll",
   "SWIM.dialogue-rerollText":"<form>You've soaked <strong>{rounded} Wounds</strong>; you will <strong>receive {currWounds} Wounds</strong>.</br>Do you want to reroll your Soaking Roll (you have <strongb>{totalBennies} Bennies</strong> left)?</form>",
   "SWIM.dialogue-decisionToApplyWounds":"No, apply Wounds now",
@@ -333,5 +336,9 @@
   "SWIM.chaseSetupDeck": "Deck to Deal From",
   "SWIM.chaseSetupPile": "Pile Deck to Pass",
   "SWIM.chaseSetupTablesName": "Tables",
-  "SWIM.chaseSetupCardsName": "Cards"
+  "SWIM.chaseSetupCardsName": "Cards",
+  "SWIM.notification.critFailHarderToKillFail" : "You've rolled a Critical Failure and failed your {harderToKillName} roll! You will die now...",
+  "SWIM.notification.critFailHarderToKillSuccess": "You've rolled a Critical Failure but made your {harderToKillName} roll! You will survive <em>somehow</em>...",
+  "SWIM.chat.critFailHarderToKillFail": "{actorAlias} rolled a <span style='font-size:150%'> Critical Failure, didn't make the {harderToKillName} roll and perishes! </span>",
+  "SWIM.chat.critFailHarderToKillSuccess": "{actorAlias} rolled a <span style='font-size:150%'> Critical Failure, but made the ${harderToKillName} roll, is Incapacitated but survives, <em>somehow</em>. </span>"
 }
