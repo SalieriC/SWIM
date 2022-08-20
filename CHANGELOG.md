@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Adjusted property paths to support FoundryVTT v10.
 - SWIM now completely ignores the death flag featured in Health Estimate. Instead the proper incapacitation icon will be set in the Health Estimate settings when the game starts and HE is installed. As a result, HE is not a dependency any longer, though still strongly suggested.
+### Fixed
+- Fixed a bug in the effect builder that didn't set maintainedPowers additional stat up when the caster was also the target.
 
 ## [0.18.5] - 2022-08-14
 ☮️ Peace in the world, or the world in pieces. 🕊️

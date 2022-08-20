@@ -1099,7 +1099,7 @@ export async function effect_builder_gm(data) {
                 aeData.changes.push({ key: `data.stats.toughness.value`, mode: 2, priority: undefined, value: change })
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data.shrink.duration
             }
@@ -1133,7 +1133,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data.speed.duration
             }
@@ -1173,7 +1173,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
@@ -1206,7 +1206,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data.burden.duration
                 aeData.duration.seconds = noPP ? Number(999999999999999) : data.burden.durationNoCombat
@@ -1240,7 +1240,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.seconds = noPP ? Number(999999999999999) : data.beastFriend.durationNoCombat
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration / 6
@@ -1277,7 +1277,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data.invisibility.duration
             }
@@ -1329,7 +1329,7 @@ export async function effect_builder_gm(data) {
             }
             /* Don't want to use that for instant powers.
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
             }
             */
@@ -1364,7 +1364,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data.deflection.duration
             }
@@ -1399,7 +1399,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data.arcaneProtection.duration
             }
@@ -1440,7 +1440,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data.burrow.duration
             }
@@ -1475,7 +1475,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data.damageField.duration
             }
@@ -1511,7 +1511,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.seconds = noPP ? Number(999999999999999) : data.darksight.duration
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration / 6
@@ -1547,7 +1547,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data.detectArcana.duration
             }
@@ -1582,7 +1582,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.seconds = noPP ? Number(999999999999999) : data.concealArcana.duration
             }
@@ -1618,7 +1618,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.seconds = noPP ? Number(999999999999999) : data.disguise.duration
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration / 6
@@ -1655,7 +1655,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.seconds = noPP ? Number(999999999999999) : data.environmentalProtection.duration
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration / 6
@@ -1691,7 +1691,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data.farsight.duration
             }
@@ -1726,7 +1726,7 @@ export async function effect_builder_gm(data) {
             }
             if (data.fly.icon) {aeData.icon = data.fly.icon}
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data.fly.duration
             }
@@ -1762,7 +1762,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data.intangibility.duration
             }
@@ -1798,7 +1798,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.seconds = noPP ? Number(999999999999999) : data[type].duration
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration / 6
@@ -1834,7 +1834,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration
             }
@@ -1870,7 +1870,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.seconds = noPP ? Number(999999999999999) : data[type].duration
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration / 6
@@ -1906,7 +1906,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration
             }
@@ -1942,7 +1942,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.seconds = noPP ? Number(999999999999999) : data[type].duration
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration / 6
@@ -1978,7 +1978,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration
             }
@@ -2013,7 +2013,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration
             }
@@ -2048,7 +2048,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration
             }
@@ -2083,7 +2083,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration
             }
@@ -2125,7 +2125,7 @@ export async function effect_builder_gm(data) {
                 }
             }
             if (targetID === casterID) {
-                if (additionalChange) { aeData.changes.push(additionalChange[0]) }
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
                 aeData.flags.swim.owner = true
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
