@@ -58,9 +58,9 @@ Hooks.on(`ready`, () => {
             }
         }
     }
-    game.swade.effectCallbacks.set("shaken", swim.unshake(version, effect))
-    game.swade.effectCallbacks.set("stunned", swim.unstun(effect))
-    game.swade.effectCallbacks.set("bleeding-out", swim.soak_damage(effect))
+    game.swade.effectCallbacks.set("shaken", swim.unshake)
+    game.swade.effectCallbacks.set("stunned", swim.unstun)
+    game.swade.effectCallbacks.set("bleeding-out", swim.soak_damage)
 
     // Setting up new conditions
     if (game.settings.get('swim', 'irradiationSetting') === true) {
