@@ -63,7 +63,7 @@ export async function shape_changer_script() {
             else if (actor.system.advances?.value < 12) { maxSize = 2 }
             else if (actor.system.advances?.value < 16) { maxSize = 4 }
             else if (actor.system.advances?.value >= 16) { maxSize = 10 }
-            else if (game.settings.get("swim", "ignoreShapeChangeSizeRule") === true) { maxSize = 999 }
+            if (game.settings.get("swim", "ignoreShapeChangeSizeRule") === true) { maxSize = 999 }
             //Selection for all shape change presets:
             if (size <= maxSize || game.user.isGM === true) {
                 scOptions = scOptions + `<option value="${each.id}">${each.data.name}</option>`;
