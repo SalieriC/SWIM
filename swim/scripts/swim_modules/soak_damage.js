@@ -1,6 +1,6 @@
 /*******************************************
  * Soak Damage
- * v. 5.1.1
+ * v. 5.2.0
  * Code by SalieriC#8263.
  *******************************************/
 export async function soak_damage_script(effect = false) {
