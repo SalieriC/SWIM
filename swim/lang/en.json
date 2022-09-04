@@ -9,6 +9,8 @@
   "SWIM.chaseDeckHint": "This must be the exact name of the table that contains your chase cards for the Chase Setup Macro. This will be your default option, you can still choose another deck, but the one here will always be on top.",
   "SWIM.injuryTableName": "Injury Table:",
   "SWIM.injuryTableHint": "Injury table used for Gritty Damage. You need to set up the EXACT name of your Injury Table. Gritty damage is only used for non-GM accounts.",
+  "SWIM.swdxUnshakeName": "Use SWD unshake rules:",
+  "SWIM.swdxUnshakeHint": "If activated, SWIM will use the unshake rules from SWD (raise required to act immediately, movement halved if Shaken) instead of SWADE.",
   "SWIM.grittyDamageName": "Use Gritty Damage?",
   "SWIM.grittyDamageHint": "Activate this if you want to use Gritty Damage. By default it only affects PCs.",
   "SWIM.grittyDamageNPCName": "Use Gritty Damage on NPCs?",
@@ -340,5 +342,6 @@
   "SWIM.notification.critFailHarderToKillFail" : "You've rolled a Critical Failure and failed your {harderToKillName} roll! You will die now...",
   "SWIM.notification.critFailHarderToKillSuccess": "You've rolled a Critical Failure but made your {harderToKillName} roll! You will survive <em>somehow</em>...",
   "SWIM.chat.critFailHarderToKillFail": "{actorAlias} rolled a <span style='font-size:150%'> Critical Failure, didn't make the {harderToKillName} roll and perishes! </span>",
-  "SWIM.chat.critFailHarderToKillSuccess": "{actorAlias} rolled a <span style='font-size:150%'> Critical Failure, but made the ${harderToKillName} roll, is Incapacitated but survives, <em>somehow</em>. </span>"
+  "SWIM.chat.critFailHarderToKillSuccess": "{actorAlias} rolled a <span style='font-size:150%'> Critical Failure, but made the ${harderToKillName} roll, is Incapacitated but survives, <em>somehow</em>. </span>",
+  "SWIM.notification-adjustPaceDisabled": "SWD unshake rules active, SWIM disabled the adjust Pace with Wounds setting."
 }
