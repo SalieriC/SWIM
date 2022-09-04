@@ -362,21 +362,21 @@ export class api {
     shape_changer_script()
   }
   // Soak Damage
-  static async _soak_damage() {
-    soak_damage_script()
+  static async _soak_damage(effect = false) {
+    soak_damage_script(effect)
   }
   // Token Vision
   static async _token_vision() {
     token_vision_script()
   }
   // Unshake script
-  static async _unshake(version) {
-    if (version === "SWD") { unshake_swd_script() }
-    else if (version === "SWADE") { unshake_swade_script() }
+  static async _unshake(version, effect = false) {
+    if (version === "SWD") { unshake_swd_script(effect) }
+    else if (version === "SWADE") { unshake_swade_script(effect) }
   }
   // Unstun script
-  static async _unstun() {
-    unstun_script()
+  static async _unstun(effect = false) {
+    unstun_script(effect)
   }
 
 

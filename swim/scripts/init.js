@@ -36,11 +36,31 @@ Hooks.on(`ready`, () => {
         let key = "install and activate";
         if (game.modules.get('warpgate')) key = "activate";
         ui.notifications.error(`SWIM requires the 'warpgate' module. Please ${key} it.`)
-    }
+    }    
 
     // Ready stuff
     console.log('SWADE Immersive Macros | Ready');
     register_settings();
+
+    // Registering SWIM functions to effect callbacks of SWIM:
+    let version = "SWADE"
+    if (game.settings.get('swim', 'swdxUnshake') === true) {
+        version = "SWD"
+        // Disable subtracting Wounds from Pace if SWD Unshake is used:
+        if ( game.settings.get("swade", "enableWoundPace") === true && swim.is_first_gm() ) {
+            game.settings.set("swade", "enableWoundPace", false)
+            ui.notifications.notify(game.i18n.localize("SWIM.notification-adjustPaceDisabled"))
+        }
+        // Add half pace effect to Shaken:
+        for (let status of CONFIG.SWADE.statusEffects) {
+            if (status.id === 'shaken') {
+                await status.changes.push({key: "data.stats.speed.value", mode: 1, priority: undefined, value: "0.5"})
+            }
+        }
+    }
+    game.swade.effectCallbacks.set("shaken", swim.unshake(version, effect))
+    game.swade.effectCallbacks.set("stunned", swim.unstun(effect))
+    game.swade.effectCallbacks.set("bleeding-out", swim.soak_damage(effect))
 
     // Setting up new conditions
     if (game.settings.get('swim', 'irradiationSetting') === true) {
