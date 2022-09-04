@@ -54,7 +54,7 @@ Hooks.on(`ready`, () => {
         // Add half pace effect to Shaken:
         for (let status of CONFIG.SWADE.statusEffects) {
             if (status.id === 'shaken') {
-                await status.changes.push({key: "data.stats.speed.value", mode: 1, priority: undefined, value: "0.5"})
+                status.changes.push({key: "data.stats.speed.value", mode: 1, priority: undefined, value: "0.5"})
             }
         }
     }
