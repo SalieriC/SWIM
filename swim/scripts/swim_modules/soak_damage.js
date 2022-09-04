@@ -1,6 +1,6 @@
 /*******************************************
  * Soak Damage
- * v. 5.2.0
+ * v. 5.2.1
  * Code by SalieriC#8263.
  *******************************************/
 export async function soak_damage_script(effect = false) {
@@ -11,7 +11,8 @@ export async function soak_damage_script(effect = false) {
         ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"));
         return;
     } else if (effect) {
-        token = effect.parent
+        let actor = effect.parent
+        token = canvas.scene.tokens.find(t => t.actor.id === actor.id)
     }
     const actor = token.actor
 

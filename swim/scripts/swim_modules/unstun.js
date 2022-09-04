@@ -1,6 +1,6 @@
 /*******************************************
  * Unstun macro for SWADE
- * version v.4.1.0
+ * version v.4.1.1
  * Made and maintained by SalieriC#8263 using original Code from Shteff.
  ******************************************/
 
@@ -12,7 +12,8 @@ export async function unstun_script(effect = false) {
         ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"));
         return;
     } else if (effect) {
-        token = effect.parent
+        let actor = effect.parent
+        token = canvas.scene.tokens.find(t => t.actor.id === actor.id)
     }
 
     // Setting up SFX path.

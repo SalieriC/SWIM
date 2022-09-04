@@ -1,6 +1,6 @@
 /*******************************************
  * Unshake macro for SWD
- * version 4.1.0
+ * version 4.1.1
  * Original code (an eternity ago) by Shteff, altered by Forien, edited and maintained by SalieriC#8263.
  ******************************************/
 
@@ -12,7 +12,8 @@ export async function unshake_swd_script(effect = false) {
         ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"));
         return;
     } else if (effect) {
-        token = effect.parent
+        let actor = effect.parent
+        token = canvas.scene.tokens.find(t => t.actor.id === actor.id)
     }
 
     // Checking for System Benny image.
@@ -166,7 +167,7 @@ export async function unshake_swd_script(effect = false) {
 
 /*******************************************
  * Unshake macro for SWADE
- * version 4.1.0
+ * version 4.1.1
  * Original code (an eternity ago) by Shteff, altered by Forien, edited and maintained by SalieriC#8263.
  ******************************************/
 
@@ -178,7 +179,8 @@ export async function unshake_swade_script(effect = false) {
         ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"));
         return;
     } else if (effect) {
-        token = effect.parent
+        let actor = effect.parent
+        token = canvas.scene.tokens.find(t => t.actor.id === actor.id)
     }
 
     // Checking for system Benny image.
