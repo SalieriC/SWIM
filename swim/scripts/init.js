@@ -44,7 +44,7 @@ Hooks.on(`ready`, () => {
 
     // Registering SWIM functions to effect callbacks of SWIM:
     let version = "SWADE"
-    if (game.settings.get('swim', 'swdxUnshake') === true) {
+    if (game.settings.get('swim', 'swdUnshake') === true) {
         version = "SWD"
         // Disable subtracting Wounds from Pace if SWD Unshake is used:
         if ( game.settings.get("swade", "enableWoundPace") === true && swim.is_first_gm() ) {

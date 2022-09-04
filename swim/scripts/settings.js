@@ -3,7 +3,7 @@
 import * as SWIM from './constants.js'
 
 export const settingVariables = [
-    {id: 'swdxUnshake', config_type: Boolean, tab: "Setting Rules", default: false},
+    {id: 'swdUnshake', config_type: Boolean, tab: "Setting Rules", default: false},
     {id: 'grittyDamage', config_type: Boolean, tab: "Setting Rules", default: false},
     {id: 'grittyDamageNPC', config_type: Boolean, tab: "Setting Rules", default: false},
     {id: 'natHeal_Time', config_type: String, tab: "Setting Rules", default: 'five days'},
