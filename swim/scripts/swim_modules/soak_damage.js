@@ -1,6 +1,6 @@
 /*******************************************
  * Soak Damage
- * v. 5.2.1
+ * v. 5.2.2
  * Code by SalieriC#8263.
  *******************************************/
 export async function soak_damage_script(effect = false) {
@@ -13,7 +13,7 @@ export async function soak_damage_script(effect = false) {
     } else if (effect) {
         let actor = effect.parent
         token = canvas.scene.tokens.find(t => t.actor.id === actor.id)
-        const nameKey = game.user.character.id === actor.id ? `${game.i18n.localize("SWIM.word-you")} ${game.i18n.localize("SWIM.word-are")}` : `${token.name} + ${game.i18n.localize("SWIM.word-is")}`
+        const nameKey = game.user.character.id === actor.id ? `${game.i18n.localize("SWIM.word-you")} ${game.i18n.localize("SWIM.word-are")}` : `${token.name} ${game.i18n.localize("SWIM.word-is")}`
         ui.notifications.notify(game.i18n.format("SWIM.notification-bleedingRoll", {tokenName: nameKey}));
     }
     const actor = token.actor
