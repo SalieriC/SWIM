@@ -1,6 +1,6 @@
 /*******************************************
  * Unshake macro for SWD
- * version 4.1.1
+ * version 4.1.2
  * Original code (an eternity ago) by Shteff, altered by Forien, edited and maintained by SalieriC#8263.
  ******************************************/
 
@@ -14,6 +14,8 @@ export async function unshake_swd_script(effect = false) {
     } else if (effect) {
         let actor = effect.parent
         token = canvas.scene.tokens.find(t => t.actor.id === actor.id)
+        const nameKey = game.user.character.id === actor.id ? `${game.i18n.localize("SWIM.word-you")} ${game.i18n.localize("SWIM.word-are")}` : `${token.name} + ${game.i18n.localize("SWIM.word-is")}`
+        ui.notifications.notify(game.i18n.format("SWIM.notification-shakenRoll", {tokenName: nameKey}));
     }
 
     // Checking for System Benny image.
@@ -167,7 +169,7 @@ export async function unshake_swd_script(effect = false) {
 
 /*******************************************
  * Unshake macro for SWADE
- * version 4.1.1
+ * version 4.1.2
  * Original code (an eternity ago) by Shteff, altered by Forien, edited and maintained by SalieriC#8263.
  ******************************************/
 
@@ -181,6 +183,8 @@ export async function unshake_swade_script(effect = false) {
     } else if (effect) {
         let actor = effect.parent
         token = canvas.scene.tokens.find(t => t.actor.id === actor.id)
+        const nameKey = game.user.character.id === actor.id ? `${game.i18n.localize("SWIM.word-you")} ${game.i18n.localize("SWIM.word-are")}` : `${token.name} + ${game.i18n.localize("SWIM.word-is")}`
+        ui.notifications.notify(game.i18n.format("SWIM.notification-shakenRoll", {tokenName: nameKey}));
     }
 
     // Checking for system Benny image.

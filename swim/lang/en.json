@@ -343,5 +343,11 @@
   "SWIM.notification.critFailHarderToKillSuccess": "You've rolled a Critical Failure but made your {harderToKillName} roll! You will survive <em>somehow</em>...",
   "SWIM.chat.critFailHarderToKillFail": "{actorAlias} rolled a <span style='font-size:150%'> Critical Failure, didn't make the {harderToKillName} roll and perishes! </span>",
   "SWIM.chat.critFailHarderToKillSuccess": "{actorAlias} rolled a <span style='font-size:150%'> Critical Failure, but made the ${harderToKillName} roll, is Incapacitated but survives, <em>somehow</em>. </span>",
-  "SWIM.notification-adjustPaceDisabled": "SWD unshake rules active, SWIM disabled the adjust Pace with Wounds setting."
+  "SWIM.notification-adjustPaceDisabled": "SWD unshake rules active, SWIM disabled the adjust Pace with Wounds setting.",
+  "SWIM.word-you": "You",
+  "SWIM.word-are": "are",
+  "SWIM.word-is": "is",
+  "SWIM.notification-shakenRoll": "{tokenName} Shaken, please roll to unshake.",
+  "SWIM.notification-stunnedRoll": "{tokenName} Stunned, please roll to unstun.",
+  "SWIM.notification-bleedingRoll": "{tokenName} bleeding out, please roll to avoid death."
 }
