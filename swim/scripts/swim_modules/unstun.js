@@ -1,16 +1,18 @@
 /*******************************************
  * Unstun macro for SWADE
- * version v.4.0.3
+ * version v.4.1.0
  * Made and maintained by SalieriC#8263 using original Code from Shteff.
  ******************************************/
 
-export async function unstun_script() {
-    const { speaker, _, __, token } = await swim.get_macro_variables()
+export async function unstun_script(effect = false) {
+    let { speaker, _, __, token } = await swim.get_macro_variables()
 
     // No Token is Selected
-    if (!token || canvas.tokens.controlled.length > 1) {
+    if ((!token || canvas.tokens.controlled.length > 1) && !effect) {
         ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"));
         return;
+    } else if (effect) {
+        token = effect.parent
     }
 
     // Setting up SFX path.

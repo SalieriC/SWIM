@@ -3,15 +3,18 @@
  * v. 5.1.1
  * Code by SalieriC#8263.
  *******************************************/
-export async function soak_damage_script() {
-    const { speaker, _, __, token } = await swim.get_macro_variables()
-    const actor = token.actor
-    
-    // Checking if at least one token is defined.
-    if (!token || canvas.tokens.controlled.length > 1) {
+export async function soak_damage_script(effect = false) {
+    let { speaker, _, __, token } = await swim.get_macro_variables()
+
+    // No Token is Selected
+    if ((!token || canvas.tokens.controlled.length > 1) && !effect) {
         ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"));
         return;
+    } else if (effect) {
+        token = effect.parent
     }
+    const actor = token.actor
+
     // Checking for System Benny image.
     let bennyImage = await swim.get_benny_image()
     // Setting SFX

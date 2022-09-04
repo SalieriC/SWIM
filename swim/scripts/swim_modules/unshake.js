@@ -1,16 +1,18 @@
 /*******************************************
  * Unshake macro for SWD
- * version 4.0.2
+ * version 4.1.0
  * Original code (an eternity ago) by Shteff, altered by Forien, edited and maintained by SalieriC#8263.
  ******************************************/
 
-export async function unshake_swd_script() {
-    const { speaker, _, __, token } = await swim.get_macro_variables()
+export async function unshake_swd_script(effect = false) {
+    let { speaker, _, __, token } = await swim.get_macro_variables()
 
     // No Token is Selected
-    if (!token || canvas.tokens.controlled.length > 1) {
+    if ((!token || canvas.tokens.controlled.length > 1) && !effect) {
         ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"));
         return;
+    } else if (effect) {
+        token = effect.parent
     }
 
     // Checking for System Benny image.
@@ -164,17 +166,19 @@ export async function unshake_swd_script() {
 
 /*******************************************
  * Unshake macro for SWADE
- * version 4.0.2
+ * version 4.1.0
  * Original code (an eternity ago) by Shteff, altered by Forien, edited and maintained by SalieriC#8263.
  ******************************************/
 
-export async function unshake_swade_script() {
-    const { speaker, _, __, token } = await swim.get_macro_variables()
+export async function unshake_swade_script(effect = false) {
+    let { speaker, _, __, token } = await swim.get_macro_variables()
 
     // No Token is Selected
-    if (!token || canvas.tokens.controlled.length > 1) {
+    if ((!token || canvas.tokens.controlled.length > 1) && !effect) {
         ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"));
         return;
+    } else if (effect) {
+        token = effect.parent
     }
 
     // Checking for system Benny image.
