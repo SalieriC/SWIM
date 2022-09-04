@@ -362,7 +362,7 @@ export class api {
     shape_changer_script()
   }
   // Soak Damage
-  static async _soak_damage(effect = false) {
+  static async _soak_damage(effect) {
     soak_damage_script(effect)
   }
   // Token Vision
@@ -370,13 +370,13 @@ export class api {
     token_vision_script()
   }
   // Unshake script
-  static async _unshake(effect = false) {
+  static async _unshake(effect) {
     const version = game.settings.get("swim", "swdUnshake") ? "SWD" : "SWADE"
     if (version === "SWD") { unshake_swd_script(effect) }
     else if (version === "SWADE") { unshake_swade_script(effect) }
   }
   // Unstun script
-  static async _unstun(effect = false) {
+  static async _unstun(effect) {
     unstun_script(effect)
   }
 
