@@ -370,7 +370,8 @@ export class api {
     token_vision_script()
   }
   // Unshake script
-  static async _unshake(version, effect = false) {
+  static async _unshake(effect = false) {
+    const version = game.settings.get("swim", "swdUnshake") ? "SWD" : "SWADE"
     if (version === "SWD") { unshake_swd_script(effect) }
     else if (version === "SWADE") { unshake_swade_script(effect) }
   }
