@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Adjusted manifest to reflect the FVTT v10 requirements.
 ### Fixed
 - Fixed a bug in the effect builder that didn't set maintainedPowers additional stat up when the caster was also the target.
+### Removed
+- Unshake macros from the compendium were removed and unified into a single macro since the version is now drawn from the settings.
 
 ## [0.18.5] - 2022-08-14
 ☮️ Peace in the world, or the world in pieces. 🕊️
