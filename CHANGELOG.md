@@ -7,10 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
+- New Setting that lets users choose to use the SWD unshake rules. If this setting is active...
+- - ... SWIM will disable the adjust Pace with Wounds Setting and
+- - puts an effect to Shaken that halves the actors Pace.
+- SWIM now overwrites the callback functions of effects in SWIM, meaning it will initiate its own functions when the character is Shaken, Stunned or Bleeding Out.
 - New translation strings.
 ### Changed
 - Adjusted property paths to support FoundryVTT v10.
 - SWIM now completely ignores the death flag featured in Health Estimate. Instead the proper incapacitation icon will be set in the Health Estimate settings when the game starts and HE is installed. As a result, HE is not a dependency any longer, though still strongly suggested.
+- Adjusted manifest to reflect the FVTT v10 requirements.
 ### Fixed
 - Fixed a bug in the effect builder that didn't set maintainedPowers additional stat up when the caster was also the target.
 
