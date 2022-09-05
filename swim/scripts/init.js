@@ -52,7 +52,7 @@ Hooks.on(`ready`, () => {
             ui.notifications.notify(game.i18n.localize("SWIM.notification-adjustPaceDisabled"))
         }
         // Add half pace effect to Shaken:
-        for (let status of CONFIG.SWADE.statusEffects) {
+        for (let status of CONFIG.statusEffects) {
             if (status.id === 'shaken') {
                 status.changes.push({key: "data.stats.speed.value", mode: 1, priority: undefined, value: "0.5"})
             }
@@ -69,7 +69,7 @@ Hooks.on(`ready`, () => {
 
     // Set Health Estimate up
     if (game.modules.get('healthEstimate')?.active && swim.is_first_gm()) {
-        let incapIcon = CONFIG.SWADE.statusEffects.filter(e => e.id === "incapacitated").icon
+        let incapIcon = CONFIG.statusEffects.filter(e => e.id === "incapacitated").icon
         if (game.settings.get("healthEstimate", "core.deathMarker") != incapIcon) {game.settings.set("healthEstimate", "core.deathMarker", incapIcon)}
     }
 
