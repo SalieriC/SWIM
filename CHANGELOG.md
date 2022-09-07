@@ -21,6 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed a bug in the effect builder that didn't set maintainedPowers additional stat up when the caster was also the target.
 - Fixed a bug in the Shape Changer that rendered the ignore size rule setting useless (thanks @jdavasligil).
+- Fixed a bug when holding which resulted on having the combat tracker focus on top of the tracker instead of the token which should have its turn.
+### Known Issues
+- Holding still breaks on first round of combat but I have no clue why.
 ### Removed
 - Unshake macros from the compendium were removed and unified into a single macro since the version is now drawn from the settings.
 

@@ -147,6 +147,7 @@ Hooks.on(`ready`, () => {
     warpgate.event.watch("SWIM.deleteActor", gm_relay.gmDeleteActor, swim.is_first_gm)
     warpgate.event.watch("SWIM.updateCombat-previousTurn", gm_relay.combat_previousTurn, swim.is_first_gm)
     warpgate.event.watch("SWIM.updateCombat-nextTurn", gm_relay.combat_nextTurn, swim.is_first_gm)
+    warpgate.event.watch("SWIM.updateCombat-currentTurn", gm_relay.combat_currentTurn, swim.is_first_gm)
 });
 
 // Hooks on conditions
@@ -174,6 +175,8 @@ Hooks.on(`createActiveEffect`, async (condition, _, userID) => {
         const tokens = actor.getActiveTokens()
         const combatID = game.combat.id
         for (let token of tokens) { await token.combatant.update({ "flags.swade.roundHeld": 1 }) }
+        await swim.wait('100') // Needed to give the whole thing some time to prevent issues with jokers.
+        warpgate.event.notify("SWIM.updateCombat-currentTurn", {combatID: combatID, currTurn: currentTurn})
     }
 })
 Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
