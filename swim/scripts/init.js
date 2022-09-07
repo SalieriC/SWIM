@@ -146,6 +146,7 @@ Hooks.on(`ready`, () => {
     warpgate.event.watch("SWIM.effectBuilder", effect_builder_gm, swim.is_first_gm)
     warpgate.event.watch("SWIM.deleteActor", gm_relay.gmDeleteActor, swim.is_first_gm)
     warpgate.event.watch("SWIM.updateCombat-previousTurn", gm_relay.combat_previousTurn, swim.is_first_gm)
+    warpgate.event.watch("SWIM.updateCombat-nextTurn", gm_relay.combat_nextTurn, swim.is_first_gm)
 });
 
 // Hooks on conditions
@@ -171,6 +172,7 @@ Hooks.on(`createActiveEffect`, async (condition, _, userID) => {
     // Hold
     if (condition.data.flags?.core?.statusId === "holding" && swim.is_first_gm() && game.combat) {
         const tokens = actor.getActiveTokens()
+        const combatID = game.combat.id
         for (let token of tokens) { await token.combatant.update({ "flags.swade.roundHeld": 1 }) }
     }
 })
