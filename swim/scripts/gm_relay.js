@@ -27,4 +27,16 @@ export class gm_relay {
             await game.combat.update({ "turn": currentTurn + 1 })
         }
     }
+    static async combat_currentTurn(data) {
+        let combatID = data.combatID
+        if (!combatID) {
+            combatID = game.combat.id
+        }
+        const combat = game.combats.get(combatID)
+        const currentTurn = data.currTurn
+        await swim.wait('200')
+        if (currentTurn > 0) {
+            await game.combat.update({ "turn": currentTurn })
+        }
+    }
 }
