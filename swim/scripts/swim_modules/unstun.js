@@ -61,7 +61,7 @@ export async function unstun_script(effect = false) {
             for (let effect of token.actor.data.effects) {
                 if (effect.data.disabled === false && !edgeNames.includes(effect.data.label)) { // only apply changes if effect is enabled and not made by a recognised Edge.
                     for (let change of effect.data.changes) {
-                        if (change.key === "SWIM.unStunBonus") {
+                        if (change.key === "SWIM.unStunMod") {
                             //Building array of effect names and icons that affect the unStunBonus
                             effectName.push(effect.data.label);
                             effectIcon.push(effect.data.icon);
