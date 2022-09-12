@@ -87,7 +87,7 @@ export async function unstun_script(effect = false) {
         // Apply +2 if Elan is present and if it is a reroll.
         if (typeof elanBonus === "number") {
             rollWithEdge += 2;
-            edgeText = edgeText + `<br/><i>+ Elan</i>.`;
+            edgeText = edgeText + `<br/><i>+ ${game.i18n.localize("SWIM.edge-elan")}</i>.`;
         }
 
         let chatData = `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge} </span>`;
@@ -96,8 +96,8 @@ export async function unstun_script(effect = false) {
         if (token.actor.system.wildcard === false && token.actor.type === "npc") { wildCard = false }
         let critFail = await swim.critFail_check(wildCard, r)
         if (critFail === true) {
-            ui.notifications.notify("You've rolled a Critical Failure!");
-            let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure! </span>`;
+            ui.notifications.notify(game.i18n.localize("SWIM.notification-critFail"));
+            let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultCritFail", {name : actorAlias});
             ChatMessage.create({ content: chatData });
         }
         else {
