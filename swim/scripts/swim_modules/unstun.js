@@ -119,8 +119,8 @@ export async function unstun_script(effect = false) {
                 useBenny();
             }
             chatData += ` ${edgeText}`;
+            ChatMessage.create({ content: chatData });
         }
-        ChatMessage.create({ content: chatData });
     }
 
     async function useBenny() {

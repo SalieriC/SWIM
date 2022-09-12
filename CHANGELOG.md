@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug in the effect builder that didn't set maintainedPowers additional stat up when the caster was also the target.
 - Fixed a bug in the Shape Changer that rendered the ignore size rule setting useless (thanks @jdavasligil).
 - Fixed a bug when holding which resulted on having the combat tracker focus on top of the tracker instead of the token which should have its turn.
+- Fixed a bug that created a second result chat message when an actor rolled a critical failure to unstun.
 ### Known Issues
 - Holding still breaks on first round of combat but I have no clue why.
 ### Removed
