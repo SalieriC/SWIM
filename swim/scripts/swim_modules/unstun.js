@@ -53,6 +53,37 @@ export async function unstun_script(effect = false) {
             edgeText += `<br/><i>+ ${edge.name}</i>`;
         }
 
+        //Get generic actor unstun bonus and check if it is from an AE:
+        let effectName = [];
+        let effectIcon = [];
+        let effectValue = [];
+        if (token.actor.data.effects.size > 0) {
+            for (let effect of token.actor.data.effects) {
+                if (effect.data.disabled === false && !edgeNames.includes(effect.data.label)) { // only apply changes if effect is enabled and not made by a recognised Edge.
+                    for (let change of effect.data.changes) {
+                        if (change.key === "SWIM.unStunBonus") {
+                            //Building array of effect names and icons that affect the unStunBonus
+                            effectName.push(effect.data.label);
+                            effectIcon.push(effect.data.icon);
+                            effectValue.push(change.value);
+                        }
+                    }
+                }
+            }
+            for (let i = 0; i < effectName.length; i++) {
+                // Apply mod using parseFloat() to make it a Number:
+                rollWithEdge += parseFloat(effectValue[i]);
+                // Change indicator in case the modifier from AE is negative:
+                let indicator = "+";
+                let effectMod = effectValue[i];
+                if (parseFloat(effectValue[i]) < 0) {
+                    indicator = "-";
+                    effectMod = effectValue[i].replace("-", "");
+                }
+                edgeText += `<br/><i>${indicator} ${effectMod} <img src="${effectIcon[i]}" alt="" width="15" height="15" style="border:0" />${effectName[i]}</i>`;
+            }
+        }
+
         // Apply +2 if Elan is present and if it is a reroll.
         if (typeof elanBonus === "number") {
             rollWithEdge += 2;
