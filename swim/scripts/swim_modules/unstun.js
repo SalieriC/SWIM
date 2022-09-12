@@ -1,6 +1,6 @@
 /*******************************************
  * Unstun macro for SWADE
- * version v.4.1.4
+ * version v.4.2.0
  * Made and maintained by SalieriC#8263 using original Code from Shteff.
  ******************************************/
 
