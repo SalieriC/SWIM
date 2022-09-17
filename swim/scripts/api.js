@@ -371,6 +371,11 @@ export class api {
   }
   // Unshake script
   static async _unshake(effect) {
+    if (typeof effect === "string") {
+      ui.notifications.error(game.i18n.localize("SWIM.notification.generalErrorMsg"))
+      console.error("You were passing a string to the unshake macro. This is likely because you're using an outdated version of the macro. Please either import the newest version from the compendium into your world or change the macro as following: 'swim.unshake()' (without the ').")
+      return;
+    }
     const version = game.settings.get("swim", "swdUnshake") ? "SWD" : "SWADE"
     if (version === "SWD") { unshake_swd_script(effect) }
     else if (version === "SWADE") { unshake_swade_script(effect) }

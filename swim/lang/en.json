@@ -226,7 +226,7 @@
   "SWIM.chatMessage-healOtherRaiseRelief" : "{tokenName} gave {targetName} some relief by removing up to two level of <em>Fatigue</em> and/or <em>Shaken</em> and/or <em>Stunned</em>.",
   "SWIM.chatMessage-healOtherRaise":"{tokenName} healed ${targetName} for two Wounds.",
   "SWIM.chatMessage-healOtherRaiseContinued":" And healed ${targetName} for one Wound.",
-  "SWIM.notification.generalErrorMsg":"An error occured. See the console for more details.",
+  "SWIM.notification.generalErrorMsg":"An error occured. See the console (F12) for more details.",
   "SWIM.dialogue-noWoundsNorFatigue": "<form><p>You currently neither have any Wounds nor Fatigue. There is nothing for you to do here.</p></form>",
   "SWIM.dialogue-nevermind":"Nevermind...",
   "SWIM.dialogue-fatigueCheck":"<p>You currently have <strong>no</strong> Wounds and <strong>{currentFatige}/{maxFatigue}</strong> Fatigue.</p><p>In general you may remove a level of Fatigue <strong>every hour</strong> when resting and the source of your Fatigue is absent. This can be altered depending on the source of Fatigue, so <strong>ask your GM</strong> if you're allowed to remove your Fatigue now.</p>",
