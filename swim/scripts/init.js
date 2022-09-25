@@ -148,6 +148,20 @@ Hooks.on(`ready`, () => {
     warpgate.event.watch("SWIM.updateCombat-previousTurn", gm_relay.combat_previousTurn, swim.is_first_gm)
     warpgate.event.watch("SWIM.updateCombat-nextTurn", gm_relay.combat_nextTurn, swim.is_first_gm)
     warpgate.event.watch("SWIM.updateCombat-currentTurn", gm_relay.combat_currentTurn, swim.is_first_gm)
+
+    //Ammo Management header button
+    if(game.user.isGM) {
+        Hooks.on('getItemSheetHeaderButtons', function (item, buttons) {
+            if(item.type === 'gear') {
+                const ammoMnmtButton = {
+                    label: 'Ammo Setup',
+                    icon: 'fas fa-bomb',
+                    //onclick: NOT_YET_IMPLEMENTED
+                };
+                buttons.unshift(ammoMnmtButton);
+            }
+        });
+    }
 });
 
 // Hooks on conditions
