@@ -313,4 +313,44 @@
     }
     // Apply AE
     await newToken.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+
+    //Apply leadership AEs:
+    let commandAeData = {
+        changes: [
+            {
+                "key": "SWIM.unStunMod",
+                "value": "1",
+                "mode": 2
+            },
+            {
+                "key": "system.attributes.spirit.unShakeBonus",
+                "value": "1",
+                "mode": 2
+            }
+        ],
+        icon: "",
+        label: "",
+    }
+    let command = summoner.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-command").toLowerCase())
+    let holdLine = summoner.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-holdTheLine").toLowerCase())
+    let fervor = summoner.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-fervor").toLowerCase())
+    if (fervor) {
+        commandAeData.label = "Is under exceptional command"
+        commandAeData.icon = fervor.img
+    } else if (command) {
+        commandAeData.label = "Is under command"
+        commandAeData.icon = command.img
+    } 
+    if (holdLine) {
+        commandAeData.changes.push(
+            {
+                "key": "system.stats.toughness.value",
+                "value": "1",
+                "mode": 2
+            }
+        )
+    }
+    if (fervor || command) {
+        await newToken.actor.createEmbeddedDocuments('ActiveEffect', [commandAeData]);
+    }
  }
