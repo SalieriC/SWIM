@@ -7,6 +7,7 @@ import { summoner_gm } from './swim_modules/mighty-summoner.js'
 import { heal_other_gm } from './swim_modules/personal_health_centre.js'
 import { common_bond_gm } from './swim_modules/common_bond.js'
 import { effect_builder_gm } from './swim_modules/effect_builder.js'
+import { open_swim_item_config } from "./swim_item_config.js";
 
 /*Hooks.on('getCardsDirectoryEntryContext', function (stuff) {
     console.log(stuff)
@@ -151,18 +152,18 @@ Hooks.on(`ready`, () => {
 
     //SWIM per-actor/item config header button
     if(game.user.isGM) {
-        const swimConfigButton = {
-            label: 'SWIM',
-            icon: 'fas fa-swimmer',
-            //onclick: NOT_YET_IMPLEMENTED
-        };
+        const evnt = function(obj, buttons) {
+            const swimConfigButton = {
+                label: 'SWIM',
+                icon: 'fas fa-swimmer',
+                onclick: () => open_swim_item_config(obj)
+            };
 
-        Hooks.on('getItemSheetHeaderButtons', function (item, buttons) {
             buttons.unshift(swimConfigButton);
-        });
-        Hooks.on('getActorSheetHeaderButtons', function (actor, buttons) {
-            buttons.unshift(swimConfigButton);
-        });
+        }
+
+        Hooks.on('getItemSheetHeaderButtons', evnt);
+        Hooks.on('getActorSheetHeaderButtons', evnt);
     }
 });
 

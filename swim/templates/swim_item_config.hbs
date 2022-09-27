@@ -1,0 +1,20 @@
+<form id="swim-custom-config">
+    <h2>{{ localize "SWIM.ItemConfigMenu" }}</h2>
+    <hr/>
+    <section class="content">
+        <div class="form-group">
+            {{#with item }}
+                <label>{{ type }}</label>
+                <div class="form-fields">
+                    {{#if this.is_boolean}}
+                        <input type="checkbox" name="{{ this.id }}" {{#if this.value }}checked=""{{/if}}>
+                    {{else}}
+                        <input type="text" name="{{ this.id }}" value="{{ this.value }}">
+                        {{# if this.use_audio_picker }}{{ filePicker type="audio" target=this.id }}{{/if}}
+                        {{# if this.use_video_picker }}{{ filePicker type="video" target=this.id }}{{/if}}
+                    {{/if}}
+                </div>
+            {{/with}}
+        </div>
+    </section>
+</form>
