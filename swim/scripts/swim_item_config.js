@@ -1,25 +1,22 @@
+import * as SWIM from "./constants.js";
 
-export async function open_swim_item_config(itemOrActor) {
-    if(itemOrActor instanceof SwadeActor) {
-        ui.notifications.warning("We do not support actors yet.");
-        return;
-    }
+export async function open_swim_item_config(item) {
+    new ItemConfigForm(item).render(true);
+}
 
-    new ItemConfigForm(itemOrActor).render();
+export async function open_swim_actor_config(actor) {
+    ui.notifications.warn("We do not support actors yet.");
 }
 
 class ItemConfigForm extends FormApplication {
-    constructor(myObject) {
-        super(myObject, { title: myObject.name });
-        // The rest of the constructor
-    }
 
     static get defaultOptions() {
         let options = super.defaultOptions;
         options.id = 'swim-item-config';
+        options.title = "SWIM Config"
         options.template = "/modules/swim/templates/swim_item_config.hbs";
-        options.width = SWIM.CONFIG_WINDOW_WIDTH;
-        options.height = SWIM.CONFIG_WINDOW_HEIGHT;
+        options.width = SWIM.ITEM_CONFIG_WINDOW_WIDTH;
+        options.height = SWIM.ITEM_CONFIG_WINDOW_HEIGHT;
         return options;
     }
 
@@ -28,10 +25,7 @@ class ItemConfigForm extends FormApplication {
     }
 
     getData() {
-        if(this.object.type === 'gear') {
-            return {item: this.object};
-        }
-        return {};
+        return {obj: this.object};
     }
 
     async _updateObject(_, formData) {

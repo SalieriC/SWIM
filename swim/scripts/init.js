@@ -7,7 +7,7 @@ import { summoner_gm } from './swim_modules/mighty-summoner.js'
 import { heal_other_gm } from './swim_modules/personal_health_centre.js'
 import { common_bond_gm } from './swim_modules/common_bond.js'
 import { effect_builder_gm } from './swim_modules/effect_builder.js'
-import { open_swim_item_config } from "./swim_item_config.js";
+import { open_swim_actor_config, open_swim_item_config } from "./swim_item_config.js";
 
 /*Hooks.on('getCardsDirectoryEntryContext', function (stuff) {
     console.log(stuff)
@@ -151,19 +151,24 @@ Hooks.on(`ready`, () => {
     warpgate.event.watch("SWIM.updateCombat-currentTurn", gm_relay.combat_currentTurn, swim.is_first_gm)
 
     //SWIM per-actor/item config header button
-    if(game.user.isGM) {
-        const evnt = function(obj, buttons) {
-            const swimConfigButton = {
+    if (game.user.isGM) {
+        Hooks.on('getItemSheetHeaderButtons', function (sheet, buttons) {
+            buttons.unshift({
+                class: 'swim_config_button',
                 label: 'SWIM',
                 icon: 'fas fa-swimmer',
-                onclick: () => open_swim_item_config(obj)
-            };
+                onclick: () => open_swim_item_config(sheet.item)
 
-            buttons.unshift(swimConfigButton);
-        }
-
-        Hooks.on('getItemSheetHeaderButtons', evnt);
-        Hooks.on('getActorSheetHeaderButtons', evnt);
+            });
+        });
+        Hooks.on('getActorSheetHeaderButtons', function (sheet, buttons) {
+            buttons.unshift({
+                class: 'swim_config_button',
+                label: 'SWIM',
+                icon: 'fas fa-swimmer',
+                onclick: () => open_swim_actor_config(sheet.item)
+            });
+        });
     }
 });
 
