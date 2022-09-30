@@ -2,19 +2,29 @@
     <h2>{{ localize "SWIM.ItemConfigMenu" }}</h2>
     <hr/>
     <section class="content">
-        <div class="form-group">
-            {{#with obj }}
-                <label>{{ type }}</label>
-                <div class="form-fields">
-                    {{#if this.is_boolean}}
-                        <input type="checkbox" name="{{ this.id }}" {{#if this.value }}checked=""{{/if}}>
-                    {{else}}
-                        <input type="text" name="{{ this.id }}" value="{{ this.value }}">
-                        {{# if this.use_audio_picker }}{{ filePicker type="audio" target=this.id }}{{/if}}
-                        {{# if this.use_video_picker }}{{ filePicker type="video" target=this.id }}{{/if}}
-                    {{/if}}
-                </div>
-            {{/with}}
-        </div>
+        {{#each options}}
+            <div class="form-group">
+                {{#if this.isSectionTitle }}
+                    <h3>{{this.value}}</h3>
+                {{else}}
+                    <label>{{ this.label }}</label>
+                    <div class="form-fields">
+                        {{#if this.isBoolean}}
+                            <input type="checkbox" name="{{ this.id }}" {{#if this.value }}checked=""{{/if}}>
+                        {{/if}}
+                        {{#if this.isAE}}
+                            <button data-action="_setActiveEffect" data-id="{{this.id}}" data-value="{{this.value}}">
+                                Set Active Effect
+                            </button>
+                        {{/if}}
+                    </div>
+                {{/if}}
+            </div>
+        {{/each}}
     </section>
+    <footer class="sheet-footer flexrow">
+        <button type="submit" name="submit">
+            <i class="far fa-save"></i> {{localize 'SETTINGS.Save'}}
+        </button>
+    </footer>
 </form>
