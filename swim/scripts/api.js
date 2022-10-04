@@ -127,9 +127,9 @@ export class api {
     let gmBennies
     let totalBennies
     //Check for actor status and adjust bennies based on edges.
-    let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === game.i18n.localize("SWIM.edge-luck").toLowerCase()) });
-    let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === game.i18n.localize("SWIM.edge-greatLuck").toLowerCase()) });
-    let actorCoup = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === game.i18n.localize("SWIM.ability-coup-50f").toLowerCase()) });
+    let actorLuck = token.actor.items.find(function (item) { return (item.name.toLowerCase() === game.i18n.localize("SWIM.edge-luck").toLowerCase()) });
+    let actorGreatLuck = token.actor.items.find(function (item) { return (item.name.toLowerCase() === game.i18n.localize("SWIM.edge-greatLuck").toLowerCase()) });
+    let actorCoup = token.actor.items.find(function (item) { return (item.name.toLowerCase() === game.i18n.localize("SWIM.ability-coup-50f").toLowerCase()) });
     if ((token.actor.system.wildcard === false) && (actorGreatLuck === undefined)) {
       if ((!(actorLuck === undefined)) && (tokenBennies > 1) && ((actorGreatLuck === undefined))) { tokenBennies = 1; }
       else { tokenBennies = 0; }
@@ -162,7 +162,7 @@ export class api {
       await game.user.setFlag("swade", "bennies", game.user.getFlag("swade", "bennies") - 1)
     } else {
       await token.actor.update({
-        "data.bennies.value": tokenBennies - 1,
+        "system.bennies.value": tokenBennies - 1,
       })
     }
 
@@ -276,53 +276,6 @@ export class api {
   }
   // Effect Builder
   static async _effect_builder(message = false, item = false) {
-    /* I honestly don't think this is worth it atm...
-    console.log(message)
-    const renderData = message ? message.getFlag("betterrolls-swade2", "render_data") : false
-    if (renderData && (renderData.trait_roll.is_fumble === true || renderData.trait_roll.old_rolls.length > 0)) { return }
-    let isSupportedPower = false
-    const SUPPORTED_POWERS = [
-      game.i18n.localize("SWIM.power-boost").toLowerCase(),
-      game.i18n.localize("SWIM.power-lower").toLowerCase(),
-      game.i18n.localize("SWIM.power-smite").toLowerCase(),
-      game.i18n.localize("SWIM.power-protection").toLowerCase(),
-      game.i18n.localize("SWIM.power-growth").toLowerCase(),
-      game.i18n.localize("SWIM.power-shrink").toLowerCase(),
-      game.i18n.localize("SWIM.power-sloth").toLowerCase(),
-      game.i18n.localize("SWIM.power-speed").toLowerCase(),
-      game.i18n.localize("SWIM.power-speedQuickness").toLowerCase(),
-      game.i18n.localize("SWIM.power-beastFriend").toLowerCase(),
-      game.i18n.localize("SWIM.power-invisibility").toLowerCase(),
-      game.i18n.localize("SWIM.power-confusion").toLowerCase(),
-      game.i18n.localize("SWIM.power-deflection").toLowerCase(),
-      game.i18n.localize("SWIM.power-arcaneProtection").toLowerCase(),
-      game.i18n.localize("SWIM.power-burrow").toLowerCase(),
-      game.i18n.localize("SWIM.power-damageField").toLowerCase(),
-      game.i18n.localize("SWIM.power-darksight").toLowerCase(),
-      game.i18n.localize("SWIM.power-detectArcana").toLowerCase(),
-      game.i18n.localize("SWIM.power-concealArcana").toLowerCase(),
-      game.i18n.localize("SWIM.power-detect").toLowerCase(),
-      game.i18n.localize("SWIM.power-conceal").toLowerCase(),
-      game.i18n.localize("SWIM.power-disguise").toLowerCase(),
-      game.i18n.localize("SWIM.power-environmentalProtection").toLowerCase(),
-      game.i18n.localize("SWIM.power-farsight").toLowerCase(),
-      game.i18n.localize("SWIM.power-fly").toLowerCase(),
-      game.i18n.localize("SWIM.power-intangibility").toLowerCase(),
-      game.i18n.localize("SWIM.power-mindLink").toLowerCase(),
-      game.i18n.localize("SWIM.power-puppet").toLowerCase(),
-      game.i18n.localize("SWIM.power-slumber").toLowerCase(),
-      game.i18n.localize("SWIM.power-silence").toLowerCase(),
-      game.i18n.localize("SWIM.power-speakLanguage").toLowerCase(),
-      game.i18n.localize("SWIM.power-wallWalker").toLowerCase(),
-      game.i18n.localize("SWIM.power-warriorsGift").toLowerCase(),
-      game.i18n.localize("SWIM.power-empathy").toLowerCase(),
-      game.i18n.localize("SWIM.power-blind").toLowerCase(),
-      game.i18n.localize("SWIM.power-elementalManipulation").toLowerCase(),
-      game.i18n.localize("SWIM.power-easeBurden-tes").toLowerCase(),
-    ]
-    console.log(SUPPORTED_POWERS)
-    for (let power of SUPPORTED_POWERS) if (item.name.toLowerCase().includes(power)) isSupportedPower = true
-    if (isSupportedPower === false) { return }*/
     effect_builder()
   }
   // Falling Damage
@@ -384,15 +337,4 @@ export class api {
   static async _unstun(effect) {
     unstun_script(effect)
   }
-
-
-  /* Call Macros (Deprecated as of version 0.15.0)
-  static async start_macro(macroName, compendiumName = 'swim.swade-immersive-macros') {
-    let pack = game.packs.get(compendiumName);
-    let macro = (await pack.getDocuments()).find(i => (i.data.name == macroName));
-    await macro.execute();
-  }
-  */
-
-  //In the Check for Bennies function, don't forget Coup (50F) which always adds a Benny even if it is an Extra.
 }
