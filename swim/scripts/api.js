@@ -127,9 +127,9 @@ export class api {
     let gmBennies
     let totalBennies
     //Check for actor status and adjust bennies based on edges.
-    let actorLuck = token.actor.items.find(function (item) { return (item.name.toLowerCase() === game.i18n.localize("SWIM.edge-luck").toLowerCase()) });
-    let actorGreatLuck = token.actor.items.find(function (item) { return (item.name.toLowerCase() === game.i18n.localize("SWIM.edge-greatLuck").toLowerCase()) });
-    let actorCoup = token.actor.items.find(function (item) { return (item.name.toLowerCase() === game.i18n.localize("SWIM.ability-coup-50f").toLowerCase()) });
+    let actorLuck = token.actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-luck").toLowerCase())
+    let actorGreatLuck = token.actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-greatLuck").toLowerCase())
+    let actorCoup = token.actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.ability-coup-50f").toLowerCase())
     if ((token.actor.system.wildcard === false) && (actorGreatLuck === undefined)) {
       if ((!(actorLuck === undefined)) && (tokenBennies > 1) && ((actorGreatLuck === undefined))) { tokenBennies = 1; }
       else { tokenBennies = 0; }
