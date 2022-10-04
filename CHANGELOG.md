@@ -31,6 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Holding still breaks on first round of combat but I have no clue why.
 ### Removed
 - Unshake macros from the compendium were removed and unified into a single macro since the version is now drawn from the settings.
+### Deprecated
+- Old macros deprecated. They are still available in a zip file in case s/o wants to check them out.
 
 ## [0.18.5] - 2022-08-14
 ☮️ Peace in the world, or the world in pieces. 🕊️
