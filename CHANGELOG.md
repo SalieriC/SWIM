@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Adjusted manifest to reflect the FVTT v10 requirements.
 - Removed v10 update warning.
 - Changed some translation strings.
+- Updated settings-extender.js to the v10 version.
+- General cleanup of code.
 ### Fixed
 - Fixed a bug in the effect builder that didn't set maintainedPowers additional stat up when the caster was also the target.
 - Fixed a bug in the Shape Changer that rendered the ignore size rule setting useless (thanks @jdavasligil).
