@@ -47,9 +47,9 @@ export async function falling_damage_script() {
             else if (waterSuccess === "raise") { waterRaise = true; damage = 0; }
         }
         if (waterRaise === false) {
-            messageContent += `<p>${token.data.name} falls ${fallingDepth}&rdquo; and takes <strong><span style="font-size:115%">${damage}</strong></span> damage.</p>`
+            messageContent += `<p>${token.name} falls ${fallingDepth}&rdquo; and takes <strong><span style="font-size:115%">${damage}</strong></span> damage.</p>`
         } else if (waterRaise === true) {
-            messageContent += `<p>${token.data.name} falls ${fallingDepth}&rdquo; but dives into the water gracefully, taking no damage in the process.</p>`
+            messageContent += `<p>${token.name} falls ${fallingDepth}&rdquo; but dives into the water gracefully, taking no damage in the process.</p>`
         }
         await calculate_damage(token, damage);
     }
@@ -58,7 +58,7 @@ export async function falling_damage_script() {
         const toughness = token.document._actor.system.stats.toughness.value;
         const isShaken = token.document._actor.system.status.isShaken;
         const raises = Math.floor((damage - toughness) / 4);
-        const isHardy = token.document._actor.data.items.find(function (item) {
+        const isHardy = token.document._actor.items.find(function (item) {
             return ((item.name.toLowerCase() === "hardy") && item.type === "ability");
         });
         if (toughness > damage) {
@@ -99,8 +99,8 @@ export async function falling_damage_script() {
         for (let token of tokens) {
             content += `
         <p>
-          <img style="border: 0; text-align: left;" src="${token.data.img}" width="25" height="25" /> 
-          <span style="vertical-align: super; text-align: left;">${token.data.name}</span>
+          <img style="border: 0; text-align: left;" src="${token.img}" width="25" height="25" /> 
+          <span style="vertical-align: super; text-align: left;">${token.name}</span>
         </p>
         <input style="text-align: center;" id="fallingDepth-${token.id}" style="flex: 1;" type="number" value="0" />
         <input style="text-align: center;" id="snowDepth-${token.id}" style="flex: 1;" type="number" value="0" />
@@ -125,7 +125,7 @@ export async function falling_damage_script() {
                             if (waterSuccess != "na" && snowDepth != 0) {
                                 return ui.notifications.error(`You can't combine water and snow.`)
                             }
-                            messageContent += `<h3><img style="border: 0;" src=${token.data.img} width="35" height="35" /> ${token.data.name}</h3>`;
+                            messageContent += `<h3><img style="border: 0;" src=${token.img} width="35" height="35" /> ${token.name}</h3>`;
                             await roll_damage(token, fallingDepth, snowDepth, waterSuccess);
                         }
                         if (officialModule === true) {
