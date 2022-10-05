@@ -234,7 +234,7 @@ export class api {
     AudioHelper.play({ src: `${sfx}`, volume: volume, loop: false }, playForAll);
   }
 
-  static async _get_folder_content(folderName) {
+  static _get_folder_content(folderName) {
     // This returns all contents of a folder and all its sub-folders on up to three layers. It gets the contents no matter of permission.
     const folder = game.folders.getName(folderName);
     return folder.contents.concat(folder.getSubfolders(true).flatMap(f => f.contents));

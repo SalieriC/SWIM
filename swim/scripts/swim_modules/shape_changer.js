@@ -45,7 +45,7 @@ export async function shape_changer_script() {
     //Set div class based on enabled official module:
     const officialClass = await swim.get_official_class()
 
-    let totalContent = await swim.get_folder_content("Shape Change Presets")
+    let totalContent = swim.get_folder_content("Shape Change Presets")
 
     async function main() {
         //Pre-selecting shape change actors based on rank:
@@ -134,7 +134,7 @@ export async function shape_changer_gm(data) {
     }
     const userID = data.userID
 
-    let totalContent = await swim.get_folder_content("Shape Change Presets")
+    let totalContent = swim.get_folder_content("Shape Change Presets")
 
     async function main() {
         if (data.type === "change") {
