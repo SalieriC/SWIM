@@ -735,7 +735,7 @@ export async function effect_builder() {
                                 label: selectedPower === "other" ? game.i18n.format("SWIM.label-maintaining", {powerName: power.name}) : game.i18n.format("SWIM.label-maintaining", {powerName: game.i18n.localize(`SWIM.power-${selectedPower}`)}),
                                 duration: {
                                     seconds: noPP ? Number(999999999999999) : durationSeconds,
-                                    startRound: token.combatant != null ? game.combat.data.round : 0,
+                                    startRound: token.combatant != null ? game.combat.round : 0,
                                     rounds: noPP ? Number(999999999999999) : durationRounds,
                                 },
                                 flags: {
@@ -753,10 +753,10 @@ export async function effect_builder() {
                                 }
                             }
                             if (noPP) {
-                                aeData.changes.push({ key: `@Skill{${skillName}}[data.die.modifier]`, mode: 2, priority: undefined, value: -1 })
+                                aeData.changes.push({ key: `@Skill{${skillName}}[system.die.modifier]`, mode: 2, priority: undefined, value: -1 })
                             }
                             if (token.actor.system.additionalStats?.maintainedPowers) {
-                                aeData.changes.push({ key: `data.additionalStats.maintainedPowers.value`, mode: 2, priority: undefined, value: 1 })
+                                aeData.changes.push({ key: `system.additionalStats.maintainedPowers.value`, mode: 2, priority: undefined, value: 1 })
                             }
                             await token.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
                         }
@@ -786,7 +786,7 @@ export async function effect_builder() {
                         if (targetWeapons.length >= 1) {
                             let weaponOptions
                             for (let weapon of targetWeapons) {
-                                weaponOptions = weaponOptions + `<option value="${weapon.name}">${weapon.data.name}</option>`
+                                weaponOptions = weaponOptions + `<option value="${weapon.name}">${weapon.name}</option>`
                             }
                             let html = `
                                 <div class='form-group'>
@@ -892,12 +892,12 @@ export async function effect_builder_gm(data) {
     if (casterIsTarget && noPP === true && !(type === "blind" || type === "confusion" || type === "sloth")) {
         if (power) {
             const skillName = power.system.actions.skill
-            additionalChange = [{ key: `@Skill{${skillName}}[data.die.modifier]`, mode: 2, priority: undefined, value: -1 }]
+            additionalChange = [{ key: `@Skill{${skillName}}[system.die.modifier]`, mode: 2, priority: undefined, value: -1 }]
             if (caster.actor.system.additionalStats?.maintainedPowers) {
-                additionalChange.push({ key: `data.additionalStats.maintainedPowers.value`, mode: 2, priority: undefined, value: 1 })
+                additionalChange.push({ key: `system.additionalStats.maintainedPowers.value`, mode: 2, priority: undefined, value: 1 })
             }
         } else if (caster.actor.system.additionalStats?.maintainedPowers) {
-            additionalChange = [{ key: `data.additionalStats.maintainedPowers.value`, mode: 2, priority: undefined, value: 1 }]
+            additionalChange = [{ key: `system.additionalStats.maintainedPowers.value`, mode: 2, priority: undefined, value: 1 }]
         }
     }
 
@@ -1023,7 +1023,7 @@ export async function effect_builder_gm(data) {
                 label: game.i18n.localize("SWIM.power-growth"),
                 duration: {
                     rounds: power || noPP ? Number(999999999999999) : data.growth.duration,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -1041,16 +1041,16 @@ export async function effect_builder_gm(data) {
             }
             const targetStr = target.actor.system.attributes.strength.die.sides + change * 2
             if (targetStr <= 12) {
-                aeData.changes.push({ key: `data.attributes.strength.die.sides`, mode: 2, priority: undefined, value: change * 2 })
+                aeData.changes.push({ key: `system.attributes.strength.die.sides`, mode: 2, priority: undefined, value: change * 2 })
             } else {
                 const toMax = 12 - target.actor.system.attributes.strength.die.sides
                 const rest = change - (toMax / 2)
-                aeData.changes.push({ key: `data.attributes.strength.die.sides`, mode: 2, priority: undefined, value: toMax },
-                    { key: `data.attributes.strength.die.modifier`, mode: 2, priority: undefined, value: rest })
+                aeData.changes.push({ key: `system.attributes.strength.die.sides`, mode: 2, priority: undefined, value: toMax },
+                    { key: `system.attributes.strength.die.modifier`, mode: 2, priority: undefined, value: rest })
             }
-            aeData.changes.push({ key: `data.stats.size`, mode: 2, priority: undefined, value: change })
+            aeData.changes.push({ key: `system.stats.size`, mode: 2, priority: undefined, value: change })
             if (target.actor.system.details.autoCalcToughness === false) {
-                aeData.changes.push({ key: `data.stats.toughness.value`, mode: 2, priority: undefined, value: change })
+                aeData.changes.push({ key: `system.stats.toughness.value`, mode: 2, priority: undefined, value: change })
             }
             if (targetID === casterID) {
                 if (additionalChange) {
@@ -1071,7 +1071,7 @@ export async function effect_builder_gm(data) {
                 label: game.i18n.localize("SWIM.power-shrink"),
                 duration: {
                     rounds: power || noPP ? Number(999999999999999) : data.shrink.duration,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -1090,13 +1090,13 @@ export async function effect_builder_gm(data) {
             const targetStr = target.actor.system.attributes.strength.die.sides + change * 2
             if (targetStr <= 4) {
                 const toMin = 4 - target.actor.system.attributes.strength.die.sides
-                aeData.changes.push({ key: `data.attributes.strength.die.sides`, mode: 2, priority: undefined, value: toMin })
+                aeData.changes.push({ key: `system.attributes.strength.die.sides`, mode: 2, priority: undefined, value: toMin })
             } else {
-                aeData.changes.push({ key: `data.attributes.strength.die.sides`, mode: 2, priority: undefined, value: change * 2 })
+                aeData.changes.push({ key: `system.attributes.strength.die.sides`, mode: 2, priority: undefined, value: change * 2 })
             }
-            aeData.changes.push({ key: `data.stats.size`, mode: 2, priority: undefined, value: change })
+            aeData.changes.push({ key: `system.stats.size`, mode: 2, priority: undefined, value: change })
             if (target.actor.system.details.autoCalcToughness === false) {
-                aeData.changes.push({ key: `data.stats.toughness.value`, mode: 2, priority: undefined, value: change })
+                aeData.changes.push({ key: `system.stats.toughness.value`, mode: 2, priority: undefined, value: change })
             }
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
@@ -1111,12 +1111,12 @@ export async function effect_builder_gm(data) {
             const change = data.speed.change
             const quickness = data.speed.quickness
             let aeData = {
-                changes: [{ key: `data.stats.speed.value`, mode: 5, priority: undefined, value: target.actor.system.stats.speed.value * change }],
+                changes: [{ key: `speed.stats.speed.value`, mode: 5, priority: undefined, value: target.actor.system.stats.speed.value * change }],
                 icon: data.speed.icon ? data.speed.icon : quickness ? "modules/swim/assets/icons/effects/m-quickness.svg" : "modules/swim/assets/icons/effects/m-speed.svg",
                 label: quickness ? game.i18n.localize("SWIM.power-speedQuickness") : game.i18n.localize("SWIM.power-speed"),
                 duration: {
                     rounds: power || noPP ? Number(999999999999999) : data.speed.duration,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -1147,14 +1147,14 @@ export async function effect_builder_gm(data) {
             if (target.combatant != null) {
                 duration = {
                     rounds: 0,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                     startTurn: 0,
                     // Same trickery as with confusion
                     turns: 1
                 }
             }
             let aeData = {
-                changes: [{ key: `data.stats.speed.value`, mode: 5, priority: undefined, value: Math.round(target.actor.system.stats.speed.value * change) }],
+                changes: [{ key: `system.stats.speed.value`, mode: 5, priority: undefined, value: Math.round(target.actor.system.stats.speed.value * change) }],
                 icon: data.sloth.icon ? data.sloth.icon : "modules/swim/assets/icons/effects/m-sloth.svg",
                 label: game.i18n.localize("SWIM.power-sloth"),
                 duration: duration,
@@ -1183,12 +1183,12 @@ export async function effect_builder_gm(data) {
             const target = playerScene.tokens.get(targetID)
             const change = data.burden.change
             let aeData = {
-                changes: [{ key: `data.attributes.strength.encumbranceSteps`, mode: 2, priority: undefined, value: change }],
+                changes: [{ key: `system.attributes.strength.encumbranceSteps`, mode: 2, priority: undefined, value: change }],
                 icon: data.burden.icon ? data.burden.icon : change > 0 ? "modules/swim/assets/icons/effects/m-ease_burden.svg" : "modules/swim/assets/icons/effects/m-burden.svg",
                 label: change > 0 ? game.i18n.localize("SWIM.power-easeBurden-tes") : game.i18n.localize("SWIM.power-burden-tes"),
                 duration: {
                     rounds: power || noPP ? Number(999999999999999) : data.burden.duration,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                     seconds: power || noPP ? Number(999999999999999) : data.burden.durationNoCombat,
                 },
                 flags: {
@@ -1223,7 +1223,7 @@ export async function effect_builder_gm(data) {
                 duration: {
                     seconds: power || noPP ? Number(999999999999999) : data.beastFriend.durationNoCombat,
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration / 6,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -1254,10 +1254,10 @@ export async function effect_builder_gm(data) {
             let aeData = {
                 changes: [],
                 icon: data.invisibility.icon ? data.invisibility.icon : "modules/succ/assets/icons/m-invisible.svg",
-                label: data.invisibility.degree === "raise" ? `${condition.data.label} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${condition.data.label}`,
+                label: data.invisibility.degree === "raise" ? `${condition.label} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${condition.label}`,
                 duration: {
                     rounds: power || noPP ? Number(999999999999999) : data.invisibility.duration,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -1291,7 +1291,7 @@ export async function effect_builder_gm(data) {
             if (target.combatant != null) {
                 duration = {
                     rounds: 0,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                     startTurn: 0,
                     /*
                      * This is the hacky part. Setting start turn to zero, combined with duration 1 turn ensures that 
@@ -1307,8 +1307,8 @@ export async function effect_builder_gm(data) {
             }
             let aeData = {
                 changes: [
-                    { key: `data.status.isDistracted`, mode: 5, priority: undefined, value: true },
-                    { key: `data.status.isDistracted`, mode: 5, priority: undefined, value: true }
+                    { key: `system.status.isDistracted`, mode: 5, priority: undefined, value: true },
+                    { key: `system.status.isDistracted`, mode: 5, priority: undefined, value: true }
                 ],
                 icon: data.confusion.icon ? data.confusion.icon : "modules/swim/assets/icons/effects/m-confusion.svg",
                 label: game.i18n.localize("SWIM.power-confusion"),
@@ -1344,7 +1344,7 @@ export async function effect_builder_gm(data) {
                 label: `${game.i18n.localize("SWIM.power-deflection")} (${game.i18n.localize(`SWIM.gameTerm-${data.deflection.type}`).toLowerCase()})`,
                 duration: {
                     rounds: power || noPP ? Number(999999999999999) : data.deflection.duration,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -1379,7 +1379,7 @@ export async function effect_builder_gm(data) {
                 label: data.arcaneProtection.degree === "raise" ? `${game.i18n.localize("SWIM.power-arcaneProtection")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-arcaneProtection")}`,
                 duration: {
                     rounds: power || noPP ? Number(999999999999999) : data.arcaneProtection.duration,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -1420,7 +1420,7 @@ export async function effect_builder_gm(data) {
                 label: label,
                 duration: {
                     rounds: power || noPP ? Number(999999999999999) : data.burrow.duration,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -1455,7 +1455,7 @@ export async function effect_builder_gm(data) {
                 label: data.damageField.damage === true ? `${game.i18n.localize("SWIM.power-damageField")} (2d6)` : `${game.i18n.localize("SWIM.power-arcaneProtection")} (2d4)`,
                 duration: {
                     rounds: power || noPP ? Number(999999999999999) : data.damageField.duration,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -1491,7 +1491,7 @@ export async function effect_builder_gm(data) {
                 duration: {
                     seconds: power || noPP ? Number(999999999999999) : data.darksight.duration,
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration / 6,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -1562,7 +1562,7 @@ export async function effect_builder_gm(data) {
                 label: data.concealArcana.strong === true ? `${game.i18n.localize("SWIM.power-concealArcana")} (${game.i18n.localize("SWIM.modifierStrong").toLowerCase()})` : `${game.i18n.localize("SWIM.power-concealArcana")}`,
                 duration: {
                     seconds: power || noPP ? Number(999999999999999) : data.concealArcana.duration,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -1598,7 +1598,7 @@ export async function effect_builder_gm(data) {
                 duration: {
                     seconds: power || noPP ? Number(999999999999999) : data.disguise.duration,
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration / 6,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -1635,7 +1635,7 @@ export async function effect_builder_gm(data) {
                 duration: {
                     seconds: power || noPP ? Number(999999999999999) : data.environmentalProtection.duration,
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration / 6,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -1671,7 +1671,7 @@ export async function effect_builder_gm(data) {
                 label: data.farsight.degree === "raise" ? `${game.i18n.localize("SWIM.power-farsight")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-farsight")}`,
                 duration: {
                     rounds: power || noPP ? Number(999999999999999) : data.farsight.duration,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -1705,7 +1705,7 @@ export async function effect_builder_gm(data) {
                 label: data.fly.degree === "raise" ? `${game.i18n.localize("SWADE.Flying")} (24")` : `${game.i18n.localize("SWADE.Flying")} (12")`,
                 duration: {
                     rounds: power || noPP ? Number(999999999999999) : data.fly.duration,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -1742,7 +1742,7 @@ export async function effect_builder_gm(data) {
                 label: game.i18n.localize("SWIM.power-intangibility"),
                 duration: {
                     rounds: power || noPP ? Number(999999999999999) : data.intangibility.duration,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -1778,7 +1778,7 @@ export async function effect_builder_gm(data) {
                 duration: {
                     seconds: power || noPP ? Number(999999999999999) : data[type].duration,
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration / 6,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -1814,7 +1814,7 @@ export async function effect_builder_gm(data) {
                 label: data[type].degree === "raise" ? `${data.puppet.casterName}'s ${game.i18n.localize("SWIM.power-puppet")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${data.puppet.casterName}'s ${game.i18n.localize("SWIM.power-puppet")}`,
                 duration: {
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -1850,7 +1850,7 @@ export async function effect_builder_gm(data) {
                 duration: {
                     seconds: power || noPP ? Number(999999999999999) : data[type].duration,
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration / 6,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -1886,7 +1886,7 @@ export async function effect_builder_gm(data) {
                 label: data[type].degree === "raise" ? `${game.i18n.localize("SWIM.power-silence")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-silence")}`,
                 duration: {
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -1922,7 +1922,7 @@ export async function effect_builder_gm(data) {
                 duration: {
                     seconds: power || noPP ? Number(999999999999999) : data[type].duration,
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration / 6,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -1958,7 +1958,7 @@ export async function effect_builder_gm(data) {
                 label: data[type].degree === "raise" ? `${game.i18n.localize("SWIM.power-wallWalker")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-wallWalker")}`,
                 duration: {
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -1993,7 +1993,7 @@ export async function effect_builder_gm(data) {
                 label: data[type].degree === "raise" ? `${game.i18n.localize("SWIM.power-warriorsGift")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-warriorsGift")}`,
                 duration: {
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -2028,7 +2028,7 @@ export async function effect_builder_gm(data) {
                 label: data[type].degree === "raise" ? `${game.i18n.localize(`SWIM.power-${type}`)} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize(`SWIM.power-${type}`)}`,
                 duration: {
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -2063,7 +2063,7 @@ export async function effect_builder_gm(data) {
                 label: data[type].degree === "raise" ? `${game.i18n.localize(`SWIM.power-${type}`)} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize(`SWIM.power-${type}`)}`,
                 duration: {
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                 },
                 flags: {
                     swade: {
@@ -2096,7 +2096,7 @@ export async function effect_builder_gm(data) {
             if (target.combatant != null) {
                 duration = {
                     rounds: 0,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                     startTurn: 0,
                     // Same trickery as with confusion
                     turns: 1
@@ -2139,7 +2139,7 @@ export async function effect_builder_gm(data) {
                 label: data[type].degree === "raise" ? `${power.name} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${power.name}`,
                 duration: {
                     rounds: power || noPP ? Number(999999999999999) : data[type].durationRounds,
-                    startRound: target.combatant != null ? game.combat.data.round : 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
                     seconds: power || noPP ? Number(999999999999999) : data[type].durationSeconds
                 },
                 flags: {
