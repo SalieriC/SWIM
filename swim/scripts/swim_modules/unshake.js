@@ -41,8 +41,8 @@ export async function unshake_swd_script(effect = false) {
         ];
         // Making all lower case:
         edgeNames = edgeNames.map(name => name.toLowerCase())
-        const undeadAE = token.actor.effects.find(ae => ae.data.label.toLowerCase() === game.i18n.localize("SWIM.ability-undead").toLowerCase());
-        if (undeadAE && undeadAE.data.disabled === false) {
+        const undeadAE = token.actor.effects.find(ae => ae.label.toLowerCase() === game.i18n.localize("SWIM.ability-undead").toLowerCase());
+        if (undeadAE && undeadAE.disabled === false) {
             edgeNames.push('undead')
         } else if (!undeadAE) {
             edgeNames.push('undead')
@@ -50,7 +50,7 @@ export async function unshake_swd_script(effect = false) {
         const actorAlias = speaker.alias;
         // ROLL SPIRIT AND CHECK COMBAT REFLEXES
         const r = await token.actor.rollAttribute('spirit');
-        const edges = token.actor.data.items.filter(function (item) {
+        const edges = token.actor.items.filter(function (item) {
             return edgeNames.includes(item.name.toLowerCase()) && (item.type === "edge" || item.type === "ability");
         });
 
@@ -65,14 +65,14 @@ export async function unshake_swd_script(effect = false) {
         let effectName = [];
         let effectIcon = [];
         let effectValue = [];
-        if (unShakeBonus != 0 && token.actor.data.effects.size > 0) {
-            for (let effect of token.actor.data.effects) {
-                if (effect.data.disabled === false) { // only apply changes if effect is enabled
-                    for (let change of effect.data.changes) {
-                        if (change.key === "data.attributes.spirit.unShakeBonus") {
+        if (unShakeBonus != 0 && token.actor.effects.size > 0) {
+            for (let effect of token.actor.effects) {
+                if (effect.disabled === false) { // only apply changes if effect is enabled
+                    for (let change of effect.changes) {
+                        if (change.key === "system.attributes.spirit.unShakeBonus") {
                             //Building array of effect names and icons that affect the unShakeBonus
-                            effectName.push(effect.data.label);
-                            effectIcon.push(effect.data.icon);
+                            effectName.push(effect.label);
+                            effectIcon.push(effect.icon);
                             effectValue.push(change.value);
                         }
                     }
@@ -211,8 +211,8 @@ export async function unshake_swade_script(effect = false) {
         ];
         // Making all lower case:
         edgeNames = edgeNames.map(name => name.toLowerCase())
-        const undeadAE = token.actor.effects.find(ae => ae.data.label.toLowerCase() === game.i18n.localize("SWIM.ability-undead").toLowerCase());
-        if (undeadAE && undeadAE.data.disabled === false) {
+        const undeadAE = token.actor.effects.find(ae => ae.label.toLowerCase() === game.i18n.localize("SWIM.ability-undead").toLowerCase());
+        if (undeadAE && undeadAE.disabled === false) {
             edgeNames.push('undead')
         } else if (!undeadAE) {
             edgeNames.push('undead')
@@ -220,7 +220,7 @@ export async function unshake_swade_script(effect = false) {
         const actorAlias = speaker.alias;
         // ROLL SPIRIT AND CHECK COMBAT REFLEXES
         const r = await token.actor.rollAttribute('spirit');
-        const edges = token.actor.data.items.filter(function (item) {
+        const edges = token.actor.items.filter(function (item) {
             return edgeNames.includes(item.name.toLowerCase()) && (item.type === "edge" || item.type === "ability");
         });
 
@@ -235,14 +235,14 @@ export async function unshake_swade_script(effect = false) {
         let effectName = [];
         let effectIcon = [];
         let effectValue = [];
-        if (unShakeBonus != 0 && token.actor.data.effects.size > 0) {
-            for (let effect of token.actor.data.effects) {
-                if (effect.data.disabled === false) { // only apply changes if effect is enabled
-                    for (let change of effect.data.changes) {
-                        if (change.key === "data.attributes.spirit.unShakeBonus") {
+        if (unShakeBonus != 0 && token.actor.effects.size > 0) {
+            for (let effect of token.actor.effects) {
+                if (effect.disabled === false) { // only apply changes if effect is enabled
+                    for (let change of effect.changes) {
+                        if (change.key === "system.attributes.spirit.unShakeBonus") {
                             //Building array of effect names and icons that affect the unShakeBonus
-                            effectName.push(effect.data.label);
-                            effectIcon.push(effect.data.icon);
+                            effectName.push(effect.label);
+                            effectIcon.push(effect.icon);
                             effectValue.push(change.value);
                         }
                     }
