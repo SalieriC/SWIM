@@ -156,7 +156,7 @@ export async function heal_other_gm(data) {
                     await succ.apply_status(targetActor, 'bleeding-out', true, true)
                     if (await succ.check_status(token, 'incapacitated') === true) {
                         const incCondition = await succ.get_condition_from(token.actor, 'incapacitated')
-                        if (incCondition.data.flags?.core?.overlay === true) {
+                        if (incCondition.flags?.core?.overlay === true) {
                             incCondition.setFlag('succ', 'updatedAE', true)
                             await incCondition.update({"flags.core.overlay": false})
                         }
@@ -189,7 +189,7 @@ export async function heal_other_gm(data) {
                 await succ.toggle_status(targetActor, 'bleeding-out', false)
                 if (await succ.check_status(token, 'incapacitated') === true) {
                     const incCondition = await succ.get_condition_from(token.actor, 'incapacitated')
-                    if (incCondition.data.flags?.core?.overlay === false) {
+                    if (incCondition.flags?.core?.overlay === false) {
                         incCondition.setFlag('succ', 'updatedAE', true)
                         await incCondition.update({"flags.core.overlay": true})
                     }
@@ -261,14 +261,14 @@ export async function heal_other_gm(data) {
                 setWounds = targetWoundsMax
                 await succ.apply_status(targetActor, 'incapacitated', true)
             }
-            targetActor.update({ "data.wounds.value": setWounds })
+            targetActor.update({ "system.wounds.value": setWounds })
         } else if (method === "relief") {
             if (targetFatigue < amount) { amount = targetFatigue }
-            targetActor.update({ "data.fatigue.value": targetFatigue - amount })
+            targetActor.update({ "system.fatigue.value": targetFatigue - amount })
             await playHealFX(target, unshakeSFX)
         } else if (method === "heal") {
             if (targetWounds < amount) { amount = targetWounds }
-            targetActor.update({ "data.wounds.value": targetWounds - amount })
+            targetActor.update({ "system.wounds.value": targetWounds - amount })
             await playHealFX(target, soakSFX)
         }
     }
@@ -309,30 +309,30 @@ async function healSelf(token, speaker) {
     //Checking for Edges (and Special/Racial Abilities)
     let natHeal_time = game.settings.get(
         'swim', 'natHeal_Time');
-    const fastHealer = token.actor.data.items.find(function (item) {
+    const fastHealer = token.actor.items.find(function (item) {
         return ((item.name.toLowerCase() === game.i18n.localize("SWIM.edge-fastHealer").toLowerCase()) && item.type === "edge");
     });
     if (fastHealer) { natHeal_time = "three days" };
-    const reg_slow = token.actor.data.items.find(function (item) {
+    const reg_slow = token.actor.items.find(function (item) {
         return ((item.name.toLowerCase() === game.i18n.localize("SWIM.ability-slowRegeneration").toLowerCase()) && item.type === "ability");
     });
     if (reg_slow) { natHeal_time = "day" };
-    const reg_fast = token.actor.data.items.find(function (item) {
+    const reg_fast = token.actor.items.find(function (item) {
         return ((item.name.toLowerCase() === game.i18n.localize("SWIM.ability-fastRegeneration").toLowerCase()) && item.type === "ability");
     });
     if (reg_fast) { natHeal_time = "round" };
-    const elan = token.actor.data.items.find(function (item) {
+    const elan = token.actor.items.find(function (item) {
         return item.name.toLowerCase() === game.i18n.localize("SWIM.edge-elan").toLowerCase() && item.type === "edge";
     });
     //Checking for Health Potions
     const healthPotionOptions = game.settings.get(
         'swim', 'healthPotionOptions');
     const healthPotionsSplit = healthPotionOptions.split('|');
-    const hasHealthPotion = token.actor.data.items.find(function (item) {
+    const hasHealthPotion = token.actor.items.find(function (item) {
         return (healthPotionsSplit.includes(item.name) && item.type === "gear" && item.system.quantity > 0)
     });
     //Find owned Health potions.
-    const ownedHealthPotions = healthPotionsSplit.filter(potion => token.actor.data.items.some(item => item.name === potion && item.type === "gear" && item.system.quantity > 0));
+    const ownedHealthPotions = healthPotionsSplit.filter(potion => token.actor.items.some(item => item.name === potion && item.type === "gear" && item.system.quantity > 0));
     //Set up a list of Health Potions to choose from.
     let healthPotionList;
     for (let healthPotion of ownedHealthPotions) {
@@ -343,11 +343,11 @@ async function healSelf(token, speaker) {
     const fatiguePotionOptions = game.settings.get(
         'swim', 'fatiguePotionOptions');
     const fatiguePotionsSplit = fatiguePotionOptions.split('|');
-    const hasFatiguePotion = token.actor.data.items.find(function (item) {
+    const hasFatiguePotion = token.actor.items.find(function (item) {
         return (fatiguePotionsSplit.includes(item.name) && item.type === "gear" && item.system.quantity > 0)
     });
     //Find owned Fatigue potions.
-    const ownedFatiguePotions = fatiguePotionsSplit.filter(potion => token.actor.data.items.some(item => item.name === potion && item.type === "gear" && item.system.quantity > 0));
+    const ownedFatiguePotions = fatiguePotionsSplit.filter(potion => token.actor.items.some(item => item.name === potion && item.type === "gear" && item.system.quantity > 0));
     //Set up a list of Fatigue Potions to choose from.
     let fatiguePotionList;
     for (let fatiguePotion of ownedFatiguePotions) {
@@ -604,7 +604,7 @@ async function healSelf(token, speaker) {
         const actorAlias = speaker.alias;
         // Roll Vigor and check for Fast Healer.
         const r = await token.actor.rollAttribute('vigor');
-        const edges = token.actor.data.items.filter(function (item) {
+        const edges = token.actor.items.filter(function (item) {
             return edgeNames.includes(item.name.toLowerCase()) && (item.type === "edge" || item.type === "ability");
         });
         let rollWithEdge = r.total;
@@ -761,7 +761,7 @@ async function healSelf(token, speaker) {
                 ui.notifications.error(`You can't heal more wounds than you have, healing all Wounds instead now...`);
             }
             setWounds = wv - genericHealWounds;
-            await token.actor.update({ "data.wounds.value": setWounds });
+            await token.actor.update({ "system.wounds.value": setWounds });
             await removeInjury(token.actor, genericHealWounds)
             ui.notifications.notify(`${genericHealWounds} Wound(s) healed.`);
         }
@@ -782,7 +782,7 @@ async function healSelf(token, speaker) {
                 if (setWounds < 0) {
                     setWounds = 0;
                 }
-                await token.actor.update({ "data.wounds.value": setWounds });
+                await token.actor.update({ "system.wounds.value": setWounds });
                 await removeInjury(token.actor, rounded)
                 ui.notifications.notify("One Wound healed.");
             }
@@ -791,7 +791,7 @@ async function healSelf(token, speaker) {
                 if (setWounds < 0) {
                     setWounds = 0
                 }
-                await token.actor.update({ "data.wounds.value": setWounds });
+                await token.actor.update({ "system.wounds.value": setWounds });
                 rounded = 2
                 await removeInjury(token.actor, rounded)
                 ui.notifications.notify("Two Wounds healed.");
@@ -852,9 +852,9 @@ async function healSelf(token, speaker) {
                         genericHealWounds = Number(html.find("#numWounds")[0].value);
                         let selectedPotion = String(html.find("[name=potionName]")[0].value);
                         let potion_to_update = token.actor.items.find(i => i.name === selectedPotion);
-                        let potion_icon = potion_to_update.data.img;
+                        let potion_icon = potion_to_update.img;
                         const updates = [
-                            { _id: potion_to_update.id, "data.quantity": potion_to_update.system.quantity - 1 }
+                            { _id: potion_to_update.id, "system.quantity": potion_to_update.system.quantity - 1 }
                         ];
                         await token.actor.updateEmbeddedDocuments("Item", updates);
                         if (potion_to_update.system.quantity < 1) {
@@ -904,9 +904,9 @@ async function healSelf(token, speaker) {
                         genericHealFatigue = Number(html.find("#numFatigue")[0].value);
                         let selectedPotion = String(html.find("[name=potionName]")[0].value);
                         let potion_to_update = token.actor.items.find(i => i.name === selectedPotion);
-                        let potion_icon = potion_to_update.data.img;
+                        let potion_icon = potion_to_update.img;
                         const updates = [
-                            { _id: potion_to_update.id, "data.quantity": potion_to_update.system.quantity - 1 }
+                            { _id: potion_to_update.id, "system.quantity": potion_to_update.system.quantity - 1 }
                         ];
                         await token.actor.updateEmbeddedEntity("Item", updates);
                         if (potion_to_update.system.quantity < 1) {
@@ -974,7 +974,7 @@ async function healSelf(token, speaker) {
             ui.notifications.error(`You can't cure more Fatigue than you have, curing all Fatigue instead now...`);
         }
         let setFatigue = fv - genericHealFatigue;
-        await token.actor.update({ "data.fatigue.value": setFatigue });
+        await token.actor.update({ "system.fatigue.value": setFatigue });
         ui.notifications.notify(`${genericHealFatigue} Level(s) of Fatigue cured.`);
         if (looseFatigueSFX && genericHealFatigue > 0) {
             await playHealFX(token, looseFatigueSFX)
@@ -984,13 +984,13 @@ async function healSelf(token, speaker) {
     async function applyWounds(noVig) {
         setWounds = wv + 1
         if (setWounds <= wm) {
-            await token.actor.update({ "data.wounds.value": setWounds });
+            await token.actor.update({ "system.wounds.value": setWounds });
             if (woundedSFX) {
                 AudioHelper.play({ src: `${woundedSFX}` }, true);
             }
         }
         else {
-            await token.actor.update({ "data.wounds.value": wm });
+            await token.actor.update({ "system.wounds.value": wm });
             await succ.apply_status(token, 'incapacitated', true, true)
             if (incapSFX) {
                 AudioHelper.play({ src: `${incapSFX}` }, true);
@@ -1008,18 +1008,18 @@ async function healSelf(token, speaker) {
 }
 
 async function removeInjury(actor, healedWounds) {
-    let activeEffects = actor.data.effects
+    let activeEffects = actor.effects
     let injuries = []
     let aeIDsToRemove = []
     for (let effect of activeEffects) {
-        if (effect.data.flags?.swim) {
+        if (effect.flags?.swim) {
             injuries.push(effect)
         }
     }
     injuries.reverse() //Reverse to remove combat injuries in proper order, from most recent to least recent.
     for (let injury of injuries) {
-        let combat = injury.data.flags.swim.isCombatInjury
-        let permanent = injury.data.flags.swim.isPermanent
+        let combat = injury.flags.swim.isCombatInjury
+        let permanent = injury.flags.swim.isPermanent
         if (permanent === false && combat === true) {
             //remove if wound is healed
             if (healedWounds > 0) {
