@@ -76,7 +76,7 @@
         //Pre-selecting shape change actors based on rank:
         let scOptions;
         for (let each of totalContent) {
-            scOptions = scOptions + `<option value="${each.id}">${each.data.name}</option>`;
+            scOptions = scOptions + `<option value="${each.id}">${each.name}</option>`;
         }
         let content = `${officialClass}
         <p>Please select a creature you want to summon and confirm.</p>
@@ -129,7 +129,8 @@
                         const raise = html.find(`#raise`)[0].checked;
                         const summonersName = token.name
                         const scActor = game.actors.get(scID)
-                        const scName = scActor.data.token.name
+                        const scMaxWounds = scActor.system.wounds.max
+                        const scName = scActor.prototypeToken.name
                         //Get Duration:
                         const duration = noPP ? Number(-1) : Number(html.find(`#duration`)[0].value)
                         const skillName = noPP ? html.find(`#skillSelection`)[0].value : false
@@ -145,7 +146,7 @@
                                 token: {name: `${summonersName}'s ${scName}`},
                                 actor: {
                                     name: `${summonersName}'s ${scName}`,
-                                    "data.wounds.max": 1
+                                    "system.wounds.max": scMaxWounds + 1
                                 },
                             }
                         }
