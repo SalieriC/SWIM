@@ -20,7 +20,7 @@ export async function common_bond_script() {
         return
     }
     const target = Array.from(game.user.targets)[0]
-    const commonBond = token.actor.data.items.find(function (item) {
+    const commonBond = token.actor.items.find(function (item) {
         return ((item.name.toLowerCase() === game.i18n.localize("SWIM.edge-commonBond").toLowerCase()) && item.type === "edge");
     });
     if (!commonBond) {
@@ -70,7 +70,7 @@ export async function common_bond_gm(data) {
     const bennyImage = await swim.get_benny_image()
     const bennyHTML = `<img style="border: none;" src="${bennyImage}"" width="25" height="25" />`
 
-    await target.actor.update({"data.bennies.value": target.actor.system.bennies.value + 1})
+    await target.actor.update({"system.bennies.value": target.actor.system.bennies.value + 1})
     ChatMessage.create({
         user: game.user.id,
         content: game.i18n.format("SWIM.chatMessage-commonBond", {officialClass: officialClass ,bennyHTML: bennyHTML ,tokenName: token.name, targetName: target.name}),
