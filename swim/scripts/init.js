@@ -103,7 +103,7 @@ Hooks.on(`ready`, () => {
                         if (readIt === true) {
                             game.settings.set('swim', 'docRead', true)
                             if (!game.settings.get("swade", "tocBlockList")["swim.swim-actor-folders"]) {
-                                await game.settings.set("swade", "tocBlockList", {"swim.swim-actor-folders": true})
+                                await game.settings.set("swade", "tocBlockList", {"swim.swim-actor-folders": true}) //Needed to see the folders in the compendium.
                                 window.location.reload();
                             }
                         }
