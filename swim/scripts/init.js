@@ -74,7 +74,9 @@ Hooks.on(`ready`, () => {
     }
 
     // First Login warning
-    if (game.settings.get('swim', 'docRead') === false) {
+    if (game.settings.get('swim', 'docReadV10') === false || !game.settings.get("swade", "tocBlockList")["swim.swim-actor-folders"]) {
+        let additionalText = ""
+        if (!game.settings.get("swade", "tocBlockList")["swim.swim-actor-folders"]) {additionalText = "<p><strong>Please note:</strong> To make some adjustments to properly use SWIM, the world will be reloaded after closing this dialogue.<p>"}
         new Dialog({
             title: 'Welcome to SWIM',
             content: `<form>
@@ -88,6 +90,7 @@ Hooks.on(`ready`, () => {
                     <label for="readIt">I declare that I have read all of the above and I won't bother the SWADE or PEG Inc. team with questions and problems regarding SWIM or I may be struck down by lightning: </label>
                     <input id="readIt" name="Read it!" type="checkbox"></input>
                 </div>
+                ${additionalText}
                 <hr />
                 <p>Please also consider to donate if you really like SWIM. This is one of the few ways of letting me know that SWIM is actually used and appreciated by some. =)</p>
                 <p><a href="https://ko-fi.com/salieric"><img style="border: 0px; display: block; margin-left: auto; margin-right: auto;" src="https://www.ko-fi.com/img/githubbutton_sm.svg" width="223" height="30" /></a></p>
@@ -99,13 +102,16 @@ Hooks.on(`ready`, () => {
                         let readIt = html.find("#readIt")[0].checked
                         if (readIt === true) {
                             game.settings.set('swim', 'docRead', true)
+                            if (!game.settings.get("swade", "tocBlockList")["swim.swim-actor-folders"]) {
+                                await game.settings.set("swade", "tocBlockList", {"swim.swim-actor-folders": true})
+                                window.location.reload();
+                            }
                         }
                     }
                 }
             },
         }).render(true);
-    }
-    if (game.settings.get('swim', 'br2Message') === false && game.modules.get('betterrolls-swade2')?.active && game.user.isGM === true) {
+    } else if (game.settings.get('swim', 'br2Message') === false && game.modules.get('betterrolls-swade2')?.active && game.user.isGM === true) {
         new Dialog({
             title: 'Better Rolls 2 support for SWIM.',
             content: `<form>
