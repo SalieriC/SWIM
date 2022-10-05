@@ -50,15 +50,15 @@ export async function radiation_centre_script() {
     // Declairing variables and constants.
     const fv = token.actor.system.fatigue.value;
     const fm = token.actor.system.fatigue.max;
-    const elan = token.actor.data.items.find(function (item) {
+    const elan = token.actor.items.find(function (item) {
         return item.name.toLowerCase() === "elan" && item.type === "edge";
     });
-    const soldier = token.actor.data.items.find(function (item) {
+    const soldier = token.actor.items.find(function (item) {
         return item.name.toLowerCase() === game.i18n.localize("SWIM.edge-soldier").toLowerCase() && item.type === "edge";
     });
     //Check for actor status and adjust bennies based on edges.
-    let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
-    let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
+    let actorLuck = token.actor.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
+    let actorGreatLuck = token.actor.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
     if ((token.actor.system.wildcard === false) && (actorGreatLuck === undefined)) {
         if ((!(actorLuck === undefined)) && (bennies > 1) && ((actorGreatLuck === undefined))) { bennies = 1; }
         else { bennies = 0; }
@@ -75,7 +75,7 @@ export async function radiation_centre_script() {
         const actorAlias = speaker.alias;
         // Roll Vigor and check for Iron Jaw.
         const r = await token.actor.rollAttribute('vigor');
-        const edges = token.actor.data.items.filter(function (item) {
+        const edges = token.actor.items.filter(function (item) {
             return edgeNames.includes(item.name.toLowerCase()) && (item.type === "edge" || item.type === "ability");
         });
         let rollWithEdge = r.total;
@@ -142,13 +142,13 @@ export async function radiation_centre_script() {
     async function applyFatigue() {
         newFatigue = fv + 1;
         if (newFatigue <= fm) {
-            token.actor.update({ "data.fatigue.value": newFatigue });
+            token.actor.update({ "system.fatigue.value": newFatigue });
             if (fatiguedSFX) {
                 AudioHelper.play({ src: `${fatiguedSFX}` }, true);
             }
         }
         else {
-            token.actor.update({ "data.fatigue.value": fm });
+            token.actor.update({ "system.fatigue.value": fm });
             /*game.cub.addCondition("Incapacitated");
             if (incapSFX) {
                 AudioHelper.play({ src: `${incapSFX}` }, true);
