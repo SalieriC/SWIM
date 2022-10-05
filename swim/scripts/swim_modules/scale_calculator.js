@@ -19,7 +19,7 @@ export async function scale_calculator() {
     if (game.modules.get("swade-core-rules")?.active) { coreRules = true; }
 
     if (tokenActor === undefined || tokenTarget === undefined) {
-        ui.notifications.warn("You must select a token and target another one!");
+        ui.notifications.warn(game.i18n.localize("SWIM.notification-selectAndTargetOneToken"));
     } else {
         const actorSwat = token.actor.items.find(function (item) {
             return ((item.name.toLowerCase() === game.i18n.localize("SWIM.ability-swat").toLowerCase()) && item.type === "ability");
