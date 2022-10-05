@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A way to add a bonus to unstun rolls using Active Efects. To use it create an active effect with the attribute key `SWIM.unStunMod` (case sensitive), the change mode `Add` and a value of your choosing. A bonus must not have a `+` in front of the number, a penalty needs a `-` in front of the number.
 - If the Summoner has the Command edge, the Fervor and/or the Hold the Line! edge, the summoner will add an AE to the summoned creature which respects that.
 - New translation strings and extended localization of the module.
+- New API function which returns all contents of a folder and its sub-folders up to three layers deep.
 ### Changed
 - **Breaking:** Changed the API so that the Unshake macro gets the version from the settings rather than being passed to the function. This means that the Unshake macro needs to be replaced by the one in the SWIM compendium.
 - - Added a detailed error message explaining the problem in case the old version of the macro is used.
