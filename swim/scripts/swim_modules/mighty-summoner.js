@@ -180,10 +180,10 @@
                             }
                         }
                         if (noPP) {
-                            aeData.changes.push({ key: `@Skill{${skillName}}[data.die.modifier]`, mode: 2, priority: undefined, value: -1 })
+                            aeData.changes.push({ key: `@Skill{${skillName}}[system.die.modifier]`, mode: 2, priority: undefined, value: -1 })
                         }
                         if (token.actor.system.additionalStats?.maintainedPowers) {
-                            aeData.changes.push({ key: `data.additionalStats.maintainedPowers.value`, mode: 2, priority: undefined, value: 1 })
+                            aeData.changes.push({ key: `system.additionalStats.maintainedPowers.value`, mode: 2, priority: undefined, value: 1 })
                         }
                         await token.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
 
@@ -221,14 +221,14 @@
                 one: {
                     label: `<i class="fas fa-paw"></i> Dismiss Creature`,
                     callback: async (_) => {
-                        const tokenMaintEffect = token.actor.data.effects.find(e => e.data.flags?.swim?.isSummonedCreature === true)
-                        const maintenanceID = tokenMaintEffect.data.flags?.swim?.maintenanceID
+                        const tokenMaintEffect = token.actor.effects.find(e => e.flags?.swim?.isSummonedCreature === true)
+                        const maintenanceID = tokenMaintEffect.flags?.swim?.maintenanceID
                         const dismissData = [token.id]
                         await play_sfx(dismissData)
                         await swim.wait(`200`) // delay script execution so that the vfx has time to get the tokens position
                         await warpgate.dismiss(token.id, game.scenes.current.id)
                         for (let each of game.scenes.current.tokens) {
-                            const maintEffect = each.actor.data.effects.find(e => e.data.flags?.swim?.maintenanceID === maintenanceID)
+                            const maintEffect = each.actor.effects.find(e => e.flags?.swim?.maintenanceID === maintenanceID)
                             if (maintEffect) {
                                 await maintEffect.delete()
                             }
@@ -240,7 +240,7 @@
         }).render(true);
     }
 
-    if ((token.data.flags?.warpgate?.sourceActorId && actor.data.flags?.warpgate?.control?.user) && (game.user.isGM || game.user.id === token.actor.data.flags?.warpgate?.control?.user)) {
+    if ((token.flags?.warpgate?.sourceActorId && actor.flags?.warpgate?.control?.user) && (game.user.isGM || game.user.id === token.actor.flags?.warpgate?.control?.user)) {
         dismiss()
     } else {
         main();
@@ -310,7 +310,7 @@
         oldCombatData.flags.swade.isGroupLeader = true
         delete oldCombatData.flags.swade.groupId
         await summoner.combatant.update(oldCombatData)
-        aeData.duration.startRound = game.combat.data.round
+        aeData.duration.startRound = game.combat.round
     }
     // Apply AE
     await newToken.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
