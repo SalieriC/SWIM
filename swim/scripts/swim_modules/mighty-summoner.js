@@ -59,12 +59,7 @@
     //Set div class based on enabled official module:
     const officialClass = await swim.get_official_class()
 
-    let folder = game.folders.getName("Summon Creature Presets");
-    let content = folder.content;
-    let totalContent = folder.children.reduce((acc, subFolder) => {
-        acc = acc.concat(subFolder.content);
-        return acc;
-    }, content);
+    let totalContent = await swim.get_folder_content("Summon Creature Presets")
 
     let duration = 5
     const concentration = token.actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-concentration") && i.type === "edge")

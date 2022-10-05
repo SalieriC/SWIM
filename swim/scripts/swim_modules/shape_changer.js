@@ -45,12 +45,7 @@ export async function shape_changer_script() {
     //Set div class based on enabled official module:
     const officialClass = await swim.get_official_class()
 
-    let folder = game.folders.getName("Shape Change Presets");
-    let content = folder.contents; //in v9 it was `content` now it's `contents` but only on the first layer...
-    let totalContent = folder.children.reduce((acc, subFolder) => {
-        acc = acc.concat(subFolder.documents); //Within children it is `documents` instead of `contents` for whatever reason.
-        return acc;
-    }, content);
+    let totalContent = await swim.get_folder_content("Shape Change Presets")
 
     async function main() {
         //Pre-selecting shape change actors based on rank:
@@ -139,12 +134,7 @@ export async function shape_changer_gm(data) {
     }
     const userID = data.userID
 
-    let folder = game.folders.getName("Shape Change Presets");
-    let content = folder.contents; //in v9 it was `content` now it's `contents` but only on the first layer...
-    let totalContent = folder.children.reduce((acc, subFolder) => {
-        acc = acc.concat(subFolder.documents); //Within children it is `documents` instead of `contents` for whatever reason.
-        return acc;
-    }, content);
+    let totalContent = await swim.get_folder_content("Shape Change Presets")
 
     async function main() {
         if (data.type === "change") {

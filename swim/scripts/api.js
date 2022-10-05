@@ -42,6 +42,7 @@ export class api {
       get_official_class: api._get_official_class,
       get_actor_sfx: api._get_actor_sfx,
       play_sfx: api._play_sfx,
+      get_folder_content: api._get_folder_content,
       // Convenience
       ammo_management: api._ammo_management,
       br2_ammo_management: api._ammo_management_br2,
@@ -74,6 +75,7 @@ export class api {
    * - Spend Benny
    * - Get SFX
    * - Play SFX
+   * - Get Folder Contents
    ******************************************/
 
   // Get Macro Variables
@@ -230,6 +232,22 @@ export class api {
         'swim', 'defaultVolume')
     }
     AudioHelper.play({ src: `${sfx}`, volume: volume, loop: false }, playForAll);
+  }
+
+  static async _get_folder_content(folderName) {
+    // This returns all contents of a folder and all its sub-folders on up to three layers. It gets the contents no matter of permission.
+    const folder = game.folders.getName(folderName);
+    return folder.contents.concat(folder.getSubfolders(true).flatMap(f => f.contents));
+
+    /* alternative version that only goes one layer deep:
+    let folder = game.folders.getName(folderName);
+    let content = folder.contents; //in v9 it was `content` now it's `contents` but only on the first layer...
+    let totalContent = folder.children.reduce((acc, subFolder) => {
+        acc = acc.concat(subFolder.documents); //Within children it is `documents` instead of `contents` for whatever reason.
+        return acc;
+    }, content);
+    console.log(totalContent)
+    */
   }
 
   /*******************************************
