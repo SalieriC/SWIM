@@ -24,7 +24,7 @@ export async function combat_setup() {
     let tokens = []
     for (let token of tokensUnfiltered) {
         if (token.actor.type === "npc" && await succ.check_status(token, "incapacitated") === false) {
-            if (token.actor.data.flags?.healthEstimate?.dead === false || !token.actor.data.flags?.healthEstimate?.dead) {
+            if (token.actor.flags?.healthEstimate?.dead === false || !token.actor.flags?.healthEstimate?.dead) {
                 tokens.push(token)
             }
         } else if (token.actor.type === "character" || token.actor.type === "vehicle") {
@@ -45,7 +45,7 @@ export async function combat_setup() {
             }
         }
         */
-        tokensToAdd.push({ tokenId: token.id, hidden: token.data.hidden })
+        tokensToAdd.push({ tokenId: token.id, hidden: token.document.hidden })
     }
     const combat = !game.combat ? await Combat.create({ scene: canvas.scene.id, active: true }) : game.combat
     const combatants = await combat.createEmbeddedDocuments("Combatant", tokensToAdd)

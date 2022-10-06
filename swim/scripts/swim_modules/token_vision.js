@@ -17,7 +17,7 @@ export async function token_vision_script() {
             return
         }
         const { speaker, character, actor, token } = await swim.get_macro_variables()
-        let currentColour = token.data.light.color
+        let currentColour = token.document.light.color
 
         // Add Vision Type only if the Game Master is using the Macro
         let dialogue_content = `
@@ -102,11 +102,11 @@ export async function token_vision_script() {
             let dimLight = 0;
             let brightLight = 0;
             let lightAngle = 360;
-            let lockRotation = tokenD.data.lockRotation;
-            let alpha = tokenD.data.light.alpha;
-            let animIntensity = tokenD.data.light.animation.intensity;
-            let animSpeed = tokenD.data.light.animation.speed;
-            let animType = tokenD.data.light.animation.type;
+            let lockRotation = tokenD.document.lockRotation;
+            let alpha = tokenD.document.light.alpha;
+            let animIntensity = tokenD.document.light.animation.intensity;
+            let animSpeed = tokenD.document.light.animation.speed;
+            let animType = tokenD.document.light.animation.type;
             // Get Vision Type Values
             visionType = html.find('[name="vision-type"]')[0].value || "none";
             let presetChoice = html.find('[id="colour-presets"]')[0].value;
@@ -118,7 +118,7 @@ export async function token_vision_script() {
             else if (presetChoice === "white") { colourChoice = "#FFFFFF" }
             let lightColour = colourChoice;
             let activeLight = false
-            if (tokenD.data.light.bright >= 1 || tokenD.data.light.dim >= 1) { activeLight = true }
+            if (tokenD.document.light.bright >= 1 || tokenD.document.light.dim >= 1) { activeLight = true }
 
             // Get Vision Type Values
             visionType = html.find('[name="vision-type"]')[0].value || "none";
@@ -154,8 +154,8 @@ export async function token_vision_script() {
                 case "nochange":
                     //break;
                 default:
-                    dimSight = tokenD.data.dimSight;
-                    brightSight = tokenD.data.brightSight;
+                    dimSight = tokenD.dimRadius;
+                    brightSight = tokenD.brightRadius;
             }
             // Get Light Source Values
             switch (lightSource) {
@@ -231,15 +231,15 @@ export async function token_vision_script() {
                 case "nochange":
                     //break;
                 default:
-                    dimLight = tokenD.data.light.dim;
-                    brightLight = tokenD.data.light.bright;
-                    lightAngle = tokenD.data.light.angle;
-                    lockRotation = tokenD.data.lockRotation;
-                    alpha = tokenD.data.light.alpha;
+                    dimLight = tokenD.document.light.dim;
+                    brightLight = tokenD.document.light.bright;
+                    lightAngle = tokenD.document.light.angle;
+                    lockRotation = tokenD.document.lockRotation;
+                    alpha = tokenD.document.light.alpha;
                     lightColour = lightColour;
-                    animIntensity = tokenD.data.light.animation.intensity;
-                    animSpeed = tokenD.data.light.animation.speed;
-                    animType = tokenD.data.light.animation.type;
+                    animIntensity = tokenD.document.light.animation.intensity;
+                    animSpeed = tokenD.document.light.animation.speed;
+                    animType = tokenD.document.light.animation.type;
                     break;
             }
             // Update Token

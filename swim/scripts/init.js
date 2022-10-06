@@ -55,7 +55,7 @@ Hooks.on(`ready`, () => {
         // Add half pace effect to Shaken:
         for (let status of CONFIG.statusEffects) {
             if (status.id === 'shaken') {
-                status.changes.push({key: "data.stats.speed.value", mode: 1, priority: undefined, value: "0.5"})
+                status.changes.push({key: "system.stats.speed.value", mode: 1, priority: undefined, value: "0.5"})
             }
         }
     }
@@ -75,7 +75,9 @@ Hooks.on(`ready`, () => {
     }
 
     // First Login warning
-    if (game.settings.get('swim', 'docRead') === false) {
+    if (game.settings.get('swim', 'docReadV10') === false || !game.settings.get("swade", "tocBlockList")["swim.swim-actor-folders"]) {
+        let additionalText = ""
+        if (!game.settings.get("swade", "tocBlockList")["swim.swim-actor-folders"]) {additionalText = "<p><strong>Please note:</strong> To make some adjustments to properly use SWIM, the world will be reloaded after closing this dialogue.<p>"}
         new Dialog({
             title: 'Welcome to SWIM',
             content: `<form>
@@ -89,6 +91,7 @@ Hooks.on(`ready`, () => {
                     <label for="readIt">I declare that I have read all of the above and I won't bother the SWADE or PEG Inc. team with questions and problems regarding SWIM or I may be struck down by lightning: </label>
                     <input id="readIt" name="Read it!" type="checkbox"></input>
                 </div>
+                ${additionalText}
                 <hr />
                 <p>Please also consider to donate if you really like SWIM. This is one of the few ways of letting me know that SWIM is actually used and appreciated by some. =)</p>
                 <p><a href="https://ko-fi.com/salieric"><img style="border: 0px; display: block; margin-left: auto; margin-right: auto;" src="https://www.ko-fi.com/img/githubbutton_sm.svg" width="223" height="30" /></a></p>
@@ -96,17 +99,20 @@ Hooks.on(`ready`, () => {
             buttons: {
                 one: {
                     label: "Let me play already!",
-                    callback: (html) => {
+                    callback: async (html) => {
                         let readIt = html.find("#readIt")[0].checked
                         if (readIt === true) {
-                            game.settings.set('swim', 'docRead', true)
+                            game.settings.set('swim', 'docReadV10', true)
+                            if (!game.settings.get("swade", "tocBlockList")["swim.swim-actor-folders"]) {
+                                await game.settings.set("swade", "tocBlockList", {"swim.swim-actor-folders": true}) //Needed to see the folders in the compendium.
+                                window.location.reload();
+                            }
                         }
                     }
                 }
             },
         }).render(true);
-    }
-    if (game.settings.get('swim', 'br2Message') === false && game.modules.get('betterrolls-swade2')?.active && game.user.isGM === true) {
+    } else if (game.settings.get('swim', 'br2Message') === false && game.modules.get('betterrolls-swade2')?.active && game.user.isGM === true) {
         new Dialog({
             title: 'Better Rolls 2 support for SWIM.',
             content: `<form>
@@ -176,24 +182,24 @@ Hooks.on(`ready`, () => {
 Hooks.on(`createActiveEffect`, async (condition, _, userID) => {
     const actor = condition.parent
     // Invisible
-    if (((actor.hasPlayerOwner && condition.data.flags?.core?.statusId === "invisible") || condition.data.label.toLowerCase() === game.i18n.localize("SWIM.power-intangibility").toLowerCase()) && swim.is_first_gm()) {
+    if (((actor.hasPlayerOwner && condition.flags?.core?.statusId === "invisible") || condition.label.toLowerCase() === game.i18n.localize("SWIM.power-intangibility").toLowerCase()) && swim.is_first_gm()) {
         const tokens = actor.getActiveTokens()
         for (let token of tokens) {
-            if (condition.data.flags?.core?.statusId === "invisible") { await token.document.update({ "alpha": 0.5 }) }
-            else if (condition.data.label.toLowerCase() === game.i18n.localize("SWIM.power-intangibility").toLowerCase()) { await token.document.update({ "alpha": 0.75 }) }
+            if (condition.flags?.core?.statusId === "invisible") { await token.document.update({ "alpha": 0.5 }) }
+            else if (condition.label.toLowerCase() === game.i18n.localize("SWIM.power-intangibility").toLowerCase()) { await token.document.update({ "alpha": 0.75 }) }
         }
-    } else if (!actor.hasPlayerOwner && swim.is_first_gm() && condition.data.flags?.core?.statusId === "invisible") {
+    } else if (!actor.hasPlayerOwner && swim.is_first_gm() && condition.flags?.core?.statusId === "invisible") {
         const tokens = actor.getActiveTokens()
         for (let token of tokens) {
-            if (token.data.hidden === false) { await token.toggleVisibility() }
+            if (token.document.hidden === false) { await token.toggleVisibility() }
         }
     }
     // Light
-    if (condition.data.flags?.core?.statusId === "torch" && game.user.id === userID) {
+    if (condition.flags?.core?.statusId === "torch" && game.user.id === userID) {
         swim.token_vision()
     }
     // Hold
-    if (condition.data.flags?.core?.statusId === "holding" && swim.is_first_gm() && game.combat) {
+    if (condition.flags?.core?.statusId === "holding" && swim.is_first_gm() && game.combat) {
         const tokens = actor.getActiveTokens()
         const combatID = game.combat.id
         for (let token of tokens) { await token.combatant.update({ "flags.swade.roundHeld": 1 }) }
@@ -204,33 +210,33 @@ Hooks.on(`createActiveEffect`, async (condition, _, userID) => {
 Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
     const actor = condition.parent
     // Invisible
-    if (((actor.hasPlayerOwner && condition.data.flags?.core?.statusId === "invisible") || condition.data.label.toLowerCase() === game.i18n.localize("SWIM.power-intangibility").toLowerCase()) && swim.is_first_gm()) {
+    if (((actor.hasPlayerOwner && condition.flags?.core?.statusId === "invisible") || condition.label.toLowerCase() === game.i18n.localize("SWIM.power-intangibility").toLowerCase()) && swim.is_first_gm()) {
         const tokens = actor.getActiveTokens()
         for (let token of tokens) {
             await token.document.update({ "alpha": 1 })
         }
-    } else if (!actor.hasPlayerOwner && swim.is_first_gm() && condition.data.flags?.core?.statusId === "invisible") {
+    } else if (!actor.hasPlayerOwner && swim.is_first_gm() && condition.flags?.core?.statusId === "invisible") {
         const tokens = actor.getActiveTokens()
         for (let token of tokens) {
-            if (token.data.hidden === true) { await token.toggleVisibility() }
+            if (token.document.hidden === true) { await token.toggleVisibility() }
         }
     }
     // Cancel maintained power
-    if (condition.data.flags?.swim?.maintainedPower === true && condition.data.flags?.swim?.owner === true && swim.is_first_gm()) {
-        for (let targetID of condition.data.flags.swim.targets) {
+    if (condition.flags?.swim?.maintainedPower === true && condition.flags?.swim?.owner === true && swim.is_first_gm()) {
+        for (let targetID of condition.flags.swim.targets) {
             const playerScene = game.scenes.get(game.users.get(userID).viewedScene)
             const token = playerScene.tokens.get(targetID)
-            const effect = token.actor.data.effects.find(ae => ae.data.flags?.swim?.maintenanceID === condition.data.flags?.swim?.maintenanceID)
+            const effect = token.actor.effects.find(ae => ae.flags?.swim?.maintenanceID === condition.flags?.swim?.maintenanceID)
             if (effect) {
                 await effect.delete()
             }
         }
     }
     // Cancel Summoned Creature
-    if (condition.data.flags?.swim?.maintainedSummon === true && swim.is_first_gm()) {
-        if (condition.data.flags.swim.owner === false) {
+    if (condition.flags?.swim?.maintainedSummon === true && swim.is_first_gm()) {
+        if (condition.flags.swim.owner === false) {
             for (let each of game.scenes.current.tokens) {
-                const maintEffect = each.actor.data.effects.find(e => e.data.flags?.swim?.maintenanceID === condition.data.flags?.swim?.maintenanceID)
+                const maintEffect = each.actor.effects.find(e => e.flags?.swim?.maintenanceID === condition.flags?.swim?.maintenanceID)
                 if (maintEffect) {
                     await maintEffect.delete()
                 }
@@ -242,9 +248,9 @@ Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
             const dismissData = [actor.token.id]
             await play_sfx(dismissData)
             await warpgate.dismiss(actor.token.id, game.scenes.current.id)
-        } else if (condition.data.flags.swim.owner === true) {
+        } else if (condition.flags.swim.owner === true) {
             for (let each of game.scenes.current.tokens) {
-                const maintEffect = each.actor.data.effects.find(e => e.data.flags?.swim?.maintenanceID === condition.data.flags?.swim?.maintenanceID)
+                const maintEffect = each.actor.effects.find(e => e.flags?.swim?.maintenanceID === condition.flags?.swim?.maintenanceID)
                 if (maintEffect) {
                     const dismissData = [each.id]
                     await play_sfx(dismissData)
@@ -273,15 +279,15 @@ Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
         }
     }
     // Light
-    if (condition.data.flags?.core?.statusId === "torch" && game.user.id === userID) {
+    if (condition.flags?.core?.statusId === "torch" && game.user.id === userID) {
         swim.token_vision()
     }
     // Hold
-    if (condition.data.flags?.core?.statusId === "holding" && game.user.id === userID) {
+    if (condition.flags?.core?.statusId === "holding" && game.user.id === userID) {
         if (game.combat) {
             const tokens = actor.getActiveTokens()
-            const currentCardValue = game.combat.combatant.data.flags.swade.cardValue
-            const currentSuitValue = game.combat.combatant.data.flags.swade.suitValue
+            const currentCardValue = game.combat.combatant.flags.swade.cardValue
+            const currentSuitValue = game.combat.combatant.flags.swade.suitValue
             const combatID = game.combat.id
             new Dialog({
                 title: game.i18n.localize("SWIM.dialogue-takingInitiativeTitle"),
@@ -344,13 +350,13 @@ Hooks.on("deleteCombat", async (combat, options, userId) => {
     if (game.settings.get("swim", "combatPlaylistManagement") === true) {
         if (swim.is_first_gm() === false) { return }
         for (let playlist of game.playlists) {
-            if (playlist.data.flags?.swim?.resumeAfterCombat === true) {
+            if (playlist.flags?.swim?.resumeAfterCombat === true) {
                 await playlist.playAll()
                 playlist.unsetFlag('swim', 'resumeAfterCombat')
             }
         }
         const combatPlaylist = game.playlists.find(p => p.name.toLowerCase() === "combat") //needs setting
-        if (combatPlaylist && combatPlaylist.data.playing === true) {
+        if (combatPlaylist && combatPlaylist.playing === true) {
             await combatPlaylist.stopAll()
         }
     }
@@ -383,25 +389,25 @@ Hooks.on("BRSW-AfterApplyDamage", async (token, final_wounds, final_shaken, inca
 });
 /* This produces duplicate sound effects, leaving it commented until a good solution to exclude them on a condition is found.
 Hooks.on(`createActiveEffect`, async (condition, _, userID) => {
-    if (condition.data.flags?.core?.statusId === "incapacitated" || condition.data.flags?.core?.statusId === "shaken") {
+    if (condition.flags?.core?.statusId === "incapacitated" || condition.flags?.core?.statusId === "shaken") {
         const actor = condition.parent
         const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(actor)
         const volume = Number(game.settings.get("swim", "defaultVolume"))
-        if (condition.data.flags?.core?.statusId === "incapacitated") {
+        if (condition.flags?.core?.statusId === "incapacitated") {
             await swim.play_sfx(deathSFX, volume)
-        } else if (condition.data.flags?.core?.statusId === "shaken") {
+        } else if (condition.flags?.core?.statusId === "shaken") {
             await swim.play_sfx(shakenSFX, volume)
         }
     }
 })
 Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
-    if (condition.data.flags?.core?.statusId === "incapacitated" || condition.data.flags?.core?.statusId === "shaken") {
+    if (condition.flags?.core?.statusId === "incapacitated" || condition.flags?.core?.statusId === "shaken") {
         const actor = condition.parent
         const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(actor)
         const volume = Number(game.settings.get("swim", "defaultVolume"))
-        if (condition.data.flags?.core?.statusId === "incapacitated") {
+        if (condition.flags?.core?.statusId === "incapacitated") {
             await swim.play_sfx(soakSFX, volume)
-        } else if (condition.data.flags?.core?.statusId === "shaken") {
+        } else if (condition.flags?.core?.statusId === "shaken") {
             await swim.play_sfx(unshakeSFX, volume)
         }
     }

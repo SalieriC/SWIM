@@ -84,11 +84,6 @@ export async function ammo_management_script() {
             if (rate_of_fire === 5) { defaultShots = 40; }
             if (rate_of_fire === 6) { defaultShots = 50; }
 
-            /*
-            let defaultSingleReload = false;
-            let isSingleReload = parseInt(weapons.find(w => w.id === selectedWeapon).data.name.includes("Revolver"));
-            if (isSingleReload === true){defaultSingleReload = true;}
-            */
             //TRANSLATE TODO
             return `
       <form>
@@ -164,7 +159,7 @@ export async function ammo_management_script() {
                 sil = true;
             }
             // Getting Weapon and loaded ammo
-            const weaponIMG = item_weapon.data.img;
+            const weaponIMG = item_weapon.img;
             let currentAmmo
             if (item_weapon.system.additionalStats.loadedAmmo) {
                 currentAmmo = item_weapon.system.additionalStats.loadedAmmo.value;
@@ -192,7 +187,7 @@ export async function ammo_management_script() {
                 }
                 const newQuantity = currentQuantity - shots;
                 const updates = [
-                    { _id: item_weapon.id, "data.quantity": `${newQuantity}` },
+                    { _id: item_weapon.id, "system.quantity": `${newQuantity}` },
                 ];
                 // Updating the consumable weapon
                 await actor.updateEmbeddedDocuments("Item", updates);
@@ -231,7 +226,7 @@ export async function ammo_management_script() {
                     const newCharges = currentCharges - shots;
                     //Setting up the updates
                     const updates = [
-                        { _id: item_ammo.id, "data.quantity": `${newCharges}` },
+                        { _id: item_ammo.id, "system.quantity": `${newCharges}` },
                     ];
                     // Updating the Weapon
                     await actor.updateEmbeddedDocuments("Item", updates);;
@@ -256,7 +251,7 @@ export async function ammo_management_script() {
             }
             else {
                 const updates = [
-                    { _id: item_weapon.id, "data.currentShots": `${newCharges}` },
+                    { _id: item_weapon.id, "system.currentShots": `${newCharges}` },
                 ];
                 // Updating the Weapon
                 await actor.updateEmbeddedDocuments("Item", updates);
@@ -324,8 +319,8 @@ export async function ammo_management_script() {
                     sfx_reload = sfx[0];
                 }
                 // Getting images from items
-                const weaponIMG = item_weapon.data.img;
-                const ammoIMG = item_ammo.data.img;
+                const weaponIMG = item_weapon.img;
+                const ammoIMG = item_ammo.img;
 
                 // Getting current numbers
                 const currentCharges = parseInt(item_weapon.system.currentShots);
@@ -383,9 +378,9 @@ export async function ammo_management_script() {
                 }
                 else if (chgType === true) {
                     const updates = [
-                        { _id: item_weapon.id, "data.currentShots": `${newCharges}`, "data.additionalStats.loadedAmmo.value": `${ammo}` },
-                        { _id: item_ammo.id, "data.quantity": `${newAmmo}` },
-                        { _id: item_oldAmmo.id, "data.quantity": `${oldAmmoRefill}` },
+                        { _id: item_weapon.id, "system.currentShots": `${newCharges}`, "system.additionalStats.loadedAmmo.value": `${ammo}` },
+                        { _id: item_ammo.id, "system.quantity": `${newAmmo}` },
+                        { _id: item_oldAmmo.id, "system.quantity": `${oldAmmoRefill}` },
                     ];
 
                     await actor.updateEmbeddedDocuments("Item", updates);
@@ -401,8 +396,8 @@ export async function ammo_management_script() {
                 }
                 else {
                     const updates = [
-                        { _id: item_weapon.id, "data.currentShots": `${newCharges}`, "data.additionalStats.loadedAmmo.value": `${ammo}` },
-                        { _id: item_ammo.id, "data.quantity": `${newAmmo}` },
+                        { _id: item_weapon.id, "system.currentShots": `${newCharges}`, "system.additionalStats.loadedAmmo.value": `${ammo}` },
+                        { _id: item_ammo.id, "system.quantity": `${newAmmo}` },
                     ];
 
                     await actor.updateEmbeddedDocuments("Item", updates);
@@ -436,7 +431,7 @@ export async function ammo_management_script() {
                     newCharges = maxCharges;
                 }
                 const updates = [
-                    { _id: item_weapon.id, "data.currentShots": `${newCharges}` }
+                    { _id: item_weapon.id, "system.currentShots": `${newCharges}` }
                 ];
                 await actor.updateEmbeddedDocuments("Item", updates);
 
@@ -540,7 +535,7 @@ export async function br2_ammo_management_script(message, actor, item) {
 
     async function checkWeapon() {
         //Don't execute the macro on a reroll by checking if the old_rolls is empty:
-        if (message.data.flags['betterrolls-swade2'].render_data.trait_roll.old_rolls.length >= 1) { return; }
+        if (message.flags['betterrolls-swade2'].render_data.trait_roll.old_rolls.length >= 1) { return; }
         //Check whether or not the weapon is suitable for the shooting macro
         if (
             (item.type === "weapon" &&
@@ -571,13 +566,13 @@ export async function br2_ammo_management_script(message, actor, item) {
             item_ammo = actor.items.getName(`${item_weapon.system.ammo}`);
         }
         //Setting the amount of shots based on RoF:
-        let traitDice = message.data.flags['betterrolls-swade2'].render_data.trait_roll.dice;
+        let traitDice = message.flags['betterrolls-swade2'].render_data.trait_roll.dice;
         //console.log(traitDice);
         //console.log(message.data.flags['betterrolls-swade2'].render_data);
         let rate_of_fire = traitDice.length;
         if (actor.system.wildcard === true) { rate_of_fire = rate_of_fire - 1; }
         //console.log(rate_of_fire);
-        let shots = message.data.flags['betterrolls-swade2'].render_data.used_shots;
+        let shots = message.flags['betterrolls-swade2'].render_data.used_shots;
         //failsafe to guss amount of shots in case BR2 return zero or undefined:
         if (shots === 0 || !shots) {
             if (rate_of_fire === 1) { shots = 1; }
@@ -610,7 +605,7 @@ export async function br2_ammo_management_script(message, actor, item) {
             sfx_empty = sfx[5];
         }
         // Getting Weapon and loaded ammo
-        const weaponIMG = item_weapon.data.img;
+        const weaponIMG = item_weapon.img;
         let currentAmmo
         if (item_weapon.system.additionalStats.loadedAmmo) {
             currentAmmo = item_weapon.system.additionalStats.loadedAmmo.value;
@@ -635,7 +630,7 @@ export async function br2_ammo_management_script(message, actor, item) {
         }
         else if (item_weapon.system.additionalStats.isConsumable && item_weapon.system.additionalStats.isConsumable.value === true) {
             //Get Skill from BR2. This returns as "Skill dx" so we need to filter that later...
-            let usedSkill = message.data.flags['betterrolls-swade2'].render_data.skill_title;
+            let usedSkill = message.flags['betterrolls-swade2'].render_data.skill_title;
             //We assume that all consumable weapons use "Athletics", "Athletics (Throwing)", "Athletics (Explosives)" or "Throwing" and only proceed if one of these skills was used. This is where we filter with .includes().
             if (usedSkill.includes("Athletics") === false &&
                 usedSkill.includes("Athletics (Throwing)") === false &&
@@ -648,7 +643,7 @@ export async function br2_ammo_management_script(message, actor, item) {
             }
             const newQuantity = currentQuantity - shots;
             const updates = [
-                { _id: item_weapon.id, "data.quantity": `${newQuantity}` },
+                { _id: item_weapon.id, "system.quantity": `${newQuantity}` },
             ];
             // Updating the consumable weapon
             await actor.updateEmbeddedDocuments("Item", updates);
@@ -687,7 +682,7 @@ export async function br2_ammo_management_script(message, actor, item) {
                 const newCharges = currentCharges - shots;
                 //Setting up the updates
                 const updates = [
-                    { _id: item_ammo.id, "data.quantity": `${newCharges}` },
+                    { _id: item_ammo.id, "system.quantity": `${newCharges}` },
                 ];
                 // Updating the Weapon
                 actor.updateEmbeddedDocuments("Item", updates);
@@ -713,7 +708,7 @@ export async function br2_ammo_management_script(message, actor, item) {
         }
         else {
             const updates = [
-                { _id: item_weapon.id, "data.currentShots": `${newCharges}` },
+                { _id: item_weapon.id, "system.currentShots": `${newCharges}` },
             ];
             // Updating the Weapon
             actor.updateEmbeddedDocuments("Item", updates);

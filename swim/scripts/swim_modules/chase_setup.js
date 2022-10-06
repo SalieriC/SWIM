@@ -44,20 +44,20 @@
             t.name.includes(`Cards`))
             );
         Array.from(options).map((el) => {
-            cardsList += `<option value="${el.data.name}">${el.data.name}</option>`
+            cardsList += `<option value="${el.name}">${el.name}</option>`
         });
 
         const deckOptions = game.cards.filter(t =>
             t.type == "deck"
             );
         Array.from(deckOptions).map((el) => {
-            deckList += `<option value="${el.data.name}">${el.data.name}</option>`
+            deckList += `<option value="${el.name}">${el.name}</option>`
         });
         const pileOptions = game.cards.filter( t =>
                 t.type == "pile"
         );
         Array.from(pileOptions).map((el) => {
-                    pileList += `<option value="${el.data.name}">${el.data.name}</option>`
+                    pileList += `<option value="${el.name}">${el.name}</option>`
             });
 
 
@@ -162,14 +162,14 @@
         if(isTables) {
             cardDraws = (
                 await game.tables
-                    .find((el) => el.data.name == tableName)
+                    .find((el) => el.name == tableName)
                     .drawMany(cardsToDraw, { displayChat: false })
             ).results;
         } else {
             pileDeck = await game.cards.getName(pileName)
             cardDraws = (
                 await game.cards
-                    .find((el) => el.data.name == deckName)
+                    .find((el) => el.name == deckName)
                     .deal([pileDeck],cardsToDraw,{ chatNotification: false })
             );
         }
@@ -183,7 +183,7 @@
             let yPosition = deckDown + ( row * ( cardHeight + borderVert ) );
             let theImage="";
             if(isTables) {
-                theImage = cardDraws[i].data.img
+                theImage = cardDraws[i].img
             } else {
                 theImage = pileDeck.availableCards[i].img
             }
@@ -208,7 +208,7 @@
         let pileName = html.find("#pileName")[0].value;
 
         if(isTables) {
-            const table = await game.tables.find((t) => t.data.name === tableName);
+            const table = await game.tables.find((t) => t.name === tableName);
             table.reset();
         } else {
             await game.cards.getName(deckName).reset({chatNotification: false});
@@ -217,7 +217,7 @@
 
         AudioHelper.play({ src: `systems/swade/assets/card-flip.wav` }, true);
 
-        const delete_ids = canvas.scene.data.tiles
+        const delete_ids = canvas.scene.tiles
             .filter(t => !!t.getFlag('swim', 'isChaseCard') === true)
             .map(t => t.id);
 

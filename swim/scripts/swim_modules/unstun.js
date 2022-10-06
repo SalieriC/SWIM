@@ -32,7 +32,7 @@ export async function unstun_script(effect = false) {
     let bennyImage = await swim.get_benny_image()
 
     //Checking for Elan
-    const elan = token.actor.data.items.find(function (item) {
+    const elan = token.actor.items.find(function (item) {
         return item.name.toLowerCase() === "elan" && item.type === "edge";
     });
     let elanBonus;
@@ -43,7 +43,7 @@ export async function unstun_script(effect = false) {
         const actorAlias = speaker.alias;
         // ROLL VIGOR AND CHECK COMBAT REFLEXES
         const r = await token.actor.rollAttribute('vigor');
-        const edges = token.actor.data.items.filter(function (item) {
+        const edges = token.actor.items.filter(function (item) {
             return edgeNames.includes(item.name.toLowerCase()) && (item.type === "edge" || item.type === "ability");
         });
         let rollWithEdge = r.total;
@@ -57,14 +57,14 @@ export async function unstun_script(effect = false) {
         let effectName = [];
         let effectIcon = [];
         let effectValue = [];
-        if (token.actor.data.effects.size > 0) {
-            for (let effect of token.actor.data.effects) {
-                if (effect.data.disabled === false && !edgeNames.includes(effect.data.label)) { // only apply changes if effect is enabled and not made by a recognised Edge.
-                    for (let change of effect.data.changes) {
+        if (token.actor.effects.size > 0) {
+            for (let effect of token.actor.effects) {
+                if (effect.disabled === false && !edgeNames.includes(effect.label)) { // only apply changes if effect is enabled and not made by a recognised Edge.
+                    for (let change of effect.changes) {
                         if (change.key === "SWIM.unStunMod") {
                             //Building array of effect names and icons that affect the unStunBonus
-                            effectName.push(effect.data.label);
-                            effectIcon.push(effect.data.icon);
+                            effectName.push(effect.label);
+                            effectIcon.push(effect.icon);
                             effectValue.push(change.value);
                         }
                     }

@@ -12,15 +12,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - - puts an effect to Shaken that halves the actors Pace.
 - SWIM now overwrites the callback functions of effects in SWIM, meaning it will initiate its own functions when the character is Shaken, Stunned or Bleeding Out. You are notified about that on your turn.
 - A way to add a bonus to unstun rolls using Active Efects. To use it create an active effect with the attribute key `SWIM.unStunMod` (case sensitive), the change mode `Add` and a value of your choosing. A bonus must not have a `+` in front of the number, a penalty needs a `-` in front of the number.
+- If the Summoner has the Command edge, the Fervor and/or the Hold the Line! edge, the summoner will add an AE to the summoned creature which respects that.
 - New translation strings and extended localization of the module.
+- New API function which returns all contents of a folder and its sub-folders up to three layers deep.
+- On startup SWIM will check if the actor folder compendium is in the systems block toc list and if not prompt a dialogue to add it as otherwise the folders are invisible.
 ### Changed
 - **Breaking:** Changed the API so that the Unshake macro gets the version from the settings rather than being passed to the function. This means that the Unshake macro needs to be replaced by the one in the SWIM compendium.
 - - Added a detailed error message explaining the problem in case the old version of the macro is used.
 - Adjusted property paths to support FoundryVTT v10.
 - SWIM now completely ignores the death flag featured in Health Estimate. Instead the proper incapacitation icon will be set in the Health Estimate settings when the game starts and HE is installed. As a result, HE is not a dependency any longer, though still strongly suggested.
 - Adjusted manifest to reflect the FVTT v10 requirements.
-- Removed v10 update warning.
 - Changed some translation strings.
+- Updated settings-extender.js to the v10 version.
+- A creature summoned with a raise will now receive a max wound in addition to its current max wounds instead of setting it fixed to one. This should cover the Fantasy Companion where some summonable creatures already are resilient.
+- General cleanup of code.
 ### Fixed
 - Fixed a bug in the effect builder that didn't set maintainedPowers additional stat up when the caster was also the target.
 - Fixed a bug in the Shape Changer that rendered the ignore size rule setting useless (thanks @jdavasligil).
@@ -30,6 +35,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Holding still breaks on first round of combat but I have no clue why.
 ### Removed
 - Unshake macros from the compendium were removed and unified into a single macro since the version is now drawn from the settings.
+- Removed v10 update warning.
+### Deprecated
+- Old macros deprecated. They are still available in a zip file in case s/o wants to check them out.
 
 ## [0.18.5] - 2022-08-14
 ☮️ Peace in the world, or the world in pieces. 🕊️
