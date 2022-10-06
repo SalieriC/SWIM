@@ -22,7 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Adjusted property paths to support FoundryVTT v10.
 - SWIM now completely ignores the death flag featured in Health Estimate. Instead the proper incapacitation icon will be set in the Health Estimate settings when the game starts and HE is installed. As a result, HE is not a dependency any longer, though still strongly suggested.
 - Adjusted manifest to reflect the FVTT v10 requirements.
-- Removed v10 update warning.
 - Changed some translation strings.
 - Updated settings-extender.js to the v10 version.
 - A creature summoned with a raise will now receive a max wound in addition to its current max wounds instead of setting it fixed to one. This should cover the Fantasy Companion where some summonable creatures already are resilient.
@@ -36,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Holding still breaks on first round of combat but I have no clue why.
 ### Removed
 - Unshake macros from the compendium were removed and unified into a single macro since the version is now drawn from the settings.
+- Removed v10 update warning.
 ### Deprecated
 - Old macros deprecated. They are still available in a zip file in case s/o wants to check them out.
 
