@@ -98,10 +98,10 @@ Hooks.on(`ready`, () => {
             buttons: {
                 one: {
                     label: "Let me play already!",
-                    callback: (html) => {
+                    callback: async (html) => {
                         let readIt = html.find("#readIt")[0].checked
                         if (readIt === true) {
-                            game.settings.set('swim', 'docRead', true)
+                            game.settings.set('swim', 'docReadV10', true)
                             if (!game.settings.get("swade", "tocBlockList")["swim.swim-actor-folders"]) {
                                 await game.settings.set("swade", "tocBlockList", {"swim.swim-actor-folders": true}) //Needed to see the folders in the compendium.
                                 window.location.reload();
