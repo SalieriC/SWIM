@@ -172,7 +172,7 @@ Hooks.on(`ready`, () => {
                 class: 'swim_config_button',
                 label: 'SWIM',
                 icon: 'fas fa-swimmer',
-                onclick: () => open_swim_actor_config(sheet.item)
+                onclick: () => open_swim_actor_config(sheet.actor)
             });
         });
     }
