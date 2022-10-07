@@ -31,6 +31,22 @@ export async function v10_migration() {
                         ui.notifications.notify("Starting Migration now, please be patient. Your world will reload after completion.")
                         for (let actor of game.actors) {
                             //Process all actors...
+                            if (actor.system.additionalStats?.sfx?.value && actor.system.additionalStats?.sfx?.dtype === "string") {
+                                const sfxSequence = actor.system.additionalStats?.sfx?.value
+                                const sfxSplit = sfxSequence.split("|")
+                                const shakenSFX = sfxSplit[0]
+                                const deathSFX = sfxSplit[1]
+                                const unshakeSFX = sfxSplit[2]
+                                const soakSFX = sfxSplit[3]
+                                const flags = { //Verify how they are structured in final release.
+                                    config: {
+                                        shakenSfx: shakenSFX,
+                                        deathSfx: deathSFX,
+                                        unshakeSfx: unshakeSFX,
+                                        soakSfx: soakSFX
+                                    }
+                                }
+                            }
                         } for (let item of game.items) {
                             //Process all items...
                         }
