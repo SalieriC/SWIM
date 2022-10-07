@@ -86,6 +86,14 @@ export function register_settings() {
         scope: 'world',
         config: false,
     });
+    game.settings.register('swim', 'migrationDone', {
+        name: "v1MigrationName",
+        hint: "v1MigrationHint",
+        type: Boolean,
+        default: false,
+        scope: 'world',
+        config: false,
+    });
     game.settings.registerMenu('swim', 'custom-config', {
         name: game.i18n.localize("SWIM.ConfigMenuName"),
         label: game.i18n.localize("SWIM.ConfigMenuLabel"),

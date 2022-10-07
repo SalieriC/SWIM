@@ -5,6 +5,8 @@
   "SWIM.Save": "Save Changes",
   "SWIM.docReadName": "I have read the documentation.",
   "SWIM.docReadHint": "I hereby declare, that I have read the ReadMe and documentation as well as the dialogue on login about SWADE Immersive Macros (SWIM) and I may be struck by lightning if I lie.",
+  "SWIM.allowUserConfigName": "Allow non-GM users SWIM config access:",
+  "SWIM.allowUserConfigHint": "This setting allows non-GM users to access and edit the SWIM config window on actors and items.",
   "SWIM.chaseDeckName": "Chase Deck:",
   "SWIM.chaseDeckHint": "This must be the exact name of the table that contains your chase cards for the Chase Setup Macro. This will be your default option, you can still choose another deck, but the one here will always be on top.",
   "SWIM.injuryTableName": "Injury Table:",
