@@ -9,11 +9,43 @@ export async function open_swim_actor_config(actor) {
     new DocumentConfigForm(actor).render(true);
 }
 
-//Add more actor or item types here
+/*
+This object works as follows:
+
+configs = {
+    type: { options: {...} }
+}
+
+type is the type of actor or item. So if you want to add configs for weapons and npc, you would do it like this:
+
+configs = {
+    weapon: { options: {...} },
+    npc: { options: {...} }
+}
+
+the options map contains sections to show in the config window. each section has an arbitrary key and an object that describes
+what the section is about. Right now we have the following possibilities (pick one):
+
+- isSectionTitle: if true shows a subheader to differentiate different sections of the config UI.
+    - value: text for the subheader
+- isBoolean: if true will show a checkbox.
+    - id: the name under which to store this config in the flags
+    - label: the text to render next to the checkbox
+    - value: the default value of the checkbox
+- isText: if true will show a textfield.
+    - id: the name under which to store this config in the flags
+    - label: the text to render next to the textfield
+    - value: the default value of the textfield
+- isAE: if true will show a button to edit an in-memory ActiveEffect
+    - id: the name under which to store this config in the flags
+    - label: the text to render on the button
+    - value: the default value of the AE
+
+ */
 const configs = {
     gear: {
         options: {
-            ammoTitle: {
+            /*ammoTitle: {
                 isSectionTitle: true,
                 value: "Ammo Management"
             },
@@ -27,8 +59,8 @@ const configs = {
                 isAE: true,
                 label: 'Set Ammo Active Effect',
                 id: 'ammoActiveEffect',
-                value: ''
-            }
+                value: {}
+            }*/
         }
     }
 }
