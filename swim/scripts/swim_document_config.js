@@ -2,44 +2,44 @@ import * as SWIM from "./constants.js";
 import SWIMEffectConfig from "./helpers/custom_effect_config.js";
 
 export async function open_swim_item_config(item) {
-    new ItemConfigForm(item).render(true);
+    new DocumentConfigForm(item).render(true);
 }
 
 export async function open_swim_actor_config(actor) {
-    ui.notifications.warn("We do not support actors yet.");
+    new DocumentConfigForm(actor).render(true);
 }
 
 //Add more actor or item types here
 const configs = {
     gear: {
         options: {
-            ammo_title: {
+            ammoTitle: {
                 isSectionTitle: true,
                 value: "Ammo Management"
             },
             isAmmo: {
                 isBoolean: true,
-                id: 'is-ammo',
+                id: 'isAmmo',
                 label: 'Is Ammunition',
                 value: false
             },
             ammoAE: {
                 isAE: true,
                 label: 'Set Ammo Active Effect',
-                id: 'ammo-active-effect',
+                id: 'ammoActiveEffect',
                 value: ''
             }
         }
     }
 }
 
-class ItemConfigForm extends FormApplication {
+class DocumentConfigForm extends FormApplication {
 
     static get defaultOptions() {
         let options = super.defaultOptions;
-        options.id = 'swim-item-config';
+        options.id = 'swim-document-config';
         options.title = "SWIM Config"
-        options.template = "/modules/swim/templates/swim_item_config.hbs";
+        options.template = "/modules/swim/templates/swim_document_config.hbs";
         options.width = SWIM.ITEM_CONFIG_WINDOW_WIDTH;
         options.height = SWIM.ITEM_CONFIG_WINDOW_HEIGHT;
         return options;
@@ -63,10 +63,11 @@ class ItemConfigForm extends FormApplication {
         const config = configs[this.object.type];
         if (config !== undefined) {
             //load and merge flags here
-            if ('swim-item-config' in this.object.flags) {
-                for (const [key, value] of Object.entries(config.options)) {
-                    if (value.id in this.object.flags['swim-item-config']) {
-                        const val = this.object.flags['swim-item-config'][value.id];
+            if ('swim' in this.object.flags && 'config' in this.object.flags.swim) {
+                const flagsConfig = this.object.flags.swim.config;
+                for (const [_, value] of Object.entries(config.options)) {
+                    if (value.id in flagsConfig) {
+                        const val = flagsConfig[value.id];
                         if (val !== null && val !== undefined) {
                             value.value = val;
                         }
@@ -89,8 +90,8 @@ class ItemConfigForm extends FormApplication {
         let defaults;
         const id = event.currentTarget.dataset.id;
 
-        if ('swim-item-config' in this.object.flags && id in this.object.flags['swim-item-config']) {
-            defaults = this.object.flags['swim-item-config'][id];
+        if ('swim' in this.object.flags && 'config' in this.object.flags.swim && id in this.object.flags.swim.config) {
+            defaults = this.object.flags.swim.config[id];
         } else {
             defaults = {
                 label: `Ammo Effect (${this.object.name})`,
@@ -125,7 +126,9 @@ class ItemConfigForm extends FormApplication {
         console.log(formData);
         const Data = {
             flags: {
-                ["swim-item-config"]: formData
+                swim: {
+                    config: formData
+                }
             }
         };
 

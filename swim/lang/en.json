@@ -356,5 +356,5 @@
   "SWIM.notification-shakenRoll": "{tokenName} Shaken, please roll to unshake.",
   "SWIM.notification-stunnedRoll": "{tokenName} Stunned, please roll to unstun.",
   "SWIM.notification-bleedingRoll": "{tokenName} bleeding out, please roll to avoid death.",
-  "SWIM.ItemConfigMenu": "Swim Config"
+  "SWIM.DocumentConfigMenu": "SWIM Config"
 }

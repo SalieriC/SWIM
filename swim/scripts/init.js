@@ -7,7 +7,7 @@ import { summoner_gm } from './swim_modules/mighty-summoner.js'
 import { heal_other_gm } from './swim_modules/personal_health_centre.js'
 import { common_bond_gm } from './swim_modules/common_bond.js'
 import { effect_builder_gm } from './swim_modules/effect_builder.js'
-import { open_swim_actor_config, open_swim_item_config } from "./swim_item_config.js";
+import { open_swim_actor_config, open_swim_item_config } from "./swim_document_config.js";
 
 /*Hooks.on('getCardsDirectoryEntryContext', function (stuff) {
     console.log(stuff)
