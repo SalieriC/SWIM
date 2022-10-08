@@ -91,12 +91,12 @@ export async function v10_migration() {
                                     swim: {
                                         config: {
                                             sfx: {
-                                                reload: reloadSfx.toLowerCase() === "none" || reloadSfx.toLowerCase() === "reload" ? "" : reloadSfx,
-                                                fire: fireSfx.toLowerCase() === "none" || fireSfx.toLowerCase() === "fire" ? "" : fireSfx,
-                                                autoFire: autofireSfx.toLowerCase() === "none" || autofireSfx.toLowerCase() === "autofire" ? "" : autofireSfx,
-                                                silencedFire: silencedfireSfx.toLowerCase() === "none" || silencedfireSfx.toLowerCase() === "silenced" ? "" : silencedfireSfx,
-                                                silencedAutoFire: silencedautofireSfx.toLowerCase() === "none" || silencedautofireSfx.toLowerCase() === "silencedautofire" ? "" : silencedautofireSfx,
-                                                empty: emptyfireSfx.toLowerCase() === "none" || emptyfireSfx.toLowerCase() === "empty" ? "" : emptyfireSfx
+                                                reload: reloadSfx.toLowerCase() === "null" || reloadSfx.toLowerCase() === "reload" ? "" : reloadSfx,
+                                                fire: fireSfx.toLowerCase() === "null" || fireSfx.toLowerCase() === "fire" ? "" : fireSfx,
+                                                autoFire: autofireSfx.toLowerCase() === "null" || autofireSfx.toLowerCase() === "autofire" ? "" : autofireSfx,
+                                                silencedFire: silencedfireSfx.toLowerCase() === "null" || silencedfireSfx.toLowerCase() === "silenced" ? "" : silencedfireSfx,
+                                                silencedAutoFire: silencedautofireSfx.toLowerCase() === "null" || silencedautofireSfx.toLowerCase() === "silencedautofire" ? "" : silencedautofireSfx,
+                                                empty: emptyfireSfx.toLowerCase() === "null" || emptyfireSfx.toLowerCase() === "empty" ? "" : emptyfireSfx
                                             },
                                             isPack: isPack,
                                             isConsumable: isConsumable,
