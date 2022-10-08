@@ -91,12 +91,12 @@ export async function v10_migration() {
                                     swim: {
                                         config: {
                                             sfx: {
-                                                reload: reloadSfx,
-                                                fire: fireSfx,
-                                                autoFire: autofireSfx,
-                                                silencedFire: silencedfireSfx,
-                                                silencedAutoFire: silencedautofireSfx,
-                                                empty: emptyfireSfx
+                                                reload: reloadSfx.toLowerCase() === "none" || reloadSfx.toLowerCase() === "reload" ? "" : reloadSfx,
+                                                fire: fireSfx.toLowerCase() === "none" || fireSfx.toLowerCase() === "fire" ? "" : fireSfx,
+                                                autoFire: autofireSfx.toLowerCase() === "none" || autofireSfx.toLowerCase() === "autofire" ? "" : autofireSfx,
+                                                silencedFire: silencedfireSfx.toLowerCase() === "none" || silencedfireSfx.toLowerCase() === "silenced" ? "" : silencedfireSfx,
+                                                silencedAutoFire: silencedautofireSfx.toLowerCase() === "none" || silencedautofireSfx.toLowerCase() === "silencedautofire" ? "" : silencedautofireSfx,
+                                                empty: emptyfireSfx.toLowerCase() === "none" || emptyfireSfx.toLowerCase() === "empty" ? "" : emptyfireSfx
                                             },
                                             isPack: isPack,
                                             isConsumable: isConsumable,
