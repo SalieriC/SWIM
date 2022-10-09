@@ -1,9 +1,3 @@
-/** ToDo:
- * [ ] Migration for when the config button is pressed.
- * [ ] Disable additional stats in migration.
- * [X] Make migration run on first start.
- */
-
 import { SWIM_CONFIG_VERSION } from "./constants";
 
 export async function v10_migration() {
@@ -62,6 +56,7 @@ export async function v10_migration() {
                                     }
                                 }
                                 await actor.update(flagData)
+                                await actor.update({ "system.additionalStats.-=sfx": null })
                             }
                         } for (let item of allItems) {
                             //Process all items...
@@ -88,12 +83,16 @@ export async function v10_migration() {
                                 emptyfireSfx = sfxSplit[5]
                             } if (actor.system.additionalStats?.isPack?.value && actor.system.additionalStats?.isPack?.dtype === "Boolean") {
                                 isPack = actor.system.additionalStats?.isPack?.value
+                                await item.update({ "system.additionalStats.-=isPack": null })
                             } if (actor.system.additionalStats?.isConsumable?.value && actor.system.additionalStats?.isConsumable?.dtype === "Boolean") {
                                 isConsumable = actor.system.additionalStats?.isConsumable?.value
+                                await item.update({ "system.additionalStats.-=isConsumable": null })
                             } if (actor.system.additionalStats?.silenced?.value && actor.system.additionalStats?.silenced?.dtype === "Boolean") {
                                 silenced = actor.system.additionalStats?.silenced?.value
+                                await item.update({ "system.additionalStats.-=silenced": null })
                             } if (actor.system.additionalStats?.loadedAmmo?.value && actor.system.additionalStats?.loadedAmmo?.dtype === "String") {
                                 loadedAmmo = actor.system.additionalStats?.loadedAmmo?.value
+                                await item.update({ "system.additionalStats.-=loadedAmmo": null })
                             }
                             const flagData = { //Verify how they are structured in final release.
                                 flags: {
@@ -151,6 +150,7 @@ export async function update_migration(actor, currVersion) {
                 }
             }
             await actor.update(flagData)
+            await actor.update({ "system.additionalStats.-=sfx": null })
         }
     } for (let item of allItems) {
         //Process all items...
@@ -177,12 +177,16 @@ export async function update_migration(actor, currVersion) {
             emptyfireSfx = sfxSplit[5]
         } if (actor.system.additionalStats?.isPack?.value && actor.system.additionalStats?.isPack?.dtype === "Boolean") {
             isPack = actor.system.additionalStats?.isPack?.value
+            await item.update({ "system.additionalStats.-=isPack": null })
         } if (actor.system.additionalStats?.isConsumable?.value && actor.system.additionalStats?.isConsumable?.dtype === "Boolean") {
             isConsumable = actor.system.additionalStats?.isConsumable?.value
+            await item.update({ "system.additionalStats.-=isConsumable": null })
         } if (actor.system.additionalStats?.silenced?.value && actor.system.additionalStats?.silenced?.dtype === "Boolean") {
             silenced = actor.system.additionalStats?.silenced?.value
+            await item.update({ "system.additionalStats.-=silenced": null })
         } if (actor.system.additionalStats?.loadedAmmo?.value && actor.system.additionalStats?.loadedAmmo?.dtype === "String") {
             loadedAmmo = actor.system.additionalStats?.loadedAmmo?.value
+            await item.update({ "system.additionalStats.-=loadedAmmo": null })
         }
         const flagData = {
             flags: {
