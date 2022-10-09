@@ -6,8 +6,19 @@
 		"minimum": 10,
 		"verified": "10"
 	},
-	"version": "0.18.4",
-	"author": "SalieriC",
+	"version": "1.0.0",
+	"authors": [
+		{
+		  "name": "SalieriC",
+		  "url": "https://ko-fi.com/salieric",
+		  "discord": "SalieriC#8263"
+		},
+		{
+			"name": "Emanuel May",
+			"url": "https://github.com/loofou",
+			"discord": "Loofou#7406"
+		}
+	  ],
 	"relationships": {
 		"systems": [
 			{
@@ -15,25 +26,19 @@
 				"type": "system",
 				"manifest": "https://gitlab.com/api/v4/projects/16269883/packages/generic/swade/latest/system.json",
 				"compatibility": {
-					"verified": "1.2.0"
+					"minimum": "2.0.5",
+					"verified": "2.0.5"
 				}
 			}
 		],
 		"requires": [
 			{
-				"id": "compendium-folders",
-				"type": "module",
-				"manifest": "https://raw.githubusercontent.com/earlSt1/vtt-compendium-folders/master/module.json",
-				"compatibility": {
-					"verified": "2.2.44"
-				}
-			},
-			{
 				"id": "lib-wrapper",
 				"type": "module",
-				"manifest": "https://github.com/ruipin/fvtt-lib-wrapper/releases/download/v1.11.4.0/module.json",
+				"manifest": "https://raw.githubusercontent.com/ruipin/fvtt-lib-wrapper/master/module.json",
 				"compatibility": {
-					"verified": "1.11.4.0"
+					"minimum": "1.12.10.0",
+					"verified": "1.12.10.0"
 				}
 			},
 			{
@@ -41,7 +46,8 @@
 				"type": "module",
 				"manifest": "https://gitlab.com/foundry-azzurite/settings-extender/-/jobs/artifacts/master/raw/dist/settings-extender/module.json?job=build",
 				"compatibility": {
-					"verified": "1.2.0"
+					"minimum": "1.2.1",
+					"verified": "1.2.1"
 				}
 			},
 			{
@@ -49,15 +55,17 @@
 				"type": "module",
 				"manifest": "https://raw.githubusercontent.com/SalieriC/SUCC/main/succ/module.json",
 				"compatibility": {
-					"verified": "0.1.0"
+					"minimum": "0.2.0",
+					"verified": "0.2.0"
 				}
 			},
 			{
 				"id": "warpgate",
 				"type": "module",
-				"manifest": "https://raw.githubusercontent.com/trioderegion/warpgate/master/module.json",
+				"manifest": "https://github.com/trioderegion/warpgate/releases/latest/download/module.json",
 				"compatibility": {
-					"verified": "1.0"
+					"minimum": "1.14.0",
+					"verified": "1.14.0"
 				}
 			}
 		]
