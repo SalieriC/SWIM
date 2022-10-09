@@ -347,7 +347,7 @@ export async function shape_changer_gm(data) {
         // Make new token very opaque.
         // Spawns the new token using WarpGate
         let newTokenID = await warpgate.spawnAt(token.center, scCopy.name, {
-            'alpha': SWIM.ALMOST_INVISIBLE,
+            'alpha': 1, //SWIM.ALMOST_INVISIBLE, //- disabled until further investigation.
             'actorId': scCopy.id,
             } );
         let newToken = canvas.tokens.get(newTokenID[0]);
@@ -361,8 +361,8 @@ export async function shape_changer_gm(data) {
             let oldCombatData = token.combatant.toObject()
             await update_combat(newTokenID, oldCombatData)
         }
-        // Morph the tokens from old to new.
-        await morph_tokens(token, newToken, scCopy);
+        // Morph the tokens from old to new. - Currently throws tons of errors, thus disabled until further investigation.
+        //await morph_tokens(token, newToken, scCopy);
         // Remove the old token
         await warpgate.dismiss(token.id)
         // For GM, need to manually set the focus; include a short delay to allow the new token to appear.
