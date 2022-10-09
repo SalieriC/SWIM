@@ -368,5 +368,17 @@
   "SWIM.Config_UnshakeSFXName": "Unshake SFX:",
   "SWIM.Config_UnshakeSFXHint": "The SFX to be played when this actor becomes recovers from being Shaken.",
   "SWIM.Config_SoakSFXName": "Soak SFX:",
-  "SWIM.Config_SoakSFXHint": "The SFX to be played when this actor successfully soaks wounds."
+  "SWIM.Config_SoakSFXHint": "The SFX to be played when this actor successfully soaks wounds.",
+  "SWIM.Config_ReloadSFXName": "Reload SFX:",
+  "SWIM.Config_ReloadSFXHint": "The SFX to be played when this weapon is reloaded.",
+  "SWIM.Config_FireSFXName": "Shot SFX:",
+  "SWIM.Config_FireSFXHint": "The SFX to be played when this weapon is fired. This SFX is used multiple times when a burst or Fanning the Hammer is executed.",
+  "SWIM.Config_AutoFireSFXName": "Automatic fire SFX:",
+  "SWIM.Config_AutoFireSFXHint": "The SFX to be played when this weapon shoots ten or more shots at once.",
+  "SWIM.Config_SilencedFireSFXName": "Silenced shot SFX:",
+  "SWIM.Config_SilencedFireSFXHint": "The SFX to be played when this weapon is shot with a suppressor (silencer) on. This SFX is used multiple times when a burst or Fanning the Hammer is executed while it is suppressed.",
+  "SWIM.Config_SilencedAutoFireSFXName": "Silenced automatic fire SFX:",
+  "SWIM.Config_SilencedAutoFireSFXHint": "The SFX to be played when this weapon is suppressed and shoots ten or more shots at once.",
+  "SWIM.Config_EmptySFXName": "Empty shot SFX:",
+  "SWIM.Config_EmptySFXHint": "The SFX to be played when this weapon is empty but tried to be fired regardless."
 }

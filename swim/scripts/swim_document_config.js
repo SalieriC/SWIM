@@ -75,6 +75,7 @@ const configs = [
         value: ''
     }*/
     //SFX shown at the bottom(?):
+    //Actor SFX:
     {
         isSectionTitle: true,
         showFor: ['weapon', 'character', 'npc'],
@@ -119,8 +120,68 @@ const configs = [
         value: "",
         useFilePicker: true,
         filePickerData: "audio"
+    },
+    //Weapon SFX:
+    {
+        isText: true,
+        showFor: ['weapon'],
+        id: "reloadSFX",
+        label: "SWIM.Config_ReloadSFXName",
+        hint: "SWIM.Config_ReloadSFXHint",
+        value: "",
+        useFilePicker: true,
+        filePickerData: "audio"
+    },
+    {
+        isText: true,
+        showFor: ['weapon'],
+        id: "fireSFX",
+        label: "SWIM.Config_FireSFXName",
+        hint: "SWIM.Config_FireSFXHint",
+        value: "",
+        useFilePicker: true,
+        filePickerData: "audio"
+    },
+    {
+        isText: true,
+        showFor: ['weapon'],
+        id: "autoFireSFX",
+        label: "SWIM.Config_AutoFireSFXName",
+        hint: "SWIM.Config_AutoFireSFXHint",
+        value: "",
+        useFilePicker: true,
+        filePickerData: "audio"
+    },
+    {
+        isText: true,
+        showFor: ['weapon'],
+        id: "silencedFireSFX",
+        label: "SWIM.Config_SilencedFireSFXName",
+        hint: "SWIM.Config_SilencedFireSFXHint",
+        value: "",
+        useFilePicker: true,
+        filePickerData: "audio"
+    },
+    {
+        isText: true,
+        showFor: ['weapon'],
+        id: "silencedAutoFireSFX",
+        label: "SWIM.Config_SilencedAutoFireSFXName",
+        hint: "SWIM.Config_SilencedAutoFireSFXHint",
+        value: "",
+        useFilePicker: true,
+        filePickerData: "audio"
+    },
+    {
+        isText: true,
+        showFor: ['weapon'],
+        id: "emptySFX",
+        label: "SWIM.Config_EmptySFXName",
+        hint: "SWIM.Config_EmptySFXHint",
+        value: "",
+        useFilePicker: true,
+        filePickerData: "audio"
     }
-    //ToDo: Make file pickers available.
 ]
 
 const swimConfigVersion = 1
