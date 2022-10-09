@@ -14,3 +14,6 @@ export const CONFIG_WINDOW_HEIGHT = 600;
 export const NUM_MORPHS_DEFAULT = 50
 export const NUM_MORPHS_MIN = 0
 export const NUM_MORPHS_MAX = 100
+
+export const ITEM_CONFIG_WINDOW_WIDTH = 500;
+export const ITEM_CONFIG_WINDOW_HEIGHT = 400;
