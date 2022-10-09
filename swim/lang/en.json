@@ -356,5 +356,7 @@
   "SWIM.notification-shakenRoll": "{tokenName} Shaken, please roll to unshake.",
   "SWIM.notification-stunnedRoll": "{tokenName} Stunned, please roll to unstun.",
   "SWIM.notification-bleedingRoll": "{tokenName} bleeding out, please roll to avoid death.",
-  "SWIM.DocumentConfigMenu": "SWIM Config"
+  "SWIM.DocumentConfigMenu": "SWIM Config",
+  "SWIM.allowUserConfigName": "Allow Players to access the SWIM Config menu:",
+  "SWIM.allowUserConfigHint": "If enabled, Players will be able to see and use the SWIM Config menu on actors and items."
 }

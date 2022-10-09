@@ -157,7 +157,7 @@ Hooks.on(`ready`, () => {
     warpgate.event.watch("SWIM.updateCombat-currentTurn", gm_relay.combat_currentTurn, swim.is_first_gm)
 
     //SWIM per-actor/item config header button
-    if (game.user.isGM) {
+    if (game.user.isGM || game.settings.get('swim', 'allowUserConfig')) {
         Hooks.on('getItemSheetHeaderButtons', function (sheet, buttons) {
             buttons.unshift({
                 class: 'swim_config_button',
