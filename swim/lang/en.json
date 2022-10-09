@@ -385,5 +385,7 @@
   "SWIM.Config_IsSilencedName": "Suppressed (Silenced):",
   "SWIM.Config_IsSilencedHint": "Check this to mark the weapon as being suppressed (silenced).",
   "SWIM.Config_LoadedAmmoName": "Loaded Ammo:",
-  "SWIM.Config_LoadedAmmoHint": "The currently loaded ammunition. This is set by the ammo management function in SWIM and usually doesn't need to be configured by the user."
+  "SWIM.Config_LoadedAmmoHint": "The currently loaded ammunition. This is set by the ammo management function in SWIM and usually doesn't need to be configured by the user.",
+  "SWIM.Config_IsConsumableName": "Consumable Weapon:",
+  "SWIM.Config_IsConsumableHint": "This marks a weapon as a consumable one. Consumable weapons do not reduce their ammunition on usage; instead the quantity is removed (used for throwing knives, grenades, etc.)"
 }

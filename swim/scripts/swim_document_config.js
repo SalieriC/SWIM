@@ -58,6 +58,14 @@ const configs = [
         label: "SWIM.Config_WeaponConfig"
     },
     {
+        isText: true,
+        showFor: ['weapon'],
+        id: 'loadedAmmo',
+        label: 'SWIM.Config_LoadedAmmoName',
+        hint: 'SWIM.Config_LoadedAmmoHint',
+        value: ""
+    },
+    {
         isBoolean: true,
         showFor: ['weapon'],
         id: 'isSilenced',
@@ -66,12 +74,12 @@ const configs = [
         value: false
     },
     {
-        isText: true,
+        isBoolean: true,
         showFor: ['weapon'],
-        id: 'loadedAmmo',
-        label: 'SWIM.Config_LoadedAmmoName',
-        hint: 'SWIM.Config_LoadedAmmoHint',
-        value: ""
+        id: 'isConsumable',
+        label: 'SWIM.Config_IsConsumableName',
+        hint: 'SWIM.Config_IsConsumableHint',
+        value: false
     },
     //TODO: Finish Ammo Management Improvements
     /*{
