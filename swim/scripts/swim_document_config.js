@@ -1,17 +1,16 @@
 import * as SWIM from "./constants.js";
 import SWIMEffectConfig from "./helpers/custom_effect_config.js";
 import { update_migration } from "./migrations.js";
-import { SWIM_CONFIG_VERSION } from "./constants.js";
 
 export async function open_swim_item_config(item) {
     const currVersion = actor.flags.swim.config._version
-    if (currVersion < SWIM_CONFIG_VERSION) { await update_migration(actor = false, item, currVersion) }
+    if (currVersion < SWIM.CONFIG_VERSION) { await update_migration(actor = false, item, currVersion) }
     new DocumentConfigForm(item).render(true);
 }
 
 export async function open_swim_actor_config(actor) {
     const currVersion = actor.flags.swim.config._version
-    if (currVersion < SWIM_CONFIG_VERSION) { await update_migration(actor, item = false, currVersion) }
+    if (currVersion < SWIM.CONFIG_VERSION) { await update_migration(actor, item = false, currVersion) }
     new DocumentConfigForm(actor).render(true);
 }
 
@@ -262,7 +261,7 @@ const configs = [
     }
 ]
 
-const swimConfigVersion = SWIM_CONFIG_VERSION
+const swimConfigVersion = SWIM.CONFIG_VERSION
 
 class DocumentConfigForm extends FormApplication {
 

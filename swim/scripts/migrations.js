@@ -1,4 +1,4 @@
-import { SWIM_CONFIG_VERSION } from "./constants";
+import * as SWIM from "./constants.js";
 
 export async function v10_migration() {
     new Dialog({
@@ -50,7 +50,7 @@ export async function v10_migration() {
                                                 deathSFX: deathSFX,
                                                 unshakeSFX: unshakeSFX,
                                                 soakSFX: soakSFX,
-                                                _version: SWIM_CONFIG_VERSION
+                                                _version: SWIM.CONFIG_VERSION
                                             }
                                         }
                                     }
@@ -108,7 +108,7 @@ export async function v10_migration() {
                                             isConsumable: isConsumable,
                                             isSilenced: silenced,
                                             loadedAmmo: loadedAmmo,
-                                            _version: SWIM_CONFIG_VERSION
+                                            _version: SWIM.CONFIG_VERSION
                                         }
                                     }
                                 }
@@ -146,7 +146,7 @@ export async function update_migration(actor, item, currVersion) {
                                 deathSFX: deathSFX,
                                 unshakeSFX: unshakeSFX,
                                 soakSFX: soakSFX,
-                                _version: SWIM_CONFIG_VERSION
+                                _version: SWIM.CONFIG_VERSION
                             }
                         }
                     }
@@ -205,7 +205,7 @@ export async function update_migration(actor, item, currVersion) {
                         isConsumable: isConsumable,
                         isSilenced: silenced,
                         loadedAmmo: loadedAmmo,
-                        _version: SWIM_CONFIG_VERSION
+                        _version: SWIM.CONFIG_VERSION
                     }
                 }
             }
