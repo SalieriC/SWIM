@@ -77,9 +77,49 @@ const configs = [
     //SFX shown at the bottom(?):
     {
         isSectionTitle: true,
-        showFor: ['gear', 'weapon', 'armor', 'shield', 'consumable', 'character', 'npc', 'vehicle'],
+        showFor: ['weapon', 'character', 'npc'],
         label: "SWIM.Config_SFX"
     },
+    {
+        isText: true,
+        showFor: ['character', 'npc'],
+        id: "shakenSFX",
+        label: "SWIM.Config_ShakenSFXName",
+        hint: "SWIM.Config_ShakenSFXHint",
+        value: "",
+        useFilePicker: true,
+        filePickerData: "audio"
+    },
+    {
+        isText: true,
+        showFor: ['character', 'npc'],
+        id: "deathSFX",
+        label: "SWIM.Config_IncapSFXName",
+        hint: "SWIM.Config_IncapSFXHint",
+        value: "",
+        useFilePicker: true,
+        filePickerData: "audio"
+    },
+    {
+        isText: true,
+        showFor: ['character', 'npc'],
+        id: "unshakeSFX",
+        label: "SWIM.Config_UnshakeSFXName",
+        hint: "SWIM.Config_UnshakeSFXHint",
+        value: "",
+        useFilePicker: true,
+        filePickerData: "audio"
+    },
+    {
+        isText: true,
+        showFor: ['character', 'npc'],
+        id: "soakSFX",
+        label: "SWIM.Config_SoakSFXName",
+        hint: "SWIM.Config_SoakSFXHint",
+        value: "",
+        useFilePicker: true,
+        filePickerData: "audio"
+    }
     //ToDo: Make file pickers available.
 ]
 
