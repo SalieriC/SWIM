@@ -1,8 +1,10 @@
 /** ToDo:
  * [ ] Migration for when the config button is pressed.
  * [ ] Disable additional stats in migration.
- * [ ] Make migration run on first start.
+ * [X] Make migration run on first start.
  */
+
+import { SWIM_CONFIG_VERSION } from "./constants";
 
 export async function v10_migration() {
     new Dialog({
@@ -33,7 +35,7 @@ export async function v10_migration() {
                 callback: async (html) => {
                     let start = html.find("#startMigration")[0].checked
                     if (start === true) {
-                        ui.notifications.notify("Starting Migration now, please be patient. Your world will reload after completion.")
+                        ui.notifications.warn("Starting Migration now, please be patient. Your world will reload after completion.", {permanent: true})
                         let allItems = []
                         allItems.push(game.items)
                         for (let actor of game.actors) {
@@ -53,7 +55,8 @@ export async function v10_migration() {
                                                 shakenSFX: shakenSFX,
                                                 deathSFX: deathSFX,
                                                 unshakeSFX: unshakeSFX,
-                                                soakSFX: soakSFX
+                                                soakSFX: soakSFX,
+                                                _version: SWIM_CONFIG_VERSION
                                             }
                                         }
                                     }
@@ -102,11 +105,11 @@ export async function v10_migration() {
                                             silencedFireSFX: silencedfireSfx.toLowerCase() === "null" || silencedfireSfx.toLowerCase() === "silenced" ? "" : silencedfireSfx,
                                             silencedAutoFireSFX: silencedautofireSfx.toLowerCase() === "null" || silencedautofireSfx.toLowerCase() === "silencedautofire" ? "" : silencedautofireSfx,
                                             emptySFX: emptyfireSfx.toLowerCase() === "null" || emptyfireSfx.toLowerCase() === "empty" ? "" : emptyfireSfx,
-
                                             isPack: isPack,
                                             isConsumable: isConsumable,
                                             isSilenced: silenced,
-                                            loadedAmmo: loadedAmmo
+                                            loadedAmmo: loadedAmmo,
+                                            _version: SWIM_CONFIG_VERSION
                                         }
                                     }
                                 }
@@ -120,4 +123,87 @@ export async function v10_migration() {
             }
         },
     }).render(true);
+}
+
+export async function update_migration(actor, currVersion) {
+    if (!currVersion || currVersion < 1) {
+        ui.notifications.warn(`Starting Migration for ${actor.name}, please wait.`)
+        let allItems = []
+        for (let item of actor.items) { allItems.push(item) }
+        if (actor.system.additionalStats?.sfx?.value && actor.system.additionalStats?.sfx?.dtype === "String") {
+            const sfxSequence = actor.system.additionalStats?.sfx?.value
+            const sfxSplit = sfxSequence.split("|")
+            const shakenSFX = sfxSplit[0]
+            const deathSFX = sfxSplit[1]
+            const unshakeSFX = sfxSplit[2]
+            const soakSFX = sfxSplit[3]
+            const flagData = {
+                flags: {
+                    swim: {
+                        config: {
+                            shakenSFX: shakenSFX,
+                            deathSFX: deathSFX,
+                            unshakeSFX: unshakeSFX,
+                            soakSFX: soakSFX,
+                            _version: SWIM_CONFIG_VERSION
+                        }
+                    }
+                }
+            }
+            await actor.update(flagData)
+        }
+    } for (let item of allItems) {
+        //Process all items...
+        let isPack = false
+        let loadedAmmo = ""
+        let isConsumable = false
+        let sfxSequence = "" // RELOAD|FIRE|AUTOFIRE|SILENCED|SILENCEDAUTOFIRE|EMPTY
+        let silenced = false
+
+        let reloadSfx = ""
+        let fireSfx = ""
+        let autofireSfx = ""
+        let silencedfireSfx = ""
+        let silencedautofireSfx = ""
+        let emptyfireSfx = ""
+        if (actor.system.additionalStats?.sfx?.value && actor.system.additionalStats?.sfx?.dtype === "String") {
+            sfxSequence = actor.system.additionalStats?.sfx?.value
+            sfxSplit = sfxSequence.split("|")
+            reloadSfx = sfxSplit[0]
+            fireSfx = sfxSplit[1]
+            autofireSfx = sfxSplit[2]
+            silencedfireSfx = sfxSplit[3]
+            silencedautofireSfx = sfxSplit[4]
+            emptyfireSfx = sfxSplit[5]
+        } if (actor.system.additionalStats?.isPack?.value && actor.system.additionalStats?.isPack?.dtype === "Boolean") {
+            isPack = actor.system.additionalStats?.isPack?.value
+        } if (actor.system.additionalStats?.isConsumable?.value && actor.system.additionalStats?.isConsumable?.dtype === "Boolean") {
+            isConsumable = actor.system.additionalStats?.isConsumable?.value
+        } if (actor.system.additionalStats?.silenced?.value && actor.system.additionalStats?.silenced?.dtype === "Boolean") {
+            silenced = actor.system.additionalStats?.silenced?.value
+        } if (actor.system.additionalStats?.loadedAmmo?.value && actor.system.additionalStats?.loadedAmmo?.dtype === "String") {
+            loadedAmmo = actor.system.additionalStats?.loadedAmmo?.value
+        }
+        const flagData = {
+            flags: {
+                swim: {
+                    config: {
+                        reloadSFX: reloadSfx.toLowerCase() === "null" || reloadSfx.toLowerCase() === "reload" ? "" : reloadSfx,
+                        fireSFX: fireSfx.toLowerCase() === "null" || fireSfx.toLowerCase() === "fire" ? "" : fireSfx,
+                        autoFireSFX: autofireSfx.toLowerCase() === "null" || autofireSfx.toLowerCase() === "autofire" ? "" : autofireSfx,
+                        silencedFireSFX: silencedfireSfx.toLowerCase() === "null" || silencedfireSfx.toLowerCase() === "silenced" ? "" : silencedfireSfx,
+                        silencedAutoFireSFX: silencedautofireSfx.toLowerCase() === "null" || silencedautofireSfx.toLowerCase() === "silencedautofire" ? "" : silencedautofireSfx,
+                        emptySFX: emptyfireSfx.toLowerCase() === "null" || emptyfireSfx.toLowerCase() === "empty" ? "" : emptyfireSfx,
+                        isPack: isPack,
+                        isConsumable: isConsumable,
+                        isSilenced: silenced,
+                        loadedAmmo: loadedAmmo,
+                        _version: SWIM_CONFIG_VERSION
+                    }
+                }
+            }
+        }
+        await item.update(flagData)
+        ui.notifications.notify(`Migration for ${actor.name} finished.`)
+    }
 }

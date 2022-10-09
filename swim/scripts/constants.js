@@ -5,6 +5,9 @@
  * By SalieriC
  ******************************************************/
 
+// Update this whenever SWIM actor/item config changes:
+export const SWIM_CONFIG_VERSION = 1;
+
 export const ALMOST_INVISIBLE = 0.1;
 export const RAISE_SCALE_DEFAULT = 1.0;
 export const RAISE_SCALE_MAX = 5.0;
