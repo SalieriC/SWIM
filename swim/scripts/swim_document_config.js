@@ -156,9 +156,9 @@ const configs = [
     {
         isText: true,
         showFor: ['character', 'npc'],
-        id: "unstunSFX",
-        label: "SWIM.Config_UnstunSFXName",
-        hint: "SWIM.Config_UnstunSFXHint",
+        id: "stunnedSFX",
+        label: "SWIM.Config_StunnedSFXName",
+        hint: "SWIM.Config_StunnedSFXHint",
         value: "",
         useFilePicker: true,
         filePickerData: "audio"
@@ -169,6 +169,16 @@ const configs = [
         id: "soakSFX",
         label: "SWIM.Config_SoakSFXName",
         hint: "SWIM.Config_SoakSFXHint",
+        value: "",
+        useFilePicker: true,
+        filePickerData: "audio"
+    },
+    {
+        isText: true,
+        showFor: ['character', 'npc'],
+        id: "fatiguedSFX",
+        label: "SWIM.Config_FatiguedSFXName",
+        hint: "SWIM.Config_FatiguedSFXHint",
         value: "",
         useFilePicker: true,
         filePickerData: "audio"
