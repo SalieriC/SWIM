@@ -78,6 +78,14 @@ export function register_settings() {
         scope: 'user',
         config: true,
     });
+    game.settings.register('swim', 'allowUserConfig', {
+        name: game.i18n.localize("SWIM.allowUserConfigName"),
+        hint: game.i18n.localize("SWIM.allowUserConfigHint"),
+        type: Boolean,
+        default: true,
+        scope: 'world',
+        config: true,
+    });
     game.settings.register('swim', 'br2Message', {
         name: "br2MessageName",
         hint: "br2MessageHint",
@@ -86,7 +94,7 @@ export function register_settings() {
         scope: 'world',
         config: false,
     });
-    game.settings.register('swim', 'migrationDone', {
+    game.settings.register('swim', 'v1MigrationDone', {
         name: "v1MigrationName",
         hint: "v1MigrationHint",
         type: Boolean,
