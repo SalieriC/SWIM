@@ -183,6 +183,16 @@ const configs = [
         useFilePicker: true,
         filePickerData: "audio"
     },
+    {
+        isText: true,
+        showFor: ['character', 'npc'],
+        id: "looseFatigueSFX",
+        label: "SWIM.Config_LooseFatigueSFXName",
+        hint: "SWIM.Config_LooseFatigueSFXHint",
+        value: "",
+        useFilePicker: true,
+        filePickerData: "audio"
+    },
     //Weapon SFX:
     {
         isText: true,
