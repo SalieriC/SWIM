@@ -260,7 +260,7 @@ const configs = [
     }
 ]
 
-const swimConfigVersion = 1
+const swimConfigVersion = SWIM_CONFIG_VERSION
 
 class DocumentConfigForm extends FormApplication {
 
