@@ -81,6 +81,19 @@ const configs = [
         hint: 'SWIM.Config_IsConsumableHint',
         value: false
     },
+    {
+        isSectionTitle: true,
+        showFor: ['gear', 'weapon', 'armor', 'shield', 'consumable'],
+        label: "SWIM.Config_AmmoConfig"
+    },
+    {
+        isBoolean: true,
+        showFor: ['gear', 'weapon', 'armor', 'shield', 'consumable'],
+        id: 'isPack',
+        label: 'SWIM.Config_IsPackName',
+        hint: 'SWIM.Config_IsPackHint',
+        value: false
+    },
     //TODO: Finish Ammo Management Improvements
     /*{
         isSectionTitle: true,
