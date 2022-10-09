@@ -3,6 +3,8 @@
   "SWIM.ConfigMenuLabel": "Start SWIM(ming)!",
   "SWIM.ConfigMenuHint": "Click here for all the configuration options available in SWIM.",
   "SWIM.Save": "Save Changes",
+  "SWIM.allowUserConfigName": "Allow non-GM users SWIM config access:",
+  "SWIM.allowUserConfigHint": "This setting allows non-GM users to access and edit the SWIM config window on actors and items.",
   "SWIM.docReadName": "I have read the documentation.",
   "SWIM.docReadHint": "I hereby declare, that I have read the ReadMe and documentation as well as the dialogue on login about SWADE Immersive Macros (SWIM) and I may be struck by lightning if I lie.",
   "SWIM.chaseDeckName": "Chase Deck:",
