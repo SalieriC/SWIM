@@ -347,7 +347,7 @@ export async function shape_changer_gm(data) {
         // Make new token very opaque.
         // Spawns the new token using WarpGate
         let newTokenID = await warpgate.spawnAt(token.center, scCopy.name, {
-            'alpha': 1, //SWIM.ALMOST_INVISIBLE, //- disabled until further investigation.
+            //'alpha': SWIM.ALMOST_INVISIBLE, //- disabled until further investigation.
             'actorId': scCopy.id,
             } );
         let newToken = canvas.tokens.get(newTokenID[0]);

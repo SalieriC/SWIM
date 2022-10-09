@@ -19,7 +19,7 @@ export async function unstun_script(effect = false) {
     }
 
     // Setting up SFX paths:
-    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(actor)
+    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
 
     // Checking for system Benny image.
     let bennyImage = await swim.get_benny_image()

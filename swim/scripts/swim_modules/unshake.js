@@ -21,7 +21,7 @@ export async function unshake_swd_script(effect = false) {
     // Checking for System Benny image.
     let bennyImage = await swim.get_benny_image()
     // Setting up SFX paths:
-    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(actor)
+    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
 
     async function rollUnshake() {
 
@@ -184,7 +184,7 @@ export async function unshake_swade_script(effect = false) {
     let bennyImage = await swim.get_benny_image()
 
     // Setting up SFX paths:
-    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(actor)
+    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
 
     async function rollUnshake() {
 

@@ -13,7 +13,7 @@ export async function mark_dead_script() {
         ui.notifications.error(game.i18n.localize("SWIM.notification-selectOneOrMoreTokens"));
         return;
     }
-    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(actor)
+    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
 
     main();
 

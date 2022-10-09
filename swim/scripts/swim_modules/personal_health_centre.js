@@ -139,7 +139,7 @@ export async function heal_other_gm(data) {
     const rating = data.rating
     const method = data.method
     const combatHealing = data.combatHealing
-    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(actor)
+    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(targetActor)
     let amount
     let chatContent
 
