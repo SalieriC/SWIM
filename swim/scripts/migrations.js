@@ -41,7 +41,7 @@ export async function v10_migration() {
                                 const unshakeSFX = sfxSplit[2]
                                 const soakSFX = sfxSplit[3]
                                 const flagData = { //Verify how they are structured in final release.
-                                    flags: { 
+                                    flags: {
                                         swim: {
                                             config: {
                                                 shakenSFX: shakenSFX,
@@ -87,17 +87,16 @@ export async function v10_migration() {
                                 loadedAmmo = actor.system.additionalStats?.loadedAmmo?.value
                             }
                             const flagData = { //Verify how they are structured in final release.
-                                flags: { 
+                                flags: {
                                     swim: {
                                         config: {
-                                            sfx: {
-                                                reload: reloadSfx.toLowerCase() === "null" || reloadSfx.toLowerCase() === "reload" ? "" : reloadSfx,
-                                                fire: fireSfx.toLowerCase() === "null" || fireSfx.toLowerCase() === "fire" ? "" : fireSfx,
-                                                autoFire: autofireSfx.toLowerCase() === "null" || autofireSfx.toLowerCase() === "autofire" ? "" : autofireSfx,
-                                                silencedFire: silencedfireSfx.toLowerCase() === "null" || silencedfireSfx.toLowerCase() === "silenced" ? "" : silencedfireSfx,
-                                                silencedAutoFire: silencedautofireSfx.toLowerCase() === "null" || silencedautofireSfx.toLowerCase() === "silencedautofire" ? "" : silencedautofireSfx,
-                                                empty: emptyfireSfx.toLowerCase() === "null" || emptyfireSfx.toLowerCase() === "empty" ? "" : emptyfireSfx
-                                            },
+                                            reloadSFX: reloadSfx.toLowerCase() === "null" || reloadSfx.toLowerCase() === "reload" ? "" : reloadSfx,
+                                            fireSFX: fireSfx.toLowerCase() === "null" || fireSfx.toLowerCase() === "fire" ? "" : fireSfx,
+                                            autoFireSFX: autofireSfx.toLowerCase() === "null" || autofireSfx.toLowerCase() === "autofire" ? "" : autofireSfx,
+                                            silencedFireSFX: silencedfireSfx.toLowerCase() === "null" || silencedfireSfx.toLowerCase() === "silenced" ? "" : silencedfireSfx,
+                                            silencedAutoFireSFX: silencedautofireSfx.toLowerCase() === "null" || silencedautofireSfx.toLowerCase() === "silencedautofire" ? "" : silencedautofireSfx,
+                                            emptySFX: emptyfireSfx.toLowerCase() === "null" || emptyfireSfx.toLowerCase() === "empty" ? "" : emptyfireSfx,
+
                                             isPack: isPack,
                                             isConsumable: isConsumable,
                                             isSilenced: silenced,
