@@ -1,3 +1,9 @@
+/** ToDo:
+ * [ ] Migration for when the config button is pressed.
+ * [ ] Disable additional stats in migration.
+ * [ ] Make migration run on first start.
+ */
+
 export async function v10_migration() {
     new Dialog({
         title: 'SWIM v.1.0.0 Migration',
