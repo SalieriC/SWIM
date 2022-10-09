@@ -156,6 +156,16 @@ const configs = [
     {
         isText: true,
         showFor: ['character', 'npc'],
+        id: "unstunSFX",
+        label: "SWIM.Config_UnstunSFXName",
+        hint: "SWIM.Config_UnstunSFXHint",
+        value: "",
+        useFilePicker: true,
+        filePickerData: "audio"
+    },
+    {
+        isText: true,
+        showFor: ['character', 'npc'],
         id: "soakSFX",
         label: "SWIM.Config_SoakSFXName",
         hint: "SWIM.Config_SoakSFXHint",
