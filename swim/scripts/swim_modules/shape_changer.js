@@ -232,7 +232,7 @@ export async function shape_changer_gm(data) {
             "prototypeToken.vision": actor.prototypeToken.vision,
             "prototypeToken.displayBars": actor.prototypeToken.displayBars,
             "prototypeToken.displayName": actor.prototypeToken.displayName,
-            "prototypeToken.alpha": SWIM.ALMOST_INVISIBLE,
+            "prototypeToken.alpha": 1, //SWIM.ALMOST_INVISIBLE,
             "system.advances.value": actor.system.advances.value,
         }
         await scCopy.update(updateData)

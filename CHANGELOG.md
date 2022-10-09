@@ -41,7 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug that created a second result chat message when an actor rolled a critical failure to unstun.
 ### Known Issues
 - Holding still breaks on first round of combat but I have no clue why.
-- The Shape Changer macro throws a lot of errors when merging. Line 350 and 365 where disabled to prevent that until further investigation.
+- The Shape Changer macro throws a lot of errors when merging. Line 235, 350 and 365 where disabled to prevent that until further investigation.
 ### Removed
 - Unshake macros from the compendium were removed and unified into a single macro since the version is now drawn from the settings.
 - Removed v10 update warning.
