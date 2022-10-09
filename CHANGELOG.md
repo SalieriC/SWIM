@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - - Along with this comes a new way of storing data, menaing that existing actor and item configurations using additional stats would break, so...
 - - a migration script is provided that goes through all actors and items of a world (but not compendiums) and updates them to this new way of storing data.
 - Added the `get_weapon_sfx` api function to get the sfx from the flags of a weapon.
+- Added file pickers for more SFX to actors (becoming stunned, gaining and loosing fatigue).
 ### Changed
 - **Breaking:** Changed the API so that the Unshake macro gets the version from the settings rather than being passed to the function. This means that the Unshake macro needs to be replaced by the one in the SWIM compendium.
 - - Added a detailed error message explaining the problem in case the old version of the macro is used.
