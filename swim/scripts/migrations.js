@@ -29,7 +29,7 @@ export async function v10_migration() {
                 callback: async (html) => {
                     let start = html.find("#startMigration")[0].checked
                     if (start === true) {
-                        ui.notifications.warn("Starting Migration now, please be patient. Your world will reload after completion.", {permanent: true})
+                        ui.notifications.warn("Starting Migration now, please be patient. Your world will reload after completion.", { permanent: true })
                         let allItems = []
                         allItems.push(game.items)
                         for (let actor of game.actors) {
@@ -124,33 +124,36 @@ export async function v10_migration() {
     }).render(true);
 }
 
-export async function update_migration(actor, currVersion) {
+export async function update_migration(actor, item, currVersion) {
     if (!currVersion || currVersion < 1) {
         ui.notifications.warn(`Starting Migration for ${actor.name}, please wait.`)
         let allItems = []
-        for (let item of actor.items) { allItems.push(item) }
-        if (actor.system.additionalStats?.sfx?.value && actor.system.additionalStats?.sfx?.dtype === "String") {
-            const sfxSequence = actor.system.additionalStats?.sfx?.value
-            const sfxSplit = sfxSequence.split("|")
-            const shakenSFX = sfxSplit[0]
-            const deathSFX = sfxSplit[1]
-            const unshakeSFX = sfxSplit[2]
-            const soakSFX = sfxSplit[3]
-            const flagData = {
-                flags: {
-                    swim: {
-                        config: {
-                            shakenSFX: shakenSFX,
-                            deathSFX: deathSFX,
-                            unshakeSFX: unshakeSFX,
-                            soakSFX: soakSFX,
-                            _version: SWIM_CONFIG_VERSION
+        if (item) { allItems.push(item) }
+        if (actor) {
+            for (let item of actor.items) { allItems.push(item) }
+            if (actor.system.additionalStats?.sfx?.value && actor.system.additionalStats?.sfx?.dtype === "String") {
+                const sfxSequence = actor.system.additionalStats?.sfx?.value
+                const sfxSplit = sfxSequence.split("|")
+                const shakenSFX = sfxSplit[0]
+                const deathSFX = sfxSplit[1]
+                const unshakeSFX = sfxSplit[2]
+                const soakSFX = sfxSplit[3]
+                const flagData = {
+                    flags: {
+                        swim: {
+                            config: {
+                                shakenSFX: shakenSFX,
+                                deathSFX: deathSFX,
+                                unshakeSFX: unshakeSFX,
+                                soakSFX: soakSFX,
+                                _version: SWIM_CONFIG_VERSION
+                            }
                         }
                     }
                 }
+                await actor.update(flagData)
+                await actor.update({ "system.additionalStats.-=sfx": null })
             }
-            await actor.update(flagData)
-            await actor.update({ "system.additionalStats.-=sfx": null })
         }
     } for (let item of allItems) {
         //Process all items...

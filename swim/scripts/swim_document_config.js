@@ -4,12 +4,14 @@ import { update_migration } from "./migrations.js";
 import { SWIM_CONFIG_VERSION } from "./constants.js";
 
 export async function open_swim_item_config(item) {
+    const currVersion = actor.flags.swim.config._version
+    if (currVersion < SWIM_CONFIG_VERSION) { await update_migration(actor = false, item, currVersion) }
     new DocumentConfigForm(item).render(true);
 }
 
 export async function open_swim_actor_config(actor) {
     const currVersion = actor.flags.swim.config._version
-    if (currVersion < SWIM_CONFIG_VERSION) { await update_migration(actor, currVersion) }
+    if (currVersion < SWIM_CONFIG_VERSION) { await update_migration(actor, item = false, currVersion) }
     new DocumentConfigForm(actor).render(true);
 }
 
