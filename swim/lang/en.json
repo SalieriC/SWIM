@@ -359,5 +359,6 @@
   "SWIM.Config_IsAmmo": "Is Ammunition",
   "SWIM.Config_IsAmmo_Hint": "If true, is considered ammunition for the Ammo Management macro.",
   "SWIM.Config_SetAmmoActiveEffect" : "Set Ammo ActiveEffect",
-  "SWIM.Config_SetAmmoActiveEffect_Hint" : "The ActiveEffect defined here will be used on the weapon once this ammo is loaded."
+  "SWIM.Config_SetAmmoActiveEffect_Hint" : "The ActiveEffect defined here will be used on the weapon once this ammo is loaded.",
+  "SWIM.Config_SFX": "Sound Effects (SFX)"
 }

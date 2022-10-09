@@ -74,6 +74,13 @@ const configs = [
         hint: 'SWIM.Config_SetAmmoActiveEffect_Hint',
         value: ''
     }*/
+    //SFX shown at the bottom(?):
+    {
+        isSectionTitle: true,
+        showFor: ['gear', 'weapon', 'armor', 'shield', 'consumable', 'character', 'npc', 'vehicle'],
+        label: "SWIM.Config_SFX"
+    },
+    //ToDo: Make file pickers available.
 ]
 
 class DocumentConfigForm extends FormApplication {
