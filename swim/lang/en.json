@@ -353,5 +353,11 @@
   "SWIM.word-is": "is",
   "SWIM.notification-shakenRoll": "{tokenName} Shaken, please roll to unshake.",
   "SWIM.notification-stunnedRoll": "{tokenName} Stunned, please roll to unstun.",
-  "SWIM.notification-bleedingRoll": "{tokenName} bleeding out, please roll to avoid death."
+  "SWIM.notification-bleedingRoll": "{tokenName} bleeding out, please roll to avoid death.",
+  "SWIM.DocumentConfigMenu": "SWIM Config",
+  "SWIM.Config_SectionAmmoManagement": "Ammo Management",
+  "SWIM.Config_IsAmmo": "Is Ammunition",
+  "SWIM.Config_IsAmmo_Hint": "If true, is considered ammunition for the Ammo Management macro.",
+  "SWIM.Config_SetAmmoActiveEffect" : "Set Ammo ActiveEffect",
+  "SWIM.Config_SetAmmoActiveEffect_Hint" : "The ActiveEffect defined here will be used on the weapon once this ammo is loaded."
 }

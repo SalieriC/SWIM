@@ -7,6 +7,7 @@ import { summoner_gm } from './swim_modules/mighty-summoner.js'
 import { heal_other_gm } from './swim_modules/personal_health_centre.js'
 import { common_bond_gm } from './swim_modules/common_bond.js'
 import { effect_builder_gm } from './swim_modules/effect_builder.js'
+import { open_swim_actor_config, open_swim_item_config } from "./swim_document_config.js";
 
 /*Hooks.on('getCardsDirectoryEntryContext', function (stuff) {
     console.log(stuff)
@@ -36,7 +37,7 @@ Hooks.on(`ready`, () => {
         let key = "install and activate";
         if (game.modules.get('warpgate')) key = "activate";
         ui.notifications.error(`SWIM requires the 'warpgate' module. Please ${key} it.`)
-    }    
+    }
 
     // Ready stuff
     console.log('SWADE Immersive Macros | Ready');
@@ -154,6 +155,27 @@ Hooks.on(`ready`, () => {
     warpgate.event.watch("SWIM.updateCombat-previousTurn", gm_relay.combat_previousTurn, swim.is_first_gm)
     warpgate.event.watch("SWIM.updateCombat-nextTurn", gm_relay.combat_nextTurn, swim.is_first_gm)
     warpgate.event.watch("SWIM.updateCombat-currentTurn", gm_relay.combat_currentTurn, swim.is_first_gm)
+
+    //SWIM per-actor/item config header button
+    if (game.user.isGM || game.settings.get('swim', 'allowUserConfig')) {
+        Hooks.on('getItemSheetHeaderButtons', function (sheet, buttons) {
+            buttons.unshift({
+                class: 'swim_config_button',
+                label: 'SWIM',
+                icon: 'fas fa-swimmer',
+                onclick: () => open_swim_item_config(sheet.item)
+
+            });
+        });
+        Hooks.on('getActorSheetHeaderButtons', function (sheet, buttons) {
+            buttons.unshift({
+                class: 'swim_config_button',
+                label: 'SWIM',
+                icon: 'fas fa-swimmer',
+                onclick: () => open_swim_actor_config(sheet.actor)
+            });
+        });
+    }
 });
 
 // Hooks on conditions
@@ -276,7 +298,7 @@ Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
                         callback: async (_) => {
                             for (let token of tokens) {
                                 await token.combatant.unsetFlag("swade", "roundHeld")
-                                await token.combatant.update({ 
+                                await token.combatant.update({
                                     "flags.swade.cardValue": currentCardValue,
                                     "flags.swade.suitValue": currentSuitValue + 0.01
                                 })
@@ -290,7 +312,7 @@ Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
                         callback: async (_) => {
                             for (let token of tokens) {
                                 await token.combatant.unsetFlag("swade", "roundHeld")
-                                await token.combatant.update({ 
+                                await token.combatant.update({
                                     "flags.swade.cardValue": currentCardValue,
                                     "flags.swade.suitValue": currentSuitValue - 0.01
                                 })

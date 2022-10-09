@@ -328,5 +328,6 @@
     "SWIM.gameTerm-Range": "Fernkampf",
     "SWIM.label-summonedEntity": "Beschworen",
     "SWIM.select-deflectionOptions": "<div class='form-group'><label for='deflectionOption'><p>Angriffsart: </p></label><select id='deflectionOption'>{options}</select></div></div>",
-    "SWIM.gameTerm-Melee": "Nahkampf"
+    "SWIM.gameTerm-Melee": "Nahkampf",
+    "SWIM.DocumentConfigMenu": "SWIM Einstellungen"
 }
