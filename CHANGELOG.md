@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New translation strings and extended localization of the module.
 - New API function which returns all contents of a folder and its sub-folders up to three layers deep.
 - On startup SWIM will check if the actor folder compendium is in the systems block toc list and if not prompt a dialogue to add it as otherwise the folders are invisible.
+- Add button in the header of items and actors that opens a SWIM configuration window.
+- - The button is accessible by the GM and optionally by players (see settings).
+- - Along with this comes a new way of storing data, menaing that existing actor and item configurations using additional stats would break, so...
+- - a migration script is provided that goes through all actors and items of a world (but not compendiums) and updates them to this new way of storing data.
 ### Changed
 - **Breaking:** Changed the API so that the Unshake macro gets the version from the settings rather than being passed to the function. This means that the Unshake macro needs to be replaced by the one in the SWIM compendium.
 - - Added a detailed error message explaining the problem in case the old version of the macro is used.
