@@ -26,20 +26,33 @@ configs = {
 the options map contains sections to show in the config window. each section has an arbitrary key and an object that describes
 what the section is about. Right now we have the following possibilities (pick one):
 
+The basic object looks like this:
+key: {
+    id: 'asd,
+    label: 'asd',
+    hint: 'asd',
+    value: ''
+}
+
 - isSectionTitle: if true shows a subheader to differentiate different sections of the config UI.
-    - value: text for the subheader
+    - label: text for the subheader
 - isBoolean: if true will show a checkbox.
     - id: the name under which to store this config in the flags
-    - label: the text to render next to the checkbox
+    - label: the loca key for the label
+    - hint: the loca key for the hint
     - value: the default value of the checkbox
 - isText: if true will show a textfield.
     - id: the name under which to store this config in the flags
-    - label: the text to render next to the textfield
+    - label: the loca key for the label
+    - hint: the loca key for the hint
     - value: the default value of the textfield
+    - useFilePicker: Set to true if you want a file picker for this text field (optional)
+    - filePickerData: The datatype of this file picker (can be: "folder", "font", "text", "graphics", "image", "audio", "video", "imagevideo" or empty) (optional)
 - isAE: if true will show a button to edit an in-memory ActiveEffect
     - id: the name under which to store this config in the flags
-    - label: the text to render on the button
-    - value: the default value of the AE
+    - label: the loca key for the label
+    - hint: the loca key for the hint
+    - value: the default value of the AE (in JSON)
 
  */
 const configs = {
@@ -47,19 +60,21 @@ const configs = {
         options: {
             /*ammoTitle: {
                 isSectionTitle: true,
-                value: "Ammo Management"
+                label: "SWIM.Config_SectionAmmoManagement"
             },
             isAmmo: {
                 isBoolean: true,
                 id: 'isAmmo',
-                label: 'Is Ammunition',
+                label: 'SWIM.Config_IsAmmo',
+                hint: 'SWIM.Config_IsAmmo_Hint',
                 value: false
             },
             ammoAE: {
                 isAE: true,
-                label: 'Set Ammo Active Effect',
                 id: 'ammoActiveEffect',
-                value: {}
+                label: 'SWIM.Config_SetAmmoActiveEffect',
+                hint: 'SWIM.Config_SetAmmoActiveEffect_Hint',
+                value: ''
             }*/
         }
     }
@@ -75,11 +90,6 @@ class DocumentConfigForm extends FormApplication {
         options.width = SWIM.ITEM_CONFIG_WINDOW_WIDTH;
         options.height = SWIM.ITEM_CONFIG_WINDOW_HEIGHT;
         return options;
-    }
-
-    constructor(object) {
-        super(object);
-        this.ammoEffects = {}
     }
 
     activateListeners(html) {
@@ -121,14 +131,15 @@ class DocumentConfigForm extends FormApplication {
     async _setActiveEffect(event) {
         let defaults;
         const id = event.currentTarget.dataset.id;
+        const oldVal = this.form.elements[id].value;
 
-        if ('swim' in this.object.flags && 'config' in this.object.flags.swim && id in this.object.flags.swim.config) {
-            defaults = this.object.flags.swim.config[id];
-        } else {
+        if (typeof oldVal === 'string' && oldVal.length === 0) {
             defaults = {
                 label: `Ammo Effect (${this.object.name})`,
                 icon: this.object.data.img
             }
+        } else {
+            defaults = JSON.parse(oldVal);
         }
 
         const effect = await CONFIG.ActiveEffect.documentClass.create(defaults, {
@@ -138,23 +149,16 @@ class DocumentConfigForm extends FormApplication {
 
         await new SWIMEffectConfig(effect, {}, (e) => {
             const effect = e.toObject();
-            this.ammoEffects[id] = effect;
+            this.form.elements[id].value = JSON.stringify(effect);
         }).render(true);
     }
 
-    async _onSubmit(event, {updateData = null, preventClose = false, preventRender = false} = {}) {
-        let data = updateData;
-        for (const [key, value] of Object.entries(this.ammoEffects)) {
-            data = {
-                ...data, ...{[key]: value}
-            };
-            this.object.deleteEmbeddedDocuments("ActiveEffect", [value._id]);
-        }
-        await super._onSubmit(event, {updateData: data, preventClose: preventClose, preventRender: preventRender});
+    async _removeActiveEffect(event) {
+        const id = event.currentTarget.dataset.id;
+        this.form.elements[id].value = '';
     }
 
     async _updateObject(_, formData) {
-        //Add flags updating here
         console.log(formData);
         const Data = {
             flags: {
