@@ -380,5 +380,10 @@
   "SWIM.Config_SilencedAutoFireSFXName": "Silenced automatic fire SFX:",
   "SWIM.Config_SilencedAutoFireSFXHint": "The SFX to be played when this weapon is suppressed and shoots ten or more shots at once.",
   "SWIM.Config_EmptySFXName": "Empty shot SFX:",
-  "SWIM.Config_EmptySFXHint": "The SFX to be played when this weapon is empty but tried to be fired regardless."
+  "SWIM.Config_EmptySFXHint": "The SFX to be played when this weapon is empty but tried to be fired regardless.",
+  "SWIM.Config_WeaponConfig": "Weapon Configurations",
+  "SWIM.Config_IsSilencedName": "Suppressed (Silenced):",
+  "SWIM.Config_IsSilencedHint": "Check this to mark the weapon as being suppressed (silenced).",
+  "SWIM.Config_LoadedAmmoName": "Loaded Ammo:",
+  "SWIM.Config_LoadedAmmoHint": "The currently loaded ammunition. This is set by the ammo management function in SWIM and usually doesn't need to be configured by the user."
 }

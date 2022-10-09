@@ -52,6 +52,27 @@ Right now we have the following possibilities (pick one):
 
  */
 const configs = [
+    {
+        isSectionTitle: true,
+        showFor: ['weapon'],
+        label: "SWIM.Config_WeaponConfig"
+    },
+    {
+        isBoolean: true,
+        showFor: ['weapon'],
+        id: 'isSilenced',
+        label: 'SWIM.Config_IsSilencedName',
+        hint: 'SWIM.Config_IsSilencedHint',
+        value: false
+    },
+    {
+        isText: true,
+        showFor: ['weapon'],
+        id: 'loadedAmmo',
+        label: 'SWIM.Config_LoadedAmmoName',
+        hint: 'SWIM.Config_LoadedAmmoHint',
+        value: ""
+    },
     //TODO: Finish Ammo Management Improvements
     /*{
         isSectionTitle: true,
