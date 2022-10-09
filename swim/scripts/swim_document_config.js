@@ -83,6 +83,8 @@ const configs = [
     //ToDo: Make file pickers available.
 ]
 
+const swimConfigVersion = 1
+
 class DocumentConfigForm extends FormApplication {
 
     static get defaultOptions() {
@@ -168,6 +170,9 @@ class DocumentConfigForm extends FormApplication {
     }
 
     async _updateObject(_, formData) {
+        //Merge in version
+        formData = {...{_version: swimConfigVersion}, ...formData};
+
         const Data = {
             flags: {
                 swim: {
