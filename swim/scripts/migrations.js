@@ -154,63 +154,63 @@ export async function update_migration(actor, item, currVersion) {
                 await actor.update(flagData)
                 await actor.update({ "system.additionalStats.-=sfx": null })
             }
-        }
-    } for (let item of allItems) {
-        //Process all items...
-        let isPack = false
-        let loadedAmmo = ""
-        let isConsumable = false
-        let sfxSequence = "" // RELOAD|FIRE|AUTOFIRE|SILENCED|SILENCEDAUTOFIRE|EMPTY
-        let silenced = false
+        } for (let item of allItems) {
+            //Process all items...
+            let isPack = false
+            let loadedAmmo = ""
+            let isConsumable = false
+            let sfxSequence = "" // RELOAD|FIRE|AUTOFIRE|SILENCED|SILENCEDAUTOFIRE|EMPTY
+            let silenced = false
 
-        let reloadSfx = ""
-        let fireSfx = ""
-        let autofireSfx = ""
-        let silencedfireSfx = ""
-        let silencedautofireSfx = ""
-        let emptyfireSfx = ""
-        if (actor.system.additionalStats?.sfx?.value && actor.system.additionalStats?.sfx?.dtype === "String") {
-            sfxSequence = actor.system.additionalStats?.sfx?.value
-            sfxSplit = sfxSequence.split("|")
-            reloadSfx = sfxSplit[0]
-            fireSfx = sfxSplit[1]
-            autofireSfx = sfxSplit[2]
-            silencedfireSfx = sfxSplit[3]
-            silencedautofireSfx = sfxSplit[4]
-            emptyfireSfx = sfxSplit[5]
-        } if (actor.system.additionalStats?.isPack?.value && actor.system.additionalStats?.isPack?.dtype === "Boolean") {
-            isPack = actor.system.additionalStats?.isPack?.value
-            await item.update({ "system.additionalStats.-=isPack": null })
-        } if (actor.system.additionalStats?.isConsumable?.value && actor.system.additionalStats?.isConsumable?.dtype === "Boolean") {
-            isConsumable = actor.system.additionalStats?.isConsumable?.value
-            await item.update({ "system.additionalStats.-=isConsumable": null })
-        } if (actor.system.additionalStats?.silenced?.value && actor.system.additionalStats?.silenced?.dtype === "Boolean") {
-            silenced = actor.system.additionalStats?.silenced?.value
-            await item.update({ "system.additionalStats.-=silenced": null })
-        } if (actor.system.additionalStats?.loadedAmmo?.value && actor.system.additionalStats?.loadedAmmo?.dtype === "String") {
-            loadedAmmo = actor.system.additionalStats?.loadedAmmo?.value
-            await item.update({ "system.additionalStats.-=loadedAmmo": null })
-        }
-        const flagData = {
-            flags: {
-                swim: {
-                    config: {
-                        reloadSFX: reloadSfx.toLowerCase() === "null" || reloadSfx.toLowerCase() === "reload" ? "" : reloadSfx,
-                        fireSFX: fireSfx.toLowerCase() === "null" || fireSfx.toLowerCase() === "fire" ? "" : fireSfx,
-                        autoFireSFX: autofireSfx.toLowerCase() === "null" || autofireSfx.toLowerCase() === "autofire" ? "" : autofireSfx,
-                        silencedFireSFX: silencedfireSfx.toLowerCase() === "null" || silencedfireSfx.toLowerCase() === "silenced" ? "" : silencedfireSfx,
-                        silencedAutoFireSFX: silencedautofireSfx.toLowerCase() === "null" || silencedautofireSfx.toLowerCase() === "silencedautofire" ? "" : silencedautofireSfx,
-                        emptySFX: emptyfireSfx.toLowerCase() === "null" || emptyfireSfx.toLowerCase() === "empty" ? "" : emptyfireSfx,
-                        isPack: isPack,
-                        isConsumable: isConsumable,
-                        isSilenced: silenced,
-                        loadedAmmo: loadedAmmo,
-                        _version: SWIM.CONFIG_VERSION
+            let reloadSfx = ""
+            let fireSfx = ""
+            let autofireSfx = ""
+            let silencedfireSfx = ""
+            let silencedautofireSfx = ""
+            let emptyfireSfx = ""
+            if (actor.system.additionalStats?.sfx?.value && actor.system.additionalStats?.sfx?.dtype === "String") {
+                sfxSequence = actor.system.additionalStats?.sfx?.value
+                sfxSplit = sfxSequence.split("|")
+                reloadSfx = sfxSplit[0]
+                fireSfx = sfxSplit[1]
+                autofireSfx = sfxSplit[2]
+                silencedfireSfx = sfxSplit[3]
+                silencedautofireSfx = sfxSplit[4]
+                emptyfireSfx = sfxSplit[5]
+            } if (actor.system.additionalStats?.isPack?.value && actor.system.additionalStats?.isPack?.dtype === "Boolean") {
+                isPack = actor.system.additionalStats?.isPack?.value
+                await item.update({ "system.additionalStats.-=isPack": null })
+            } if (actor.system.additionalStats?.isConsumable?.value && actor.system.additionalStats?.isConsumable?.dtype === "Boolean") {
+                isConsumable = actor.system.additionalStats?.isConsumable?.value
+                await item.update({ "system.additionalStats.-=isConsumable": null })
+            } if (actor.system.additionalStats?.silenced?.value && actor.system.additionalStats?.silenced?.dtype === "Boolean") {
+                silenced = actor.system.additionalStats?.silenced?.value
+                await item.update({ "system.additionalStats.-=silenced": null })
+            } if (actor.system.additionalStats?.loadedAmmo?.value && actor.system.additionalStats?.loadedAmmo?.dtype === "String") {
+                loadedAmmo = actor.system.additionalStats?.loadedAmmo?.value
+                await item.update({ "system.additionalStats.-=loadedAmmo": null })
+            }
+            const flagData = {
+                flags: {
+                    swim: {
+                        config: {
+                            reloadSFX: reloadSfx.toLowerCase() === "null" || reloadSfx.toLowerCase() === "reload" ? "" : reloadSfx,
+                            fireSFX: fireSfx.toLowerCase() === "null" || fireSfx.toLowerCase() === "fire" ? "" : fireSfx,
+                            autoFireSFX: autofireSfx.toLowerCase() === "null" || autofireSfx.toLowerCase() === "autofire" ? "" : autofireSfx,
+                            silencedFireSFX: silencedfireSfx.toLowerCase() === "null" || silencedfireSfx.toLowerCase() === "silenced" ? "" : silencedfireSfx,
+                            silencedAutoFireSFX: silencedautofireSfx.toLowerCase() === "null" || silencedautofireSfx.toLowerCase() === "silencedautofire" ? "" : silencedautofireSfx,
+                            emptySFX: emptyfireSfx.toLowerCase() === "null" || emptyfireSfx.toLowerCase() === "empty" ? "" : emptyfireSfx,
+                            isPack: isPack,
+                            isConsumable: isConsumable,
+                            isSilenced: silenced,
+                            loadedAmmo: loadedAmmo,
+                            _version: SWIM.CONFIG_VERSION
+                        }
                     }
                 }
             }
+            await item.update(flagData)
         }
-        await item.update(flagData)
         ui.notifications.notify(`Migration for ${actor.name} finished.`)
     }
 }
