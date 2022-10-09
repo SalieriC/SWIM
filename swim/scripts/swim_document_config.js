@@ -12,36 +12,31 @@ export async function open_swim_actor_config(actor) {
 /*
 This object works as follows:
 
-configs = {
-    type: { options: {...} }
-}
+configs = [
+     {
+        showFor: ['type0', 'type1']
+        id: 'asd,
+        label: 'asd',
+        hint: 'asd',
+        value: ''
+    },
+    {...}
+]
 
-type is the type of actor or item. So if you want to add configs for weapons and npc, you would do it like this:
-
-configs = {
-    weapon: { options: {...} },
-    npc: { options: {...} }
-}
-
-the options map contains sections to show in the config window. each section has an arbitrary key and an object that describes
-what the section is about. Right now we have the following possibilities (pick one):
-
-The basic object looks like this:
-key: {
-    id: 'asd,
-    label: 'asd',
-    hint: 'asd',
-    value: ''
-}
+The map contains sections and form elements to show in the config window. Each section is an object that describes what the section is about.
+Right now we have the following possibilities (pick one):
 
 - isSectionTitle: if true shows a subheader to differentiate different sections of the config UI.
+    - showFor: Array of item/actor types to show this element for. Omit entire property to always show.
     - label: text for the subheader
 - isBoolean: if true will show a checkbox.
+    - showFor: Array of item/actor types to show this element for. Omit entire property to always show.
     - id: the name under which to store this config in the flags
     - label: the loca key for the label
     - hint: the loca key for the hint
     - value: the default value of the checkbox
 - isText: if true will show a textfield.
+    - showFor: Array of item/actor types to show this element for. Omit entire property to always show.
     - id: the name under which to store this config in the flags
     - label: the loca key for the label
     - hint: the loca key for the hint
@@ -49,36 +44,37 @@ key: {
     - useFilePicker: Set to true if you want a file picker for this text field (optional)
     - filePickerData: The datatype of this file picker (can be: "folder", "font", "text", "graphics", "image", "audio", "video", "imagevideo" or empty) (optional)
 - isAE: if true will show a button to edit an in-memory ActiveEffect
+    - showFor: Array of item/actor types to show this element for. Omit entire property to always show.
     - id: the name under which to store this config in the flags
     - label: the loca key for the label
     - hint: the loca key for the hint
     - value: the default value of the AE (in JSON)
 
  */
-const configs = {
-    gear: {
-        options: {
-            /*ammoTitle: {
-                isSectionTitle: true,
-                label: "SWIM.Config_SectionAmmoManagement"
-            },
-            isAmmo: {
-                isBoolean: true,
-                id: 'isAmmo',
-                label: 'SWIM.Config_IsAmmo',
-                hint: 'SWIM.Config_IsAmmo_Hint',
-                value: false
-            },
-            ammoAE: {
-                isAE: true,
-                id: 'ammoActiveEffect',
-                label: 'SWIM.Config_SetAmmoActiveEffect',
-                hint: 'SWIM.Config_SetAmmoActiveEffect_Hint',
-                value: ''
-            }*/
-        }
-    }
-}
+const configs = [
+    //TODO: Finish Ammo Management Improvements
+    /*{
+        isSectionTitle: true,
+        showFor: ['gear', 'weapon', 'armor', 'shield', 'consumable'],
+        label: "SWIM.Config_SectionAmmoManagement"
+    },
+    {
+        isBoolean: true,
+        showFor: ['gear', 'weapon', 'armor', 'shield', 'consumable'],
+        id: 'isAmmo',
+        label: 'SWIM.Config_IsAmmo',
+        hint: 'SWIM.Config_IsAmmo_Hint',
+        value: false
+    },
+    {
+        isAE: true,
+        showFor: ['gear', 'weapon', 'armor', 'shield', 'consumable'],
+        id: 'ammoActiveEffect',
+        label: 'SWIM.Config_SetAmmoActiveEffect',
+        hint: 'SWIM.Config_SetAmmoActiveEffect_Hint',
+        value: ''
+    }*/
+]
 
 class DocumentConfigForm extends FormApplication {
 
@@ -102,23 +98,29 @@ class DocumentConfigForm extends FormApplication {
     }
 
     getData() {
-        const config = configs[this.object.type];
-        if (config !== undefined) {
+        const type = this.object.type;
+        let data = [];
+
+        for (const c of configs) {
             //load and merge flags here
+            if ('showFor' in c && !c.showFor.includes(type))
+                continue;
+
             if ('swim' in this.object.flags && 'config' in this.object.flags.swim) {
                 const flagsConfig = this.object.flags.swim.config;
-                for (const [_, value] of Object.entries(config.options)) {
-                    if (value.id in flagsConfig) {
-                        const val = flagsConfig[value.id];
-                        if (val !== null && val !== undefined) {
-                            value.value = val;
-                        }
+
+                if (c.id in flagsConfig) {
+                    const val = flagsConfig[c.id];
+                    if (val !== null && val !== undefined) {
+                        c.value = val;
                     }
                 }
             }
-            return config;
+
+            data.push(c);
         }
-        return {};
+
+        return {options: data};
     }
 
     async _onButtonClick(event) {
@@ -159,7 +161,6 @@ class DocumentConfigForm extends FormApplication {
     }
 
     async _updateObject(_, formData) {
-        console.log(formData);
         const Data = {
             flags: {
                 swim: {
