@@ -208,21 +208,16 @@ export class api {
   }
   // Get SFX
   static async _get_actor_sfx(actor) {
-    let shakenSFX
-    let deathSFX
-    let unshakeSFX
-    let soakSFX
-    if (actor.system.additionalStats?.sfx) {
-      let sfxSequence = actor.system.additionalStats.sfx.value.split("|")
-      shakenSFX = sfxSequence[0]
-      deathSFX = sfxSequence[1]
-      unshakeSFX = sfxSequence[2]
-      soakSFX = sfxSequence[3]
+    let shakenSFX = game.settings.get('swim', 'shakenSFX')
+    let deathSFX = game.settings.get('swim', 'incapSFX')
+    let unshakeSFX = game.settings.get('swim', 'looseFatigueSFX')
+    let soakSFX = game.settings.get('swim', 'looseFatigueSFX')
+    if (actor.flags?.swim?.config) {
+      shakenSFX = actor.flags.swim.config.shakenSFX
+      deathSFX = actor.flags.swim.config.deathSFX
+      unshakeSFX = actor.flags.swim.config.unshakeSFX
+      soakSFX = actor.flags.swim.config.soakSFX
     }
-    if (!shakenSFX || shakenSFX === "NULL") { shakenSFX = game.settings.get('swim', 'shakenSFX') }
-    if (!deathSFX || deathSFX === "NULL") { deathSFX = game.settings.get('swim', 'incapSFX') }
-    if (!unshakeSFX || unshakeSFX === "NULL") { unshakeSFX = game.settings.get('swim', 'looseFatigueSFX'); }
-    if (!soakSFX || soakSFX === "NULL") { soakSFX = game.settings.get('swim', 'looseFatigueSFX'); }
     return { shakenSFX, deathSFX, unshakeSFX, soakSFX }
   }
   // Play SFX
