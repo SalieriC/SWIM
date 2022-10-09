@@ -44,10 +44,10 @@ export async function v10_migration() {
                                     flags: { 
                                         swim: {
                                             config: {
-                                                shakenSfx: shakenSFX,
-                                                deathSfx: deathSFX,
-                                                unshakeSfx: unshakeSFX,
-                                                soakSfx: soakSFX
+                                                shakenSFX: shakenSFX,
+                                                deathSFX: deathSFX,
+                                                unshakeSFX: unshakeSFX,
+                                                soakSFX: soakSFX
                                             }
                                         }
                                     }
