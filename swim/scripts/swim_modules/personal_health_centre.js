@@ -139,7 +139,7 @@ export async function heal_other_gm(data) {
     const rating = data.rating
     const method = data.method
     const combatHealing = data.combatHealing
-    const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(targetActor)
+    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(actor)
     let amount
     let chatContent
 
@@ -283,23 +283,9 @@ export async function heal_other_gm(data) {
 
 async function healSelf(token, speaker) {
     // Setting SFX
-    let woundedSFX = game.settings.get(
-        'swim', 'woundedSFX');
-    let incapSFX = game.settings.get(
-        'swim', 'incapSFX');
-    let healSFX = game.settings.get(
-        'swim', 'healSFX');
-    let looseFatigueSFX = game.settings.get(
-        'swim', 'looseFatigueSFX');
+    const { woundedSFX, incapSFX, healSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(actor)
     let potionSFX = game.settings.get(
         'swim', 'potionSFX');
-    if (token.actor.system.additionalStats.sfx) {
-        let sfxSequence = token.actor.system.additionalStats.sfx.value.split("|");
-        woundedSFX = sfxSequence[0];
-        incapSFX = sfxSequence[1];
-        healSFX = sfxSequence[2];
-        looseFatigueSFX = sfxSequence[2];
-    }
 
     // Declaring variables and constants.
     const wv = token.actor.system.wounds.value;

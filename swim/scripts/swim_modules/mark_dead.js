@@ -13,12 +13,7 @@ export async function mark_dead_script() {
         ui.notifications.error(game.i18n.localize("SWIM.notification-selectOneOrMoreTokens"));
         return;
     }
-    let incapSFX = game.settings.get(
-        'swim', 'incapSFX');
-    if (token.actor.system.additionalStats.sfx) {
-        let sfxSequence = token.actor.system.additionalStats.sfx.value.split("|");
-        incapSFX = sfxSequence[1];
-    }
+    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(actor)
 
     main();
 
@@ -27,6 +22,6 @@ export async function mark_dead_script() {
             await succ.toggle_status(e, 'incapacitated', true, true)
         }
         ui.notifications.info(game.i18n.localize("SWIM.notification.markDeadAlive"));
-        AudioHelper.play({ src: `${incapSFX}` }, true);
+        AudioHelper.play({ src: `${deathSFX}` }, true);
     }
 }

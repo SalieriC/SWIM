@@ -43,8 +43,7 @@ export async function radiation_centre_script() {
     // Checking for SWADE Spices & Flavours and setting up the Benny image.
     let bennyImage = await swim.get_benny_image()
     // Setting SFX
-    let fatiguedSFX = game.settings.get(
-        'swim', 'fatiguedSFX');
+    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(actor)
     let radRes = token.actor.system.additionalStats.radRes?.value;
 
     // Declairing variables and constants.

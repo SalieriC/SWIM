@@ -211,14 +211,39 @@ export class api {
     let shakenSFX = game.settings.get('swim', 'shakenSFX')
     let deathSFX = game.settings.get('swim', 'incapSFX')
     let unshakeSFX = game.settings.get('swim', 'looseFatigueSFX')
+    let stunnedSFX = game.settings.get('swim', 'stunSFX')
     let soakSFX = game.settings.get('swim', 'looseFatigueSFX')
+    let fatiguedSFX = game.settings.get('swim', 'fatiguedSFX')
+    let looseFatigueSFX = game.settings.get('swim', 'looseFatigueSFX')
     if (actor.flags?.swim?.config) {
       shakenSFX = actor.flags.swim.config.shakenSFX
       deathSFX = actor.flags.swim.config.deathSFX
       unshakeSFX = actor.flags.swim.config.unshakeSFX
+      stunnedSFX = actor.flags.swim.config.stunnedSFX
       soakSFX = actor.flags.swim.config.soakSFX
+      fatiguedSFX = actor.flags.swim.config.fatiguedSFX
+      looseFatigueSFX = actor.flags.swim.config.looseFatigueSFX
     }
-    return { shakenSFX, deathSFX, unshakeSFX, soakSFX }
+    return { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX }
+    // const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(actor)
+  }
+  static async _get_weapon_sfx(weapon) {
+    let reloadSFX
+    let fireSFX
+    let autoFireSFX
+    let silencedFireSFX
+    let silencedAutoFireSFX
+    let emptySFX
+    if (weapon.flags?.swim?.config) {
+      reloadSFX = weapon.flags.swim.config.reloadSFX
+      fireSFX = weapon.flags.swim.config.fireSFX
+      autoFireSFX = weapon.flags.swim.config.autoFireSFX
+      silencedFireSFX = weapon.flags.swim.config.silencedFireSFX
+      silencedAutoFireSFX = weapon.flags.swim.config.silencedAutoFireSFX
+      emptySFX = weapon.flags.swim.config.emptySFX
+    }
+    return { reloadSFX, fireSFX, autoFireSFX, silencedFireSFX, silencedAutoFireSFX, emptySFX }
+    // const { reloadSFX, fireSFX, autoFireSFX, silencedFireSFX, silencedAutoFireSFX, emptySFX } = await swim.get_weapon_sfx(weapon)
   }
   // Play SFX
   static async _play_sfx(sfx, volume, playForAll = true) {

@@ -140,19 +140,7 @@ export async function ammo_management_script() {
             let sfxDelay = game.settings.get(
                 'swim', 'sfxDelay');
             // Getting the sfx from the selected weapon
-            let sfx_shot/* = stuff*/;
-            let sfx_silenced/* = stuff*/;
-            let sfx_shot_auto/* = stuff*/;
-            let sfx_silenced_auto/* = stuff*/;
-            let sfx_empty;
-            if (item_weapon.system.additionalStats.sfx) {
-                let sfx = item_weapon.system.additionalStats.sfx.value.split(`|`);
-                sfx_shot = sfx[1];
-                sfx_silenced = sfx[3];
-                sfx_shot_auto = sfx[2];
-                sfx_silenced_auto = sfx[4];
-                sfx_empty = sfx[5];
-            }
+            const { sfx_reload, sfx_shot, sfx_shot_auto, sfx_silenced, sfx_silenced_auto, sfx_empty } = await swim.get_weapon_sfx(item_weapon)
             // Setting a boolean depending on whether or not a weapon is silenced
             let sil = false;
             if (item_weapon.system.additionalStats.silenced && item_weapon.system.additionalStats.silenced.value === true) {
@@ -313,11 +301,7 @@ export async function ammo_management_script() {
                     return
                 }
                 // Getting the sfx from the selected weapon
-                let sfx_reload;
-                if (item_weapon.system.additionalStats.sfx) {
-                    let sfx = item_weapon.system.additionalStats.sfx.value.split(`|`);
-                    sfx_reload = sfx[0];
-                }
+                const { sfx_reload, sfx_shot, sfx_shot_auto, sfx_silenced, sfx_silenced_auto, sfx_empty } = await swim.get_weapon_sfx(item_weapon)
                 // Getting images from items
                 const weaponIMG = item_weapon.img;
                 const ammoIMG = item_ammo.img;
@@ -441,11 +425,7 @@ export async function ammo_management_script() {
                     },
                     content: game.i18n.format("SWIM.chatMessage-reloadWeaponWithoutAmmoName", {weaponIMG: item_weapon.img, name: token.name, itemWeaponName: item_weapon.name})
                 })
-                let sfx_reload
-                if (item_weapon.system.additionalStats.sfx) {
-                    let sfx = item_weapon.system.additionalStats.sfx.value.split(`|`);
-                    sfx_reload = sfx[0];
-                }
+                const { sfx_reload, sfx_shot, sfx_shot_auto, sfx_silenced, sfx_silenced_auto, sfx_empty } = await swim.get_weapon_sfx(item_weapon)
                 if (sfx_reload) {
                     AudioHelper.play({ src: `${sfx_reload}` }, true)
                 }
@@ -591,19 +571,7 @@ export async function br2_ammo_management_script(message, actor, item) {
         let sfxDelay = game.settings.get(
             'swim', 'sfxDelay');
         // Getting the sfx from the weapon provided by BR2:
-        let sfx_shot;
-        let sfx_silenced;
-        let sfx_shot_auto;
-        let sfx_silenced_auto;
-        let sfx_empty;
-        if (item_weapon.system.additionalStats.sfx) {
-            let sfx = item_weapon.system.additionalStats.sfx.value.split(`|`);
-            sfx_shot = sfx[1];
-            sfx_silenced = sfx[3];
-            sfx_shot_auto = sfx[2];
-            sfx_silenced_auto = sfx[4];
-            sfx_empty = sfx[5];
-        }
+        const { sfx_reload, sfx_shot, sfx_shot_auto, sfx_silenced, sfx_silenced_auto, sfx_empty } = await swim.get_weapon_sfx(item_weapon)
         // Getting Weapon and loaded ammo
         const weaponIMG = item_weapon.img;
         let currentAmmo

@@ -18,15 +18,8 @@ export async function unstun_script(effect = false) {
         ui.notifications.notify(game.i18n.format("SWIM.notification-stunnedRoll", {tokenName: nameKey}));
     }
 
-    // Setting up SFX path.
-    let stunSFX = game.settings.get(
-        'swim', 'stunSFX');
-
-    let unshakeSFX;
-    if (token.actor.system.additionalStats.sfx) {
-        let sfxSequence = token.actor.system.additionalStats.sfx.value.split("|");
-        unshakeSFX = sfxSequence[2];
-    }
+    // Setting up SFX paths:
+    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(actor)
 
     // Checking for system Benny image.
     let bennyImage = await swim.get_benny_image()

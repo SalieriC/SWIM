@@ -21,8 +21,7 @@ export async function soak_damage_script(effect = false) {
     // Checking for System Benny image.
     let bennyImage = await swim.get_benny_image()
     // Setting SFX
-    let woundedSFX = game.settings.get(
-        'swim', 'woundedSFX');
+    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(actor)
     // Injury Table for Gritty Damage
     let grit = game.settings.get(
         'swim', 'grittyDamage');
@@ -30,12 +29,6 @@ export async function soak_damage_script(effect = false) {
         'swim', 'grittyDamageNPC');
     let injuryTable = game.settings.get(
         'swim', 'injuryTable');
-    let soakSFX;
-    if (token.actor.system.additionalStats.sfx) {
-        let sfxSequence = token.actor.system.additionalStats.sfx.value.split("|");
-        woundedSFX = sfxSequence[0];
-        soakSFX = sfxSequence[3];
-    }
     const sendMessage = true
 
     // Declaring variables and constants.
