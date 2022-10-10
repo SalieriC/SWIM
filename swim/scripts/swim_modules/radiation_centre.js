@@ -184,7 +184,7 @@ export async function radiation_centre_script() {
          <p>You currently have <b>${fv}/${fm}</b> Fatigue and <b>${totalBennies}</b> Bennies.</p>
          <p><i class="fas fa-radiation"></i> @Compendium[swade-core-rules.swade-rules.S3WKO4LbfvERka9n]{Radiation} requires you to roll Vigor or you'll take <b>1 Level of Fatigue</b>.</p>
          <p>Instead you may choose to take the Level of Fatigue without a roll.</p>
-     </form>`),
+     </form>`, { async: false }),
         buttons: buttonsMain,
         default: "one",
     }).render(true);
