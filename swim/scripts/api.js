@@ -143,7 +143,7 @@ export class api {
       ui.notifications.warn("You have no more bennies left.");
     }
     if (game.user.isGM) {
-      gmBennies = game.user.getFlag("swade", "bennies");
+      gmBennies = game.user.bennies;
       totalBennies = tokenBennies + gmBennies
     }
     else {
