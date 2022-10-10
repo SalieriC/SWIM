@@ -98,7 +98,7 @@
 			"system": "swade",
 			"path": "packs/swade-immersive-macros.db",
 			"module": "swim",
-			"entity": "Macro",
+			"type": "Macro",
 			"private": true
 		},
 		{
@@ -107,7 +107,7 @@
 			"system": "swade",
 			"path": "packs/chase-layouts.db",
 			"module": "swim",
-			"entity": "Scene",
+			"type": "Scene",
 			"private": true
 		},
 		{
@@ -116,7 +116,7 @@
 			"path": "packs/swim-actor-folders.db",
 			"system": "swade",
 			"module": "swim",
-			"entity": "Actor",
+			"type": "Actor",
 			"private": true
 		},
 		{
@@ -125,7 +125,7 @@
 			"path": "packs/swim-chase-cards.db",
 			"system": "swade",
 			"module": "swim",
-			"entity": "JournalEntry",
+			"type": "JournalEntry",
 			"private": true
 		},
 		{
@@ -134,7 +134,7 @@
 			"path": "packs/swim-roll-tables.db",
 			"system": "swade",
 			"module": "swim",
-			"entity": "RollTable",
+			"type": "RollTable",
 			"private": true
 		}
 	],
