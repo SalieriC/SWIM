@@ -283,7 +283,7 @@ export async function heal_other_gm(data) {
 
 async function healSelf(token, speaker) {
     // Setting SFX
-    const { woundedSFX, incapSFX, healSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(actor)
+    const { woundedSFX, incapSFX, healSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
     let potionSFX = game.settings.get(
         'swim', 'potionSFX');
 
