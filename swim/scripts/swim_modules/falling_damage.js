@@ -99,7 +99,7 @@ export async function falling_damage_script() {
         for (let token of tokens) {
             content += `
         <p>
-          <img style="border: 0; text-align: left;" src="${token.img}" width="25" height="25" /> 
+          <img style="border: 0; text-align: left;" src="${token.document.texture.src}" width="25" height="25" /> 
           <span style="vertical-align: super; text-align: left;">${token.name}</span>
         </p>
         <input style="text-align: center;" id="fallingDepth-${token.id}" style="flex: 1;" type="number" value="0" />
@@ -125,7 +125,7 @@ export async function falling_damage_script() {
                             if (waterSuccess != "na" && snowDepth != 0) {
                                 return ui.notifications.error(`You can't combine water and snow.`)
                             }
-                            messageContent += `<h3><img style="border: 0;" src=${token.img} width="35" height="35" /> ${token.name}</h3>`;
+                            messageContent += `<h3><img style="border: 0;" src=${token.document.texture.src} width="35" height="35" /> ${token.name}</h3>`;
                             await roll_damage(token, fallingDepth, snowDepth, waterSuccess);
                         }
                         if (officialModule === true) {
