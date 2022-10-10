@@ -17,16 +17,16 @@ export async function falling_damage_script() {
     let officialModule = false;
 
     if (game.modules.get("swpf-core-rules")?.active) {
-        messageContent = `<div class="swpf-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> @Compendium[swpf-core-rules.swpf-rules.VWsotOh2lybrA8kA]{Damage from Falling}</h2>`;
+        messageContent = `<div class="swpf-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> Damage from Falling</h2>`;
         officialModule = true;
     } else if (game.modules.get("deadlands-core-rules")?.active) {
-        messageContent = `<div class="deadlands-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> @Compendium[swade-core-rules.swade-rules.KrNAAJXr91wkfxtY]{Damage from Falling}</h2>`;
+        messageContent = `<div class="deadlands-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> Damage from Falling</h2>`;
         officialModule = true;
     }/* else if (game.modules.get("sprawl-core-rules")?.active) {
     messageContent = `<div class="sprawl-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> @Compendium[swade-core-rules.swade-rules.KrNAAJXr91wkfxtY]{Damage from Falling}</h2>`;
     officialModule = true;
 }*/ else if (game.modules.get("swade-core-rules")?.active) {
-        messageContent = `<div class="swade-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> @Compendium[swade-core-rules.swade-rules.KrNAAJXr91wkfxtY]{Damage from Falling}</h2>`;
+        messageContent = `<div class="swade-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> Damage from Falling</h2>`;
         officialModule = true;
     }
     const options = `<option value="na">n/a</option><option value="success">Success</option><option value="raise">Raise</option>`;
