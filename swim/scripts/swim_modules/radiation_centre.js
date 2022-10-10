@@ -180,11 +180,11 @@ export async function radiation_centre_script() {
     let { ___, ____, totalBennies } = await swim.check_bennies(token)
     new Dialog({
         title: 'Radiation Centre',
-        content: TextEditor.enrichHTML(`<form class="swade-core">
+        content: await TextEditor.enrichHTML(`<form class="swade-core">
          <p>You currently have <b>${fv}/${fm}</b> Fatigue and <b>${totalBennies}</b> Bennies.</p>
-         <p><i class="fas fa-radiation"></i> @Compendium[swade-core-rules.swade-rules.S3WKO4LbfvERka9n]{Radiation} requires you to roll Vigor or you'll take <b>1 Level of Fatigue</b>.</p>
+         <p><i class="fas fa-radiation"></i> @UUID[Compendium.swade-core-rules.swade-rules.swadecor04theadv.JournalEntryPage.04radiation00000]{Radiation} requires you to roll Vigor or you'll take <b>1 Level of Fatigue</b>.</p>
          <p>Instead you may choose to take the Level of Fatigue without a roll.</p>
-     </form>`, { async: false }),
+     </form>`, { async: true }),
         buttons: buttonsMain,
         default: "one",
     }).render(true);
