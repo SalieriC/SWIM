@@ -40,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug when holding which resulted on having the combat tracker focus on top of the tracker instead of the token which should have its turn.
 - Fixed a bug that created a second result chat message when an actor rolled a critical failure to unstun.
 - Fixed a bug that caused a duplicate dialogue when using the token vision macro.
+- Fixed a massive bug that caused a freeze scenario in the fall damage macro in FVTT v10.
 ### Known Issues
 - Holding still breaks on first round of combat but I have no clue why.
 - The Shape Changer macro throws a lot of errors when merging. Line 235, 350 and 365 where disabled to prevent that until further investigation.
