@@ -77,11 +77,13 @@ Hooks.on(`ready`, () => {
     // First Login warning
     if (game.settings.get('swim', 'docReadV10') === false || !game.settings.get("swade", "tocBlockList")["swim.swim-actor-folders"]) {
         let additionalText = ""
+        let unshakeWarning = game.settings.get('swim', 'docRead') === true ? "<p><strong>It seems you have used SWIM before. Please note that you have to replace your unshake macro with the new version in the compendium. The SWD (old) unshaken rules can now be activated in the settings.</strong></p><hr />" : ""
         if (!game.settings.get("swade", "tocBlockList")["swim.swim-actor-folders"]) {additionalText = "<p><strong>Please note:</strong> To make some adjustments to properly use SWIM, the world will be reloaded after closing this dialogue.<p>"}
         new Dialog({
             title: 'Welcome to SWIM',
             content: `<form>
                 <h1>Welcome to SWIM</h1>
+                ${unshakeWarning}
                 <p>SWIM means SWADE Immersive Macros and that's exactly what you get.</p>
                 <p>Please make sure to read the <a href="https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/README.md">ReadMe</a> and the <a href="https://github.com/SalieriC/SWADE-Immersive-Macros/tree/main/documentation">documentation</a> on the GitHub. Don't blame me if you don't quite get how SWIM works when it is in there. If it is not in there however, feel free to drop me a DM on Discord: SalieriC#8263</p>
                 <p>Please also note that SWIM overrides some SWADE System behaviour, especially the chase cleanup. Instead you'll find the same button in the same spot (Tile controls on the left) that sets up a chase for you. Make sure to use the Chase Layouts provided by SWIM and found in a compendium with this, on other scenes the cards may not align properly. <strong>Do not blame FloRad</strong> if that is not working, it is provided by SWIM, not the system.</p>
