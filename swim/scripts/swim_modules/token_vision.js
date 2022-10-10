@@ -9,7 +9,7 @@
  * by SalieriC#8263.
  ******************************************/
 
-export async function token_vision_script() {
+export async function token_vision_script(condition = false) {
     main()
     async function main() {
         if (canvas.tokens.controlled[0] === undefined) {
@@ -265,7 +265,13 @@ export async function token_vision_script() {
                 const volume = game.settings.get("swim", "defaultVolume")
                 await swim.play_sfx(sfx, volume)
             }
-            await succ.apply_status(tokenD, 'torch', activeLight)
+            if (!condition) {
+                if (activeLight === false) {
+                    let ae = await succ.get_condition_from(tokenD, 'torch')
+                    if (ae) { await ae.setFlag('swim', 'deactivatedFromMacro', true) }//set flags to prevent duplicate message in init.js
+                }
+                await succ.apply_status(tokenD, 'torch', activeLight, false, {swim: {activatedFromMacro: true}})//pass additional data to prevent duplicate message in init.js
+            }
         }
     }
 }

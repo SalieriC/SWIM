@@ -164,7 +164,6 @@ Hooks.on(`ready`, () => {
                 label: 'SWIM',
                 icon: 'fas fa-swimmer',
                 onclick: () => open_swim_item_config(sheet.item)
-
             });
         });
         Hooks.on('getActorSheetHeaderButtons', function (sheet, buttons) {
@@ -196,7 +195,8 @@ Hooks.on(`createActiveEffect`, async (condition, _, userID) => {
     }
     // Light
     if (condition.flags?.core?.statusId === "torch" && game.user.id === userID) {
-        swim.token_vision()
+        if (condition.flags?.succ?.additionalData?.swim?.activatedFromMacro === true) { return } //Prevent second execution if macro was used.
+        swim.token_vision(condition)
     }
     // Hold
     if (condition.flags?.core?.statusId === "holding" && swim.is_first_gm() && game.combat) {
@@ -280,7 +280,8 @@ Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
     }
     // Light
     if (condition.flags?.core?.statusId === "torch" && game.user.id === userID) {
-        swim.token_vision()
+        if (condition.flags?.swim?.deactivatedFromMacro === true) { return } //Prevent second execution if macro was used.
+        swim.token_vision(condition)
     }
     // Hold
     if (condition.flags?.core?.statusId === "holding" && game.user.id === userID) {
