@@ -78,6 +78,7 @@ export class api {
    * - Get SFX
    * - Play SFX
    * - Get Folder Contents
+   * - Run Migration
    ******************************************/
 
   // Get Macro Variables
