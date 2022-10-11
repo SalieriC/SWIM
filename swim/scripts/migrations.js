@@ -31,7 +31,7 @@ export async function v10_migration() {
                     if (start === true) {
                         ui.notifications.warn("Starting Migration now, please be patient. Your world will reload after completion.", { permanent: true })
                         let allItems = []
-                        allItems.push(game.items)
+                        for (let item of game.items) { allItems.push(item) }
                         for (let actor of game.actors) {
                             //Process all actors...
                             for (let item of actor.items) { allItems.push(item) }
@@ -59,6 +59,7 @@ export async function v10_migration() {
                                 await actor.update({ "system.additionalStats.-=sfx": null })
                             }
                         } for (let item of allItems) {
+                            console.log(item)
                             //Process all items...
                             let isPack = false
                             let loadedAmmo = ""
@@ -72,15 +73,26 @@ export async function v10_migration() {
                             let silencedfireSfx = ""
                             let silencedautofireSfx = ""
                             let emptyfireSfx = ""
-                            if (item.system.additionalStats?.sfx?.value && typeof actor.system.additionalStats?.sfx?.value === "string") {
+                            if (item.system.additionalStats?.sfx?.value && typeof item.system.additionalStats?.sfx?.value === "string") {
                                 sfxSequence = item.system.additionalStats?.sfx?.value
                                 let sfxSplit = sfxSequence.split("|")
-                                reloadSfx = sfxSplit[0]
-                                fireSfx = sfxSplit[1]
-                                autofireSfx = sfxSplit[2]
-                                silencedfireSfx = sfxSplit[3]
-                                silencedautofireSfx = sfxSplit[4]
-                                emptyfireSfx = sfxSplit[5]
+                                if (item.type === "power") {
+                                    fireSfx = sfxSplit[0]
+                                } else if (item.system.ammo.toLowerCase() === "melee") {
+                                    reloadSfx = "null"
+                                    fireSfx = "null"
+                                    autofireSfx = "null"
+                                    silencedfireSfx = "null"
+                                    silencedautofireSfx = "null"
+                                    emptyfireSfx = "null"
+                                } else {
+                                    reloadSfx = sfxSplit[0]
+                                    fireSfx = sfxSplit[1]
+                                    autofireSfx = sfxSplit[2]
+                                    silencedfireSfx = sfxSplit[3]
+                                    silencedautofireSfx = sfxSplit[4]
+                                    emptyfireSfx = sfxSplit[5]
+                                }
                             } if (item.system.additionalStats?.isPack?.value && typeof item.system.additionalStats?.isPack?.value === "boolean") {
                                 isPack = item.system.additionalStats?.isPack?.value
                                 await item.update({ "system.additionalStats.-=isPack": null })
@@ -172,12 +184,23 @@ export async function update_migration(actor, item, currVersion) {
             if (item.system.additionalStats?.sfx?.value && typeof actor.system.additionalStats?.sfx?.value === "string") {
                 sfxSequence = item.system.additionalStats?.sfx?.value
                 let sfxSplit = sfxSequence.split("|")
-                reloadSfx = sfxSplit[0]
-                fireSfx = sfxSplit[1]
-                autofireSfx = sfxSplit[2]
-                silencedfireSfx = sfxSplit[3]
-                silencedautofireSfx = sfxSplit[4]
-                emptyfireSfx = sfxSplit[5]
+                if (item.type === "power") {
+                    fireSfx = sfxSplit[0]
+                } else if (item.system.ammo.toLowerCase() === "melee") {
+                    reloadSfx = "null"
+                    fireSfx = "null"
+                    autofireSfx = "null"
+                    silencedfireSfx = "null"
+                    silencedautofireSfx = "null"
+                    emptyfireSfx = "null"
+                } else {
+                    reloadSfx = sfxSplit[0]
+                    fireSfx = sfxSplit[1]
+                    autofireSfx = sfxSplit[2]
+                    silencedfireSfx = sfxSplit[3]
+                    silencedautofireSfx = sfxSplit[4]
+                    emptyfireSfx = sfxSplit[5]
+                }
             } if (item.system.additionalStats?.isPack?.value && typeof item.system.additionalStats?.isPack?.value === "boolean") {
                 isPack = item.system.additionalStats?.isPack?.value
                 await item.update({ "system.additionalStats.-=isPack": null })
