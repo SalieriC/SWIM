@@ -25,7 +25,7 @@ export async function v10_migration() {
             </form>`,
         buttons: {
             one: {
-                label: "Ok",
+                label: "Run Migration",
                 callback: async (html) => {
                     let start = html.find("#startMigration")[0].checked
                     if (start === true) {
