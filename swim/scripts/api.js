@@ -18,7 +18,8 @@ import { soak_damage_script } from './swim_modules/soak_damage.js'
 import { token_vision_script } from './swim_modules/token_vision.js'
 import { unshake_swd_script, unshake_swade_script } from './swim_modules/unshake.js'
 import { unstun_script } from './swim_modules/unstun.js'
-//import * as SWIM from './constants.js'
+import { update_migration } from './migrations.js'
+import * as SWIM from './constants.js'
 
 export class api {
 
@@ -43,6 +44,7 @@ export class api {
       get_actor_sfx: api._get_actor_sfx,
       play_sfx: api._play_sfx,
       get_folder_content: api._get_folder_content,
+      run_migration: api._run_migration,
       // Convenience
       ammo_management: api._ammo_management,
       br2_ammo_management: api._ammo_management_br2,
@@ -208,6 +210,9 @@ export class api {
   }
   // Get SFX
   static async _get_actor_sfx(actor) {
+    let item = false
+    await swim.run_migration(actor, item) //Run migration if needed.
+
     let shakenSFX = game.settings.get('swim', 'shakenSFX')
     let deathSFX = game.settings.get('swim', 'incapSFX')
     let unshakeSFX = game.settings.get('swim', 'looseFatigueSFX')
@@ -228,6 +233,9 @@ export class api {
     // const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(actor)
   }
   static async _get_weapon_sfx(weapon) {
+    let actor = false
+    await swim.run_migration(actor, item = weapon) //Run migration if needed.
+
     let reloadSFX
     let fireSFX
     let autoFireSFX
@@ -268,6 +276,19 @@ export class api {
     }, content);
     console.log(totalContent)
     */
+  }
+
+  static async _run_migration(actor, item) {
+    console.log(actor)
+    const currVersion = actor ? actor?.flags?.swim?.config?._version : item.flags?.swim?.config?._version
+    item = actor ? false : item //Failsafe should s/o pass both.
+    if (currVersion < SWIM.CONFIG_VERSION || !currVersion) {
+      await update_migration(actor, item, currVersion)
+      if (actor && actor.isToken) {
+        let originalActor = game.actors.get(actor.id)
+        if (originalActor) { await update_migration(originalActor, item, currVersion) }
+      }
+    }
   }
 
   /*******************************************

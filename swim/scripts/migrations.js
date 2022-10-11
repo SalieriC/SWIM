@@ -7,12 +7,12 @@ export async function v10_migration() {
                 <h1>SWIM v.1.0.0 Migration</h1>
                 <p>It is with great pleasure that I can now present to you SWADE Immersive Macros version 1.0.0.</p>
                 <p>Yes, that's right, it finally is a full release. Why is that? Well, SWIM made quite the progress and I don't want to bore you with a history lesson,
-                just this much: SWIM now has a proper configuration on each actor and item. No more messing around with additional stats.</p>
+                just this much: SWIM now has a proper configuration on each actor and item thanks to Loofou. No more messing around with additional stats.</p>
                 <p>To not loose all the configuration you did however, you need to run this migration. It will process actors and items, get their SWIM configuration, save them
                 in a proper way and then remove the additional stats not needed any longer.</p>
                 <p>This will only cover actors and items inside your world. Before you continue, you should thus import all actors and items saved inside any compendiums,
-                if you wish them to be processed.</p>
-                <p>As it naturally comes with being human, there is a slight chance that the migration will irrevertibly mess something up but I did my very best to write this
+                if you wish them to be processed. Otherwise they will be migrated as soon as their SWIM config menu is opened or as they're needed.</p>
+                <p>As it naturally comes with being human, there is a slight chance that the migration will irreversibly mess something up but I did my very best to write this
                 migration in a way that should prevent this from happening. That said, I cannot be held responsible for any damage or data loss. <strong>Please make a backup before you proceed!</strong></p>
                 <hr />
                 <div class="form-group">
@@ -35,7 +35,7 @@ export async function v10_migration() {
                         for (let actor of game.actors) {
                             //Process all actors...
                             for (let item of actor.items) { allItems.push(item) }
-                            if (actor.system.additionalStats?.sfx?.value && actor.system.additionalStats?.sfx?.dtype === "String") {
+                            if (actor.system.additionalStats?.sfx?.value && typeof actor.system.additionalStats?.sfx?.value === "string") {
                                 const sfxSequence = actor.system.additionalStats?.sfx?.value
                                 const sfxSplit = sfxSequence.split("|")
                                 const shakenSFX = sfxSplit[0]
@@ -72,8 +72,8 @@ export async function v10_migration() {
                             let silencedfireSfx = ""
                             let silencedautofireSfx = ""
                             let emptyfireSfx = ""
-                            if (actor.system.additionalStats?.sfx?.value && actor.system.additionalStats?.sfx?.dtype === "String") {
-                                sfxSequence = actor.system.additionalStats?.sfx?.value
+                            if (item.system.additionalStats?.sfx?.value && typeof actor.system.additionalStats?.sfx?.value === "string") {
+                                sfxSequence = item.system.additionalStats?.sfx?.value
                                 sfxSplit = sfxSequence.split("|")
                                 reloadSfx = sfxSplit[0]
                                 fireSfx = sfxSplit[1]
@@ -81,17 +81,17 @@ export async function v10_migration() {
                                 silencedfireSfx = sfxSplit[3]
                                 silencedautofireSfx = sfxSplit[4]
                                 emptyfireSfx = sfxSplit[5]
-                            } if (actor.system.additionalStats?.isPack?.value && actor.system.additionalStats?.isPack?.dtype === "Boolean") {
-                                isPack = actor.system.additionalStats?.isPack?.value
+                            } if (item.system.additionalStats?.isPack?.value && typeof item.system.additionalStats?.isPack?.value === "boolean") {
+                                isPack = item.system.additionalStats?.isPack?.value
                                 await item.update({ "system.additionalStats.-=isPack": null })
-                            } if (actor.system.additionalStats?.isConsumable?.value && actor.system.additionalStats?.isConsumable?.dtype === "Boolean") {
-                                isConsumable = actor.system.additionalStats?.isConsumable?.value
+                            } if (item.system.additionalStats?.isConsumable?.value && typeof item.system.additionalStats?.isConsumable?.value === "boolean") {
+                                isConsumable = item.system.additionalStats?.isConsumable?.value
                                 await item.update({ "system.additionalStats.-=isConsumable": null })
-                            } if (actor.system.additionalStats?.silenced?.value && actor.system.additionalStats?.silenced?.dtype === "Boolean") {
-                                silenced = actor.system.additionalStats?.silenced?.value
+                            } if (item.system.additionalStats?.silenced?.value && item.system.additionalStats?.silenced?.value === "boolean") {
+                                silenced = item.system.additionalStats?.silenced?.value
                                 await item.update({ "system.additionalStats.-=silenced": null })
-                            } if (actor.system.additionalStats?.loadedAmmo?.value && actor.system.additionalStats?.loadedAmmo?.dtype === "String") {
-                                loadedAmmo = actor.system.additionalStats?.loadedAmmo?.value
+                            } if (item.system.additionalStats?.loadedAmmo?.value && typeof item.system.additionalStats?.loadedAmmo?.value === "string") {
+                                loadedAmmo = item.system.additionalStats?.loadedAmmo?.value
                                 await item.update({ "system.additionalStats.-=loadedAmmo": null })
                             }
                             const flagData = { //Verify how they are structured in final release.
@@ -126,12 +126,13 @@ export async function v10_migration() {
 
 export async function update_migration(actor, item, currVersion) {
     if (!currVersion || currVersion < 1) {
-        ui.notifications.warn(`Starting Migration for ${actor.name}, please wait.`)
+        let name = actor ? actor.name : item.name
+        ui.notifications.warn(`Starting Migration for ${name}, please wait.`)
         let allItems = []
         if (item) { allItems.push(item) }
         if (actor) {
             for (let item of actor.items) { allItems.push(item) }
-            if (actor.system.additionalStats?.sfx?.value && actor.system.additionalStats?.sfx?.dtype === "String") {
+            if (actor.system.additionalStats?.sfx?.value && typeof actor.system.additionalStats?.sfx?.value === "string") {
                 const sfxSequence = actor.system.additionalStats?.sfx?.value
                 const sfxSplit = sfxSequence.split("|")
                 const shakenSFX = sfxSplit[0]
@@ -168,8 +169,8 @@ export async function update_migration(actor, item, currVersion) {
             let silencedfireSfx = ""
             let silencedautofireSfx = ""
             let emptyfireSfx = ""
-            if (actor.system.additionalStats?.sfx?.value && actor.system.additionalStats?.sfx?.dtype === "String") {
-                sfxSequence = actor.system.additionalStats?.sfx?.value
+            if (item.system.additionalStats?.sfx?.value && typeof actor.system.additionalStats?.sfx?.value === "string") {
+                sfxSequence = item.system.additionalStats?.sfx?.value
                 sfxSplit = sfxSequence.split("|")
                 reloadSfx = sfxSplit[0]
                 fireSfx = sfxSplit[1]
@@ -177,17 +178,17 @@ export async function update_migration(actor, item, currVersion) {
                 silencedfireSfx = sfxSplit[3]
                 silencedautofireSfx = sfxSplit[4]
                 emptyfireSfx = sfxSplit[5]
-            } if (actor.system.additionalStats?.isPack?.value && actor.system.additionalStats?.isPack?.dtype === "Boolean") {
-                isPack = actor.system.additionalStats?.isPack?.value
+            } if (item.system.additionalStats?.isPack?.value && typeof item.system.additionalStats?.isPack?.value === "boolean") {
+                isPack = item.system.additionalStats?.isPack?.value
                 await item.update({ "system.additionalStats.-=isPack": null })
-            } if (actor.system.additionalStats?.isConsumable?.value && actor.system.additionalStats?.isConsumable?.dtype === "Boolean") {
-                isConsumable = actor.system.additionalStats?.isConsumable?.value
+            } if (item.system.additionalStats?.isConsumable?.value && typeof item.system.additionalStats?.isConsumable?.value === "boolean") {
+                isConsumable = item.system.additionalStats?.isConsumable?.value
                 await item.update({ "system.additionalStats.-=isConsumable": null })
-            } if (actor.system.additionalStats?.silenced?.value && actor.system.additionalStats?.silenced?.dtype === "Boolean") {
-                silenced = actor.system.additionalStats?.silenced?.value
+            } if (item.system.additionalStats?.silenced?.value && typeof item.system.additionalStats?.silenced?.value === "boolean") {
+                silenced = item.system.additionalStats?.silenced?.value
                 await item.update({ "system.additionalStats.-=silenced": null })
-            } if (actor.system.additionalStats?.loadedAmmo?.value && actor.system.additionalStats?.loadedAmmo?.dtype === "String") {
-                loadedAmmo = actor.system.additionalStats?.loadedAmmo?.value
+            } if (item.system.additionalStats?.loadedAmmo?.value && typeof item.system.additionalStats?.loadedAmmo?.value === "string") {
+                loadedAmmo = item.system.additionalStats?.loadedAmmo?.value
                 await item.update({ "system.additionalStats.-=loadedAmmo": null })
             }
             const flagData = {

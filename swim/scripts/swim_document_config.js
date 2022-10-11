@@ -3,16 +3,14 @@ import SWIMEffectConfig from "./helpers/custom_effect_config.js";
 import { update_migration } from "./migrations.js";
 
 export async function open_swim_item_config(item) {
-    const currVersion = item.flags?.swim?.config?._version
     let actor = false
-    if (currVersion < SWIM.CONFIG_VERSION || !currVersion) { await update_migration(actor = false, item, currVersion) }
+    await swim.run_migration(actor, item)
     new DocumentConfigForm(item).render(true);
 }
 
 export async function open_swim_actor_config(actor) {
-    const currVersion = actor?.flags?.swim?.config?._version
     let item = false
-    if (currVersion < SWIM.CONFIG_VERSION || !currVersion) { await update_migration(actor, item, currVersion) }
+    await swim.run_migration(actor, item)
     new DocumentConfigForm(actor).render(true);
 }
 
