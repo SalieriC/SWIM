@@ -74,7 +74,7 @@ export async function v10_migration() {
                             let emptyfireSfx = ""
                             if (item.system.additionalStats?.sfx?.value && typeof actor.system.additionalStats?.sfx?.value === "string") {
                                 sfxSequence = item.system.additionalStats?.sfx?.value
-                                sfxSplit = sfxSequence.split("|")
+                                let sfxSplit = sfxSequence.split("|")
                                 reloadSfx = sfxSplit[0]
                                 fireSfx = sfxSplit[1]
                                 autofireSfx = sfxSplit[2]
@@ -171,7 +171,7 @@ export async function update_migration(actor, item, currVersion) {
             let emptyfireSfx = ""
             if (item.system.additionalStats?.sfx?.value && typeof actor.system.additionalStats?.sfx?.value === "string") {
                 sfxSequence = item.system.additionalStats?.sfx?.value
-                sfxSplit = sfxSequence.split("|")
+                let sfxSplit = sfxSequence.split("|")
                 reloadSfx = sfxSplit[0]
                 fireSfx = sfxSplit[1]
                 autofireSfx = sfxSplit[2]
