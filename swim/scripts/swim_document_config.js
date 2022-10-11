@@ -1,6 +1,5 @@
 import * as SWIM from "./constants.js";
 import SWIMEffectConfig from "./helpers/custom_effect_config.js";
-import { update_migration } from "./migrations.js";
 
 export async function open_swim_item_config(item) {
     let actor = false
