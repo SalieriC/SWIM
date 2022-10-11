@@ -116,7 +116,7 @@ Hooks.on(`ready`, () => {
             },
         }).render(true);
     } else if (game.settings.get('swim', 'v1MigrationDone') === false) {
-        await v10_migration()
+        v10_migration()
     } else if (game.settings.get('swim', 'br2Message') === false && game.modules.get('betterrolls-swade2')?.active && game.user.isGM === true) {
         new Dialog({
             title: 'Better Rolls 2 support for SWIM.',
