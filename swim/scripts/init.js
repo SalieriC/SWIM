@@ -8,6 +8,7 @@ import { heal_other_gm } from './swim_modules/personal_health_centre.js'
 import { common_bond_gm } from './swim_modules/common_bond.js'
 import { effect_builder_gm } from './swim_modules/effect_builder.js'
 import { open_swim_actor_config, open_swim_item_config } from "./swim_document_config.js";
+import { v10_migration } from "./migration.js"
 
 /*Hooks.on('getCardsDirectoryEntryContext', function (stuff) {
     console.log(stuff)
@@ -114,6 +115,8 @@ Hooks.on(`ready`, () => {
                 }
             },
         }).render(true);
+    } else if (game.settings.get('swim', 'v1MigrationDone') === false) {
+        await v10_migration()
     } else if (game.settings.get('swim', 'br2Message') === false && game.modules.get('betterrolls-swade2')?.active && game.user.isGM === true) {
         new Dialog({
             title: 'Better Rolls 2 support for SWIM.',
