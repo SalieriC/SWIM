@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - - Along with this comes a new way of storing data, menaing that existing actor and item configurations using additional stats would break, so...
 - - a migration script is provided that goes through all actors and items of a world (but not compendiums) and updates them to this new way of storing data.
 - - all items and actors not covered by the script (i.e. because they're in a compendium or imported later) are migrated as soon as the SWIM config button is pressed. (In this case the actor and all its items are migrated at once or only the item if the button is pressed on the item.) The migration will also start as soon as the new data is needed (i.e. when using a macro that tries to accesses the new stuff on an actor or item.)
+- - The migration function is also exposed in case it is needed. See [the wiki](https://github.com/SalieriC/SWADE-Immersive-Macros/wiki/API#run-migration) for more information.
 - Added the `get_weapon_sfx` api function to get the sfx from the flags of a weapon.
 - Added file pickers for more SFX to actors (becoming stunned, gaining and loosing fatigue).
 ### Changed
