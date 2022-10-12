@@ -280,7 +280,6 @@ export class api {
   }
 
   static async _run_migration(actor, item) {
-    console.log(actor)
     const currVersion = actor ? actor?.flags?.swim?.config?._version : item.flags?.swim?.config?._version
     item = actor ? false : item //Failsafe should s/o pass both.
     if (currVersion < SWIM.CONFIG_VERSION || !currVersion) {
