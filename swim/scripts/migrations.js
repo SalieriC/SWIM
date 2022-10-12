@@ -57,6 +57,17 @@ export async function v10_migration() {
                                 }
                                 await actor.update(flagData)
                                 await actor.update({ "system.additionalStats.-=sfx": null })
+                            } else {
+                                const flagData = {
+                                    flags: {
+                                        swim: {
+                                            config: {
+                                                _version: SWIM.CONFIG_VERSION
+                                            }
+                                        }
+                                    }
+                                }
+                                await actor.update(flagData)
                             }
                         } for (let item of allItems) {
                             console.log(item)
@@ -166,6 +177,17 @@ export async function update_migration(actor, item, currVersion) {
                 }
                 await actor.update(flagData)
                 await actor.update({ "system.additionalStats.-=sfx": null })
+            } else {
+                const flagData = {
+                    flags: {
+                        swim: {
+                            config: {
+                                _version: SWIM.CONFIG_VERSION
+                            }
+                        }
+                    }
+                }
+                await actor.update(flagData)
             }
         } for (let item of allItems) {
             //Process all items...
