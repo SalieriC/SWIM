@@ -21,7 +21,7 @@ export async function soak_damage_script(effect = false) {
     // Checking for System Benny image.
     let bennyImage = await swim.get_benny_image()
     // Setting SFX
-    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(actor)
+    const { woundedSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(actor)
     // Injury Table for Gritty Damage
     let grit = game.settings.get(
         'swim', 'grittyDamage');
@@ -30,6 +30,7 @@ export async function soak_damage_script(effect = false) {
     let injuryTable = game.settings.get(
         'swim', 'injuryTable');
     const sendMessage = true
+    const volume = game.settings.get('swim', 'defaultVolume')
 
     // Declaring variables and constants.
     const wv = token.actor.system.wounds.value;
@@ -170,7 +171,7 @@ export async function soak_damage_script(effect = false) {
                             }
                             inc = true
                         }
-                        if ((setWounds > 0 && grit === true && (token.actor.type === "character" || token.actor.type === "npc" && gritNPC === true)) && inc === false) {
+                        if ((setWounds > 0 && grit === true && (token.actor.type === "character" || (token.actor.type === "npc" && gritNPC === true))) && inc === false) {
                             let permanent = false
                             let combat = true
                             await apply_injury(permanent, combat);
@@ -539,6 +540,7 @@ export async function soak_damage_script(effect = false) {
             } else if (critFail === true) {
                 ui.notifications.notify("You've rolled a Critical Failure! You will die now...");
                 let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure and perishes! </span>`;
+                if (deathSFX) { swim.play_sfx(deathSFX, volume, true) }
                 ChatMessage.create({ content: chatData });
             } else {
                 let { _, __, totalBennies } = await swim.check_bennies(token)
@@ -679,6 +681,7 @@ export async function soak_damage_script(effect = false) {
                 if (harderToKillRoll.total === 1) {
                     ui.notifications.notify(`You've rolled a Critical Failure and failed your ${harderToKill.name} roll! You will die now...`);
                     let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure, didn't make the ${harderToKill.name} roll and perishes! </span>`;
+                    if (deathSFX) { swim.play_sfx(deathSFX, volume, true) }
                     ChatMessage.create({ content: chatData });
                 } else if (harderToKillRoll.total === 2) {
                     ui.notifications.notify(`You've rolled a Critical Failure but made your ${harderToKill.name} roll! You will survive <em>somehow</em>...`);
@@ -688,6 +691,7 @@ export async function soak_damage_script(effect = false) {
             } else if (critFail === true) {
                 ui.notifications.notify("You've rolled a Critical Failure! You will die now...");
                 let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure and perishes! </span>`;
+                if (deathSFX) { swim.play_sfx(deathSFX, volume, true) }
                 ChatMessage.create({ content: chatData });
             } else {
                 let { _, __, totalBennies } = await swim.check_bennies(token)
@@ -711,6 +715,7 @@ export async function soak_damage_script(effect = false) {
                     if (harderToKillRoll.total === 1) {
                         ui.notifications.notify(`You've rolled ${rollWithEdge} and failed your ${harderToKill.name} roll! You will die now...`);
                         let chatData = `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge}, didn't make the ${harderToKill.name} roll and perishes! </span>`;
+                        if (deathSFX) { swim.play_sfx(deathSFX, volume, true) }
                         ChatMessage.create({ content: chatData });
                     } else if (harderToKillRoll.total === 2) {
                         ui.notifications.notify(`You've rolled ${rollWithEdge} but made your ${harderToKill.name} roll! You will survive <em>somehow</em>...`);
@@ -721,6 +726,7 @@ export async function soak_damage_script(effect = false) {
                     }
                 } else if (rollWithEdge < 4) {
                     chatData += `<p>${actorAlias} perishes.<p>`
+                    if (deathSFX) { swim.play_sfx(deathSFX, volume, true) }
                     await succ.apply_status(token, "bleeding-out", false)
                     await applyIncOverlay()
                 } else if (rollWithEdge >= 4 && rollWithEdge <= 7) {

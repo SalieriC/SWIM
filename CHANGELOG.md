@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - - The migration function is also exposed in case it is needed. See [the wiki](https://github.com/SalieriC/SWADE-Immersive-Macros/wiki/API#run-migration) for more information.
 - Added the `get_weapon_sfx` api function to get the sfx from the flags of a weapon.
 - Added file pickers for more SFX to actors (becoming stunned, gaining and loosing fatigue).
+- Soak Damage macro should now play the death SFX on a perish result.
 ### Changed
 - **Breaking:** Changed the API so that the Unshake macro gets the version from the settings rather than being passed to the function. This means that the Unshake macro needs to be replaced by the one in the SWIM compendium.
 - - Added a detailed error message explaining the problem in case the old version of the macro is used.
