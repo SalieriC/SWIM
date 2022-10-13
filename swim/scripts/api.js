@@ -222,13 +222,13 @@ export class api {
     let fatiguedSFX = game.settings.get('swim', 'fatiguedSFX')
     let looseFatigueSFX = game.settings.get('swim', 'looseFatigueSFX')
     if (actor.flags?.swim?.config) {
-      shakenSFX = actor.flags.swim.config.shakenSFX
-      deathSFX = actor.flags.swim.config.deathSFX
-      unshakeSFX = actor.flags.swim.config.unshakeSFX
-      stunnedSFX = actor.flags.swim.config.stunnedSFX
-      soakSFX = actor.flags.swim.config.soakSFX
-      fatiguedSFX = actor.flags.swim.config.fatiguedSFX
-      looseFatigueSFX = actor.flags.swim.config.looseFatigueSFX
+      shakenSFX = actor.flags.swim.config.shakenSFX ? actor.flags.swim.config.shakenSFX : game.settings.get('swim', 'shakenSFX')
+      deathSFX = actor.flags.swim.config.deathSFX ? actor.flags.swim.config.deathSFX : game.settings.get('swim', 'incapSFX')
+      unshakeSFX = actor.flags.swim.config.unshakeSFX ? actor.flags.swim.config.unshakeSFX : game.settings.get('swim', 'looseFatigueSFX')
+      stunnedSFX = actor.flags.swim.config.stunnedSFX ? actor.flags.swim.config.stunnedSFX : game.settings.get('swim', 'stunSFX')
+      soakSFX = actor.flags.swim.config.soakSFX ? actor.flags.swim.config.soakSFX : game.settings.get('swim', 'looseFatigueSFX')
+      fatiguedSFX = actor.flags.swim.config.fatiguedSFX ? actor.flags.swim.config.fatiguedSFX : game.settings.get('swim', 'fatiguedSFX')
+      looseFatigueSFX = actor.flags.swim.config.looseFatigueSFX ? actor.flags.swim.config.looseFatigueSFX : game.settings.get('swim', 'looseFatigueSFX')
     }
     return { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX }
     // const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(actor)
