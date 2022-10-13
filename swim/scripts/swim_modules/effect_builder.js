@@ -1308,7 +1308,7 @@ export async function effect_builder_gm(data) {
             let aeData = {
                 changes: [
                     { key: `system.status.isDistracted`, mode: 5, priority: undefined, value: true },
-                    { key: `system.status.isDistracted`, mode: 5, priority: undefined, value: true }
+                    { key: `system.status.isVulnerable`, mode: 5, priority: undefined, value: true }
                 ],
                 icon: data.confusion.icon ? data.confusion.icon : "modules/swim/assets/icons/effects/m-confusion.svg",
                 label: game.i18n.localize("SWIM.power-confusion"),
