@@ -78,7 +78,7 @@ Hooks.on(`ready`, () => {
     // First Login warning
     if (game.settings.get('swim', 'docReadV10') === false || !game.settings.get("swade", "tocBlockList")["swim.swim-actor-folders"]) {
         let additionalText = ""
-        let unshakeWarning = game.settings.get('swim', 'docRead') === true ? "<p><strong>It seems you have used SWIM before. Please note that you have to replace your unshake macro with the new version in the compendium. The SWD (old) unshaken rules can now be activated in the settings.</strong></p><hr />" : ""
+        let unshakeWarning = "<p><strong>If you have used SWIM before: Please note that you have to replace your unshake macro with the new version in the compendium. The SWD (old) unshaken rules can now be activated in the settings.</strong></p><hr />"
         if (!game.settings.get("swade", "tocBlockList")["swim.swim-actor-folders"]) {additionalText = "<p><strong>Please note:</strong> To make some adjustments to properly use SWIM, the world will be reloaded after closing this dialogue.<p>"}
         new Dialog({
             title: 'Welcome to SWIM',
