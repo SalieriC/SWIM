@@ -88,9 +88,6 @@
 	"esmodules": [
 		"./scripts/init.js"
 	],
-	"scripts": [
-		"./scripts/settings-extender.js"
-	],
 	"packs": [
 		{
 			"name": "swade-immersive-macros",

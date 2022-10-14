@@ -32,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SWIM now completely ignores the death flag featured in Health Estimate. Instead the proper incapacitation icon will be set in the Health Estimate settings when the game starts and HE is installed. As a result, HE is not a dependency any longer, though still strongly suggested.
 - Adjusted manifest to reflect the FVTT v10 requirements.
 - Changed some translation strings.
-- Updated settings-extender.js to the v10 version.
+- Removed settings-extender.js and moved to the regular dependency structure suggested by the lib now.
 - A creature summoned with a raise will now receive a max wound in addition to its current max wounds instead of setting it fixed to one. This should cover the Fantasy Companion where some summonable creatures already are resilient.
 - General cleanup of code.
 - Changed the `get_actor_sfx` api function to get the sfx from the flags instead of the additional stats.
