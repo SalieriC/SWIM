@@ -235,7 +235,7 @@
         }).render(true);
     }
 
-    if ((token.flags?.warpgate?.sourceActorId && actor.flags?.warpgate?.control?.user) && (game.user.isGM || game.user.id === token.actor.flags?.warpgate?.control?.user)) {
+    if ((token.document.flags?.warpgate?.sourceActorId && actor.flags?.warpgate?.control?.user) && (game.user.isGM || game.user.id === actor.flags?.warpgate?.control?.user)) {
         dismiss()
     } else {
         main();
