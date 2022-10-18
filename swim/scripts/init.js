@@ -9,6 +9,10 @@ import { common_bond_gm } from './swim_modules/common_bond.js'
 import { effect_builder_gm } from './swim_modules/effect_builder.js'
 import { open_swim_actor_config, open_swim_item_config } from "./swim_document_config.js";
 import { v10_migration } from "./migrations.js"
+import { effect_hooks } from "./hooks/effect_hooks.js"
+import { actor_hooks } from "./hooks/actor_hooks.js"
+import { combat_hooks } from "./hooks/combat_hooks.js"
+import { brsw_hooks } from "./hooks/brsw_hooks.js"
 
 /*Hooks.on('getCardsDirectoryEntryContext', function (stuff) {
     console.log(stuff)
@@ -39,6 +43,12 @@ Hooks.on(`ready`, () => {
         if (game.modules.get('warpgate')) key = "activate";
         ui.notifications.error(`SWIM requires the 'warpgate' module. Please ${key} it.`)
     }
+
+    //Run functions to register hooks:
+    effect_hooks()
+    actor_hooks()
+    combat_hooks()
+    brsw_hooks()
 
     // Ready stuff
     console.log('SWADE Immersive Macros | Ready');
@@ -182,217 +192,6 @@ Hooks.on(`ready`, () => {
     }
 });
 
-// Hooks on conditions
-Hooks.on(`createActiveEffect`, async (condition, _, userID) => {
-    const actor = condition.parent
-    // Invisible
-    if (((actor.hasPlayerOwner && condition.flags?.core?.statusId === "invisible") || condition.label.toLowerCase() === game.i18n.localize("SWIM.power-intangibility").toLowerCase()) && swim.is_first_gm()) {
-        const tokens = actor.getActiveTokens()
-        for (let token of tokens) {
-            if (condition.flags?.core?.statusId === "invisible") { await token.document.update({ "alpha": 0.5 }) }
-            else if (condition.label.toLowerCase() === game.i18n.localize("SWIM.power-intangibility").toLowerCase()) { await token.document.update({ "alpha": 0.75 }) }
-        }
-    } else if (!actor.hasPlayerOwner && swim.is_first_gm() && condition.flags?.core?.statusId === "invisible") {
-        const tokens = actor.getActiveTokens()
-        for (let token of tokens) {
-            if (token.document.hidden === false) { await token.toggleVisibility() }
-        }
-    }
-    // Light
-    if (condition.flags?.core?.statusId === "torch" && game.user.id === userID) {
-        if (condition.flags?.succ?.additionalData?.swim?.activatedFromMacro === true) { return } //Prevent second execution if macro was used.
-        swim.token_vision(condition)
-    }
-    // Hold
-    if (condition.flags?.core?.statusId === "holding" && swim.is_first_gm() && game.combat) {
-        const tokens = actor.getActiveTokens()
-        const combatID = game.combat.id
-        for (let token of tokens) { await token.combatant.update({ "flags.swade.roundHeld": 1 }) }
-        await swim.wait('100') // Needed to give the whole thing some time to prevent issues with jokers.
-        warpgate.event.notify("SWIM.updateCombat-currentTurn", {combatID: combatID, currTurn: currentTurn})
-    }
-})
-Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
-    const actor = condition.parent
-    // Invisible
-    if (((actor.hasPlayerOwner && condition.flags?.core?.statusId === "invisible") || condition.label.toLowerCase() === game.i18n.localize("SWIM.power-intangibility").toLowerCase()) && swim.is_first_gm()) {
-        const tokens = actor.getActiveTokens()
-        for (let token of tokens) {
-            await token.document.update({ "alpha": 1 })
-        }
-    } else if (!actor.hasPlayerOwner && swim.is_first_gm() && condition.flags?.core?.statusId === "invisible") {
-        const tokens = actor.getActiveTokens()
-        for (let token of tokens) {
-            if (token.document.hidden === true) { await token.toggleVisibility() }
-        }
-    }
-    // Cancel maintained power
-    if (condition.flags?.swim?.maintainedPower === true && condition.flags?.swim?.owner === true && swim.is_first_gm()) {
-        for (let targetID of condition.flags.swim.targets) {
-            const playerScene = game.scenes.get(game.users.get(userID).viewedScene)
-            const token = playerScene.tokens.get(targetID)
-            const effect = token.actor.effects.find(ae => ae.flags?.swim?.maintenanceID === condition.flags?.swim?.maintenanceID)
-            if (effect) {
-                await effect.delete()
-            }
-        }
-    }
-    // Cancel Summoned Creature
-    if (condition.flags?.swim?.maintainedSummon === true && swim.is_first_gm()) {
-        if (condition.flags.swim.owner === false) {
-            for (let each of game.scenes.current.tokens) {
-                const maintEffect = each.actor.effects.find(e => e.flags?.swim?.maintenanceID === condition.flags?.swim?.maintenanceID)
-                if (maintEffect) {
-                    await maintEffect.delete()
-                }
-            }
-            if (actor.sheet.rendered) {
-                actor.sheet.close();
-                await swim.wait('100')
-            }
-            const dismissData = [actor.token.id]
-            await play_sfx(dismissData)
-            await warpgate.dismiss(actor.token.id, game.scenes.current.id)
-        } else if (condition.flags.swim.owner === true) {
-            for (let each of game.scenes.current.tokens) {
-                const maintEffect = each.actor.effects.find(e => e.flags?.swim?.maintenanceID === condition.flags?.swim?.maintenanceID)
-                if (maintEffect) {
-                    const dismissData = [each.id]
-                    await play_sfx(dismissData)
-                    await warpgate.dismiss(each.id, game.scenes.current.id)
-                    return
-                }
-            }
-        }
-        async function play_sfx(spawnData) {
-            //Playing VFX & SFX:
-            let spawnSFX = game.settings.get(
-                'swim', 'shapeShiftSFX');
-            let spawnVFX = game.settings.get(
-                'swim', 'shapeShiftVFX');
-            if (spawnSFX) { swim.play_sfx(spawnSFX) }
-            if (game.modules.get("sequencer")?.active && spawnVFX) {
-                let tokenD = canvas.tokens.get(spawnData[0])
-                let sequence = new Sequence()
-                    .effect()
-                    .file(`${spawnVFX}`) //recommendation: "modules/jb2a_patreon/Library/2nd_Level/Misty_Step/MistyStep_01_Regular_Green_400x400.webm"
-                    .atLocation(tokenD)
-                    .scale(1)
-                sequence.play();
-                await swim.wait(`800`);
-            }
-        }
-    }
-    // Light
-    if (condition.flags?.core?.statusId === "torch" && game.user.id === userID) {
-        if (condition.flags?.swim?.deactivatedFromMacro === true) { return } //Prevent second execution if macro was used.
-        swim.token_vision(condition)
-    }
-    // Hold
-    if (condition.flags?.core?.statusId === "holding" && game.user.id === userID) {
-        if (game.combat) {
-            const tokens = actor.getActiveTokens()
-            const currentCardValue = game.combat.combatant.flags.swade.cardValue
-            const currentSuitValue = game.combat.combatant.flags.swade.suitValue
-            const combatID = game.combat.id
-            new Dialog({
-                title: game.i18n.localize("SWIM.dialogue-takingInitiativeTitle"),
-                content: game.i18n.localize("SWIM.dialogue-takingInitiativeText"),
-                buttons: {
-                    one: {
-                        label: game.i18n.localize("SWIM.dialogue-takingInitiative-ButtonNow"),
-                        callback: async (_) => {
-                            for (let token of tokens) {
-                                await token.combatant.unsetFlag("swade", "roundHeld")
-                                await token.combatant.update({
-                                    "flags.swade.cardValue": currentCardValue,
-                                    "flags.swade.suitValue": currentSuitValue + 0.01
-                                })
-                            }
-                            await swim.wait('100') // Needed to give the whole thing some time to prevent issues with jokers.
-                            warpgate.event.notify("SWIM.updateCombat-previousTurn", {combatID: combatID})
-                        }
-                    },
-                    two: {
-                        label: game.i18n.localize("SWIM.dialogue-takingInitiative-ButtonAfter"),
-                        callback: async (_) => {
-                            for (let token of tokens) {
-                                await token.combatant.unsetFlag("swade", "roundHeld")
-                                await token.combatant.update({
-                                    "flags.swade.cardValue": currentCardValue,
-                                    "flags.swade.suitValue": currentSuitValue - 0.01
-                                })
-                            }
-                        },
-                    }
-                },
-                //close: { callback: await succ.apply_status(actor, "holding", true) },
-                default: "one"
-            }).render(true)
-        }
-    }
-})
-
-// Combat setup playlist handling
-Hooks.on("preUpdateCombat", async (combat, update, options, userId) => {
-    if (game.settings.get("swim", "combatPlaylistManagement") === true && combat.round === 0 && update.round === 1) {
-        if (swim.is_first_gm() === false) { return }
-        const combatPlaylistName = game.settings.get("swim", "combatPlaylist")
-        const combatPlaylist = game.playlists.getName(combatPlaylistName)
-        const protectedFolder = game.settings.get("swim", "noStopFolder")
-        for (let playlist of game.playlists.playing) {
-            if (playlist.folder?.name.toLowerCase() != protectedFolder.toLowerCase()) {
-                playlist.setFlag('swim', 'resumeAfterCombat', true)
-                playlist.stopAll()
-            }
-        }
-        if (combatPlaylist) {
-            combatPlaylist.playAll()
-        }
-    }
-})
-
-Hooks.on("deleteCombat", async (combat, options, userId) => {
-    if (game.settings.get("swim", "combatPlaylistManagement") === true) {
-        if (swim.is_first_gm() === false) { return }
-        for (let playlist of game.playlists) {
-            if (playlist.flags?.swim?.resumeAfterCombat === true) {
-                await playlist.playAll()
-                playlist.unsetFlag('swim', 'resumeAfterCombat')
-            }
-        }
-        const combatPlaylist = game.playlists.find(p => p.name.toLowerCase() === "combat") //needs setting
-        if (combatPlaylist && combatPlaylist.playing === true) {
-            await combatPlaylist.stopAll()
-        }
-    }
-})
-
-//BR2 Hooks
-Hooks.on(`BRSW-Unshake`, async (message, actor) => {
-    if (game.settings.get("swim", "br2Support") === true) {
-        const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(actor)
-        if (unshakeSFX) {
-            await swim.play_sfx(unshakeSFX)
-        }
-    }
-})
-/*Hooks.on("BRSW-AfterShowDamageCard", async (actor, wounds, message) => {
-    console.log(actor, wounds, message)
-});*/
-Hooks.on("BRSW-AfterApplyDamage", async (token, final_wounds, final_shaken, incapacitated, initial_wounds, initial_shaken, soaked) => {
-    if (game.settings.get("swim", "br2Support") === true) {
-        const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(token.actor)
-        const volume = Number(game.settings.get("swim", "defaultVolume"))
-        if (soaked >= 1) {
-            await swim.play_sfx(soakSFX, volume)
-        } else if (incapacitated === true) {
-            await swim.play_sfx(deathSFX, volume)
-        } else if (final_wounds > initial_wounds || final_shaken === true) {
-            await swim.play_sfx(shakenSFX, volume)
-        }
-    }
-});
 /* This produces duplicate sound effects, leaving it commented until a good solution to exclude them on a condition is found.
 Hooks.on(`createActiveEffect`, async (condition, _, userID) => {
     if (condition.flags?.core?.statusId === "incapacitated" || condition.flags?.core?.statusId === "shaken") {
