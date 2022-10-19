@@ -63,210 +63,227 @@ Right now we have the following possibilities (pick one):
     - max: the maximum value of the number field
 
  */
-const configs = [
-    {
-        isSectionTitle: true,
-        showFor: ['weapon'],
-        label: "SWIM.Config_WeaponConfig"
-    },
-    {
-        isText: true,
-        showFor: ['weapon'],
-        id: 'loadedAmmo',
-        label: 'SWIM.Config_LoadedAmmoName',
-        hint: 'SWIM.Config_LoadedAmmoHint',
-        value: ""
-    },
-    {
-        isBoolean: true,
-        showFor: ['weapon'],
-        id: 'isSilenced',
-        label: 'SWIM.Config_IsSilencedName',
-        hint: 'SWIM.Config_IsSilencedHint',
-        value: false
-    },
-    {
-        isBoolean: true,
-        showFor: ['weapon'],
-        id: 'isConsumable',
-        label: 'SWIM.Config_IsConsumableName',
-        hint: 'SWIM.Config_IsConsumableHint',
-        value: false
-    },
-    {
-        isSectionTitle: true,
-        showFor: ['gear', 'weapon', 'armor', 'shield', 'consumable'],
-        label: "SWIM.Config_AmmoConfig"
-    },
-    {
-        isBoolean: true,
-        showFor: ['gear', 'weapon', 'armor', 'shield', 'consumable'],
-        id: 'isPack',
-        label: 'SWIM.Config_IsPackName',
-        hint: 'SWIM.Config_IsPackHint',
-        value: false
-    },
-    //TODO: Finish Ammo Management Improvements
-    /*{
-        isSectionTitle: true,
-        showFor: ['gear', 'weapon', 'armor', 'shield', 'consumable'],
-        label: "SWIM.Config_SectionAmmoManagement"
-    },
-    {
-        isBoolean: true,
-        showFor: ['gear', 'weapon', 'armor', 'shield', 'consumable'],
-        id: 'isAmmo',
-        label: 'SWIM.Config_IsAmmo',
-        hint: 'SWIM.Config_IsAmmo_Hint',
-        value: false
-    },
-    {
-        isAE: true,
-        showFor: ['gear', 'weapon', 'armor', 'shield', 'consumable'],
-        id: 'ammoActiveEffect',
-        label: 'SWIM.Config_SetAmmoActiveEffect',
-        hint: 'SWIM.Config_SetAmmoActiveEffect_Hint',
-        value: ''
-    }*/
-    //SFX shown at the bottom(?):
-    //Actor SFX:
-    {
-        isSectionTitle: true,
-        showFor: ['weapon', 'character', 'npc'],
-        label: "SWIM.Config_SFX"
-    },
-    {
-        isText: true,
-        showFor: ['character', 'npc'],
-        id: "shakenSFX",
-        label: "SWIM.Config_ShakenSFXName",
-        hint: "SWIM.Config_ShakenSFXHint",
-        value: "",
-        useFilePicker: true,
-        filePickerData: "audio"
-    },
-    {
-        isText: true,
-        showFor: ['character', 'npc'],
-        id: "deathSFX",
-        label: "SWIM.Config_IncapSFXName",
-        hint: "SWIM.Config_IncapSFXHint",
-        value: "",
-        useFilePicker: true,
-        filePickerData: "audio"
-    },
-    {
-        isText: true,
-        showFor: ['character', 'npc'],
-        id: "unshakeSFX",
-        label: "SWIM.Config_UnshakeSFXName",
-        hint: "SWIM.Config_UnshakeSFXHint",
-        value: "",
-        useFilePicker: true,
-        filePickerData: "audio"
-    },
-    {
-        isText: true,
-        showFor: ['character', 'npc'],
-        id: "stunnedSFX",
-        label: "SWIM.Config_StunnedSFXName",
-        hint: "SWIM.Config_StunnedSFXHint",
-        value: "",
-        useFilePicker: true,
-        filePickerData: "audio"
-    },
-    {
-        isText: true,
-        showFor: ['character', 'npc'],
-        id: "soakSFX",
-        label: "SWIM.Config_SoakSFXName",
-        hint: "SWIM.Config_SoakSFXHint",
-        value: "",
-        useFilePicker: true,
-        filePickerData: "audio"
-    },
-    {
-        isText: true,
-        showFor: ['character', 'npc'],
-        id: "fatiguedSFX",
-        label: "SWIM.Config_FatiguedSFXName",
-        hint: "SWIM.Config_FatiguedSFXHint",
-        value: "",
-        useFilePicker: true,
-        filePickerData: "audio"
-    },
-    {
-        isText: true,
-        showFor: ['character', 'npc'],
-        id: "looseFatigueSFX",
-        label: "SWIM.Config_LooseFatigueSFXName",
-        hint: "SWIM.Config_LooseFatigueSFXHint",
-        value: "",
-        useFilePicker: true,
-        filePickerData: "audio"
-    },
-    //Weapon SFX:
-    {
-        isText: true,
-        showFor: ['weapon'],
-        id: "reloadSFX",
-        label: "SWIM.Config_ReloadSFXName",
-        hint: "SWIM.Config_ReloadSFXHint",
-        value: "",
-        useFilePicker: true,
-        filePickerData: "audio"
-    },
-    {
-        isText: true,
-        showFor: ['weapon'],
-        id: "fireSFX",
-        label: "SWIM.Config_FireSFXName",
-        hint: "SWIM.Config_FireSFXHint",
-        value: "",
-        useFilePicker: true,
-        filePickerData: "audio"
-    },
-    {
-        isText: true,
-        showFor: ['weapon'],
-        id: "autoFireSFX",
-        label: "SWIM.Config_AutoFireSFXName",
-        hint: "SWIM.Config_AutoFireSFXHint",
-        value: "",
-        useFilePicker: true,
-        filePickerData: "audio"
-    },
-    {
-        isText: true,
-        showFor: ['weapon'],
-        id: "silencedFireSFX",
-        label: "SWIM.Config_SilencedFireSFXName",
-        hint: "SWIM.Config_SilencedFireSFXHint",
-        value: "",
-        useFilePicker: true,
-        filePickerData: "audio"
-    },
-    {
-        isText: true,
-        showFor: ['weapon'],
-        id: "silencedAutoFireSFX",
-        label: "SWIM.Config_SilencedAutoFireSFXName",
-        hint: "SWIM.Config_SilencedAutoFireSFXHint",
-        value: "",
-        useFilePicker: true,
-        filePickerData: "audio"
-    },
-    {
-        isText: true,
-        showFor: ['weapon'],
-        id: "emptySFX",
-        label: "SWIM.Config_EmptySFXName",
-        hint: "SWIM.Config_EmptySFXHint",
-        value: "",
-        useFilePicker: true,
-        filePickerData: "audio"
-    },
-]
+function swim_config_options() {
+    const configs = [
+        {
+            isSectionTitle: true,
+            showFor: ['weapon'],
+            label: "SWIM.Config_WeaponConfig"
+        },
+        {
+            isText: true,
+            showFor: ['weapon'],
+            id: 'loadedAmmo',
+            label: 'SWIM.Config_LoadedAmmoName',
+            hint: 'SWIM.Config_LoadedAmmoHint',
+            value: ""
+        },
+        {
+            isBoolean: true,
+            showFor: ['weapon'],
+            id: 'isSilenced',
+            label: 'SWIM.Config_IsSilencedName',
+            hint: 'SWIM.Config_IsSilencedHint',
+            value: false
+        },
+        {
+            isBoolean: true,
+            showFor: ['weapon'],
+            id: 'isConsumable',
+            label: 'SWIM.Config_IsConsumableName',
+            hint: 'SWIM.Config_IsConsumableHint',
+            value: false
+        },
+        {
+            isSectionTitle: true,
+            showFor: ['gear', 'weapon', 'armor', 'shield', 'consumable'],
+            label: "SWIM.Config_AmmoConfig"
+        },
+        {
+            isBoolean: true,
+            showFor: ['gear', 'weapon', 'armor', 'shield', 'consumable'],
+            id: 'isPack',
+            label: 'SWIM.Config_IsPackName',
+            hint: 'SWIM.Config_IsPackHint',
+            value: false
+        },
+        //TODO: Finish Ammo Management Improvements
+        /*{
+            isSectionTitle: true,
+            showFor: ['gear', 'weapon', 'armor', 'shield', 'consumable'],
+            label: "SWIM.Config_SectionAmmoManagement"
+        },
+        {
+            isBoolean: true,
+            showFor: ['gear', 'weapon', 'armor', 'shield', 'consumable'],
+            id: 'isAmmo',
+            label: 'SWIM.Config_IsAmmo',
+            hint: 'SWIM.Config_IsAmmo_Hint',
+            value: false
+        },
+        {
+            isAE: true,
+            showFor: ['gear', 'weapon', 'armor', 'shield', 'consumable'],
+            id: 'ammoActiveEffect',
+            label: 'SWIM.Config_SetAmmoActiveEffect',
+            hint: 'SWIM.Config_SetAmmoActiveEffect_Hint',
+            value: ''
+        }*/
+    ]
+
+    if (game.settings.get("swim", "irradiationSetting")) {
+        configs.push({
+            isNumber: true,
+            showFor: ['character', 'npc'],
+            id: 'radRes',
+            label: 'SWIM.Config_RadResName',
+            hint: 'SWIM.Config_RadResHint',
+            value: 0,
+        })
+    }
+
+    configs.push(
+        //SFX shown at the bottom(?):
+        //Actor SFX:
+        {
+            isSectionTitle: true,
+            showFor: ['weapon', 'character', 'npc'],
+            label: "SWIM.Config_SFX"
+        },
+        {
+            isText: true,
+            showFor: ['character', 'npc'],
+            id: "shakenSFX",
+            label: "SWIM.Config_ShakenSFXName",
+            hint: "SWIM.Config_ShakenSFXHint",
+            value: "",
+            useFilePicker: true,
+            filePickerData: "audio"
+        },
+        {
+            isText: true,
+            showFor: ['character', 'npc'],
+            id: "deathSFX",
+            label: "SWIM.Config_IncapSFXName",
+            hint: "SWIM.Config_IncapSFXHint",
+            value: "",
+            useFilePicker: true,
+            filePickerData: "audio"
+        },
+        {
+            isText: true,
+            showFor: ['character', 'npc'],
+            id: "unshakeSFX",
+            label: "SWIM.Config_UnshakeSFXName",
+            hint: "SWIM.Config_UnshakeSFXHint",
+            value: "",
+            useFilePicker: true,
+            filePickerData: "audio"
+        },
+        {
+            isText: true,
+            showFor: ['character', 'npc'],
+            id: "stunnedSFX",
+            label: "SWIM.Config_StunnedSFXName",
+            hint: "SWIM.Config_StunnedSFXHint",
+            value: "",
+            useFilePicker: true,
+            filePickerData: "audio"
+        },
+        {
+            isText: true,
+            showFor: ['character', 'npc'],
+            id: "soakSFX",
+            label: "SWIM.Config_SoakSFXName",
+            hint: "SWIM.Config_SoakSFXHint",
+            value: "",
+            useFilePicker: true,
+            filePickerData: "audio"
+        },
+        {
+            isText: true,
+            showFor: ['character', 'npc'],
+            id: "fatiguedSFX",
+            label: "SWIM.Config_FatiguedSFXName",
+            hint: "SWIM.Config_FatiguedSFXHint",
+            value: "",
+            useFilePicker: true,
+            filePickerData: "audio"
+        },
+        {
+            isText: true,
+            showFor: ['character', 'npc'],
+            id: "looseFatigueSFX",
+            label: "SWIM.Config_LooseFatigueSFXName",
+            hint: "SWIM.Config_LooseFatigueSFXHint",
+            value: "",
+            useFilePicker: true,
+            filePickerData: "audio"
+        },
+        //Weapon SFX:
+        {
+            isText: true,
+            showFor: ['weapon'],
+            id: "reloadSFX",
+            label: "SWIM.Config_ReloadSFXName",
+            hint: "SWIM.Config_ReloadSFXHint",
+            value: "",
+            useFilePicker: true,
+            filePickerData: "audio"
+        },
+        {
+            isText: true,
+            showFor: ['weapon'],
+            id: "fireSFX",
+            label: "SWIM.Config_FireSFXName",
+            hint: "SWIM.Config_FireSFXHint",
+            value: "",
+            useFilePicker: true,
+            filePickerData: "audio"
+        },
+        {
+            isText: true,
+            showFor: ['weapon'],
+            id: "autoFireSFX",
+            label: "SWIM.Config_AutoFireSFXName",
+            hint: "SWIM.Config_AutoFireSFXHint",
+            value: "",
+            useFilePicker: true,
+            filePickerData: "audio"
+        },
+        {
+            isText: true,
+            showFor: ['weapon'],
+            id: "silencedFireSFX",
+            label: "SWIM.Config_SilencedFireSFXName",
+            hint: "SWIM.Config_SilencedFireSFXHint",
+            value: "",
+            useFilePicker: true,
+            filePickerData: "audio"
+        },
+        {
+            isText: true,
+            showFor: ['weapon'],
+            id: "silencedAutoFireSFX",
+            label: "SWIM.Config_SilencedAutoFireSFXName",
+            hint: "SWIM.Config_SilencedAutoFireSFXHint",
+            value: "",
+            useFilePicker: true,
+            filePickerData: "audio"
+        },
+        {
+            isText: true,
+            showFor: ['weapon'],
+            id: "emptySFX",
+            label: "SWIM.Config_EmptySFXName",
+            hint: "SWIM.Config_EmptySFXHint",
+            value: "",
+            useFilePicker: true,
+            filePickerData: "audio"
+        },
+    )
+    return configs
+}
 
 const swimConfigVersion = SWIM.CONFIG_VERSION
 
@@ -292,6 +309,7 @@ class DocumentConfigForm extends FormApplication {
     }
 
     getData() {
+        const configs = swim_config_options()
         const type = this.object.type;
         let data = [];
 
@@ -314,7 +332,7 @@ class DocumentConfigForm extends FormApplication {
             data.push(c);
         }
 
-        return {options: data};
+        return { options: data };
     }
 
     async _onButtonClick(event) {
@@ -356,7 +374,7 @@ class DocumentConfigForm extends FormApplication {
 
     async _updateObject(_, formData) {
         //Merge in version
-        formData = {...{_version: swimConfigVersion}, ...formData};
+        formData = { ...{ _version: swimConfigVersion }, ...formData };
 
         const Data = {
             flags: {
