@@ -44,15 +44,13 @@ async function createDialog(actor, weapons) {
     await new Dialog({
         title: game.i18n.localize("SWIM.dialogue-ammoManagement"),
         content: `
-            <form name="form">
-                <h3>Select Mode</h3>
+            <form name="form" xmlns="http://www.w3.org/1999/html">
                 <div class="form-group">
-                    <label for="reload">Reload: </label>
-                    <input id="reload" name="mode" type="radio" value="reload" checked="true">
-                </div>
-                <div class="form-group">
-                    <label for="shooting">Shooting: </label>
-                    <input id="shooting" name="mode" type="radio" value="shooting">
+                    <label for="mode">Select Mode: </label>
+                    <select id="mode" name="mode">
+                        <option value="reload" selected>Reload</option>
+                        <option value="shooting">Shooting</option>
+                    </select>
                 </div>
                 <hr>
                 <h3>Select Weapon</h3>
@@ -60,14 +58,10 @@ async function createDialog(actor, weapons) {
                     <label for="weapon">Weapon: </label>
                     <select id="weapon" name="weapon">${weapons.reduce((acc, val) => acc += `<option value="${val.id}" ${val === defaultWeapon ? `selected` : ``}>${val.name}</option>`, ``)}</select>
                 </div>
-                <div class="form-group notes">
+                <div class="form-group">
                     <label for="loaded_ammo">Loaded Ammo: </label>
-                    <input id="loaded_ammo" name="loaded_ammo" type="text" value="${loadedAmmo}" readonly="readonly">
+                    <b><label id="loaded_ammo bold" name="loaded_ammo">${loadedAmmo} (${currentShots}/${currentMaxShots})</label></b>
                     <p class="notes">If this is empty, you should probably load some ammo first with the Reload mode above!</p>
-                </div>
-                <div class="form-group notes">
-                    <label for="shot_amount">Weapon Ammo Capacity: </label>
-                    <input id="shot_amount" name="shot_amount" type="text" value="${currentShots + "/" + currentMaxShots}" readonly="readonly">
                 </div>
                 <hr>
                 <div id="shooting_section">
@@ -98,20 +92,12 @@ async function createDialog(actor, weapons) {
             const modeSwitchLambda = (event) => {
                 const form = event.target.closest("form");
 
-                const selectedModeForms = form.querySelectorAll('input[name="mode"]');
+                const selectedModeForms = form.querySelector('select[name="mode"]');
                 const reloadDiv = form.querySelector("#reload_section");
                 const shootingDiv = form.querySelector("#shooting_section");
 
-                let mode;
-                for (const selectedMode of selectedModeForms) {
-                    if (selectedMode.checked) {
-                        mode = selectedMode.value;
-                        break;
-                    }
-                }
-
                 //enable and disable the respective part of the form
-                if (mode === "reload") {
+                if (selectedModeForms.selectedIndex === 0) {
                     reloadDiv.style.display = "block";
                     shootingDiv.style.display = "none";
                 } else {
@@ -126,8 +112,7 @@ async function createDialog(actor, weapons) {
                 const selectedWeaponForm = form.querySelector('select[name="weapon"]');
                 const selectedAmmoForm = form.querySelector('select[name="ammo"]');
                 const selectedShotsForm = form.querySelector('input[name="shots"]');
-                const selectedLoadedAmmoForm = form.querySelector('input[name="loaded_ammo"]');
-                const selectedShotAmountForm = form.querySelector('input[name="shot_amount"]');
+                const selectedLoadedAmmoForm = form.querySelector('label[name="loaded_ammo"]');
 
                 const selectedWeapon = weapons[selectedWeaponForm.selectedIndex];
 
@@ -137,11 +122,9 @@ async function createDialog(actor, weapons) {
                     selectedShotsForm.setAttribute("value", defaultShots);
 
                     loadedAmmo = selectedWeapon.flags.swim.config.loadedAmmo;
-                    selectedLoadedAmmoForm.setAttribute("value", loadedAmmo);
-
                     currentShots = selectedWeapon.system.currentShots;
                     currentMaxShots = selectedWeapon.system.shots;
-                    selectedShotAmountForm.setAttribute("value", currentShots + "/" + currentMaxShots);
+                    selectedLoadedAmmoForm.innerHTML = `${loadedAmmo} (${currentShots}/${currentMaxShots})`;
 
                     defaultAmmo = selectedWeapon.system.ammo.trim().split('|').filter(a => !!actor.items.getName(a));
                     selectedAmmoForm.innerHTML = defaultAmmo.reduce((acc, val) => acc += `<option value="${val}" ${val === loadedAmmo ? `selected` : ``}>${val}</option>`, ``);
@@ -150,12 +133,9 @@ async function createDialog(actor, weapons) {
                 }
             }
 
-            dialogContent.querySelector(`input[name="mode"]`).focus();
+            dialogContent.querySelector(`select[name="mode"]`).focus();
             dialogContent.querySelector(`select[name="weapon"]`).addEventListener("input", weaponSwitchLambda);
-
-            for (const input of dialogContent.querySelectorAll(`input[name="mode"]`)) {
-                input.addEventListener("input", modeSwitchLambda);
-            }
+            dialogContent.querySelector(`select[name="mode"]`).addEventListener("input", modeSwitchLambda);
 
             //Set initial mode
             const reloadDiv = dialogContent.querySelector("#reload_section");
