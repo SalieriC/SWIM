@@ -53,6 +53,14 @@ Right now we have the following possibilities (pick one):
     - label: the loca key for the label
     - hint: the loca key for the hint
     - value: the default value of the AE (in JSON)
+- isNumber: if true will show a number spinner
+    - showFor: Array of item/actor types to show this element for. Omit entire property to always show.
+    - id: the name under which to store this config in the flags
+    - label: the loca key for the label
+    - hint: the loca key for the hint
+    - value: the default value of the number field
+    - min: the minimum value of the number field
+    - max: the maximum value of the number field
 
  */
 const configs = [
@@ -257,7 +265,7 @@ const configs = [
         value: "",
         useFilePicker: true,
         filePickerData: "audio"
-    }
+    },
 ]
 
 const swimConfigVersion = SWIM.CONFIG_VERSION
