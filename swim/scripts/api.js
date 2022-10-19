@@ -1,6 +1,5 @@
 // Many thanks to honeybadger#2614 for the support on setting up the API.
 
-import { ammo_management_script, br2_ammo_management_script } from './swim_modules/ammo_management.js'
 import { chase_setup_script } from './swim_modules/chase_setup.js'
 import { common_bond_script } from './swim_modules/common_bond.js'
 import { deviation_script } from './swim_modules/deviation.js'
@@ -20,7 +19,7 @@ import { unshake_swd_script, unshake_swade_script } from './swim_modules/unshake
 import { unstun_script } from './swim_modules/unstun.js'
 import { update_migration } from './migrations.js'
 import * as SWIM from './constants.js'
-import { showWeaponAmmoDialog } from "./swim_modules/ammo_management_v2.js";
+import { showWeaponAmmoDialog, br2_ammo_management_script } from "./swim_modules/ammo_management.js";
 
 export class api {
 
