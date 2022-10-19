@@ -26,6 +26,10 @@
                             <input type="text" name="{{ this.id }}" value="{{ this.value }}">
                             {{# if this.useFilePicker }}{{ filePicker type=this.filePickerData target=this.id }}{{/if}}
                         {{/if}}
+
+                        {{#if this.isNumber}}
+                            <input type="number" name="{{ this.id }}" value="{{ this.value }}" min="{{ this.min }}" max="{{ this.max }}">
+                        {{/if}}
                     </div>
                     <p class="notes">{{ localize this.hint }}</p>
                 {{/if}}
