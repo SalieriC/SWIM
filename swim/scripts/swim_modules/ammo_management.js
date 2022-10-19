@@ -397,7 +397,7 @@ async function reloadButton(html, actor, weapons, ammo) {
         const maxCharges = parseInt(selectedWeapon.system.shots);
         const requiredCharges = parseInt(selectedWeapon.system.shots - currentCharges);
         const availableAmmo = parseInt(selectedAmmo.system.quantity);
-        const oldAmmoQuantity = parseInt(oldAmmo.system.quantity);
+        const oldAmmoQuantity = parseInt(oldAmmo?.system?.quantity) || 0;
 
         // Variables for recharging procedure
         let amountToRecharge;
@@ -575,10 +575,27 @@ async function applyActiveEffect(actor, selectedWeapon, selectedAmmo, oldAmmo) {
         for (let change of effectObj.changes) {
             const oldKey = change.key;
             change.key = `@${selectedWeapon.type}{${selectedWeapon.name}}[${oldKey}]`;
-        }
-        effectObj.flags = { ...effectObj.flags, ...{swim: {ammoEffectFor: selectedWeapon.id}}};
 
-        const effect = await CONFIG.ActiveEffect.documentClass.create(effectObj, {
+            //Any custom effect code goes here
+            if (oldKey === "system.range" && selectedWeapon.system.range.includes("/")) {
+                const oldRange = selectedWeapon.system.range;
+                let rangeNums = oldRange.split("/");
+                if(change.mode === CONST.ACTIVE_EFFECT_MODES.ADD) {
+                    rangeNums[0] += change.value;
+                    rangeNums[1] += change.value * 2;
+                    rangeNums[2] += change.value * 4;
+                } else if(change.mode === CONST.ACTIVE_EFFECT_MODES.MULTIPLY) {
+                    rangeNums[0] *= change.value;
+                    rangeNums[1] *= change.value;
+                    rangeNums[2] *= change.value;
+                }
+                change.value = `${rangeNums[0]}/${rangeNums[1]}/${rangeNums[2]}`;
+                change.mode = CONST.ACTIVE_EFFECT_MODES.OVERRIDE;
+            }
+        }
+        effectObj.flags = {...effectObj.flags, ...{swim: {ammoEffectFor: selectedWeapon.id}}};
+
+        await CONFIG.ActiveEffect.documentClass.create(effectObj, {
             rendersheet: false,
             parent: actor
         });
