@@ -23,10 +23,10 @@ export async function showWeaponAmmoDialog() {
 
 function checkWeapon(item) {
     return item.type === "weapon"
-    && item.system.quantity > 0
-    && item.flags?.swim?.config !== undefined
-    && (item.system.ammo.trim() !== ""
-        || item.flags.swim.config.isConsumable === true);
+        && item.system.quantity > 0
+        && item.flags?.swim?.config !== undefined
+        && (item.system.ammo.trim() !== ""
+            || item.flags.swim.config.isConsumable === true);
 }
 
 async function createDialog(actor, weapons) {
@@ -412,21 +412,23 @@ async function reloadButton(html, actor, weapons, ammo) {
             newCharges = amountToRecharge;
             newAmmo = availableAmmo - 1;
             //Refill old Charge Pack if it is still full (current and max shots are equal)
-            if (chgType === true && currentCharges === maxCharges) {
-                oldAmmoRefill = oldAmmoQuantity + 1;
-            } else if (chgType === true && currentCharges !== maxCharges) {
-                oldAmmoRefill = oldAmmoQuantity;
+            if (chgType) {
+                if (currentCharges === maxCharges) {
+                    oldAmmoRefill = oldAmmoQuantity + 1;
+                } else {
+                    oldAmmoRefill = oldAmmoQuantity;
+                }
             }
         }
         // Checking if user selected to change the ammo type. This is only relevant if not a Charge Pack, if it is, it's already handled above.
-        else if (chgType === true) {
+        else if (chgType) {
             // When changing Ammo type, remaining shots should not become the new Ammo Type.
             amountToRecharge = parseInt(selectedWeapon.system.shots);
             //Change the amount to recharge to 1 if singleReload is checked.
-            if (selectedSingleReload === true) {
+            if (selectedSingleReload) {
                 amountToRecharge = 1
             }
-            if (autoReload === true) {
+            if (autoReload) {
                 amountToRecharge = 0
             }
             newCharges = amountToRecharge;
@@ -436,7 +438,7 @@ async function reloadButton(html, actor, weapons, ammo) {
             // If the quantity of ammo is less than the amount required, use whatever is left.
             amountToRecharge = Math.min(availableAmmo, requiredCharges);
             //Change the amount to recharge to 1 if singleReload is checked.
-            if (selectedSingleReload === true) {
+            if (selectedSingleReload) {
                 amountToRecharge = currentCharges >= maxCharges ? 0 : 1
                 if (amountToRecharge === 0) {
                     ui.notifications.error(game.i18n.localize("SWIM.notification-weaponAlreadyFull"))
@@ -450,7 +452,7 @@ async function reloadButton(html, actor, weapons, ammo) {
         // Check if there is ammo left to reload.
         if (availableAmmo < 1) {
             ui.notifications.notify(game.i18n.localize("SWIM.notification-outOfAmmo"))
-        } else if (chgType === true) {
+        } else if (chgType) {
             const updates = [
                 {
                     _id: selectedWeapon.id,
@@ -477,6 +479,8 @@ async function reloadButton(html, actor, weapons, ammo) {
             if (sfx_reload) {
                 AudioHelper.play({src: `${sfx_reload}`}, true)
             }
+
+            await applyActiveEffect(actor, selectedWeapon, selectedAmmo, oldAmmo);
         } else {
             const updates = [
                 {
@@ -549,6 +553,35 @@ async function reloadButton(html, actor, weapons, ammo) {
         if (sfx_reload) {
             AudioHelper.play({src: `${sfx_reload}`}, true)
         }
+    }
+}
+
+async function applyActiveEffect(actor, selectedWeapon, selectedAmmo, oldAmmo) {
+    if (oldAmmo.flags?.swim?.config?.ammoActiveEffect !== undefined) {
+        const effects = actor.effects.filter(e => {
+            return e.flags?.swim?.ammoEffectFor === selectedWeapon.id
+        });
+        const toDelete = effects.map(a => a._id);
+        await actor.deleteEmbeddedDocuments("ActiveEffect", toDelete);
+    }
+
+    if (selectedAmmo.flags?.swim?.config?.ammoActiveEffect !== undefined
+        && selectedAmmo.flags?.swim?.config?.ammoActiveEffect?.trim() !== "") {
+        let effectObj = JSON.parse(selectedAmmo.flags.swim.config.ammoActiveEffect);
+
+        //Adjust effect to work with items
+        delete effectObj._id; //We want a unique ID for this one
+        effectObj.label += `[${selectedWeapon.name}]`;
+        for (let change of effectObj.changes) {
+            const oldKey = change.key;
+            change.key = `@${selectedWeapon.type}{${selectedWeapon.name}}[${oldKey}]`;
+        }
+        effectObj.flags = { ...effectObj.flags, ...{swim: {ammoEffectFor: selectedWeapon.id}}};
+
+        const effect = await CONFIG.ActiveEffect.documentClass.create(effectObj, {
+            rendersheet: false,
+            parent: actor
+        });
     }
 }
 
@@ -629,23 +662,39 @@ export async function br2_ammo_management_script(message, actor, item) {
     const npcAmmo = game.settings.get('swim', 'npcAmmo');
 
     //Don't execute the macro on a reroll by checking if the old_rolls is empty:
-    if (message.flags['betterrolls-swade2'].render_data.trait_roll.old_rolls.length >= 1) { return; }
+    if (message.flags['betterrolls-swade2'].render_data.trait_roll.old_rolls.length >= 1) {
+        return;
+    }
 
     //If the weapon is not compatible, return early
-    if(!checkWeapon(item)) return;
+    if (!checkWeapon(item)) return;
 
     const traitDice = message.flags['betterrolls-swade2'].render_data.trait_roll.dice;
     let rate_of_fire = traitDice.length;
-    if (actor.system.wildcard === true) { rate_of_fire = rate_of_fire - 1; }
+    if (actor.system.wildcard === true) {
+        rate_of_fire = rate_of_fire - 1;
+    }
     let shots = message.flags['betterrolls-swade2'].render_data.used_shots;
     //failsafe to guss amount of shots in case BR2 return zero or undefined:
     if (shots === 0 || !shots) {
-        if (rate_of_fire === 1) { shots = 1; }
-        if (rate_of_fire === 2) { shots = 5; }
-        if (rate_of_fire === 3) { shots = 10; }
-        if (rate_of_fire === 4) { shots = 20; }
-        if (rate_of_fire === 5) { shots = 40; }
-        if (rate_of_fire === 6) { shots = 50; }
+        if (rate_of_fire === 1) {
+            shots = 1;
+        }
+        if (rate_of_fire === 2) {
+            shots = 5;
+        }
+        if (rate_of_fire === 3) {
+            shots = 10;
+        }
+        if (rate_of_fire === 4) {
+            shots = 20;
+        }
+        if (rate_of_fire === 5) {
+            shots = 40;
+        }
+        if (rate_of_fire === 6) {
+            shots = 50;
+        }
     }
 
     await shoot(item, shots, actor);
