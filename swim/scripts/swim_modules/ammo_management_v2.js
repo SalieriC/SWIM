@@ -48,12 +48,12 @@ async function createDialog(actor, weapons) {
                     <label for="weapon">Weapon: </label>
                     <select id="weapon" name="weapon">${weapons.reduce((acc, val) => acc += `<option value="${val.id}" ${val === defaultWeapon ? `selected` : ``}>${val.name}</option>`, ``)}</select>
                 </div>
-                <div class="form-group">
+                <div class="form-group notes">
                     <label for="loaded_ammo">Loaded Ammo: </label>
                     <input id="loaded_ammo" name="loaded_ammo" type="text" value="${loadedAmmo}" readonly="readonly">
                     <p class="notes">If this is empty, you should probably load some ammo first with the Reload mode above!</p>
                 </div>
-                <div class="form-group">
+                <div class="form-group notes">
                     <label for="shot_amount">Weapon Ammo Capacity: </label>
                     <input id="shot_amount" name="shot_amount" type="text" value="${currentShots + "/" + currentMaxShots}" readonly="readonly">
                 </div>
