@@ -153,7 +153,7 @@
   "SWIM.noStopFolderName": "Folder of playlists that don't stop:",
   "SWIM.noStopFolderHint": "You can specify a folder name (exact, not case sensitive) containing playlists that will never stop playing when combat starts.",
   "SWIM.notification-noReloadableOrConsumableWeapon": "You have no reloadable or consumable weapons.",
-  "SWIM.dialogue-attack":"Attack Dialog",
+  "SWIM.dialogue-ammoManagement":"Ammo Management",
   "SWIM.dialogue-shoot":"Shoot",
   "SWIM.dialogue-reload":"Reload",
   "SWIM.notification-noItemLeft":"You don't have a(n) {itemName} left.",

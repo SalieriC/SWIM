@@ -6,12 +6,11 @@ export async function showWeaponAmmoDialog() {
 
     //get weapons
     const weapons = actor.items.filter(item =>
-        (item.type === "weapon" &&
-            item.system.ammo.trim() !== "" &&
-            item.system.quantity > 0) ||
-        (item.type === "weapon" &&
-            item.flags.swim.config.isConsumable === true &&
-            item.system.quantity > 0)
+        item.type === "weapon"
+        && item.system.quantity > 0
+        && item.flags?.swim?.config !== undefined
+        && (item.system.ammo.trim() !== ""
+            || item.flags.swim.config.isConsumable === true)
     );
     if (weapons.length === 0) return ui.notifications.error(game.i18n.localize("SWIM.notification-noReloadableOrConsumableWeapon"));
 
@@ -26,51 +25,97 @@ async function createDialog(actor, weapons) {
     let defaultWeapon = weapons[0];
     let defaultShots = shotsPerRof[defaultWeapon.system.rof];
     let defaultAmmo = defaultWeapon.system.ammo.trim().split('|').filter(a => !!actor.items.getName(a));
+    let loadedAmmo = defaultWeapon.flags.swim.config.loadedAmmo;
+    let currentShots = defaultWeapon.system.currentShots;
+    let currentMaxShots = defaultWeapon.system.shots;
 
     await new Dialog({
-        title: game.i18n.localize("SWIM.dialogue-attack"),
+        title: game.i18n.localize("SWIM.dialogue-ammoManagement"),
         content: `
             <form name="form">
                 <h3>Select Mode</h3>
                 <div class="form-group">
                     <label for="reload">Reload: </label>
-                    <input id="reload" name="mode" type="radio" checked="true">
+                    <input id="reload" name="mode" type="radio" value="reload" checked="true">
                 </div>
                 <div class="form-group">
                     <label for="shooting">Shooting: </label>
-                    <input id="shooting" name="mode" type="radio">
+                    <input id="shooting" name="mode" type="radio" value="shooting">
                 </div>
                 <hr>
-                <div>
-                    <p>Here you can fire shots from your weapon or reload it.</p>
-                    <p>You don't need to adjust the "# of Shots" for reloading. If you change the ammo type you'll keep the old ammo unless it is a Charge Pack.</p>
-                    <p class="notes"><b># of Shots per ROF:</b> ROF 1 = 1 Shot; ROF 2 = 5; ROF 3 = 10; ROF 4 = 20; ROF 5 = 40; ROF 6 = 50</p>
-                </div>
-                <div class="form-group">
-                    <label for="shots"># of Shots: </label>
-                    <input id="shots", name="shots" type="number" min="0" max="${defaultShots}" value="${defaultShots}">
-                </div>
+                <h3>Select Weapon</h3>
                 <div class="form-group">
                     <label for="weapon">Weapon: </label>
                     <select id="weapon" name="weapon">${weapons.reduce((acc, val) => acc += `<option value="${val.id}" ${val === defaultWeapon ? `selected` : ``}>${val.name}</option>`, ``)}</select>
                 </div>
                 <div class="form-group">
-                    <label for="ammo">Ammo: </label>
-                    <select id="ammo" name="ammo">${defaultAmmo.reduce((acc, val) => acc += `<option value="${val}">${val}</option>`, ``)}</select>
+                    <label for="loaded_ammo">Loaded Ammo: </label>
+                    <input id="loaded_ammo" name="loaded_ammo" type="text" value="${loadedAmmo}" readonly="readonly">
+                    <p class="notes">If this is empty, you should probably load some ammo first with the Reload mode above!</p>
                 </div>
                 <div class="form-group">
-                    <label for="singleReload">Can only reload one at a time: </label>
-                    <input id="singleReload" name="singleReload" type="checkbox"${defaultSingleReload}>
+                    <label for="shot_amount">Weapon Ammo Capacity: </label>
+                    <input id="shot_amount" name="shot_amount" type="text" value="${currentShots + "/" + currentMaxShots}" readonly="readonly">
+                </div>
+                <hr>
+                <div id="shooting_section">
+                    <h3>Shooting</h3>
+                    <p>Here you can fire precise amount of shots from your weapon, based on the current loaded ammo.</p>
+                    <div class="form-group">
+                        <label for="shots"># of Shots: </label>
+                        <input id="shots", name="shots" type="number" min="0" max="${defaultShots}" value="${defaultShots}">
+                        <p class="notes"><b># of Shots per ROF:</b> ROF 1 = 1 Shot; ROF 2 = 5; ROF 3 = 10; ROF 4 = 20; ROF 5 = 40; ROF 6 = 50</p>
+                    </div>
+                </div>
+                <div id="reload_section">
+                    <h3>Reload and Ammo Switching</h3>
+                    <p>Here you can switch ammo and reload your weapon</p>
+                    <p class="notes">If you change the ammo type you'll get the old ammo back, unless it is a Charge Pack.</p>
+                    <div class="form-group">
+                        <label for="ammo">Ammo to load: </label>
+                        <select id="ammo" name="ammo">${defaultAmmo.reduce((acc, val) => acc += `<option value="${val}" ${val === loadedAmmo ? `selected` : ``}>${val}</option>`, ``)}</select>
+                    </div>
+                    <div class="form-group">
+                        <label for="singleReload">Can only reload one at a time: </label>
+                        <input id="singleReload" name="singleReload" type="checkbox"${defaultSingleReload}>
+                    </div>
                 </div>
             </form>
             `,
         render: ([dialogContent]) => {
-            let lambda = (event) => {
+            const modeSwitchLambda = (event) => {
+                const form = event.target.closest("form");
+
+                const selectedModeForms = form.querySelectorAll('input[name="mode"]');
+                const reloadDiv = form.querySelector("#reload_section");
+                const shootingDiv = form.querySelector("#shooting_section");
+
+                let mode;
+                for (const selectedMode of selectedModeForms) {
+                    if (selectedMode.checked) {
+                        mode = selectedMode.value;
+                        break;
+                    }
+                }
+
+                //enable and disable the respective part of the form
+                if (mode === "reload") {
+                    reloadDiv.style.display = "block";
+                    shootingDiv.style.display = "none";
+                } else {
+                    reloadDiv.style.display = "none";
+                    shootingDiv.style.display = "block";
+                }
+            }
+
+            const weaponSwitchLambda = (event) => {
                 const form = event.target.closest("form");
 
                 const selectedWeaponForm = form.querySelector('select[name="weapon"]');
                 const selectedAmmoForm = form.querySelector('select[name="ammo"]');
                 const selectedShotsForm = form.querySelector('input[name="shots"]');
+                const selectedLoadedAmmoForm = form.querySelector('input[name="loaded_ammo"]');
+                const selectedShotAmountForm = form.querySelector('input[name="shot_amount"]');
 
                 const selectedWeapon = weapons[selectedWeaponForm.selectedIndex];
 
@@ -79,15 +124,32 @@ async function createDialog(actor, weapons) {
                     selectedShotsForm.setAttribute("max", defaultShots);
                     selectedShotsForm.setAttribute("value", defaultShots);
 
+                    loadedAmmo = selectedWeapon.flags.swim.config.loadedAmmo;
+                    selectedLoadedAmmoForm.setAttribute("value", loadedAmmo);
+
+                    currentShots = selectedWeapon.system.currentShots;
+                    currentMaxShots = selectedWeapon.system.shots;
+                    selectedShotAmountForm.setAttribute("value", currentShots + "/" + currentMaxShots);
+
                     defaultAmmo = selectedWeapon.system.ammo.trim().split('|').filter(a => !!actor.items.getName(a));
-                    selectedAmmoForm.innerHTML = defaultAmmo.reduce((acc, val) => acc += `<option value="${val}">${val}</option>`, ``);
+                    selectedAmmoForm.innerHTML = defaultAmmo.reduce((acc, val) => acc += `<option value="${val}" ${val === loadedAmmo ? `selected` : ``}>${val}</option>`, ``);
 
                     defaultWeapon = selectedWeapon;
                 }
             }
 
-            dialogContent.querySelector(`select[name="weapon"]`).focus();
-            dialogContent.querySelector(`select[name="weapon"]`).addEventListener("input", lambda);
+            dialogContent.querySelector(`input[name="mode"]`).focus();
+            dialogContent.querySelector(`select[name="weapon"]`).addEventListener("input", weaponSwitchLambda);
+
+            for (const input of dialogContent.querySelectorAll(`input[name="mode"]`)) {
+                input.addEventListener("input", modeSwitchLambda);
+            }
+
+            //Set initial mode
+            const reloadDiv = dialogContent.querySelector("#reload_section");
+            const shootingDiv = dialogContent.querySelector("#shooting_section");
+            reloadDiv.style.display = "block";
+            shootingDiv.style.display = "none";
         },
         buttons: {
             shoot: {
