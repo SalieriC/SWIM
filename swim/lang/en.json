@@ -398,5 +398,7 @@
   "SWIM.Config_IsConsumableHint": "This marks a weapon as a consumable one. Consumable weapons do not reduce their ammunition on usage; instead the quantity is removed (used for throwing knives, grenades, etc.).",
   "SWIM.Config_AmmoConfig": "Ammunition Configuration",
   "SWIM.Config_IsPackName": "Charge Pack:",
-  "SWIM.Config_IsPackHint": "This marks an item as a charge pack. Charge packs will always refill the entire weapon instead of a single shot (used for magazines, batteries, etc.)."
+  "SWIM.Config_IsPackHint": "This marks an item as a charge pack. Charge packs will always refill the entire weapon instead of a single shot (used for magazines, batteries, etc.).",
+  "SWIM.Config_RadResName": "Radiation Resistance:",
+  "SWIM.Config_RadResHint": "You can specify a radiation resistance here. It may be negative for vulnerability to radiation."
 }

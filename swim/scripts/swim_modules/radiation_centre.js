@@ -36,15 +36,11 @@ export async function radiation_centre_script() {
         }
         return ui.notifications.error('Your GM has not activated the Irradiation Condition. Ask your GM to do so and try again.')
     }
-    /*else if (!token.actor.system.additionalStats.radRes) {
-        ui.notifications.error("Activate your Rad Resistance Additional Stat before using this macro.");
-        return;
-    }*/
     // Checking for SWADE Spices & Flavours and setting up the Benny image.
     let bennyImage = await swim.get_benny_image()
     // Setting SFX
     const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
-    let radRes = token.actor.system.additionalStats.radRes?.value;
+    let radRes = token.actor.flags?.swim?.config?.radRes;
 
     // Declairing variables and constants.
     const fv = token.actor.system.fatigue.value;
@@ -95,7 +91,8 @@ export async function radiation_centre_script() {
         rollWithEdge += radRes;
         let radResVal = `${radRes}`;
         if (radRes >= 1) { radResVal = `+${radRes}`; }
-        if (token.actor.system.additionalStats.radRes) { edgeText = edgeText + `<br/><i>including ${radResVal} from current Rad Resistance</i>.`; }
+        else if (radRes <= -1) { radResVal = `-${radRes}`; }
+        if (radRes && radRes != 0) { edgeText = edgeText + `<br/><i>including ${radResVal} from current Rad Resistance</i>.`; }
 
         // Roll Vigor
         let chatData = `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge} </span>`;

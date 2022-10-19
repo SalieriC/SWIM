@@ -67,6 +67,10 @@ export async function v10_migration() {
                                         }
                                     }
                                 }
+                                if (actor.system.additionalStats?.radRes?.value) {
+                                    flagData.flags.swim.config.radRes = Number(actor.system.additionalStats?.radRes?.value)
+                                    await actor.update({ "system.additionalStats.-=radRes": null })
+                                }
                                 await actor.update(flagData)
                             }
                         } for (let item of allItems) {
@@ -186,6 +190,10 @@ export async function update_migration(actor, item, currVersion) {
                             }
                         }
                     }
+                }
+                if (actor.system.additionalStats?.radRes?.value) {
+                    flagData.flags.swim.config.radRes = Number(actor.system.additionalStats?.radRes?.value)
+                    await actor.update({ "system.additionalStats.-=radRes": null })
                 }
                 await actor.update(flagData)
             }
