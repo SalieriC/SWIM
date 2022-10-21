@@ -129,6 +129,19 @@ function swim_config_options() {
             hint: 'SWIM.Config_SetAmmoActiveEffect_Hint',
             value: ''
         }*/
+        {
+            isSectionTitle: true,
+            showFor: ['character', 'npc'],
+            label: "SWIM.GeneralActorConfig"
+        },
+        {
+            isText: true,
+            showFor: ['character', 'npc'],
+            id: "pronoun",
+            label: "SWIM.Config_PronounName",
+            hint: "SWIM.Config_PronounHint",
+            value: ""
+        },
     ]
 
     if (game.settings.get("swim", "irradiationSetting")) {

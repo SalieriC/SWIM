@@ -45,6 +45,7 @@ export class api {
       play_sfx: api._play_sfx,
       get_folder_content: api._get_folder_content,
       run_migration: api._run_migration,
+      get_pronoun: api._get_pronoun,
       // Convenience
       ammo_management: api._ammo_management,
       br2_ammo_management: api._ammo_management_br2,
@@ -79,6 +80,7 @@ export class api {
    * - Play SFX
    * - Get Folder Contents
    * - Run Migration
+   * - Get Pronoun
    ******************************************/
 
   // Get Macro Variables
@@ -289,6 +291,19 @@ export class api {
         if (originalActor) { await update_migration(originalActor, item, currVersion) }
       }
     }
+  }
+  
+  //Get the defined pronoun or 'its' if undefined
+  static _get_pronoun(actorOrToken) {
+    let actor = actorOrToken
+    if (actorOrToken.actor) {
+      actor = actorOrToken.actor
+    }
+    let pronoun = "its"
+    if (actor.flags?.swim?.config?.pronoun) {
+      pronoun = actor.flags.swim.config.pronoun
+    }
+    return pronoun
   }
 
   /*******************************************
