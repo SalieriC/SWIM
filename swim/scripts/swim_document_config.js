@@ -359,11 +359,14 @@ class DocumentConfigForm extends FormApplication {
             rendersheet: false,
             parent: this.object
         });
+        //Set a flag to mark effects to be deleted later.
+        await effect.setFlag('swim', 'ammoAeTempEff', true)
 
-        await new SWIMEffectConfig(effect, {}, (e) => {
+        await new SWIMEffectConfig(effect, {}, async (e) => {
             const effect = e.toObject();
             this.form.elements[id].value = JSON.stringify(effect);
         }).render(true);
+        
     }
 
     async _removeActiveEffect(event) {
@@ -385,6 +388,10 @@ class DocumentConfigForm extends FormApplication {
 
         try {
             this.object.update(Data);
+            // Fallback that deletes all AEs that are marked as temporary:
+            for (let eff of this.object.effects) {
+                if (eff.flags?.swim?.ammoAeTempEff === true) { await eff.delete() }
+            }
             console.log(`Flags set on ${this.object.name}.`, this.object);
         } catch (err) {
             console.log(err)
