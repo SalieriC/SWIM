@@ -96,12 +96,12 @@ function swim_config_options() {
         },
         {
             isSectionTitle: true,
-            showFor: ['gear', 'weapon', 'armor', 'shield', 'consumable'],
+            showFor: ['gear'],
             label: "SWIM.Config_AmmoConfig"
         },
         {
             isBoolean: true,
-            showFor: ['gear', 'weapon', 'armor', 'shield', 'consumable'],
+            showFor: ['gear'],
             id: 'isPack',
             label: 'SWIM.Config_IsPackName',
             hint: 'SWIM.Config_IsPackHint',
@@ -109,7 +109,7 @@ function swim_config_options() {
         },
         {
             isAE: true,
-            showFor: ['gear', 'weapon', 'armor', 'shield', 'consumable'],
+            showFor: ['gear'],
             id: 'ammoActiveEffect',
             label: 'SWIM.Config_SetAmmoActiveEffectName',
             hint: 'SWIM.Config_SetAmmoActiveEffectHint',
