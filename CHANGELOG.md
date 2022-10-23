@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New translation strings and extended localization of the module.
 - New API function which returns all contents of a folder and its sub-folders up to three layers deep.
 - On startup SWIM will check if the actor folder compendium is in the systems block toc list and if not prompt a dialogue to add it as otherwise the folders are invisible.
-- Add button in the header of items and actors that opens a SWIM configuration window.
+- Add button in the header of items and actors that opens a SWIM configuration window (@loofou).
 - - The button is accessible by the GM and optionally by players (see settings).
 - - Along with this comes a new way of storing data, menaing that existing actor and item configurations using additional stats would break, so...
 - - a migration script is provided that goes through all actors and items of a world (but not compendiums) and updates them to this new way of storing data.
@@ -36,6 +36,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A creature summoned with a raise will now receive a max wound in addition to its current max wounds instead of setting it fixed to one. This should cover the Fantasy Companion where some summonable creatures already are resilient.
 - General cleanup of code.
 - Changed the `get_actor_sfx` api function to get the sfx from the flags instead of the additional stats.
+- Ammo Management completely overhauled (@loofou):
+- - Refactored the macro completely and added a new design to the dialogue. It now should display the proper options depending on selection (shooting or reloading)
+- - Implement Ammo ActiveEffect system: Ammo that has an Active Effect assigned to it using the SWIM configuration on the ammo item, is applying the effect on the actor if the ammo is loaded. The effect is removed when the ammo is unloaded.
+- - Ammo management now uses the audio from the SWIM config instead of additional stats as well as other configurations.
 ### Fixed
 - Fixed a bug in the effect builder that didn't set maintainedPowers additional stat up when the caster was also the target.
 - Fixed a bug in the Shape Changer that rendered the ignore size rule setting useless (thanks @jdavasligil).
