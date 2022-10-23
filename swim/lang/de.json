@@ -154,7 +154,7 @@
     "SWIM.combatPlaylistManagementHint": "Wenn diese Option aktiviert ist, wird die unten gewählte Wiedergabeliste beim Beginn einer Begegnung gestartet. Nach dem Ende der Begegnung wird die zuvor aktive Wiedergabeliste geladen.",
     "SWIM.noStopFolderHint": "Definiert einen Ordner mit Namen (genauso, aber nicht bei gleicher Groß- und Kleinschreibung), dessen Wiedergabelisten nicht gestoppt werden, wenn der Kampf beginnt.",
     "SWIM.notification-noReloadableOrConsumableWeapon": "Du trägst keine nachladbaren oder verbrauchbaren Waffen bei mir.",
-    "SWIM.dialogue-attack": "Angriffsdialog",
+    "SWIM.dialogue-ammoManagement":"Munitionsverwaltung",
     "SWIM.notification-cannotReloadConsumableWeapons": "Verbrauchbare Waffen können nicht nachgeladen werden, verwende stattdessen Schießen.",
     "SWIM.chatMessage-unshakeResultRoll": "{name} würfelt eine <span style=\"font-size:150%\"> {rollWithEdge} </span>",
     "SWIM.chatMessage-unshakeResultNoShakenCanAct": ", ist nicht mehr Angeschlagen und kann normal agieren.",

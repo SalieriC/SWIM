@@ -1,6 +1,5 @@
 // Many thanks to honeybadger#2614 for the support on setting up the API.
 
-import { ammo_management_script, br2_ammo_management_script } from './swim_modules/ammo_management.js'
 import { chase_setup_script } from './swim_modules/chase_setup.js'
 import { common_bond_script } from './swim_modules/common_bond.js'
 import { deviation_script } from './swim_modules/deviation.js'
@@ -20,6 +19,7 @@ import { unshake_swd_script, unshake_swade_script } from './swim_modules/unshake
 import { unstun_script } from './swim_modules/unstun.js'
 import { update_migration } from './migrations.js'
 import * as SWIM from './constants.js'
+import { showWeaponAmmoDialog, br2_ammo_management_script } from "./swim_modules/ammo_management.js";
 
 export class api {
 
@@ -42,6 +42,7 @@ export class api {
       wait: api._wait,
       get_official_class: api._get_official_class,
       get_actor_sfx: api._get_actor_sfx,
+      get_weapon_sfx: api._get_weapon_sfx,
       play_sfx: api._play_sfx,
       get_folder_content: api._get_folder_content,
       run_migration: api._run_migration,
@@ -237,7 +238,7 @@ export class api {
   }
   static async _get_weapon_sfx(weapon) {
     let actor = false
-    await swim.run_migration(actor, item = weapon) //Run migration if needed.
+    await swim.run_migration(actor, weapon) //Run migration if needed.
 
     let reloadSFX
     let fireSFX
@@ -331,7 +332,8 @@ export class api {
 
   // Ammo Management
   static async _ammo_management() {
-    ammo_management_script()
+    //ammo_management_script()
+    showWeaponAmmoDialog();
   }
   static async _ammo_management_br2(message, actor, item) {
     br2_ammo_management_script(message, actor, item)
