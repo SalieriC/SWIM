@@ -132,7 +132,7 @@ function swim_config_options() {
         {
             isSectionTitle: true,
             showFor: ['character', 'npc'],
-            label: "SWIM.GeneralActorConfig"
+            label: "SWIM.Config_GeneralActorConfig"
         },
         {
             isText: true,
