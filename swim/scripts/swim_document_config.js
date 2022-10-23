@@ -107,28 +107,14 @@ function swim_config_options() {
             hint: 'SWIM.Config_IsPackHint',
             value: false
         },
-        //TODO: Finish Ammo Management Improvements
-        /*{
-            isSectionTitle: true,
-            showFor: ['gear', 'weapon', 'armor', 'shield', 'consumable'],
-            label: "SWIM.Config_SectionAmmoManagement"
-        },
-        {
-            isBoolean: true,
-            showFor: ['gear', 'weapon', 'armor', 'shield', 'consumable'],
-            id: 'isAmmo',
-            label: 'SWIM.Config_IsAmmo',
-            hint: 'SWIM.Config_IsAmmo_Hint',
-            value: false
-        },
         {
             isAE: true,
             showFor: ['gear', 'weapon', 'armor', 'shield', 'consumable'],
             id: 'ammoActiveEffect',
-            label: 'SWIM.Config_SetAmmoActiveEffect',
-            hint: 'SWIM.Config_SetAmmoActiveEffect_Hint',
+            label: 'SWIM.Config_SetAmmoActiveEffectName',
+            hint: 'SWIM.Config_SetAmmoActiveEffectHint',
             value: ''
-        }*/
+        },
         {
             isSectionTitle: true,
             showFor: ['character', 'npc'],
