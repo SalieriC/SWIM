@@ -332,7 +332,7 @@ class DocumentConfigForm extends FormApplication {
             data.push(c);
         }
 
-        return { options: data };
+        return { options: data, isEmbedded: this.object.isEmbedded };
     }
 
     async _onButtonClick(event) {

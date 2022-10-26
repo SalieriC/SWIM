@@ -14,7 +14,7 @@
                         {{/if}}
                         {{#if this.isAE}}
                             <input type="text" name="{{ this.id }}" value="{{ this.value }}">
-                            <button data-action="_setActiveEffect" data-id="{{this.id}}">
+                            <button data-action="_setActiveEffect" data-id="{{this.id}}" {{#if ../isEmbedded }}disabled{{/if}}>
                                 <i class="far fa-pen-to-square"></i>
                             </button>
                             <button data-action="_removeActiveEffect" data-id="{{this.id}}">
@@ -28,7 +28,8 @@
                         {{/if}}
 
                         {{#if this.isNumber}}
-                            <input type="number" name="{{ this.id }}" value="{{ this.value }}" min="{{ this.min }}" max="{{ this.max }}">
+                            <input type="number" name="{{ this.id }}" value="{{ this.value }}" min="{{ this.min }}"
+                                   max="{{ this.max }}">
                         {{/if}}
                     </div>
                     <p class="notes">{{ localize this.hint }}</p>
