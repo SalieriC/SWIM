@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.0.0] - 2022-10-31
 ☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - New Setting that lets users choose to use the SWD unshake rules. If this setting is active...
@@ -18,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - On startup SWIM will check if the actor folder compendium is in the systems block toc list and if not prompt a dialogue to add it as otherwise the folders are invisible.
 - Add button in the header of items and actors that opens a SWIM configuration window (@loofou).
 - - The button is accessible by the GM and optionally by players (see settings).
+- - The data will be saved no matter if you hit save or the close button to prevent accidental data loss.
 - - Along with this comes a new way of storing data, menaing that existing actor and item configurations using additional stats would break, so...
 - - a migration script is provided that goes through all actors and items of a world (but not compendiums) and updates them to this new way of storing data.
 - - all items and actors not covered by the script (i.e. because they're in a compendium or imported later) are migrated as soon as the SWIM config button is pressed. (In this case the actor and all its items are migrated at once or only the item if the button is pressed on the item.) The migration will also start as soon as the new data is needed (i.e. when using a macro that tries to accesses the new stuff on an actor or item.)
@@ -42,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - - Refactored the macro completely and added a new design to the dialogue. It now should display the proper options depending on selection (shooting or reloading)
 - - Implement Ammo ActiveEffect system: Ammo that has an Active Effect assigned to it using the SWIM configuration on the ammo item, is applying the effect on the actor if the ammo is loaded. The effect is removed when the ammo is unloaded.
 - - Ammo management now uses the audio from the SWIM config instead of additional stats as well as other configurations.
+- Renamed the module to "SWADE Immersion Module". It describes better what it is now and keeps the cool abbreviation.
 ### Fixed
 - Fixed a bug in the effect builder that didn't set maintainedPowers additional stat up when the caster was also the target.
 - Fixed a bug in the Shape Changer that rendered the ignore size rule setting useless (thanks @jdavasligil).
@@ -52,17 +56,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug in the Power Effect Builder that applied Distracted twice on Confusion instead of Distracted and Vulnerable.
 ### Known Issues
 - Holding still breaks on first round of combat but I have no clue why.
-- The Shape Changer macro throws a lot of errors when merging. Line 235, 350 and 365 where disabled to prevent that until further investigation.
+- The Shape Changer macro throws a lot of errors when merging. Line 235, 350 and 365 where disabled to prevent that until further investigation. That means that the token merging / blending feature is disabled for now. It otherwise works as it should. The feature will be reindtroduced once the issue was found.
 ### Removed
 - Unshake macros from the compendium were removed and unified into a single macro since the version is now drawn from the settings.
 - Removed v10 update warning.
 ### Deprecated
-- Old macros deprecated. They are still available in a zip file in case s/o wants to check them out.
-- ways to get data from additional stats were completely removed. A migration is provided.
-- Token merging disabled because of the error mentioned above. It'll be reintroduced once the problem was found.
+- Old macros deprecated from the repo. They are still available in a zip file in case s/o wants to check them out.
+- Ways to get data from additional stats were completely removed. A migration is provided.
 
 ## [0.18.5] - 2022-08-14
-☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Soak damage now also handles Bleeding Out rolls.
 ### Changed
@@ -71,7 +73,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Falling damage now caps at 10d6+10.
 
 ## [0.18.4] - 2022-07-22
-☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Added FVTT card deck support for the chase setup (thanks a lot @mafamac).
 ### Fixed
@@ -79,12 +80,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Falling damage didn't explode.
 
 ## [0.18.3] - 2022-06-13
-☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Mighty Summoner: Maintenance Active Effects. Upon summoning a creature, the summoned creature and the summoner will gain an active effect containing the duration and some additional data from SWIM. If either of those effects ands and is deleted, the summoned creature will be dismissed. This works both ways. If the no power point setting is chosen, the duration of the power is near infinite and the maintenance AE on the caster incurs a penalty to the skill as per the no power point setting rule.
 
 ## [0.18.2] - 2022-06-11
-☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Translation update for german language via weblate.
 ### Changed
@@ -96,7 +95,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PEB now properly applies changes to `maintainedPowers` additional stats if found. This was buggy as of yet.
 
 ## [0.18.1] - 2022-05-21
-☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Added a setting that disables the rank requirement for players when using the Shape Changer.
 - Other option for the Power Effect Builder that allows setting up powers and maintaining them even if they're not (yet) added in the PEB. This (currently) doesn't offer the ability to set up any changes (will be added in a future version).
@@ -112,7 +110,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <a href="https://ko-fi.com/salieric"><img style="border: 0px; display: block; margin-left: auto; margin-right: auto;" src="https://www.ko-fi.com/img/githubbutton_sm.svg" width="223" height="30" /></a>
 
 ## [0.18.0] - 2022-05-09
-☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Mighty Summoner: Summoned Creatures now get an Active Effect with the appropriate duration. Duration is doubled if the summoner has the Concentration Edge.
 - Various new assets (see ReadMe for credits, all altered by SalieriC#8263):  
