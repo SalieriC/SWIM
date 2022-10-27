@@ -295,7 +295,7 @@ class DocumentConfigForm extends FormApplication {
         options.template = "/modules/swim/templates/swim_document_config.hbs";
         options.width = SWIM.ITEM_CONFIG_WINDOW_WIDTH;
         options.height = SWIM.ITEM_CONFIG_WINDOW_HEIGHT;
-        options.submitOnChange = true; // This will save the flags even if we close the window without hitting "Save"
+        options.submitOnClose = true; // This will save the flags even if we close the window without hitting "Save"
         return options;
     }
 
