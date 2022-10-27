@@ -168,8 +168,8 @@
   "SWIM.chatMessage-weaponUsed":"<img src=\"{weaponIMG}\" alt=\"\" width=\"25\" height=\"25\" /> {name} uses {shots} {itemWeaponName}(s) and has {newQuantity} left.",
   "SWIM.chatMessage-shotsFiredWithCurrentAmmoNoRoundsWithNewCharges":"<img src=\"{weaponIMG}\" alt=\"\" width=\"25\" height=\"25\" /> {name} fires <strong>{shots} {currentAmmo}</strong> from a {itemWeaponName} and has <strong>{newCharges} left</strong>.",
   "SWIM.chatMessage-shotsFiredWithCurrentAmmoNoRoundsWithoutNewCharges":"<img src=\"{weaponIMG}\" alt=\"\" width=\"25\" height=\"25\" /> {name} fires <strong>{shots} {currentAmmo}</strong> from a {itemWeaponName}.",
-  "SWIM.chatMessage-reloadWeaponWithAmmoName":"<img src=\"{weaponIMG}\" alt=\"\" width=\"25\" height=\"25\" /><img src=\"{ammoIMG}\" alt=\"\" width=\"25\" height=\"25\" /> {name} reloads his/her {itemWeaponName} with {itemAmmoName}.",
-  "SWIM.chatMessage-reloadWeaponWithoutAmmoName":"<img src=\"{weaponIMG}\" alt=\"\" width=\"25\" height=\"25\" /> {name} reloads his/her {itemWeaponName}.",
+  "SWIM.chatMessage-reloadWeaponWithAmmoName":"<img src=\"{weaponIMG}\" alt=\"\" width=\"25\" height=\"25\" /><img src=\"{ammoIMG}\" alt=\"\" width=\"25\" height=\"25\" /> {name} reloads {pronoun} {itemWeaponName} with {itemAmmoName}.",
+  "SWIM.chatMessage-reloadWeaponWithoutAmmoName":"<img src=\"{weaponIMG}\" alt=\"\" width=\"25\" height=\"25\" /> {name} reloads {pronoun} {itemWeaponName}.",
   "SWIM.chatMessage-unshakeBonusOtherActor":"<br/><em>{unShakeBonus} other actor modifier</em>",
   "SWIM.chatMessage-unshakeResultRoll":"{name} rolled <span style=\"font-size:150%\"> {rollWithEdge} </span>",
   "SWIM.chatMessage-unshakeResultNoShakenCannotAct":" and is no longer Shaken but cannot act this turn.",
@@ -400,5 +400,6 @@
   "SWIM.Config_RadResHint": "You can specify a radiation resistance here. It may be negative for vulnerability to radiation.",
   "SWIM.Config_GeneralActorConfig": "General Actor Configuration",
   "SWIM.Config_PronounName": "Pronoun",
-  "SWIM.Config_PronounHint": "Enter this actors pronoun here (usually 'his' or 'her'). If empty, SWIM will default to 'its' to fit most NPC monsters."
+  "SWIM.Config_PronounHint": "Enter this actors pronoun here (usually 'his' or 'her'). If empty, SWIM will default to 'its' to fit most NPC monsters.",
+  "SWIM.Defaults_Pronoun": "its"
 }

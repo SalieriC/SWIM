@@ -352,6 +352,7 @@ async function reloadButton(html, actor, weapons, ammo) {
         selectedShots,
         selectedSingleReload
     } = getValues(html, actor, weapons, ammo);
+    const pronoun = swim.get_pronoun(actor)
 
     //Set up variables
     const weaponImg = selectedWeapon.img;
@@ -473,7 +474,8 @@ async function reloadButton(html, actor, weapons, ammo) {
                     ammoIMG: ammoImg,
                     name: actor.name,
                     itemWeaponName: selectedWeapon.name,
-                    itemAmmoName: selectedAmmo.name
+                    itemAmmoName: selectedAmmo.name,
+                    pronoun: pronoun
                 })
             })
             if (sfx_reload) {
@@ -501,7 +503,8 @@ async function reloadButton(html, actor, weapons, ammo) {
                     ammoIMG: ammoImg,
                     name: actor.name,
                     itemWeaponName: selectedWeapon.name,
-                    itemAmmoName: selectedAmmo.name
+                    itemAmmoName: selectedAmmo.name,
+                    pronoun: pronoun
                 })
             })
             if (sfx_reload) {

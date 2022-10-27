@@ -284,6 +284,7 @@ export async function heal_other_gm(data) {
 async function healSelf(token, speaker) {
     // Setting SFX
     const { woundedSFX, incapSFX, healSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
+    const pronoun = swim.get_pronoun(token)
     let potionSFX = game.settings.get(
         'swim', 'potionSFX');
 
@@ -659,7 +660,7 @@ async function healSelf(token, speaker) {
                 if (roundedCopy < 1) { removeWounds(); }
             } if (roundedCopy === 1 && numberWounds > 1) {
                 let { _, __, totalBennies } = await swim.check_bennies(token)
-                chatData += ` and heals ${roundedCopy} of his ${numberWounds} Wounds.`;
+                chatData += ` and heals ${roundedCopy} of ${pronoun} ${numberWounds} Wounds.`;
                 if (totalBennies < 1 || (roundedCopy === 1 && rounded >= 2)) {
                     removeWounds();
                 }
@@ -667,10 +668,10 @@ async function healSelf(token, speaker) {
                     dialogReroll(roundedCopy, conditionsText);
                 };
             } else if ((roundedCopy > 1 && roundedCopy >= numberWounds) || (roundedCopy === 1 && numberWounds === 1)) {
-                chatData += ` and heals all of his Wounds.`;
+                chatData += ` and heals all of ${pronoun} Wounds.`;
                 removeWounds();
             } else if (roundedCopy >= 2) {
-                chatData += ` and heals two of his Wounds (the maximum for a Natural Healing roll).`;
+                chatData += ` and heals two of ${pronoun} Wounds (the maximum for a Natural Healing roll).`;
                 removeWounds();
             }
             chatData += ` ${edgeText}`;

@@ -300,7 +300,7 @@ export class api {
     if (actorOrToken.actor) {
       actor = actorOrToken.actor
     }
-    let pronoun = "its"
+    let pronoun = game.i18n.localize("SWIM.Defaults_Pronoun") // english default: 'its'
     if (actor.flags?.swim?.config?.pronoun) {
       pronoun = actor.flags.swim.config.pronoun
     }
