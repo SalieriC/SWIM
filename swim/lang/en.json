@@ -399,7 +399,7 @@
   "SWIM.Config_RadResName": "Radiation Resistance:",
   "SWIM.Config_RadResHint": "You can specify a radiation resistance here. It may be negative for vulnerability to radiation.",
   "SWIM.Config_GeneralActorConfig": "General Actor Configuration",
-  "SWIM.Config_PronounName": "Pronoun",
+  "SWIM.Config_PronounName": "Pronoun:",
   "SWIM.Config_PronounHint": "Enter this actors pronoun here (usually 'his' or 'her'). If empty, SWIM will default to 'its' to fit most NPC monsters.",
   "SWIM.Defaults_Pronoun": "its"
 }
