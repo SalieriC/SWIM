@@ -13,6 +13,7 @@ import { effect_hooks } from "./hooks/effect_hooks.js"
 import { actor_hooks } from "./hooks/actor_hooks.js"
 import { combat_hooks } from "./hooks/combat_hooks.js"
 import { brsw_hooks } from "./hooks/brsw_hooks.js"
+import { brsw_actions_setup } from "./helpers/brsw_actions_setup.js"
 
 /*Hooks.on('getCardsDirectoryEntryContext', function (stuff) {
     console.log(stuff)
@@ -53,6 +54,11 @@ Hooks.on(`ready`, () => {
     // Ready stuff
     console.log('SWADE Immersive Macros | Ready');
     register_settings();
+
+    //Setup actions for BRSW:
+    if (game.settings.get('swim', 'br2Support') === true) {
+        brsw_actions_setup()
+    }
 
     // Registering SWIM functions to effect callbacks of SWIM:
     let version = "SWADE"

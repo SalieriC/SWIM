@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added file pickers for more SFX to actors (becoming stunned, gaining and loosing fatigue).
 - Soak Damage macro should now play the death SFX on a perish result.
 - A configuration for actors that lets users select a pronoun for each character and NPC. 
+- Better BRSW integration: The global actions SWIM needs to function with BRWS together are now set up automatically. Please delete those from SWIM you've set up earlier.
 ### Changed
 - **Breaking:** Changed the API so that the Unshake macro gets the version from the settings rather than being passed to the function. This means that the Unshake macro needs to be replaced by the one in the SWIM compendium.
 - - Added a detailed error message explaining the problem in case the old version of the macro is used.
