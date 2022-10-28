@@ -401,5 +401,6 @@
   "SWIM.Config_GeneralActorConfig": "General Actor Configuration",
   "SWIM.Config_PronounName": "Pronoun:",
   "SWIM.Config_PronounHint": "Enter this actors pronoun here (usually 'his' or 'her'). If empty, SWIM will default to 'its' to fit most NPC monsters.",
-  "SWIM.Defaults_Pronoun": "its"
+  "SWIM.Defaults_Pronoun": "its",
+  "SWIM.Config_ButtonDisabled": "Only available for items not owned by a player."
 }
