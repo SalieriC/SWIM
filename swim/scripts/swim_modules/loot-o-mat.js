@@ -96,7 +96,7 @@ export async function loot_o_mat_script() {
         let treasure = `
 <div class="swade-core">
 <h2><img style="border: 0;" src=${img} width="25" height="25" /> ${heading}</h2>
-<p>You find <strong>${result} $</strong> woth of treasure on ${name} or in the lair.</p>
+<p>You find <strong>${result} $</strong> worth of treasure on ${name} or in the lair.</p>
 </div>
 `
 
