@@ -54,6 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug that caused a duplicate dialogue when using the token vision macro.
 - Fixed a massive bug that caused a freeze scenario in the fall damage macro in FVTT v10.
 - Fixed a bug in the Power Effect Builder that applied Distracted twice on Confusion instead of Distracted and Vulnerable.
+- Power Effect Builder is now able apply multiple instances of Protection, Smite, Boost and Lower.
 ### Known Issues
 - Holding still breaks on first round of combat but I have no clue why.
 - The Shape Changer macro throws a lot of errors when merging. Line 235, 350 and 365 where disabled to prevent that until further investigation. That means that the token merging / blending feature is disabled for now. It otherwise works as it should. The feature will be reindtroduced once the issue was found.

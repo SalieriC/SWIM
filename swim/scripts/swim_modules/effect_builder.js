@@ -926,7 +926,8 @@ export async function effect_builder_gm(data) {
                         owner: false,
                         powerID: power ? power.id : undefined
                     }}
-                }
+                },
+                force: true
             }
             if (target.targetID === casterID) {
                 boostData.boost.flags.swim.owner = true
@@ -952,7 +953,8 @@ export async function effect_builder_gm(data) {
                         owner: false,
                         powerID: power ? power.id : undefined
                     }}
-                }
+                },
+                force: true
             }
             if (target.targetID === casterID) {
                 lowerData.lower.flags.swim.owner = true
@@ -978,7 +980,8 @@ export async function effect_builder_gm(data) {
                         owner: false,
                         powerID: power ? power.id : undefined
                     }}
-                }
+                },
+                force: true
             }
             if (target.targetID === casterID) {
                 protectionData.protection.flags.swim.owner = true
@@ -1004,7 +1007,8 @@ export async function effect_builder_gm(data) {
                         owner: false,
                         powerID: power ? power.id : undefined
                     }}
-                }
+                },
+                force: true
             }
             if (target.targetID === casterID) {
                 smiteData.smite.flags.swim.owner = true
