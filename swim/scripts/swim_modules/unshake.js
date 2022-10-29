@@ -14,7 +14,7 @@ export async function unshake_swd_script(effect = false) {
     } else if (effect) {
         let actor = effect.parent
         token = actor.isToken ? actor.token : canvas.scene.tokens.find(t => t.actor.id === actor.id)
-        const nameKey = game.user.character.id === actor.id ? `${game.i18n.localize("SWIM.word-you")} ${game.i18n.localize("SWIM.word-are")}` : `${token.name} ${game.i18n.localize("SWIM.word-is")}`
+        const nameKey = game.user.character?.id === actor.id ? `${game.i18n.localize("SWIM.word-you")} ${game.i18n.localize("SWIM.word-are")}` : `${token.name} ${game.i18n.localize("SWIM.word-is")}`
         ui.notifications.notify(game.i18n.format("SWIM.notification-shakenRoll", {tokenName: nameKey}));
     }
 
@@ -176,7 +176,7 @@ export async function unshake_swade_script(effect = false) {
     } else if (effect) {
         let actor = effect.parent
         token = actor.isToken ? actor.token : canvas.scene.tokens.find(t => t.actor.id === actor.id)
-        const nameKey = game.user.character.id === actor.id ? `${game.i18n.localize("SWIM.word-you")} ${game.i18n.localize("SWIM.word-are")}` : `${token.name} ${game.i18n.localize("SWIM.word-is")}`
+        const nameKey = game.user.character?.id === actor.id ? `${game.i18n.localize("SWIM.word-you")} ${game.i18n.localize("SWIM.word-are")}` : `${token.name} ${game.i18n.localize("SWIM.word-is")}`
         ui.notifications.notify(game.i18n.format("SWIM.notification-shakenRoll", {tokenName: nameKey}));
     }
 
