@@ -38,10 +38,10 @@ export async function v10_migration() {
                             if (actor.system.additionalStats?.sfx?.value && typeof actor.system.additionalStats?.sfx?.value === "string") {
                                 const sfxSequence = actor.system.additionalStats?.sfx?.value
                                 const sfxSplit = sfxSequence.split("|")
-                                const shakenSFX = sfxSplit[0]
-                                const deathSFX = sfxSplit[1]
-                                const unshakeSFX = sfxSplit[2]
-                                const soakSFX = sfxSplit[3]
+                                const shakenSFX = sfxSplit[0] ? sfxSplit[0] : ""
+                                const deathSFX = sfxSplit[1] ? sfxSplit[1] : ""
+                                const unshakeSFX = sfxSplit[2] ? sfxSplit[2] : ""
+                                const soakSFX = sfxSplit[3] ? sfxSplit[3] : ""
                                 const flagData = { //Verify how they are structured in final release.
                                     flags: {
                                         swim: {
@@ -101,12 +101,12 @@ export async function v10_migration() {
                                     silencedautofireSfx = "null"
                                     emptyfireSfx = "null"
                                 } else {
-                                    reloadSfx = sfxSplit[0]
-                                    fireSfx = sfxSplit[1]
-                                    autofireSfx = sfxSplit[2]
-                                    silencedfireSfx = sfxSplit[3]
-                                    silencedautofireSfx = sfxSplit[4]
-                                    emptyfireSfx = sfxSplit[5]
+                                    reloadSfx = sfxSplit[0] ? sfxSplit[0] : "null"
+                                    fireSfx = sfxSplit[1] ? sfxSplit[1] : "null"
+                                    autofireSfx = sfxSplit[2] ? sfxSplit[2] : "null"
+                                    silencedfireSfx = sfxSplit[3] ? sfxSplit[3] : "null"
+                                    silencedautofireSfx = sfxSplit[4] ? sfxSplit[4] : "null"
+                                    emptyfireSfx = sfxSplit[5] ? sfxSplit[5] : "null"
                                 }
                             } if (item.system.additionalStats?.isPack?.value && typeof item.system.additionalStats?.isPack?.value === "boolean") {
                                 isPack = item.system.additionalStats?.isPack?.value
@@ -121,7 +121,7 @@ export async function v10_migration() {
                                 loadedAmmo = item.system.additionalStats?.loadedAmmo?.value
                                 await item.update({ "system.additionalStats.-=loadedAmmo": null })
                             }
-                            const flagData = { //Verify how they are structured in final release.
+                            const flagData = {
                                 flags: {
                                     swim: {
                                         config: {
@@ -162,10 +162,10 @@ export async function update_migration(actor, item, currVersion) {
             if (actor.system.additionalStats?.sfx?.value && typeof actor.system.additionalStats?.sfx?.value === "string") {
                 const sfxSequence = actor.system.additionalStats?.sfx?.value
                 const sfxSplit = sfxSequence.split("|")
-                const shakenSFX = sfxSplit[0]
-                const deathSFX = sfxSplit[1]
-                const unshakeSFX = sfxSplit[2]
-                const soakSFX = sfxSplit[3]
+                const shakenSFX = sfxSplit[0] ? sfxSplit[0] : ""
+                const deathSFX = sfxSplit[1] ? sfxSplit[1] : ""
+                const unshakeSFX = sfxSplit[2] ? sfxSplit[2] : ""
+                const soakSFX = sfxSplit[3] ? sfxSplit[3] : ""
                 const flagData = {
                     flags: {
                         swim: {
@@ -224,12 +224,12 @@ export async function update_migration(actor, item, currVersion) {
                     silencedautofireSfx = "null"
                     emptyfireSfx = "null"
                 } else {
-                    reloadSfx = sfxSplit[0]
-                    fireSfx = sfxSplit[1]
-                    autofireSfx = sfxSplit[2]
-                    silencedfireSfx = sfxSplit[3]
-                    silencedautofireSfx = sfxSplit[4]
-                    emptyfireSfx = sfxSplit[5]
+                    reloadSfx = sfxSplit[0] ? sfxSplit[0] : "null"
+                    fireSfx = sfxSplit[1] ? sfxSplit[1] : "null"
+                    autofireSfx = sfxSplit[2] ? sfxSplit[2] : "null"
+                    silencedfireSfx = sfxSplit[3] ? sfxSplit[3] : "null"
+                    silencedautofireSfx = sfxSplit[4] ? sfxSplit[4] : "null"
+                    emptyfireSfx = sfxSplit[5] ? sfxSplit[5] : "null"
                 }
             } if (item.system.additionalStats?.isPack?.value && typeof item.system.additionalStats?.isPack?.value === "boolean") {
                 isPack = item.system.additionalStats?.isPack?.value
