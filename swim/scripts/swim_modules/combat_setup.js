@@ -11,7 +11,7 @@
  * - Pauses other playlists not in a folder called "Ambient" [X]
  * - Resumes all Playlists on combat end [X]
  * 
- * v. 1.0.0
+ * v. 1.0.1
  * By SalieriC, original groundwork by brunocalado#1650
  ******************************************************/
 export async function combat_setup() {
@@ -24,7 +24,7 @@ export async function combat_setup() {
     let tokens = []
     for (let token of tokensUnfiltered) {
         if (token.actor.type === "npc" && await succ.check_status(token, "incapacitated") === false) {
-            if (token.actor.data.flags?.healthEstimate?.dead === false || !token.actor.data.flags?.healthEstimate?.dead) {
+            if (token.actor.flags?.healthEstimate?.dead === false || !token.actor.flags?.healthEstimate?.dead) {
                 tokens.push(token)
             }
         } else if (token.actor.type === "character" || token.actor.type === "vehicle") {
@@ -40,12 +40,12 @@ export async function combat_setup() {
         // Process hostile NPCs
         if (token.type === "npc" && token.disposition === -1) {
             // Make wildcards to group leaders
-            if (token.actor.data.data.wildcard === true) {
+            if (token.actor.system.wildcard === true) {
                 // 
             }
         }
         */
-        tokensToAdd.push({ tokenId: token.id, hidden: token.data.hidden })
+        tokensToAdd.push({ tokenId: token.id, hidden: token.document.hidden })
     }
     const combat = !game.combat ? await Combat.create({ scene: canvas.scene.id, active: true }) : game.combat
     const combatants = await combat.createEmbeddedDocuments("Combatant", tokensToAdd)

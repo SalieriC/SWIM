@@ -154,7 +154,7 @@
     "SWIM.combatPlaylistManagementHint": "Wenn diese Option aktiviert ist, wird die unten gewählte Wiedergabeliste beim Beginn einer Begegnung gestartet. Nach dem Ende der Begegnung wird die zuvor aktive Wiedergabeliste geladen.",
     "SWIM.noStopFolderHint": "Definiert einen Ordner mit Namen (genauso, aber nicht bei gleicher Groß- und Kleinschreibung), dessen Wiedergabelisten nicht gestoppt werden, wenn der Kampf beginnt.",
     "SWIM.notification-noReloadableOrConsumableWeapon": "Du trägst keine nachladbaren oder verbrauchbaren Waffen bei mir.",
-    "SWIM.dialogue-attack": "Angriffsdialog",
+    "SWIM.dialogue-ammoManagement":"Munitionsverwaltung",
     "SWIM.notification-cannotReloadConsumableWeapons": "Verbrauchbare Waffen können nicht nachgeladen werden, verwende stattdessen Schießen.",
     "SWIM.chatMessage-unshakeResultRoll": "{name} würfelt eine <span style=\"font-size:150%\"> {rollWithEdge} </span>",
     "SWIM.chatMessage-unshakeResultNoShakenCanAct": ", ist nicht mehr Angeschlagen und kann normal agieren.",
@@ -186,7 +186,6 @@
     "SWIM.chatMessage-reloadWeaponWithoutAmmoName": "<img src=\"{weaponIMG}\" alt=\"\" width=\"25\" height=\"25\" /> {name} lädt {itemWeaponName} nach.",
     "SWIM.chatMessage-unshakeBonusOtherActor": "<br/><em>{unShakeBonus} andere Modifikatoren des Akteurs</em>",
     "SWIM.notification-critFailApplyWounds": "Du hast einen Kritischen Fehlschlag gewürfelt! Wunden werden angewendet…",
-    "SWIM.notification-healthEstimateRequired": "Bitte installiere und aktiviere das Health Estimate Modul für dieses Makro.",
     "SWIM.chatMessage-unHolyWarrior": "<br/><em>+ {numberPP}</em> der ausgegebenen Machtpunkte.",
     "SWIM.chatMessage-soakNoWounds": " und konnte keine Wunden wegstecken.",
     "SWIM.chatMessage-soakAllWounds": " und steckt alle Wunden weg.",
@@ -329,5 +328,6 @@
     "SWIM.gameTerm-Range": "Fernkampf",
     "SWIM.label-summonedEntity": "Beschworen",
     "SWIM.select-deflectionOptions": "<div class='form-group'><label for='deflectionOption'><p>Angriffsart: </p></label><select id='deflectionOption'>{options}</select></div></div>",
-    "SWIM.gameTerm-Melee": "Nahkampf"
+    "SWIM.gameTerm-Melee": "Nahkampf",
+    "SWIM.DocumentConfigMenu": "SWIM Einstellungen"
 }

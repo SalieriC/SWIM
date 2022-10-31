@@ -1,42 +1,75 @@
 {
-	"name": "swim",
-	"title": "SWADE Immersive Macros",
-	"description": "<p><b>READ THE README!</b> Doing so is very important!</p><p>A module providing immersion friendly macros to ease play of the SWADE System on Foundry VTT. <a href='https://ko-fi.com/salieric'>Please consider donating.</a> </p>",
-	"minimumCoreVersion": "9.249",
-	"compatibleCoreVersion": "9.269",
-	"version": "0.18.5",
-	"author": "SalieriC",
-	"dependencies": [
+	"id": "swim",
+	"title": "SWADE Immersion Module",
+	"description": "<p>A module providing immersion friendly macros and functionalities to enhance the gameplay experience of the SWADE System on Foundry VTT and automate some things in a non-intrusive way. <a href='https://ko-fi.com/salieric'>Please consider donating.</a> </p>",
+	"compatibility": {
+		"minimum": 10,
+		"verified": "10"
+	},
+	"version": "1.0.0",
+	"authors": [
 		{
-		  "name": "swade",
-		  "type": "system"
+		  "name": "SalieriC",
+		  "url": "https://ko-fi.com/salieric",
+		  "discord": "SalieriC#8263"
 		},
 		{
-			"type": "module",
-			"name": "compendium-folders",
-			"manifest": "https://raw.githubusercontent.com/earlSt1/vtt-compendium-folders/master/module.json"
-		},
-		{
-			"type": "module",
-			"name": "lib-wrapper",
-			"manifest": "https://github.com/ruipin/fvtt-lib-wrapper/releases/download/v1.11.4.0/module.json"
-		},
-		{
-			"type": "module",
-			"name": "settings-extender",
-			"manifest": "https://gitlab.com/foundry-azzurite/settings-extender/-/jobs/artifacts/master/raw/dist/settings-extender/module.json?job=build"
-		},
-		{
-			"type": "module",
-			"name": "succ",
-			"manifest": "https://raw.githubusercontent.com/SalieriC/SUCC/main/succ/module.json"
-		},
-		{
-			"type": "module",
-			"name": "warpgate",
-			"manifest": "https://raw.githubusercontent.com/trioderegion/warpgate/master/module.json"
+			"name": "Emanuel May",
+			"url": "https://github.com/loofou",
+			"discord": "Loofou#7406"
 		}
-	],
+	  ],
+	"relationships": {
+		"systems": [
+			{
+				"id": "swade",
+				"type": "system",
+				"manifest": "https://gitlab.com/api/v4/projects/16269883/packages/generic/swade/latest/system.json",
+				"compatibility": {
+					"minimum": "2.0.6",
+					"verified": "2.0.6"
+				}
+			}
+		],
+		"requires": [
+			{
+				"id": "lib-wrapper",
+				"type": "module",
+				"manifest": "https://raw.githubusercontent.com/ruipin/fvtt-lib-wrapper/master/module.json",
+				"compatibility": {
+					"minimum": "1.12.10.0",
+					"verified": "1.12.10.0"
+				}
+			},
+			{
+				"id": "settings-extender",
+				"type": "module",
+				"manifest": "https://gitlab.com/foundry-azzurite/settings-extender/-/jobs/artifacts/master/raw/dist/settings-extender/module.json?job=build",
+				"compatibility": {
+					"minimum": "1.2.1",
+					"verified": "1.2.1"
+				}
+			},
+			{
+				"id": "succ",
+				"type": "module",
+				"manifest": "https://raw.githubusercontent.com/SalieriC/SUCC/main/succ/module.json",
+				"compatibility": {
+					"minimum": "0.2.2",
+					"verified": "0.2.2"
+				}
+			},
+			{
+				"id": "warpgate",
+				"type": "module",
+				"manifest": "https://github.com/trioderegion/warpgate/releases/latest/download/module.json",
+				"compatibility": {
+					"minimum": "1.14.0",
+					"verified": "1.14.0"
+				}
+			}
+		]
+	},
 	"languages": [
 		{
 			"lang": "en",
@@ -49,56 +82,57 @@
 			"path": "lang/de.json"
 		}
 	],
-	"systems": ["swade"],
-	"esmodules": ["./scripts/init.js"],
-	"scripts": [
-		"./scripts/settings-extender.js"
+	"systems": [
+		"swade"
+	],
+	"esmodules": [
+		"./scripts/init.js"
 	],
 	"packs": [
-        {
-            "name": "swade-immersive-macros",
-            "label": "SWADE Immersive Macros",
-			"system": "swade",
-            "path": "packs/swade-immersive-macros.db",
-            "module": "swim",
-            "entity": "Macro",
-			"private": true
-        },
 		{
-            "name": "chase-layouts",
-            "label": "Chase Layouts",
+			"name": "swade-immersive-macros",
+			"label": "SWADE Immersive Macros",
 			"system": "swade",
-            "path": "packs/chase-layouts.db",
-            "module": "swim",
-            "entity": "Scene",
+			"path": "packs/swade-immersive-macros.db",
+			"module": "swim",
+			"type": "Macro",
 			"private": true
-        },
-		{
-		  "label": "SWIM Actor Folders",
-		  "name": "swim-actor-folders",
-		  "path": "packs/swim-actor-folders.db",
-		  "system": "swade",
-		  "module": "swim",
-		  "entity": "Actor",
-		  "private": true
 		},
 		{
-		  "label": "SWIM Chase Cards",
-		  "name": "swim-chase-cards",
-		  "path": "packs/swim-chase-cards.db",
-		  "system": "swade",
-		  "module": "swim",
-		  "entity": "JournalEntry",
-		  "private": true
+			"name": "chase-layouts",
+			"label": "Chase Layouts",
+			"system": "swade",
+			"path": "packs/chase-layouts.db",
+			"module": "swim",
+			"type": "Scene",
+			"private": true
 		},
 		{
-		  "label": "SWIM Roll Tables",
-		  "name": "swim-roll-tables",
-		  "path": "packs/swim-roll-tables.db",
-		  "system": "swade",
-		  "module": "swim",
-		  "entity": "RollTable",
-		  "private": true
+			"label": "SWIM Actor Folders",
+			"name": "swim-actor-folders",
+			"path": "packs/swim-actor-folders.db",
+			"system": "swade",
+			"module": "swim",
+			"type": "Actor",
+			"private": true
+		},
+		{
+			"label": "SWIM Chase Cards",
+			"name": "swim-chase-cards",
+			"path": "packs/swim-chase-cards.db",
+			"system": "swade",
+			"module": "swim",
+			"type": "JournalEntry",
+			"private": true
+		},
+		{
+			"label": "SWIM Roll Tables",
+			"name": "swim-roll-tables",
+			"path": "packs/swim-roll-tables.db",
+			"system": "swade",
+			"module": "swim",
+			"type": "RollTable",
+			"private": true
 		}
 	],
 	"url": "https://github.com/SalieriC/SWADE-Immersive-Macros",

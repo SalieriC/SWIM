@@ -1,6 +1,5 @@
 // Many thanks to honeybadger#2614 for the support on setting up the API.
 
-import { ammo_management_script, br2_ammo_management_script } from './swim_modules/ammo_management.js'
 import { chase_setup_script } from './swim_modules/chase_setup.js'
 import { common_bond_script } from './swim_modules/common_bond.js'
 import { deviation_script } from './swim_modules/deviation.js'
@@ -18,7 +17,9 @@ import { soak_damage_script } from './swim_modules/soak_damage.js'
 import { token_vision_script } from './swim_modules/token_vision.js'
 import { unshake_swd_script, unshake_swade_script } from './swim_modules/unshake.js'
 import { unstun_script } from './swim_modules/unstun.js'
-//import * as SWIM from './constants.js'
+import { update_migration } from './migrations.js'
+import * as SWIM from './constants.js'
+import { showWeaponAmmoDialog, br2_ammo_management_script } from "./swim_modules/ammo_management.js";
 
 export class api {
 
@@ -41,7 +42,11 @@ export class api {
       wait: api._wait,
       get_official_class: api._get_official_class,
       get_actor_sfx: api._get_actor_sfx,
+      get_weapon_sfx: api._get_weapon_sfx,
       play_sfx: api._play_sfx,
+      get_folder_content: api._get_folder_content,
+      run_migration: api._run_migration,
+      get_pronoun: api._get_pronoun,
       // Convenience
       ammo_management: api._ammo_management,
       br2_ammo_management: api._ammo_management_br2,
@@ -74,6 +79,9 @@ export class api {
    * - Spend Benny
    * - Get SFX
    * - Play SFX
+   * - Get Folder Contents
+   * - Run Migration
+   * - Get Pronoun
    ******************************************/
 
   // Get Macro Variables
@@ -123,14 +131,14 @@ export class api {
   }
   // Check Bennies
   static async _check_bennies(token) {
-    let tokenBennies = token.actor.data.data.bennies.value;
+    let tokenBennies = token.actor.system.bennies.value;
     let gmBennies
     let totalBennies
     //Check for actor status and adjust bennies based on edges.
-    let actorLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === game.i18n.localize("SWIM.edge-luck").toLowerCase()) });
-    let actorGreatLuck = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === game.i18n.localize("SWIM.edge-greatLuck").toLowerCase()) });
-    let actorCoup = token.actor.data.items.find(function (item) { return (item.name.toLowerCase() === game.i18n.localize("SWIM.ability-coup-50f").toLowerCase()) });
-    if ((token.actor.data.data.wildcard === false) && (actorGreatLuck === undefined)) {
+    let actorLuck = token.actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-luck").toLowerCase())
+    let actorGreatLuck = token.actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-greatLuck").toLowerCase())
+    let actorCoup = token.actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.ability-coup-50f").toLowerCase())
+    if ((token.actor.system.wildcard === false) && (actorGreatLuck === undefined)) {
       if ((!(actorLuck === undefined)) && (tokenBennies > 1) && ((actorGreatLuck === undefined))) { tokenBennies = 1; }
       else { tokenBennies = 0; }
     }
@@ -141,7 +149,7 @@ export class api {
       ui.notifications.warn("You have no more bennies left.");
     }
     if (game.user.isGM) {
-      gmBennies = game.user.getFlag("swade", "bennies");
+      gmBennies = game.user.bennies;
       totalBennies = tokenBennies + gmBennies
     }
     else {
@@ -162,7 +170,7 @@ export class api {
       await game.user.setFlag("swade", "bennies", game.user.getFlag("swade", "bennies") - 1)
     } else {
       await token.actor.update({
-        "data.bennies.value": tokenBennies - 1,
+        "system.bennies.value": tokenBennies - 1,
       })
     }
 
@@ -206,22 +214,48 @@ export class api {
   }
   // Get SFX
   static async _get_actor_sfx(actor) {
-    let shakenSFX
-    let deathSFX
-    let unshakeSFX
-    let soakSFX
-    if (actor.data.data.additionalStats?.sfx) {
-      let sfxSequence = actor.data.data.additionalStats.sfx.value.split("|")
-      shakenSFX = sfxSequence[0]
-      deathSFX = sfxSequence[1]
-      unshakeSFX = sfxSequence[2]
-      soakSFX = sfxSequence[3]
+    let item = false
+    await swim.run_migration(actor, item) //Run migration if needed.
+
+    let shakenSFX = game.settings.get('swim', 'shakenSFX')
+    let deathSFX = game.settings.get('swim', 'incapSFX')
+    let unshakeSFX = game.settings.get('swim', 'looseFatigueSFX')
+    let stunnedSFX = game.settings.get('swim', 'stunSFX')
+    let soakSFX = game.settings.get('swim', 'looseFatigueSFX')
+    let fatiguedSFX = game.settings.get('swim', 'fatiguedSFX')
+    let looseFatigueSFX = game.settings.get('swim', 'looseFatigueSFX')
+    if (actor.flags?.swim?.config) {
+      shakenSFX = actor.flags.swim.config.shakenSFX ? actor.flags.swim.config.shakenSFX : game.settings.get('swim', 'shakenSFX')
+      deathSFX = actor.flags.swim.config.deathSFX ? actor.flags.swim.config.deathSFX : game.settings.get('swim', 'incapSFX')
+      unshakeSFX = actor.flags.swim.config.unshakeSFX ? actor.flags.swim.config.unshakeSFX : game.settings.get('swim', 'looseFatigueSFX')
+      stunnedSFX = actor.flags.swim.config.stunnedSFX ? actor.flags.swim.config.stunnedSFX : game.settings.get('swim', 'stunSFX')
+      soakSFX = actor.flags.swim.config.soakSFX ? actor.flags.swim.config.soakSFX : game.settings.get('swim', 'looseFatigueSFX')
+      fatiguedSFX = actor.flags.swim.config.fatiguedSFX ? actor.flags.swim.config.fatiguedSFX : game.settings.get('swim', 'fatiguedSFX')
+      looseFatigueSFX = actor.flags.swim.config.looseFatigueSFX ? actor.flags.swim.config.looseFatigueSFX : game.settings.get('swim', 'looseFatigueSFX')
     }
-    if (!shakenSFX || shakenSFX === "NULL") { shakenSFX = game.settings.get('swim', 'shakenSFX') }
-    if (!deathSFX || deathSFX === "NULL") { deathSFX = game.settings.get('swim', 'incapSFX') }
-    if (!unshakeSFX || unshakeSFX === "NULL") { unshakeSFX = game.settings.get('swim', 'looseFatigueSFX'); }
-    if (!soakSFX || soakSFX === "NULL") { soakSFX = game.settings.get('swim', 'looseFatigueSFX'); }
-    return { shakenSFX, deathSFX, unshakeSFX, soakSFX }
+    return { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX }
+    // const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(actor)
+  }
+  static async _get_weapon_sfx(weapon) {
+    let actor = false
+    await swim.run_migration(actor, weapon) //Run migration if needed.
+
+    let reloadSFX
+    let fireSFX
+    let autoFireSFX
+    let silencedFireSFX
+    let silencedAutoFireSFX
+    let emptySFX
+    if (weapon.flags?.swim?.config) {
+      reloadSFX = weapon.flags.swim.config.reloadSFX
+      fireSFX = weapon.flags.swim.config.fireSFX
+      autoFireSFX = weapon.flags.swim.config.autoFireSFX
+      silencedFireSFX = weapon.flags.swim.config.silencedFireSFX
+      silencedAutoFireSFX = weapon.flags.swim.config.silencedAutoFireSFX
+      emptySFX = weapon.flags.swim.config.emptySFX
+    }
+    return { reloadSFX, fireSFX, autoFireSFX, silencedFireSFX, silencedAutoFireSFX, emptySFX }
+    // const { reloadSFX, fireSFX, autoFireSFX, silencedFireSFX, silencedAutoFireSFX, emptySFX } = await swim.get_weapon_sfx(weapon)
   }
   // Play SFX
   static async _play_sfx(sfx, volume, playForAll = true) {
@@ -230,6 +264,47 @@ export class api {
         'swim', 'defaultVolume')
     }
     AudioHelper.play({ src: `${sfx}`, volume: volume, loop: false }, playForAll);
+  }
+
+  static _get_folder_content(folderName) {
+    // This returns all contents of a folder and all its sub-folders on up to three layers. It gets the contents no matter of permission.
+    const folder = game.folders.getName(folderName);
+    return folder.contents.concat(folder.getSubfolders(true).flatMap(f => f.contents));
+
+    /* alternative version that only goes one layer deep:
+    let folder = game.folders.getName(folderName);
+    let content = folder.contents; //in v9 it was `content` now it's `contents` but only on the first layer...
+    let totalContent = folder.children.reduce((acc, subFolder) => {
+        acc = acc.concat(subFolder.documents); //Within children it is `documents` instead of `contents` for whatever reason.
+        return acc;
+    }, content);
+    console.log(totalContent)
+    */
+  }
+
+  static async _run_migration(actor, item) {
+    const currVersion = actor ? actor?.flags?.swim?.config?._version : item.flags?.swim?.config?._version
+    item = actor ? false : item //Failsafe should s/o pass both.
+    if (currVersion < SWIM.CONFIG_VERSION || !currVersion) {
+      await update_migration(actor, item, currVersion)
+      if (actor && actor.isToken) {
+        let originalActor = game.actors.get(actor.id)
+        if (originalActor) { await update_migration(originalActor, item, currVersion) }
+      }
+    }
+  }
+  
+  //Get the defined pronoun or 'its' if undefined
+  static _get_pronoun(actorOrToken) {
+    let actor = actorOrToken
+    if (actorOrToken.actor) {
+      actor = actorOrToken.actor
+    }
+    let pronoun = game.i18n.localize("SWIM.Defaults_Pronoun") // english default: 'its'
+    if (actor.flags?.swim?.config?.pronoun) {
+      pronoun = actor.flags.swim.config.pronoun
+    }
+    return pronoun
   }
 
   /*******************************************
@@ -257,7 +332,8 @@ export class api {
 
   // Ammo Management
   static async _ammo_management() {
-    ammo_management_script()
+    //ammo_management_script()
+    showWeaponAmmoDialog();
   }
   static async _ammo_management_br2(message, actor, item) {
     br2_ammo_management_script(message, actor, item)
@@ -276,53 +352,6 @@ export class api {
   }
   // Effect Builder
   static async _effect_builder(message = false, item = false) {
-    /* I honestly don't think this is worth it atm...
-    console.log(message)
-    const renderData = message ? message.getFlag("betterrolls-swade2", "render_data") : false
-    if (renderData && (renderData.trait_roll.is_fumble === true || renderData.trait_roll.old_rolls.length > 0)) { return }
-    let isSupportedPower = false
-    const SUPPORTED_POWERS = [
-      game.i18n.localize("SWIM.power-boost").toLowerCase(),
-      game.i18n.localize("SWIM.power-lower").toLowerCase(),
-      game.i18n.localize("SWIM.power-smite").toLowerCase(),
-      game.i18n.localize("SWIM.power-protection").toLowerCase(),
-      game.i18n.localize("SWIM.power-growth").toLowerCase(),
-      game.i18n.localize("SWIM.power-shrink").toLowerCase(),
-      game.i18n.localize("SWIM.power-sloth").toLowerCase(),
-      game.i18n.localize("SWIM.power-speed").toLowerCase(),
-      game.i18n.localize("SWIM.power-speedQuickness").toLowerCase(),
-      game.i18n.localize("SWIM.power-beastFriend").toLowerCase(),
-      game.i18n.localize("SWIM.power-invisibility").toLowerCase(),
-      game.i18n.localize("SWIM.power-confusion").toLowerCase(),
-      game.i18n.localize("SWIM.power-deflection").toLowerCase(),
-      game.i18n.localize("SWIM.power-arcaneProtection").toLowerCase(),
-      game.i18n.localize("SWIM.power-burrow").toLowerCase(),
-      game.i18n.localize("SWIM.power-damageField").toLowerCase(),
-      game.i18n.localize("SWIM.power-darksight").toLowerCase(),
-      game.i18n.localize("SWIM.power-detectArcana").toLowerCase(),
-      game.i18n.localize("SWIM.power-concealArcana").toLowerCase(),
-      game.i18n.localize("SWIM.power-detect").toLowerCase(),
-      game.i18n.localize("SWIM.power-conceal").toLowerCase(),
-      game.i18n.localize("SWIM.power-disguise").toLowerCase(),
-      game.i18n.localize("SWIM.power-environmentalProtection").toLowerCase(),
-      game.i18n.localize("SWIM.power-farsight").toLowerCase(),
-      game.i18n.localize("SWIM.power-fly").toLowerCase(),
-      game.i18n.localize("SWIM.power-intangibility").toLowerCase(),
-      game.i18n.localize("SWIM.power-mindLink").toLowerCase(),
-      game.i18n.localize("SWIM.power-puppet").toLowerCase(),
-      game.i18n.localize("SWIM.power-slumber").toLowerCase(),
-      game.i18n.localize("SWIM.power-silence").toLowerCase(),
-      game.i18n.localize("SWIM.power-speakLanguage").toLowerCase(),
-      game.i18n.localize("SWIM.power-wallWalker").toLowerCase(),
-      game.i18n.localize("SWIM.power-warriorsGift").toLowerCase(),
-      game.i18n.localize("SWIM.power-empathy").toLowerCase(),
-      game.i18n.localize("SWIM.power-blind").toLowerCase(),
-      game.i18n.localize("SWIM.power-elementalManipulation").toLowerCase(),
-      game.i18n.localize("SWIM.power-easeBurden-tes").toLowerCase(),
-    ]
-    console.log(SUPPORTED_POWERS)
-    for (let power of SUPPORTED_POWERS) if (item.name.toLowerCase().includes(power)) isSupportedPower = true
-    if (isSupportedPower === false) { return }*/
     effect_builder()
   }
   // Falling Damage
@@ -362,31 +391,26 @@ export class api {
     shape_changer_script()
   }
   // Soak Damage
-  static async _soak_damage() {
-    soak_damage_script()
+  static async _soak_damage(effect) {
+    soak_damage_script(effect)
   }
   // Token Vision
   static async _token_vision() {
     token_vision_script()
   }
   // Unshake script
-  static async _unshake(version) {
-    if (version === "SWD") { unshake_swd_script() }
-    else if (version === "SWADE") { unshake_swade_script() }
+  static async _unshake(effect) {
+    if (typeof effect === "string") {
+      ui.notifications.error(game.i18n.localize("SWIM.notification.generalErrorMsg"))
+      console.error("You were passing a string to the unshake macro. This is likely because you're using an outdated version of the macro. Please either import the newest version from the compendium into your world or change the macro as following: 'swim.unshake()' (without the ').")
+      return;
+    }
+    const version = game.settings.get("swim", "swdUnshake") ? "SWD" : "SWADE"
+    if (version === "SWD") { unshake_swd_script(effect) }
+    else if (version === "SWADE") { unshake_swade_script(effect) }
   }
   // Unstun script
-  static async _unstun() {
-    unstun_script()
+  static async _unstun(effect) {
+    unstun_script(effect)
   }
-
-
-  /* Call Macros (Deprecated as of version 0.15.0)
-  static async start_macro(macroName, compendiumName = 'swim.swade-immersive-macros') {
-    let pack = game.packs.get(compendiumName);
-    let macro = (await pack.getDocuments()).find(i => (i.data.name == macroName));
-    await macro.execute();
-  }
-  */
-
-  //In the Check for Bennies function, don't forget Coup (50F) which always adds a Benny even if it is an Extra.
 }

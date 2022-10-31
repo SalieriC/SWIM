@@ -3,6 +3,7 @@
 import * as SWIM from './constants.js'
 
 export const settingVariables = [
+    {id: 'swdUnshake', config_type: Boolean, tab: "Setting Rules", default: false},
     {id: 'grittyDamage', config_type: Boolean, tab: "Setting Rules", default: false},
     {id: 'grittyDamageNPC', config_type: Boolean, tab: "Setting Rules", default: false},
     {id: 'natHeal_Time', config_type: String, tab: "Setting Rules", default: 'five days'},
@@ -69,7 +70,7 @@ export const settingVariables = [
 
 export function register_settings() {
     // Documentation Read
-    game.settings.register('swim', 'docRead', {
+    game.settings.register('swim', 'docReadV10', {
         name: game.i18n.localize("SWIM.docReadName"),
         hint: game.i18n.localize("SWIM.docReadHint"),
         type: Boolean,
@@ -77,9 +78,25 @@ export function register_settings() {
         scope: 'user',
         config: true,
     });
+    game.settings.register('swim', 'allowUserConfig', {
+        name: game.i18n.localize("SWIM.allowUserConfigName"),
+        hint: game.i18n.localize("SWIM.allowUserConfigHint"),
+        type: Boolean,
+        default: true,
+        scope: 'world',
+        config: true,
+    });
     game.settings.register('swim', 'br2Message', {
         name: "br2MessageName",
         hint: "br2MessageHint",
+        type: Boolean,
+        default: false,
+        scope: 'world',
+        config: false,
+    });
+    game.settings.register('swim', 'v1MigrationDone', {
+        name: "v1MigrationName",
+        hint: "v1MigrationHint",
         type: Boolean,
         default: false,
         scope: 'world',

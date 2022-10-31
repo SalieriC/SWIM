@@ -6,7 +6,7 @@
  * (Do not remove credits, even if editing.)
  *******************************************/
 
- export async function falling_damage_script() {
+export async function falling_damage_script() {
     //use deduplication to get rid of those which are both, selected and targeted:
     let tokens = [...new Set([...canvas.tokens.controlled, ...game.user.targets])];
     if (tokens.length === 0) {
@@ -17,16 +17,16 @@
     let officialModule = false;
 
     if (game.modules.get("swpf-core-rules")?.active) {
-        messageContent = `<div class="swpf-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> @Compendium[swpf-core-rules.swpf-rules.VWsotOh2lybrA8kA]{Damage from Falling}</h2>`;
+        messageContent = `<div class="swpf-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> Damage from Falling</h2>`;
         officialModule = true;
     } else if (game.modules.get("deadlands-core-rules")?.active) {
-        messageContent = `<div class="deadlands-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> @Compendium[swade-core-rules.swade-rules.KrNAAJXr91wkfxtY]{Damage from Falling}</h2>`;
+        messageContent = `<div class="deadlands-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> Damage from Falling</h2>`;
         officialModule = true;
     }/* else if (game.modules.get("sprawl-core-rules")?.active) {
     messageContent = `<div class="sprawl-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> @Compendium[swade-core-rules.swade-rules.KrNAAJXr91wkfxtY]{Damage from Falling}</h2>`;
     officialModule = true;
 }*/ else if (game.modules.get("swade-core-rules")?.active) {
-        messageContent = `<div class="swade-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> @Compendium[swade-core-rules.swade-rules.KrNAAJXr91wkfxtY]{Damage from Falling}</h2>`;
+        messageContent = `<div class="swade-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> Damage from Falling</h2>`;
         officialModule = true;
     }
     const options = `<option value="na">n/a</option><option value="success">Success</option><option value="raise">Raise</option>`;
@@ -36,8 +36,7 @@
     //rol the damage the character takes based on the distance:
     async function roll_damage(token, fallingDepth, snowDepth, waterSuccess) {
         let halvedDepth = Math.ceil(fallingDepth / 2); //damage per 2"
-        let damageFormula = halvedDepth >= 10 ? `(1d6x+1)*10` : `(1d6x+1)*${halvedDepth}`; //cap at 10d6+10
-        console.log(damageFormula)
+        let damageFormula = halvedDepth >= 10 ? `(1d6x+1)*10` : `(1d6x+1)*${halvedDepth}`; //cap falling damage at 10d6+10
         let rollDamage = await new Roll(`${damageFormula}`).evaluate({ async: false });
         let damage = rollDamage.total;
         let waterRaise = false;
@@ -48,18 +47,18 @@
             else if (waterSuccess === "raise") { waterRaise = true; damage = 0; }
         }
         if (waterRaise === false) {
-            messageContent += `<p>${token.data.name} falls ${fallingDepth}&rdquo; and takes <strong><span style="font-size:115%">${damage}</strong></span> damage.</p>`
+            messageContent += `<p>${token.name} falls ${fallingDepth}&rdquo; and takes <strong><span style="font-size:115%">${damage}</strong></span> damage.</p>`
         } else if (waterRaise === true) {
-            messageContent += `<p>${token.data.name} falls ${fallingDepth}&rdquo; but dives into the water gracefully, taking no damage in the process.</p>`
+            messageContent += `<p>${token.name} falls ${fallingDepth}&rdquo; but dives into the water gracefully, taking no damage in the process.</p>`
         }
         await calculate_damage(token, damage);
     }
 
     async function calculate_damage(token, damage) {
-        const toughness = token.document._actor.data.data.stats.toughness.value;
-        const isShaken = token.document._actor.data.data.status.isShaken;
+        const toughness = token.document._actor.system.stats.toughness.value;
+        const isShaken = token.document._actor.system.status.isShaken;
         const raises = Math.floor((damage - toughness) / 4);
-        const isHardy = token.document._actor.data.items.find(function (item) {
+        const isHardy = token.document._actor.items.find(function (item) {
             return ((item.name.toLowerCase() === "hardy") && item.type === "ability");
         });
         if (toughness > damage) {
@@ -100,8 +99,8 @@
         for (let token of tokens) {
             content += `
         <p>
-          <img style="border: 0; text-align: left;" src="${token.data.img}" width="25" height="25" /> 
-          <span style="vertical-align: super; text-align: left;">${token.data.name}</span>
+          <img style="border: 0; text-align: left;" src="${token.document.texture.src}" width="25" height="25" /> 
+          <span style="vertical-align: super; text-align: left;">${token.name}</span>
         </p>
         <input style="text-align: center;" id="fallingDepth-${token.id}" style="flex: 1;" type="number" value="0" />
         <input style="text-align: center;" id="snowDepth-${token.id}" style="flex: 1;" type="number" value="0" />
@@ -123,18 +122,17 @@
                             let fallingDepth = Number(html.find(`#fallingDepth-${token.id}`)[0].value);
                             let snowDepth = Number(html.find(`#snowDepth-${token.id}`)[0].value);
                             let waterSuccess = html.find(`#water-${token.id}`)[0].value;
+                            console.log(fallingDepth, snowDepth, waterSuccess)
                             if (waterSuccess != "na" && snowDepth != 0) {
                                 return ui.notifications.error(`You can't combine water and snow.`)
                             }
-                            messageContent += `<h3><img style="border: 0;" src=${token.data.img} width="35" height="35" /> ${token.data.name}</h3>`;
+                            messageContent += `<h3><img style="border: 0;" src=${token.document.texture.src} width="35" height="35" /> ${token.name}</h3>`;
                             await roll_damage(token, fallingDepth, snowDepth, waterSuccess);
                         }
                         if (officialModule === true) {
                             messageContent += `</div>`;
                         }
                         ChatMessage.create({
-                            user: game.users.find(u => u.isGM === true).id,
-                            speaker: game.users.find(u => u.isGM === true),
                             content: messageContent
                         });
                     }

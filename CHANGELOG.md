@@ -5,12 +5,68 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.0.0] - 2022-10-31
 ☮️ Peace in the world, or the world in pieces. 🕊️
+### Added
+- New Setting that lets users choose to use the SWD unshake rules. If this setting is active...
+- - ... SWIM will disable the adjust Pace with Wounds Setting and
+- - puts an effect to Shaken that halves the actors Pace.
+- SWIM now overwrites the callback functions of effects in SWIM, meaning it will initiate its own functions when the character is Shaken, Stunned or Bleeding Out. You are notified about that on your turn.
+- A way to add a bonus to unstun rolls using Active Efects. To use it create an active effect with the attribute key `SWIM.unStunMod` (case sensitive), the change mode `Add` and a value of your choosing. A bonus must not have a `+` in front of the number, a penalty needs a `-` in front of the number.
+- If the Summoner has the Command edge, the Fervor and/or the Hold the Line! edge, the summoner will add an AE to the summoned creature which respects that.
+- New translation strings and extended localization of the module.
+- New API function which returns all contents of a folder and its sub-folders up to three layers deep.
+- On startup SWIM will check if the actor folder compendium is in the systems block toc list and if not prompt a dialogue to add it as otherwise the folders are invisible.
+- Add button in the header of items and actors that opens a SWIM configuration window (@loofou).
+- - The button is accessible by the GM and optionally by players (see settings).
+- - The data will be saved no matter if you hit save or the close button to prevent accidental data loss.
+- - Along with this comes a new way of storing data, menaing that existing actor and item configurations using additional stats would break, so...
+- - a migration script is provided that goes through all actors and items of a world (but not compendiums) and updates them to this new way of storing data.
+- - all items and actors not covered by the script (i.e. because they're in a compendium or imported later) are migrated as soon as the SWIM config button is pressed. (In this case the actor and all its items are migrated at once or only the item if the button is pressed on the item.) The migration will also start as soon as the new data is needed (i.e. when using a macro that tries to accesses the new stuff on an actor or item.)
+- - The migration function is also exposed in case it is needed. See [the wiki](https://github.com/SalieriC/SWADE-Immersive-Macros/wiki/API#run-migration) for more information.
+- Added the `get_weapon_sfx` api function to get the sfx from the flags of a weapon.
+- Added file pickers for more SFX to actors (becoming stunned, gaining and loosing fatigue).
+- Soak Damage macro should now play the death SFX on a perish result.
+- A configuration for actors that lets users select a pronoun for each character and NPC. 
+- Better BRSW integration: The global actions SWIM needs to function with BRWS together are now set up automatically. Please delete those from SWIM you've set up earlier.
 ### Changed
+- **Breaking:** Changed the API so that the Unshake macro gets the version from the settings rather than being passed to the function. This means that the Unshake macro needs to be replaced by the one in the SWIM compendium.
+- - Added a detailed error message explaining the problem in case the old version of the macro is used.
 - Adjusted property paths to support FoundryVTT v10.
+- SWIM now completely ignores the death flag featured in Health Estimate. Instead the proper incapacitation icon will be set in the Health Estimate settings when the game starts and HE is installed. As a result, HE is not a dependency any longer, though still strongly suggested.
+- Adjusted manifest to reflect the FVTT v10 requirements.
+- Changed some translation strings.
+- Removed settings-extender.js and moved to the regular dependency structure suggested by the lib now.
+- A creature summoned with a raise will now receive a max wound in addition to its current max wounds instead of setting it fixed to one. This should cover the Fantasy Companion where some summonable creatures already are resilient.
+- General cleanup of code.
+- Changed the `get_actor_sfx` api function to get the sfx from the flags instead of the additional stats.
+- Ammo Management completely overhauled (@loofou):
+- - Refactored the macro completely and added a new design to the dialogue. It now should display the proper options depending on selection (shooting or reloading)
+- - Implement Ammo ActiveEffect system: Ammo that has an Active Effect assigned to it using the SWIM configuration on the ammo item, is applying the effect on the actor if the ammo is loaded. The effect is removed when the ammo is unloaded.
+- - Ammo management now uses the audio from the SWIM config instead of additional stats as well as other configurations.
+- Renamed the module to "SWADE Immersion Module". It describes better what it is now and keeps the cool abbreviation.
+### Fixed
+- Fixed a bug in the effect builder that didn't set maintainedPowers additional stat up when the caster was also the target.
+- Fixed a bug in the Shape Changer that rendered the ignore size rule setting useless (thanks @jdavasligil).
+- Fixed a bug when holding which resulted on having the combat tracker focus on top of the tracker instead of the token which should have its turn.
+- Fixed a bug that created a second result chat message when an actor rolled a critical failure to unstun.
+- Fixed a bug that caused a duplicate dialogue when using the token vision macro.
+- Fixed a massive bug that caused a freeze scenario in the fall damage macro in FVTT v10.
+- Fixed a bug in the Power Effect Builder that applied Distracted twice on Confusion instead of Distracted and Vulnerable.
+- Power Effect Builder is now able apply multiple instances of Protection, Smite, Boost and Lower.
+- Typo in the Loot-o-Mat.
+### Known Issues
+- Holding still breaks on first round of combat but I have no clue why.
+- The Shape Changer macro throws a lot of errors when merging. Line 235, 350 and 365 where disabled to prevent that until further investigation. That means that the token merging / blending feature is disabled for now. It otherwise works as it should. The feature will be reindtroduced once the issue was found.
+### Removed
+- Unshake macros from the compendium were removed and unified into a single macro since the version is now drawn from the settings.
+- Removed v10 update warning.
+### Deprecated
+- Old macros deprecated from the repo. They are still available in a zip file in case s/o wants to check them out.
+- Ways to get data from additional stats were completely removed. A migration is provided.
 
 ## [0.18.5] - 2022-08-14
-☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Soak damage now also handles Bleeding Out rolls.
 ### Changed
@@ -19,7 +75,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Falling damage now caps at 10d6+10.
 
 ## [0.18.4] - 2022-07-22
-☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Added FVTT card deck support for the chase setup (thanks a lot @mafamac).
 ### Fixed
@@ -27,12 +82,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Falling damage didn't explode.
 
 ## [0.18.3] - 2022-06-13
-☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Mighty Summoner: Maintenance Active Effects. Upon summoning a creature, the summoned creature and the summoner will gain an active effect containing the duration and some additional data from SWIM. If either of those effects ands and is deleted, the summoned creature will be dismissed. This works both ways. If the no power point setting is chosen, the duration of the power is near infinite and the maintenance AE on the caster incurs a penalty to the skill as per the no power point setting rule.
 
 ## [0.18.2] - 2022-06-11
-☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Translation update for german language via weblate.
 ### Changed
@@ -44,7 +97,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PEB now properly applies changes to `maintainedPowers` additional stats if found. This was buggy as of yet.
 
 ## [0.18.1] - 2022-05-21
-☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Added a setting that disables the rank requirement for players when using the Shape Changer.
 - Other option for the Power Effect Builder that allows setting up powers and maintaining them even if they're not (yet) added in the PEB. This (currently) doesn't offer the ability to set up any changes (will be added in a future version).
@@ -60,7 +112,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <a href="https://ko-fi.com/salieric"><img style="border: 0px; display: block; margin-left: auto; margin-right: auto;" src="https://www.ko-fi.com/img/githubbutton_sm.svg" width="223" height="30" /></a>
 
 ## [0.18.0] - 2022-05-09
-☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Mighty Summoner: Summoned Creatures now get an Active Effect with the appropriate duration. Duration is doubled if the summoner has the Concentration Edge.
 - Various new assets (see ReadMe for credits, all altered by SalieriC#8263):  

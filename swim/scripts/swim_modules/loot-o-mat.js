@@ -96,7 +96,7 @@ export async function loot_o_mat_script() {
         let treasure = `
 <div class="swade-core">
 <h2><img style="border: 0;" src=${img} width="25" height="25" /> ${heading}</h2>
-<p>You find <strong>${result} $</strong> woth of treasure on ${name} or in the lair.</p>
+<p>You find <strong>${result} $</strong> worth of treasure on ${name} or in the lair.</p>
 </div>
 `
 
@@ -104,10 +104,10 @@ export async function loot_o_mat_script() {
     }
 
     async function find_treasure(tokens) {
-        // the array contains tokens but we need to get the actor data from token.document._actor.data.data.additionalStats.treasure
+        // the array contains tokens but we need to get the actor data from token.document._actor.system.additionalStats.treasure
         for (let token of tokens) {
-            if (token.document._actor.data.data.additionalStats.treasure) {
-                let lootType = token.document._actor.data.data.additionalStats.treasure.value.toLowerCase();
+            if (token.document._actor.system.additionalStats.treasure) {
+                let lootType = token.document._actor.system.additionalStats.treasure.value.toLowerCase();
                 if (lootType.includes("per") || lootType.includes("/")) {
                     let lootTypeSplit;
                     if (lootType.includes(", per")) { lootTypeSplit = lootType.split(", per ") }

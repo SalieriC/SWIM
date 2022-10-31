@@ -1,29 +1,27 @@
 /*******************************************
  * Unshake macro for SWD
- * version 4.0.2
+ * version 4.1.4
  * Original code (an eternity ago) by Shteff, altered by Forien, edited and maintained by SalieriC#8263.
  ******************************************/
 
-export async function unshake_swd_script() {
-    const { speaker, _, __, token } = await swim.get_macro_variables()
+export async function unshake_swd_script(effect = false) {
+    let { speaker, _, __, token } = await swim.get_macro_variables()
 
     // No Token is Selected
-    if (!token || canvas.tokens.controlled.length > 1) {
+    if ((!token || canvas.tokens.controlled.length > 1) && !effect) {
         ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"));
         return;
+    } else if (effect) {
+        let actor = effect.parent
+        token = actor.isToken ? actor.token : canvas.scene.tokens.find(t => t.actor.id === actor.id)
+        const nameKey = game.user.character?.id === actor.id ? `${game.i18n.localize("SWIM.word-you")} ${game.i18n.localize("SWIM.word-are")}` : `${token.name} ${game.i18n.localize("SWIM.word-is")}`
+        ui.notifications.notify(game.i18n.format("SWIM.notification-shakenRoll", {tokenName: nameKey}));
     }
 
     // Checking for System Benny image.
     let bennyImage = await swim.get_benny_image()
-    // Setting up SFX path.
-    let shakenSFX = game.settings.get(
-        'swim', 'shakenSFX');
-    let unshakeSFX;
-    if (token.actor.data.data.additionalStats.sfx) {
-        let sfxSequence = token.actor.data.data.additionalStats.sfx.value.split("|");
-        shakenSFX = sfxSequence[0];
-        unshakeSFX = sfxSequence[2];
-    }
+    // Setting up SFX paths:
+    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
 
     async function rollUnshake() {
 
@@ -36,8 +34,8 @@ export async function unshake_swd_script() {
         ];
         // Making all lower case:
         edgeNames = edgeNames.map(name => name.toLowerCase())
-        const undeadAE = token.actor.effects.find(ae => ae.data.label.toLowerCase() === game.i18n.localize("SWIM.ability-undead").toLowerCase());
-        if (undeadAE && undeadAE.data.disabled === false) {
+        const undeadAE = token.actor.effects.find(ae => ae.label.toLowerCase() === game.i18n.localize("SWIM.ability-undead").toLowerCase());
+        if (undeadAE && undeadAE.disabled === false) {
             edgeNames.push('undead')
         } else if (!undeadAE) {
             edgeNames.push('undead')
@@ -45,7 +43,7 @@ export async function unshake_swd_script() {
         const actorAlias = speaker.alias;
         // ROLL SPIRIT AND CHECK COMBAT REFLEXES
         const r = await token.actor.rollAttribute('spirit');
-        const edges = token.actor.data.items.filter(function (item) {
+        const edges = token.actor.items.filter(function (item) {
             return edgeNames.includes(item.name.toLowerCase()) && (item.type === "edge" || item.type === "ability");
         });
 
@@ -56,18 +54,18 @@ export async function unshake_swd_script() {
             edgeText += `<br/><i>+ 2 <img src="${edge.img}" alt="" width="15" height="15" style="border:0" />${edge.name}</i>`;
         }
         //Get generic actor unshake bonus and check if it is from an AE:
-        const unShakeBonus = token.actor.data.data.attributes.spirit.unShakeBonus;
+        const unShakeBonus = token.actor.system.attributes.spirit.unShakeBonus;
         let effectName = [];
         let effectIcon = [];
         let effectValue = [];
-        if (unShakeBonus != 0 && token.actor.data.effects.size > 0) {
-            for (let effect of token.actor.data.effects) {
-                if (effect.data.disabled === false) { // only apply changes if effect is enabled
-                    for (let change of effect.data.changes) {
-                        if (change.key === "data.attributes.spirit.unShakeBonus") {
+        if (unShakeBonus != 0 && token.actor.effects.size > 0) {
+            for (let effect of token.actor.effects) {
+                if (effect.disabled === false) { // only apply changes if effect is enabled
+                    for (let change of effect.changes) {
+                        if (change.key === "system.attributes.spirit.unShakeBonus") {
                             //Building array of effect names and icons that affect the unShakeBonus
-                            effectName.push(effect.data.label);
-                            effectIcon.push(effect.data.icon);
+                            effectName.push(effect.label);
+                            effectIcon.push(effect.icon);
                             effectValue.push(change.value);
                         }
                     }
@@ -93,7 +91,7 @@ export async function unshake_swd_script() {
         let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultRoll", {name : actorAlias, rollWithEdge : rollWithEdge})
         // Checking for a Critical Failure.
         let wildCard = true;
-        if (token.actor.data.data.wildcard === false && token.actor.type === "npc") { wildCard = false }
+        if (token.actor.system.wildcard === false && token.actor.type === "npc") { wildCard = false }
         let critFail = await swim.critFail_check(wildCard, r)
         if (critFail === true) {
             ui.notifications.notify(game.i18n.localize("SWIM.notification-critFail"));
@@ -164,31 +162,29 @@ export async function unshake_swd_script() {
 
 /*******************************************
  * Unshake macro for SWADE
- * version 4.0.2
+ * version 4.1.4
  * Original code (an eternity ago) by Shteff, altered by Forien, edited and maintained by SalieriC#8263.
  ******************************************/
 
-export async function unshake_swade_script() {
-    const { speaker, _, __, token } = await swim.get_macro_variables()
+export async function unshake_swade_script(effect = false) {
+    let { speaker, _, __, token } = await swim.get_macro_variables()
 
     // No Token is Selected
-    if (!token || canvas.tokens.controlled.length > 1) {
+    if ((!token || canvas.tokens.controlled.length > 1) && !effect) {
         ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"));
         return;
+    } else if (effect) {
+        let actor = effect.parent
+        token = actor.isToken ? actor.token : canvas.scene.tokens.find(t => t.actor.id === actor.id)
+        const nameKey = game.user.character?.id === actor.id ? `${game.i18n.localize("SWIM.word-you")} ${game.i18n.localize("SWIM.word-are")}` : `${token.name} ${game.i18n.localize("SWIM.word-is")}`
+        ui.notifications.notify(game.i18n.format("SWIM.notification-shakenRoll", {tokenName: nameKey}));
     }
 
     // Checking for system Benny image.
     let bennyImage = await swim.get_benny_image()
 
-    // Setting up SFX path.
-    let shakenSFX = game.settings.get(
-        'swim', 'shakenSFX');
-    let unshakeSFX;
-    if (token.actor.data.data.additionalStats.sfx) {
-        let sfxSequence = token.actor.data.data.additionalStats.sfx.value.split("|");
-        shakenSFX = sfxSequence[0];
-        unshakeSFX = sfxSequence[2];
-    }
+    // Setting up SFX paths:
+    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
 
     async function rollUnshake() {
 
@@ -201,8 +197,8 @@ export async function unshake_swade_script() {
         ];
         // Making all lower case:
         edgeNames = edgeNames.map(name => name.toLowerCase())
-        const undeadAE = token.actor.effects.find(ae => ae.data.label.toLowerCase() === game.i18n.localize("SWIM.ability-undead").toLowerCase());
-        if (undeadAE && undeadAE.data.disabled === false) {
+        const undeadAE = token.actor.effects.find(ae => ae.label.toLowerCase() === game.i18n.localize("SWIM.ability-undead").toLowerCase());
+        if (undeadAE && undeadAE.disabled === false) {
             edgeNames.push('undead')
         } else if (!undeadAE) {
             edgeNames.push('undead')
@@ -210,7 +206,7 @@ export async function unshake_swade_script() {
         const actorAlias = speaker.alias;
         // ROLL SPIRIT AND CHECK COMBAT REFLEXES
         const r = await token.actor.rollAttribute('spirit');
-        const edges = token.actor.data.items.filter(function (item) {
+        const edges = token.actor.items.filter(function (item) {
             return edgeNames.includes(item.name.toLowerCase()) && (item.type === "edge" || item.type === "ability");
         });
 
@@ -221,18 +217,18 @@ export async function unshake_swade_script() {
             edgeText += `<br/><i>+ 2 <img src="${edge.img}" alt="" width="15" height="15" style="border:0" />${edge.name}</i>`;
         }
         //Get generic actor unshake bonus and check if it is from an AE:
-        const unShakeBonus = token.actor.data.data.attributes.spirit.unShakeBonus;
+        const unShakeBonus = token.actor.system.attributes.spirit.unShakeBonus;
         let effectName = [];
         let effectIcon = [];
         let effectValue = [];
-        if (unShakeBonus != 0 && token.actor.data.effects.size > 0) {
-            for (let effect of token.actor.data.effects) {
-                if (effect.data.disabled === false) { // only apply changes if effect is enabled
-                    for (let change of effect.data.changes) {
-                        if (change.key === "data.attributes.spirit.unShakeBonus") {
+        if (unShakeBonus != 0 && token.actor.effects.size > 0) {
+            for (let effect of token.actor.effects) {
+                if (effect.disabled === false) { // only apply changes if effect is enabled
+                    for (let change of effect.changes) {
+                        if (change.key === "system.attributes.spirit.unShakeBonus") {
                             //Building array of effect names and icons that affect the unShakeBonus
-                            effectName.push(effect.data.label);
-                            effectIcon.push(effect.data.icon);
+                            effectName.push(effect.label);
+                            effectIcon.push(effect.icon);
                             effectValue.push(change.value);
                         }
                     }
@@ -258,7 +254,7 @@ export async function unshake_swade_script() {
         let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultRoll", {name : actorAlias, rollWithEdge : rollWithEdge});
         // Checking for a Critical Failure.
         let wildCard = true;
-        if (token.actor.data.data.wildcard === false && token.actor.type === "npc") { wildCard = false }
+        if (token.actor.system.wildcard === false && token.actor.type === "npc") { wildCard = false }
         let critFail = await swim.critFail_check(wildCard, r)
         if (critFail === true) {
             ui.notifications.notify(game.i18n.localize("SWIM.notification-critFail"));

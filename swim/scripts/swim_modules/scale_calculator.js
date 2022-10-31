@@ -19,20 +19,20 @@ export async function scale_calculator() {
     if (game.modules.get("swade-core-rules")?.active) { coreRules = true; }
 
     if (tokenActor === undefined || tokenTarget === undefined) {
-        ui.notifications.warn("You must select a token and target another one!");
+        ui.notifications.warn(game.i18n.localize("SWIM.notification-selectAndTargetOneToken"));
     } else {
-        const actorSwat = token.actor.data.items.find(function (item) {
+        const actorSwat = token.actor.items.find(function (item) {
             return ((item.name.toLowerCase() === game.i18n.localize("SWIM.ability-swat").toLowerCase()) && item.type === "ability");
         });
-        const targetSwat = tokenTarget.actor.data.items.find(function (item) {
+        const targetSwat = tokenTarget.actor.items.find(function (item) {
             return ((item.name.toLowerCase() === game.i18n.localize("SWIM.ability-swat").toLowerCase()) && item.type === "ability");
         });
         rollForIt();
 
 
         function rollForIt() {
-            let actorSize = tokenActor.actor.data.data.stats.size;
-            let targetSize = tokenTarget.actor.data.data.stats.size;
+            let actorSize = tokenActor.actor.system.stats.size;
+            let targetSize = tokenTarget.actor.system.stats.size;
             let actorModifier = sizeToModifier(actorSize);
             let targetModifier = sizeToModifier(targetSize);
             let modifier = calc(actorModifier, targetModifier);
