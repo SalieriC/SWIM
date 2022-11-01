@@ -67,8 +67,8 @@ export const settingVariables = [
         default: 'modules/swim/assets/sfx/Fireball-Super-Quick-Whoosh-www.fesliyanstudios.com.ogg'},
     {id: 'callbackMode', config_type: String, tab: 'Misc', default: 'manual', 
         options: [
-            {value: 'manual', locaString: 'SWIM.Option-manual'}, // Will always show the first value and thus reverts on each save of the window.
-            {value: 'automatic', locaString: 'SWIM.Option-automatic'}, // Automatic shows a blank line currently.
+            {value: 'manual', locaString: 'SWIM.Option-manual'},
+            {value: 'automatic', locaString: 'SWIM.Option-automatic'},
             {value: 'disabled', locaString: 'SWIM.Option-disabled'}
         ]},
     {id: 'irradiationSetting', config_type: Boolean, tab: "Misc", default: false},
