@@ -68,7 +68,7 @@ export const settingVariables = [
     {id: 'callbackMode', config_type: String, tab: 'Misc', default: 'manual', 
         options: [
             {value: 'manual', locaString: 'SWIM.Option-manual'}, // Will always show the first value and thus reverts on each save of the window.
-            {value: 'automatic', locString: 'SWIM.Option-automatic'}, // Automatic shows a blank line currently.
+            {value: 'automatic', locaString: 'SWIM.Option-automatic'}, // Automatic shows a blank line currently.
             {value: 'disabled', locaString: 'SWIM.Option-disabled'}
         ]},
     {id: 'irradiationSetting', config_type: Boolean, tab: "Misc", default: false},
