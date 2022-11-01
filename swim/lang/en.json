@@ -407,5 +407,5 @@
   "SWIM.Option-automatic": "Automatic",
   "SWIM.Option-manual": "Manual",
   "SWIM.callbackModeName": "Condition Roll Mode:",
-  "SWIM.callbackModeHint": "Determines if and how the SWIM functions to remove certain conditions (i.e. Shaken) should execute when the characters turn starts. Manual: A dialogue will ask for a roll. | Automatic: The roll will automatically be made. | Disabled: No roll function will be shown at the start of the turn."
+  "SWIM.callbackModeHint": "Determines if and how the SWIM functions to remove certain conditions (i.e. Shaken) should execute when the characters turn starts. Manual: A dialogue will ask for a roll. | Automatic: The roll will automatically be made. | Disabled: The system default rolls will be initiated (can be disabled in SUCC)."
 }
