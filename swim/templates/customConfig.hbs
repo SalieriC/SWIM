@@ -16,8 +16,12 @@
                             {{#if this.is_boolean}}
                                 <input type="checkbox" name="{{ this.id }}" {{#if this.value }}checked=""{{/if}}>
                             {{else if this.options}}
-                                <select name="{{this.id}}">
-                                    {{#each this.options}}<option value="{{this.value}}">{{localize this.locaString}}</option>{{/each}}
+                                <select name="{{this.id}}"> 
+                                    {{#select this.value}}
+                                        {{#each this.options}}
+                                            <option value="{{this.value}}">{{localize this.locaString}}</option>
+                                        {{/each}}
+                                    {{/select}}
                                 </select>
                             {{else}}
                                 <input type="text" name="{{ this.id }}" value="{{ this.value }}">
