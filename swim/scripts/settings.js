@@ -65,7 +65,8 @@ export const settingVariables = [
         default: ''},
     {id:  'lightSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",
         default: 'modules/swim/assets/sfx/Fireball-Super-Quick-Whoosh-www.fesliyanstudios.com.ogg'},
-    {id: 'irradiationSetting', config_type: Boolean, tab: "Additional Conditions", default: false},
+    {id: 'callbackMode', config_type: Selection, tab: 'Misc', default: 'manual', options: ['automatic', 'manual', 'disabled']},
+    {id: 'irradiationSetting', config_type: Boolean, tab: "Misc", default: false},
 ];
 
 export function register_settings() {
@@ -157,6 +158,8 @@ class CustomConfigForm extends FormApplication {
                 {id: setting.id,
                  is_boolean: setting.config_type === Boolean,
                  is_numeric: setting.config_type === Number,
+                 is_selection: setting.config_type === Selection,
+                 options: setting.options,
                  min: setting.min,
                  max: setting.max,
                  step: setting.step,

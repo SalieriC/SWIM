@@ -15,6 +15,10 @@
                         <div class="form-fields">
                             {{#if this.is_boolean}}
                                 <input type="checkbox" name="{{ this.id }}" {{#if this.value }}checked=""{{/if}}>
+                            {{else if this.is_selection}}
+                                <select name="{{this.id}}">
+                                    {{#each options}}<option value="{{this}}">{{localize "SWIM.Option-{{this}}"}}</option>{{/each}}
+                                </select>
                             {{else}}
                                 <input type="text" name="{{ this.id }}" value="{{ this.value }}">
                                 {{# if this.use_audio_picker }}{{ filePicker type="audio" target=this.id }}{{/if}}
