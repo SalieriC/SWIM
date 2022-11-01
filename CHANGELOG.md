@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 - Made the callback functions (rolls to unshake, unstun and Bleeding out) optional.
+- Added more SWIM compendiums to the toc block list.
 
 ## [1.0.0] - 2022-10-31
 ☮️ Peace in the world, or the world in pieces. 🕊️
