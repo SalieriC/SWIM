@@ -76,9 +76,12 @@ Hooks.on(`ready`, () => {
             }
         }
     }
-    game.swade.effectCallbacks.set("shaken", swim.unshake)
-    game.swade.effectCallbacks.set("stunned", swim.unstun)
-    game.swade.effectCallbacks.set("bleeding-out", swim.soak_damage)
+    const callbackMode = game.settings.get("swim", "callbackMode")
+    if (callbackMode === "manual" || callbackMode === "automatic") {
+        game.swade.effectCallbacks.set("shaken", swim.unshake)
+        game.swade.effectCallbacks.set("stunned", swim.unstun)
+        game.swade.effectCallbacks.set("bleeding-out", swim.soak_damage)
+    }
 
     // Setting up new conditions
     if (game.settings.get('swim', 'irradiationSetting') === true) {
