@@ -404,8 +404,8 @@
   "SWIM.Defaults_Pronoun": "its",
   "SWIM.Config_ButtonDisabled": "Only available for items not owned by an actor.",
   "SWIM.Option-disabled": "Disabled",
-  "SWIM.Option-automatic": "Automatic",
+  "SWIM.Option-automatic": "Automatic -> | Automatic: The roll will automatically be made. | ",
   "SWIM.Option-manual": "Manual",
   "SWIM.callbackModeName": "Condition Roll Mode:",
-  "SWIM.callbackModeHint": "Determines if and how the SWIM functions to remove certain conditions (i.e. Shaken) should execute when the characters turn starts. Manual: A dialogue will ask for a roll. | Automatic: The roll will automatically be made. | Disabled: The system default rolls will be initiated (can be disabled in SUCC)."
+  "SWIM.callbackModeHint": "Determines if and how the SWIM functions to remove certain conditions (i.e. Shaken) should execute when the characters turn starts. Manual: A dialogue will ask for a roll. | Disabled: The system default rolls will be initiated (can be disabled in SUCC)."
 }

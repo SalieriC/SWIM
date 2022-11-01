@@ -68,7 +68,7 @@ export const settingVariables = [
     {id: 'callbackMode', config_type: String, tab: 'Misc', default: 'manual', 
         options: [
             {value: 'manual', locaString: 'SWIM.Option-manual'},
-            {value: 'automatic', locaString: 'SWIM.Option-automatic'},
+            //{value: 'automatic', locaString: 'SWIM.Option-automatic'},
             {value: 'disabled', locaString: 'SWIM.Option-disabled'}
         ]},
     {id: 'irradiationSetting', config_type: Boolean, tab: "Misc", default: false},
