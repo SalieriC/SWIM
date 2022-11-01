@@ -65,7 +65,12 @@ export const settingVariables = [
         default: ''},
     {id:  'lightSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",
         default: 'modules/swim/assets/sfx/Fireball-Super-Quick-Whoosh-www.fesliyanstudios.com.ogg'},
-    {id: 'callbackMode', config_type: Selection, tab: 'Misc', default: 'manual', options: ['automatic', 'manual', 'disabled']},
+    {id: 'callbackMode', config_type: String, tab: 'Misc', default: 'manual', 
+        options: [
+            {value: 'manual', locaString: 'SWIM.Option-manual'}, // Will always show the first value and thus reverts on each save of the window.
+            {value: 'automatic', locString: 'SWIM.Option-automatic'}, // Automatic shows a blank line currently.
+            {value: 'disabled', locaString: 'SWIM.Option-disabled'}
+        ]},
     {id: 'irradiationSetting', config_type: Boolean, tab: "Misc", default: false},
 ];
 
@@ -158,8 +163,7 @@ class CustomConfigForm extends FormApplication {
                 {id: setting.id,
                  is_boolean: setting.config_type === Boolean,
                  is_numeric: setting.config_type === Number,
-                 is_selection: setting.config_type === Selection,
-                 options: setting.options,
+                 options: setting.options ? setting.options : "",
                  min: setting.min,
                  max: setting.max,
                  step: setting.step,

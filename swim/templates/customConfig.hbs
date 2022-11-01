@@ -15,9 +15,9 @@
                         <div class="form-fields">
                             {{#if this.is_boolean}}
                                 <input type="checkbox" name="{{ this.id }}" {{#if this.value }}checked=""{{/if}}>
-                            {{else if this.is_selection}}
+                            {{else if this.options}}
                                 <select name="{{this.id}}">
-                                    {{#each options}}<option value="{{this}}">{{localize "SWIM.Option-{{this}}"}}</option>{{/each}}
+                                    {{#each this.options}}<option value="{{this.value}}">{{localize this.locaString}}</option>{{/each}}
                                 </select>
                             {{else}}
                                 <input type="text" name="{{ this.id }}" value="{{ this.value }}">
