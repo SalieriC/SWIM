@@ -76,7 +76,7 @@ export const settingVariables = [
 
 export function register_settings() {
     // Documentation Read
-    game.settings.register('swim', 'docReadV10', {
+    game.settings.register('swim', 'docReadV1.1.0', {
         name: game.i18n.localize("SWIM.docReadName"),
         hint: game.i18n.localize("SWIM.docReadHint"),
         type: Boolean,

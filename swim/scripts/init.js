@@ -95,10 +95,10 @@ Hooks.on(`ready`, () => {
     }
 
     // First Login warning
-    if (game.settings.get('swim', 'docReadV10') === false || !game.settings.get("swade", "tocBlockList")["swim.swim-actor-folders"]) {
+    if (game.settings.get('swim', 'docReadV1.1.0') === false || !game.settings.get("swade", "tocBlockList")["swim.swim-actor-folders"]) {
         let additionalText = ""
         let unshakeWarning = "<p><strong>If you have used SWIM before: Please note that you have to replace your unshake macro with the new version in the compendium. The SWD (old) unshaken rules can now be activated in the settings.</strong></p><hr />"
-        if (!game.settings.get("swade", "tocBlockList")["swim.swim-actor-folders"]) {additionalText = "<p><strong>Please note:</strong> To make some adjustments to properly use SWIM, the world will be reloaded after closing this dialogue.<p>"}
+        if (!game.settings.get("swade", "tocBlockList")["swim.swim-roll-tables"]) {additionalText = "<p><strong>Please note:</strong> To make some adjustments to properly use SWIM, the world will be reloaded after closing this dialogue.<p>"}
         new Dialog({
             title: 'Welcome to SWIM',
             content: `<form>
@@ -124,9 +124,9 @@ Hooks.on(`ready`, () => {
                     callback: async (html) => {
                         let readIt = html.find("#readIt")[0].checked
                         if (readIt === true) {
-                            game.settings.set('swim', 'docReadV10', true)
-                            if (!game.settings.get("swade", "tocBlockList")["swim.swim-actor-folders"]) {
-                                await game.settings.set("swade", "tocBlockList", {"swim.swim-actor-folders": true}) //Needed to see the folders in the compendium.
+                            game.settings.set('swim', 'docReadV1.1.0', true)
+                            if (!game.settings.get("swade", "tocBlockList")["swim.swim-roll-tables"]) {
+                                await game.settings.set("swade", "tocBlockList", {"swim.swim-actor-folders": true, "swim.swade-immersive-macros": true, "swim.swim-roll-tables": true}) //Needed to see the folders in the compendium.
                                 window.location.reload();
                             }
                         }
