@@ -407,5 +407,16 @@
   "SWIM.Option-automatic": "Automatic -> | Automatic: The roll will automatically be made. | ",
   "SWIM.Option-manual": "Manual",
   "SWIM.callbackModeName": "Condition Roll Mode:",
-  "SWIM.callbackModeHint": "Determines if and how the SWIM functions to remove certain conditions (i.e. Shaken) should execute when the characters turn starts. Manual: A dialogue will ask for a roll. | Disabled: The system default rolls will be initiated (can be disabled in SUCC)."
+  "SWIM.callbackModeHint": "Determines if and how the SWIM functions to remove certain conditions (i.e. Shaken) should execute when the characters turn starts. Manual: A dialogue will ask for a roll. | Disabled: The system default rolls will be initiated (can be disabled in SUCC).",
+  "SWIM.fearResult-AdrenalineSurge": "Adrenaline Surge",
+  "SWIM.fearResult-MarkOfFear": "Mark of Fear",
+  "SWIM.fearResult-MarkOfFearDesc": "You have faced something truly terrifying and from now on wear the mark of fear. A white strak in your hair or constantly twitching eyes or anything else you can think of. Change this description here in consultation of your Game Master and adjust the change you've gone through.",
+  "SWIM.hindrance-hesitant": "Hesitant",
+  "SWIM.fearResult-Frightened": "Frightened",
+  "SWIM.fearResult-Phobia": "Phobia (<name cause here>)",
+  "SWIM.hindrance-phobia": "Phobia",
+  "SWIM.fearResult-PhobiaDesc": "You have experienced something truly terrifying and from now on you live in constant fear of whatever you have faced. You may need to add the cause of this to the title of this hindrance and the created Active Effect to avoid confusion.",
+  "SWIM.chatMessage-panickedRollMessage": "{name} is panicked and moves <span style=\"font-size:150%\">{pace}″</span> away from the cause.",
+  "SWIM.dialogue-FrightenedTitle": "One or more tokens became frightened",
+  "SWIM.dialogue-FrightenedContent": "Do you wish to remove the Frightened status of the following actors? (If you don't you'll have to do it manually later.)"
 }
