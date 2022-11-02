@@ -1,6 +1,6 @@
 /*******************************************
  * Fear Table Macro.
- * v. 2.1.1 by SalieriC#8263, original creator unknown.
+ * v. 3.0.0 by SalieriC#8263, original creator unknown.
  *******************************************/
 export async function fear_table_script() {
     let { speaker, _, __, token } = await swim.get_macro_variables()
