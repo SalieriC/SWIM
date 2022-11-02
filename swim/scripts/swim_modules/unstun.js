@@ -1,6 +1,6 @@
 /*******************************************
  * Unstun macro for SWADE
- * version v.4.2.1
+ * version v.4.2.2
  * Made and maintained by SalieriC#8263 using original Code from Shteff.
  ******************************************/
 
@@ -158,8 +158,8 @@ export async function unstun_script(effect = false) {
         };
         await succ.apply_status(token, 'distracted', true)
         await succ.apply_status(token, 'vulnerable', true)
-        if (stunSFX) {
-            AudioHelper.play({ src: `${stunSFX}` }, true);
+        if (stunnedSFX) {
+            AudioHelper.play({ src: `${stunnedSFX}` }, true);
         }
     }
 }
