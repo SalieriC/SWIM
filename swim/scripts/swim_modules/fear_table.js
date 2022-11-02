@@ -154,6 +154,48 @@ export async function fear_table_script() {
         } else if (total >= 22) {
             //Heart Attack: Vigor at -2; Success = Stunned, Failure = Death in 2d6 Rounds, healing at -4 saves him but remains Inc.
             //For this: Make addition to healing macro.
+            const roll = await actor.rollAttribute('vigor', {
+                title: game.i18n.localize("SWIM.fearResult-HeartAttack"),
+                flavour: game.i18n.localize("SWIM.fearResult-HeartAttack"),
+                additionalMods: [
+                    {
+                        label: game.i18n.localize("SWIM.fearResult-HeartAttack"),
+                        value: -2,
+                    },
+                ],
+            })
+            const total = roll.total
+            let chatData = ""
+            if (total >= 4) {
+                if (await succ.check_status(actor, 'stunned') === false) {
+                    await swim.unstun()
+                }
+                chatData = `${officialClass}<p>${game.i18n.format("SWIM.chatMessage-heartAttackSuccessMessage", { name: token.name })}</p></div>`
+            } else {
+                const pronoun = swim.get_pronoun(actor)
+                const roundRoll = await new Roll(`2d6`).evaluate({ async: false });
+                const rounds = roundRoll.total
+                const eff = await succ.apply_status(token, "heart-attack", true, true)
+                const data = {
+                    duration: {
+                        rounds: rounds,
+                        startRound: token.combatant != null ? game.combat.round : 0,
+                        seconds: rounds * 6
+                    },
+                    flags: {
+                        swade: {
+                            expiration: 3,
+                            loseTurnOnHold: true
+                        },
+                        succ: {
+                            updatedAE: true
+                        }
+                    }
+                }
+                await eff.update(data)
+                chatData = `${officialClass}<p>${game.i18n.format("SWIM.chatMessage-heartAttackFailureMessage", { name: token.name, rounds: rounds, pronoun: pronoun })}</p></div>`
+            }
+            ChatMessage.create({ content: chatData });
         }
     }
 }
