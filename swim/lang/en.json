@@ -421,5 +421,6 @@
   "SWIM.fearResult-PhobiaDesc": "You have experienced something truly terrifying and from now on you live in constant fear of whatever you have faced. You may need to add the cause of this to the title of this hindrance and the created Active Effect to avoid confusion.",
   "SWIM.chatMessage-panickedRollMessage": "{name} is panicked and moves <span style=\"font-size:150%\">{pace}″</span> away from the cause.",
   "SWIM.dialogue-FrightenedTitle": "One or more tokens became frightened",
-  "SWIM.dialogue-FrightenedContent": "Do you wish to remove the Frightened status of the following actors? (If you don't you'll have to do it manually later.)"
+  "SWIM.dialogue-FrightenedContent": "Do you wish to remove the Frightened status of the following actors? (If you don't you'll have to do it manually later.)",
+  "SWIM.chatMessage-healOtherCureHeartAttack": "{tokenName} saves {targetName} from dying of a heart attack. But {targetName} remains incapacitated. Any further healing rolls function normally."
 }
