@@ -5,7 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Highly automated Fear Table macro. Various effects are applied to te selected token depending on the result of the table.
+- Added Heart Attack removal to the Personal healing Centre macro.
 ### Changed
+- **Breaking**: The Fear Table macro now requires exactly one token to be selected.
 - Made the callback functions (rolls to unshake, unstun and Bleeding out) optional.
 - Added more SWIM compendiums to the toc block list.
 
