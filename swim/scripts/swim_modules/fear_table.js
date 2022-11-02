@@ -59,7 +59,6 @@ export async function fear_table_script() {
     dialog.render(true);
 
     async function add_effects(total) {
-        total = 18
         const officialClass = await swim.get_official_class()
         const actor = token.actor
         const hesitant = actor.system.initiative.hasHesitant === true ? true : actor.items.find(i => i.name === game.i18n.localize("SWIM.hindrance-hesitant") && i.type === "hindrance")
