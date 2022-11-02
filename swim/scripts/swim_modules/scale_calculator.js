@@ -1,6 +1,6 @@
 /*******************************************
  * Unstun macro for SWADE
- * version v.2.0.1
+ * version v.2.0.2
  * Original code by brunocalado, modified by SalieriC#8263.
  ******************************************/
 export async function scale_calculator() {

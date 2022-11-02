@@ -1,6 +1,6 @@
 /*******************************************
  * Unshake macro for SWD
- * version 4.1.4
+ * version 4.1.5
  * Original code (an eternity ago) by Shteff, altered by Forien, edited and maintained by SalieriC#8263.
  ******************************************/
 
@@ -162,7 +162,7 @@ export async function unshake_swd_script(effect = false) {
 
 /*******************************************
  * Unshake macro for SWADE
- * version 4.1.4
+ * version 4.1.5
  * Original code (an eternity ago) by Shteff, altered by Forien, edited and maintained by SalieriC#8263.
  ******************************************/
 

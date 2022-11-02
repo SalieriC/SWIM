@@ -3,7 +3,7 @@
  * This macro was originally written by @Sky#9453
  * https://github.com/Sky-Captain-13/foundry
  * 
- * version 4.0.0
+ * version 4.1.0
  * Original code (an eternity ago) by Shteff,
  * altered by Forien, edited and maintained 
  * by SalieriC#8263.

@@ -3,7 +3,7 @@
  * This Macro works best with Health Estimate installed.
  * It will mark the selected tokens as dead.
  * If the selected token is dead, it will be marked as alive instead.
- * v. 4.0.3 by SalieriC.
+ * v. 4.0.4 by SalieriC.
  *******************************************/
 export async function mark_dead_script() {
     const { _, __, ___, token } = await swim.get_macro_variables()
