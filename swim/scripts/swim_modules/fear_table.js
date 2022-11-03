@@ -4,15 +4,28 @@
  *******************************************/
 export async function fear_table_script() {
     let { speaker, _, __, token } = await swim.get_macro_variables()
+    const targets = Array.from(game.user.targets)
 
     // No Token is Selected
-    if ((!token || canvas.tokens.controlled.length > 1)) {
-        ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"));
+    if ((!token || canvas.tokens.controlled.length > 1) && game.user.targets.size < 1) {
+        ui.notifications.error(game.i18n.localize("SWIM.notification-selectOneAndTargetAnyNumber"));
         return;
     }
+
+    const fearAbility = token.actor.items.find(a => a.name.toLowerCase().includes(game.i18n.localize().toLowerCase()))
+    let fearPenalty = 0
+    let fearPenaltyInverse = 0
+    if (fearAbility) {
+        const name = fearAbility.name
+        num = name.match(/[-−+‐][0-9]/gm)
+        num = num[0].replace(/[-−‐]/gm, "-")
+        fearPenalty = Number(num)
+        fearPenaltyInverse = fearPenalty * -1 //Make the modifier positive for the table.
+    }
+
     const dialog = new Dialog({
         title: game.i18n.localize("SWIM.fear"),
-        content: game.i18n.format("SWIM.dialogue-fearContent"),
+        content: game.i18n.format("SWIM.dialogue-fearContent", { mod: fearPenalty, modPositive: fearPenaltyInverse }),
         default: 'roll',
         buttons: {
             roll: {
@@ -25,28 +38,40 @@ export async function fear_table_script() {
                     }
 
                     modifier = parseInt(modifier);
-                    const roll = new Roll('1d20 + @mod', { mod: modifier });
-                    let fearTableName = game.settings.get(
-                        'swim', 'fearTable');
-                    if (fearTableName) {
-                        let fearTable = game.tables.getName(`${fearTableName}`)
-                        if (!fearTable) {
-                            ui.notifications.error(game.i18n.format("SWIM.notification.tableNotFound", { tableName: fearTableName }))
-                            return
-                        } else {
-                            const results = await fearTable.draw({ roll });
-                            const total = results.roll.total
-                            add_effects(total)
+                    for (let target of targets) {
+                        const roll = new Roll('1d20 + @mod', { mod: modifier });
+                        let fearTableName = game.settings.get(
+                            'swim', 'fearTable');
+                        if (fearTableName) {
+                            let fearTable = game.tables.getName(`${fearTableName}`)
+                            if (!fearTable) {
+                                ui.notifications.error(game.i18n.format("SWIM.notification.tableNotFound", { tableName: fearTableName }))
+                                return
+                            } else {
+                                const results = await fearTable.draw({displayChat: false}, { roll });
+                                console.log(results)
+                                const total = results.roll.total
+                                const chatData = `<div class="table-draw">
+                                <ol class="table-results">
+                                        <li class="table-result flexrow" data-result-id="${results.results[0]._id}">
+                                            <img class="result-image" src="${results.results[0].img}" />
+                                            <div class="result-text"><strong style="text-align:center">${target.name}</strong><br />${results.results[0].text}</div>
+                                        </li>
+                                    </ol>
+                                </div>`
+                                await ChatMessage.create({ content: chatData });
+                                add_effects(total, target)
+                            }
                         }
-                    }
-                    else {
-                        ui.notifications.error(game.i18n.localize("SWIM.notification.tableNameMissing", { type: game.i18n.localize("SWIM.fear") }));
-                        return;
-                    }
-                    let fearSFX = game.settings.get(
-                        'swim', 'fearSFX');
-                    if (fearSFX) {
-                        AudioHelper.play({ src: `${fearSFX}` }, true);
+                        else {
+                            ui.notifications.error(game.i18n.localize("SWIM.notification.tableNameMissing", { type: game.i18n.localize("SWIM.fear") }));
+                            return;
+                        }
+                        let fearSFX = game.settings.get(
+                            'swim', 'fearSFX');
+                        if (fearSFX) {
+                            AudioHelper.play({ src: `${fearSFX}` }, true);
+                        }
                     }
                 }
             }
@@ -58,9 +83,10 @@ export async function fear_table_script() {
     });
     dialog.render(true);
 
-    async function add_effects(total) {
+    async function add_effects(total, target) {
         const officialClass = await swim.get_official_class()
-        const actor = token.actor
+        const token = target
+        const actor = target.actor
         const hesitant = actor.system.initiative.hasHesitant === true ? true : actor.items.find(i => i.name === game.i18n.localize("SWIM.hindrance-hesitant") && i.type === "hindrance")
         if (hesitant && total >= 14 && total <= 15) { total = 16 } //If already hesitant, adjust total to panicked instead.
         if (total <= 3) {

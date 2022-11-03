@@ -130,6 +130,7 @@
   "SWIM.notification-selectOneOrMoreTokens": "Please select one or more tokens.",
   "SWIM.notification-selectOrTargetOneOrMoreTokens": "Please select or target one or more tokens.",
   "SWIM.notification-selectAndTargetOneToken": "You must select a token and target another one.",
+  "SWIM.notification-selectOneAndTargetAnyNumber": "Please select a token and target any number of other tokens.",
   "SWIM.healVFXName": "Healing VFX:",
   "SWIM.healVFXHint": "The visual effect to be played when a token is healed. I recommend Healing Generic or Cure Wounds for everyone with access to the jb2a patreon module. Playing VFX requires Sequencer.",
   "SWIM.notification-targetSingleToken": "Please target a single token first.",
@@ -245,7 +246,7 @@
   "SWIM.dialogue-naturalHealing":"Natural Healing",
   "SWIM.dialogue-directHealing":"Direct Healing",
   "SWIM.fear": "Fear",
-  "SWIM.dialogue-fearContent": "<p>Enter the fear penalty as a positive number below:</p><form class='fearTable'><div class='form-group'><label>Fear Modifier</label><input type='number' name='fearModifier' value='0' /></div></form>",
+  "SWIM.dialogue-fearContent": "<p>Please make sure that the cause of the fear is selected and that all tokens who failed their fear check are targeted.</p><p>The fear modifier detected on the selected token is {{mod}}.<br />You may adjust that number below (enter the <em>total</em> fear penalty as a positive number):</p><form class='fearTable'><div class='form-group'><label>Fear Modifier</label><input type='number' name='fearModifier' value='{modPositive}' /></div></form>",
   "SWIM.notification.tableNotFound": "Unable to locate '{tableName}'. Please import it into the world first.",
   "SWIM.notification.tableNameMissing": "Please set a {type} table name in the SWIM settings.",
   "SWIM.notification.markDeadAlive": "Marked as dead/alive.",
@@ -422,5 +423,6 @@
   "SWIM.chatMessage-panickedRollMessage": "{name} is panicked and moves <span style=\"font-size:150%\">{pace}″</span> away from the cause.",
   "SWIM.dialogue-FrightenedTitle": "One or more tokens became frightened",
   "SWIM.dialogue-FrightenedContent": "Do you wish to remove the Frightened status of the following actors? (If you don't you'll have to do it manually later.)",
-  "SWIM.chatMessage-healOtherCureHeartAttack": "{tokenName} saves {targetName} from dying of a heart attack. But {targetName} remains incapacitated. Any further healing rolls function normally."
+  "SWIM.chatMessage-healOtherCureHeartAttack": "{tokenName} saves {targetName} from dying of a heart attack. But {targetName} remains incapacitated. Any further healing rolls function normally.",
+  "SWIM.ability-fear": "Fear"
 }
