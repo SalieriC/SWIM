@@ -13,12 +13,12 @@ export async function fear_table_script() {
         return;
     }
 
-    const fearAbility = token.actor.items.find(a => a.name.toLowerCase().includes(game.i18n.localize().toLowerCase()))
+    const fearAbility = token.actor.items.find(a => a.name.toLowerCase().includes(game.i18n.localize("SWIM.ability-fear").toLowerCase()))
     let fearPenalty = 0
     let fearPenaltyInverse = 0
     if (fearAbility) {
         const name = fearAbility.name
-        num = name.match(/[-−+‐][0-9]/gm)
+        let num = name.match(/[-−+‐][0-9]/gm)
         num = num[0].replace(/[-−‐]/gm, "-")
         fearPenalty = Number(num)
         fearPenaltyInverse = fearPenalty * -1 //Make the modifier positive for the table.
@@ -61,7 +61,7 @@ export async function fear_table_script() {
                                     </ol>
                                 </div>`
                                 await ChatMessage.create({ content: chatData });
-                                add_effects(total, target)
+                                await add_effects(total, target)
                             }
                         }
                         else {
@@ -226,6 +226,7 @@ export async function fear_table_script() {
 }
 
 async function gain_phobia(actor, major, total) {
+    const officialClass = await swim.get_official_class()
     let hindranceCompendium = false
     let originalText = ``
     if (game.modules.get("swpf-core-rules")?.active) { hindranceCompendium = "swpf-core-rules.swpf-hindrances" }
