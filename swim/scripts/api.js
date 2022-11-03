@@ -415,7 +415,7 @@ export class api {
   }
   //Shake a token
   static async _shake(token) {
-    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(actor)
+    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
     await succ.apply_status(token, 'shaken', true)
         if (shakenSFX) {
             AudioHelper.play({ src: `${shakenSFX}` }, true);
@@ -427,7 +427,7 @@ export class api {
   }
   //Stun a token
   static async _stun(token) {
-    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(actor)
+    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
     if (await succ.check_status(token, 'stunned') === false) {
       await succ.apply_status(token, 'stunned', true)
     };

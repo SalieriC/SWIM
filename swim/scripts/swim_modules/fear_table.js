@@ -58,7 +58,7 @@ export async function fear_table_script() {
                                     </ol>
                                 </div>`
                                 await ChatMessage.create({ content: chatData });
-                                await swim.wait(1000) //Fights the race condition so that effect chat messages are created before the next targets result.
+                                await swim.wait(100) //Fights the race condition so that effect chat messages are created before the next targets result.
                                 await add_effects(total, target)
                             }
                             let fearSFX = game.settings.get('swim', 'fearSFX');
