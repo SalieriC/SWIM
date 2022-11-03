@@ -37,19 +37,17 @@ export async function fear_table_script() {
                     if (modifier === '') {
                         modifier = 0;
                     }
-
+                    let fearTableName = game.settings.get('swim', 'fearTable');
                     modifier = parseInt(modifier);
-                    for (let target of targets) {
-                        const roll = new Roll('1d20 + @mod', { mod: modifier });
-                        let fearTableName = game.settings.get(
-                            'swim', 'fearTable');
-                        if (fearTableName) {
-                            let fearTable = game.tables.getName(`${fearTableName}`)
-                            if (!fearTable) {
-                                ui.notifications.error(game.i18n.format("SWIM.notification.tableNotFound", { tableName: fearTableName }))
-                                return
-                            } else {
-                                const results = await fearTable.draw({displayChat: false}, { roll });
+                    if (fearTableName) {
+                        let fearTable = game.tables.getName(`${fearTableName}`)
+                        if (!fearTable) {
+                            ui.notifications.error(game.i18n.format("SWIM.notification.tableNotFound", { tableName: fearTableName }))
+                            return
+                        } else {
+                            for (let target of targets) {
+                                const roll = new Roll('1d20 + @mod', { mod: modifier });
+                                const results = await fearTable.draw({ displayChat: false }, { roll });
                                 const total = results.roll.total
                                 const chatData = `<div class="table-draw">
                                 <ol class="table-results">
@@ -60,19 +58,16 @@ export async function fear_table_script() {
                                     </ol>
                                 </div>`
                                 await ChatMessage.create({ content: chatData });
-                                await swim.wait(100) //Fights the race condition so that effect chat messages are created before the next targets result.
+                                await swim.wait(1000) //Fights the race condition so that effect chat messages are created before the next targets result.
                                 await add_effects(total, target)
                             }
-                        }
-                        else {
-                            ui.notifications.error(game.i18n.localize("SWIM.notification.tableNameMissing", { type: game.i18n.localize("SWIM.fear") }));
-                            return;
+                            let fearSFX = game.settings.get('swim', 'fearSFX');
+                            if (fearSFX) { AudioHelper.play({ src: `${fearSFX}` }, true); }
                         }
                     }
-                    let fearSFX = game.settings.get(
-                        'swim', 'fearSFX');
-                    if (fearSFX) {
-                        AudioHelper.play({ src: `${fearSFX}` }, true);
+                    else {
+                        ui.notifications.error(game.i18n.localize("SWIM.notification.tableNameMissing", { type: game.i18n.localize("SWIM.fear") }));
+                        return;
                     }
                 }
             }
@@ -154,7 +149,7 @@ export async function fear_table_script() {
             }
             await actor.createEmbeddedDocuments('Item', [hindrance], { renderSheet: true });
             if (await succ.check_status(actor, 'stunned') === false) {
-                await swim.unstun()
+                await swim.stun(token)
             }
         } else if (total >= 14 && total <= 15) {
             //Frightened: Hesitant until end of encounter, panicked if alread is hesitant
@@ -193,7 +188,7 @@ export async function fear_table_script() {
             let chatData = ""
             if (total >= 4) {
                 if (await succ.check_status(actor, 'stunned') === false) {
-                    await swim.unstun()
+                    await swim.stun(token)
                 }
                 chatData = `${officialClass}<p>${game.i18n.format("SWIM.chatMessage-heartAttackSuccessMessage", { name: token.name })}</p></div>`
             } else {
