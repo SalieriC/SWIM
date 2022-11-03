@@ -5,16 +5,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.1.0] - 2022-11-03
+☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
-- Highly automated Fear Table macro. Various effects are applied to te selected token depending on the result of the table.
+- Highly automated Fear Table macro. Various effects are applied to te selected targets depending on the result of the table.
+- - You need to select the cause of the fear, the macro will try to find the Fear modifier for it.
+- - Target all of those tokens who were unable to make their spirit roll and the macro will roll on the fear table for each and applies the appropriate effects.
 - Added Heart Attack removal to the Personal healing Centre macro.
+- New API functions: `swim.shake(token)` and `swim.stun(token)` which adds Shaken and Stunned respectively and plays the appropriate SFX.
 ### Changed
 - **Breaking**: The Fear Table macro now requires exactly one token to be selected.
 - Made the callback functions (rolls to unshake, unstun and Bleeding out) optional.
 - Added more SWIM compendiums to the toc block list.
 
 ## [1.0.0] - 2022-10-31
-☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - New Setting that lets users choose to use the SWD unshake rules. If this setting is active...
 - - ... SWIM will disable the adjust Pace with Wounds Setting and
