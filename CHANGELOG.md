@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Heart Attack removal to the Personal healing Centre macro.
 - New API functions: `swim.shake(token)` and `swim.stun(token)` which adds Shaken and Stunned respectively and plays the appropriate SFX.
 ### Changed
-- **Breaking**: The Fear Table macro now requires exactly one token to be selected.
+- **Breaking**: The Fear Table macro now requires exactly one token to be selected and one or more to be targeted.
 - Made the callback functions (rolls to unshake, unstun and Bleeding out) optional.
 - Added more SWIM compendiums to the toc block list.
 
