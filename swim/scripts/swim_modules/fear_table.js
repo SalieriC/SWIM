@@ -153,7 +153,6 @@ export async function fear_table_script() {
             await gain_phobia(actor, major, total, officialClass)
         } else if (total >= 22) {
             //Heart Attack: Vigor at -2; Success = Stunned, Failure = Death in 2d6 Rounds, healing at -4 saves him but remains Inc.
-            //For this: Make addition to healing macro.
             const roll = await actor.rollAttribute('vigor', {
                 title: game.i18n.localize("SWIM.fearResult-HeartAttack"),
                 flavour: game.i18n.localize("SWIM.fearResult-HeartAttack"),
