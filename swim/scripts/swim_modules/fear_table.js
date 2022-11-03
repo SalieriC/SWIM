@@ -50,7 +50,6 @@ export async function fear_table_script() {
                                 return
                             } else {
                                 const results = await fearTable.draw({displayChat: false}, { roll });
-                                console.log(results)
                                 const total = results.roll.total
                                 const chatData = `<div class="table-draw">
                                 <ol class="table-results">
@@ -61,6 +60,7 @@ export async function fear_table_script() {
                                     </ol>
                                 </div>`
                                 await ChatMessage.create({ content: chatData });
+                                await swim.wait(100) //Fights the race condition so that effect chat messages are created before the next targets result.
                                 await add_effects(total, target)
                             }
                         }
@@ -68,11 +68,11 @@ export async function fear_table_script() {
                             ui.notifications.error(game.i18n.localize("SWIM.notification.tableNameMissing", { type: game.i18n.localize("SWIM.fear") }));
                             return;
                         }
-                        let fearSFX = game.settings.get(
-                            'swim', 'fearSFX');
-                        if (fearSFX) {
-                            AudioHelper.play({ src: `${fearSFX}` }, true);
-                        }
+                    }
+                    let fearSFX = game.settings.get(
+                        'swim', 'fearSFX');
+                    if (fearSFX) {
+                        AudioHelper.play({ src: `${fearSFX}` }, true);
                     }
                 }
             }
