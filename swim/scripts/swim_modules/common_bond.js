@@ -3,7 +3,7 @@
  * Transfers a Benny from a selected to a targeted tokens
  * actor.
  * 
- * v. 1.0.0
+ * v. 1.0.1
  * By SalieriC
  ******************************************************/
 export async function common_bond_script() {

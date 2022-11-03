@@ -65,12 +65,18 @@ export const settingVariables = [
         default: ''},
     {id:  'lightSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",
         default: 'modules/swim/assets/sfx/Fireball-Super-Quick-Whoosh-www.fesliyanstudios.com.ogg'},
-    {id: 'irradiationSetting', config_type: Boolean, tab: "Additional Conditions", default: false},
+    {id: 'callbackMode', config_type: String, tab: 'Misc', default: 'manual', 
+        options: [
+            {value: 'manual', locaString: 'SWIM.Option-manual'},
+            //{value: 'automatic', locaString: 'SWIM.Option-automatic'},
+            {value: 'disabled', locaString: 'SWIM.Option-disabled'}
+        ]},
+    {id: 'irradiationSetting', config_type: Boolean, tab: "Misc", default: false},
 ];
 
 export function register_settings() {
     // Documentation Read
-    game.settings.register('swim', 'docReadV10', {
+    game.settings.register('swim', 'docReadV1.1.0', {
         name: game.i18n.localize("SWIM.docReadName"),
         hint: game.i18n.localize("SWIM.docReadHint"),
         type: Boolean,
@@ -157,6 +163,7 @@ class CustomConfigForm extends FormApplication {
                 {id: setting.id,
                  is_boolean: setting.config_type === Boolean,
                  is_numeric: setting.config_type === Number,
+                 options: setting.options ? setting.options : "",
                  min: setting.min,
                  max: setting.max,
                  step: setting.step,

@@ -1,6 +1,6 @@
 /*******************************************
  * Unshake macro for SWD
- * version 2.1.0
+ * version 2.1.1
  * (c): brunocalado; altered by SalieriC.
  ******************************************/
 

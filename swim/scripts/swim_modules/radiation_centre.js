@@ -1,7 +1,7 @@
 /*******************************************
  * Radiation Centre Macro
  * Requires the Irradiated condition.
- * version 2.1.0
+ * version 2.1.1
  * By SalieriC#8263.
  ******************************************/
 export async function radiation_centre_script() {

@@ -11,7 +11,7 @@
  * - Pauses other playlists not in a folder called "Ambient" [X]
  * - Resumes all Playlists on combat end [X]
  * 
- * v. 1.0.1
+ * v. 1.0.2
  * By SalieriC, original groundwork by brunocalado#1650
  ******************************************************/
 export async function combat_setup() {

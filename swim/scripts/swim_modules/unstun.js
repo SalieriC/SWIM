@@ -1,6 +1,6 @@
 /*******************************************
  * Unstun macro for SWADE
- * version v.4.2.0
+ * version v.4.3.0
  * Made and maintained by SalieriC#8263 using original Code from Shteff.
  ******************************************/
 
@@ -149,17 +149,6 @@ export async function unstun_script(effect = false) {
     if (await succ.check_status(token, 'stunned') === true) {
         rollUnstun()
     } else if (token) {
-        if (await succ.check_status(token, 'stunned') === false) {
-            await succ.apply_status(token, 'stunned', true)
-        };
-
-        if (await succ.check_status(token, 'prone') === false) {
-            await succ.apply_status(token, 'prone', true)
-        };
-        await succ.apply_status(token, 'distracted', true)
-        await succ.apply_status(token, 'vulnerable', true)
-        if (stunSFX) {
-            AudioHelper.play({ src: `${stunSFX}` }, true);
-        }
+        await swim.stun(token)
     }
 }

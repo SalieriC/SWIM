@@ -38,7 +38,7 @@
  * which don't use a sub-currency (like 50f), just ignore
  * or round off manually.
  * 
- * v. 1.2.0 by SalieriC#8263
+ * v. 1.2.1 by SalieriC#8263
 *********************************************************/
 export async function loot_o_mat_script() {
     const { speaker, _, __, token } = await swim.get_macro_variables()

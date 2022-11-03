@@ -3,7 +3,7 @@
  * To be used with the SWIM chase layouts,
  * Advanced options allow adjustmend for any
  * scene (by pmoore603).
- * version 2.0.0
+ * version 2.0.1
  * By SalieriC#8263, flag use inspired by a macro from brunocalado#1650, assisted by Kekilla#7036, more layout options by pmoore603.
  ******************************************/
  export async function chase_setup_script() {

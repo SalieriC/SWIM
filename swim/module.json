@@ -6,7 +6,7 @@
 		"minimum": 10,
 		"verified": "10"
 	},
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"authors": [
 		{
 		  "name": "SalieriC",
@@ -26,8 +26,8 @@
 				"type": "system",
 				"manifest": "https://gitlab.com/api/v4/projects/16269883/packages/generic/swade/latest/system.json",
 				"compatibility": {
-					"minimum": "2.0.6",
-					"verified": "2.0.6"
+					"minimum": "2.0.3",
+					"verified": "2.0.3"
 				}
 			}
 		],
@@ -55,8 +55,8 @@
 				"type": "module",
 				"manifest": "https://raw.githubusercontent.com/SalieriC/SUCC/main/succ/module.json",
 				"compatibility": {
-					"minimum": "0.2.2",
-					"verified": "0.2.2"
+					"minimum": "0.2.3",
+					"verified": "0.2.3"
 				}
 			},
 			{

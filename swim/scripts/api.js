@@ -66,7 +66,9 @@ export class api {
       soak_damage: api._soak_damage,
       token_vision: api._token_vision,
       unshake: api._unshake,
-      unstun: api._unstun
+      shake: api._shake,
+      unstun: api._unstun,
+      stun: api._stun,
     }
   }
 
@@ -293,7 +295,7 @@ export class api {
       }
     }
   }
-  
+
   //Get the defined pronoun or 'its' if undefined
   static _get_pronoun(actorOrToken) {
     let actor = actorOrToken
@@ -327,7 +329,9 @@ export class api {
    * - Soak Damage
    * - Token Vision
    * - (Un-)Shake
+   * - Shake
    * - (Un-)Stun
+   * - Stun
    ******************************************/
 
   // Ammo Management
@@ -409,8 +413,32 @@ export class api {
     if (version === "SWD") { unshake_swd_script(effect) }
     else if (version === "SWADE") { unshake_swade_script(effect) }
   }
+  //Shake a token
+  static async _shake(token) {
+    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
+    await succ.apply_status(token, 'shaken', true)
+        if (shakenSFX) {
+            AudioHelper.play({ src: `${shakenSFX}` }, true);
+        }
+  }
   // Unstun script
   static async _unstun(effect) {
     unstun_script(effect)
+  }
+  //Stun a token
+  static async _stun(token) {
+    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
+    if (await succ.check_status(token, 'stunned') === false) {
+      await succ.apply_status(token, 'stunned', true)
+    };
+
+    if (await succ.check_status(token, 'prone') === false) {
+      await succ.apply_status(token, 'prone', true)
+    };
+    await succ.apply_status(token, 'distracted', true)
+    await succ.apply_status(token, 'vulnerable', true)
+    if (stunnedSFX) {
+      AudioHelper.play({ src: `${stunnedSFX}` }, true);
+    }
   }
 }

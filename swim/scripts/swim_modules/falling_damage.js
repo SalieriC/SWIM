@@ -2,7 +2,7 @@
  * Falling Damage Macro.
  * This macro automatically calculates falling damage for all selected tokens.
  * It is capable of factoring in water and snow/soft surfaces as per the core rules.
- * v. 2.0.2 by SalieriC#8263, CSS of the dialogue by Kyane von Schnitzel#8654
+ * v. 2.1.0 by SalieriC#8263, CSS of the dialogue by Kyane von Schnitzel#8654
  * (Do not remove credits, even if editing.)
  *******************************************/
 

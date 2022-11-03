@@ -1,6 +1,6 @@
 /*******************************************
  * Unshake macro for SWD
- * version 4.1.4
+ * version 4.2.0
  * Original code (an eternity ago) by Shteff, altered by Forien, edited and maintained by SalieriC#8263.
  ******************************************/
 
@@ -152,17 +152,14 @@ export async function unshake_swd_script(effect = false) {
     if (await succ.check_status(token, 'shaken') === true) {
         rollUnshake()
     } else if (token) {
-        await succ.apply_status(token, 'shaken', true)
-        if (shakenSFX) {
-            AudioHelper.play({ src: `${shakenSFX}` }, true);
-        }
+        await swim.shake(token)
     }
     /// v.3.9.2 Original code by Shteff, altered by Forien and SalieriC#8263, thanks to Spacemandev for the help as well. Fixed by hirumatto.
 }
 
 /*******************************************
  * Unshake macro for SWADE
- * version 4.1.4
+ * version 4.2.0
  * Original code (an eternity ago) by Shteff, altered by Forien, edited and maintained by SalieriC#8263.
  ******************************************/
 
@@ -310,9 +307,6 @@ export async function unshake_swade_script(effect = false) {
     if (await succ.check_status(token, 'shaken') === true) {
         rollUnshake()
     } else if (token) {
-        await succ.apply_status(token, 'shaken', true)
-        if (shakenSFX) {
-            AudioHelper.play({ src: `${shakenSFX}` }, true);
-        }
+        await swim.shake(token)
     }
 }

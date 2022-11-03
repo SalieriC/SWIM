@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 1.2.3
+ * v. 1.2.4
  * By SalieriC
  ******************************************************/
  function generate_id (length = 16) {

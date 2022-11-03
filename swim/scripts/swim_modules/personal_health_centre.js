@@ -1,6 +1,6 @@
 /*******************************************
  * Personal Health Centre
- * // v.6.2.8
+ * // v.6.3.0
  * By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
  ******************************************/
 export async function personal_health_centre_script() {
@@ -131,6 +131,7 @@ export async function heal_other_gm(data) {
     const targetWounds = targetActor.system.wounds.value
     const targetWoundsMax = targetActor.system.wounds.max
     const targetFatigue = targetActor.system.fatigue.value
+    const targetHeartAttack = await succ.check_status(targetActor, 'heart-attack')
     const targetInc = await succ.check_status(targetActor, 'incapacitated')
     const targetBleedOut = await succ.check_status(targetActor, 'bleeding-out')
     const tokenID = data.tokenID
@@ -183,6 +184,12 @@ export async function heal_other_gm(data) {
             chatContent = game.i18n.format("SWIM.chatMessage-healOtherRelief", {tokenName : token.name, targetName : target.name})
             await createchatMessage()
             await succ.toggle_status(targetActor, 'shaken', false)
+        } else if (method === "heal" && targetHeartAttack === true) {
+            await succ.toggle_status(targetActor, 'heart-attack', false)
+            await succ.apply_status(targetActor, 'incapacitated', true, true)
+            await swim.play_sfx(deathSFX)
+            chatContent = game.i18n.format("SWIM.chatMessage-healOtherCureHeartAttack", {tokenName : token.name, targetName : target.name})
+            await createchatMessage()
         } else if (method === "heal" && (targetInc === true || targetBleedOut === true || (targetInc === true && targetBleedOut === true))) {
             // Remove Bleeding out/Incap before any wounds
             if (targetBleedOut) {
@@ -223,6 +230,12 @@ export async function heal_other_gm(data) {
             await succ.toggle_status(targetActor, 'shaken', false)
             await succ.toggle_status(targetActor, 'stunned', false)
             await succ.toggle_status(targetActor, 'vulnerable', false)
+        } else if (method === "heal" && targetHeartAttack === true) {
+            await succ.toggle_status(targetActor, 'heart-attack', false)
+            await succ.apply_status(targetActor, 'incapacitated', true, true)
+            await swim.play_sfx(deathSFX)
+            chatContent = game.i18n.format("SWIM.chatMessage-healOtherCureHeartAttack", {tokenName : token.name, targetName : target.name})
+            await createchatMessage()
         } else if (method === "heal") {
             amount = 2
             if (targetInc === true || targetBleedOut === true || (targetInc === true && targetBleedOut === true)) {
