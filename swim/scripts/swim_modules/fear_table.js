@@ -7,7 +7,7 @@ export async function fear_table_script() {
     const targets = Array.from(game.user.targets)
 
     // No Token is Selected
-    if ((!token || canvas.tokens.controlled.length > 1) && game.user.targets.size < 1) {
+    if (!token || canvas.tokens.controlled.length > 1 || targets.length < 1) {
         ui.notifications.error(game.i18n.localize("SWIM.notification-selectOneAndTargetAnyNumber"));
         return;
     }

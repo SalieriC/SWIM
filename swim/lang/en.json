@@ -246,7 +246,7 @@
   "SWIM.dialogue-naturalHealing":"Natural Healing",
   "SWIM.dialogue-directHealing":"Direct Healing",
   "SWIM.fear": "Fear",
-  "SWIM.dialogue-fearContent": "<p>Please make sure that the cause of the fear is selected and that all tokens who failed their fear check are targeted.</p><p>The fear modifier detected on the selected token is {{mod}}.<br />You may adjust that number below (enter the <em>total</em> fear penalty as a positive number):</p><form class='fearTable'><div class='form-group'><label>Fear Modifier</label><input type='number' name='fearModifier' value='{modPositive}' /></div></form>",
+  "SWIM.dialogue-fearContent": "<p>Please make sure that the cause of the fear is selected and that all tokens who failed their fear check are targeted.</p><p>The fear modifier detected on the selected token is {mod}.<br />You may adjust that number below (enter the <em>total</em> fear penalty as a positive number):</p><form class='fearTable'><div class='form-group'><label>Fear Modifier</label><input type='number' name='fearModifier' value='{modPositive}' /></div></form>",
   "SWIM.notification.tableNotFound": "Unable to locate '{tableName}'. Please import it into the world first.",
   "SWIM.notification.tableNameMissing": "Please set a {type} table name in the SWIM settings.",
   "SWIM.notification.markDeadAlive": "Marked as dead/alive.",
