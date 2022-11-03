@@ -5,6 +5,7 @@
 export async function fear_table_script() {
     let { speaker, _, __, token } = await swim.get_macro_variables()
     const targets = Array.from(game.user.targets)
+    const officialClass = await swim.get_official_class()
 
     // No Token is Selected
     if (!token || canvas.tokens.controlled.length > 1 || targets.length < 1) {
@@ -25,7 +26,7 @@ export async function fear_table_script() {
 
     const dialog = new Dialog({
         title: game.i18n.localize("SWIM.fear"),
-        content: game.i18n.format("SWIM.dialogue-fearContent", { mod: fearPenalty, modPositive: fearPenaltyInverse }),
+        content: game.i18n.format("SWIM.dialogue-fearContent", { officialClass: officialClass, mod: fearPenalty, modPositive: fearPenaltyInverse }),
         default: 'roll',
         buttons: {
             roll: {
@@ -84,7 +85,6 @@ export async function fear_table_script() {
     dialog.render(true);
 
     async function add_effects(total, target) {
-        const officialClass = await swim.get_official_class()
         const token = target
         const actor = target.actor
         const hesitant = actor.system.initiative.hasHesitant === true ? true : actor.items.find(i => i.name === game.i18n.localize("SWIM.hindrance-hesitant") && i.type === "hindrance")
@@ -172,11 +172,11 @@ export async function fear_table_script() {
         } else if (total >= 18 && total <= 19) {
             //Phobia, Minor
             const major = false
-            await gain_phobia(actor, major, total, officialClass)
+            await gain_phobia(actor, major, total)
         } else if (total >= 20 && total <= 21) {
             //Phobia, Major
             const major = true
-            await gain_phobia(actor, major, total, officialClass)
+            await gain_phobia(actor, major, total)
         } else if (total >= 22) {
             //Heart Attack: Vigor at -2; Success = Stunned, Failure = Death in 2d6 Rounds, healing at -4 saves him but remains Inc.
             const roll = await actor.rollAttribute('vigor', {
@@ -225,7 +225,7 @@ export async function fear_table_script() {
     }
 }
 
-async function gain_phobia(actor, major, total, officialClass) {
+async function gain_phobia(actor, major, total) {
     let hindranceCompendium = false
     let originalText = ``
     if (game.modules.get("swpf-core-rules")?.active) { hindranceCompendium = "swpf-core-rules.swpf-hindrances" }
