@@ -132,7 +132,7 @@ export class api {
     return bennyImage
   }
   // Check Bennies
-  static async _check_bennies(token) {
+  static async _check_bennies(token, notify = true) {
     let tokenBennies = token.actor.system.bennies.value;
     let gmBennies
     let totalBennies
@@ -147,7 +147,7 @@ export class api {
     if (actorCoup) { tokenBennies = tokenBennies + 1 }
 
     // Non GM token has <1 bennie OR GM user AND selected token has <1 benny
-    if ((!game.user.isGM && tokenBennies < 1) || (game.user.isGM && tokenBennies < 1 && game.user.getFlag("swade", "bennies") < 1)) {
+    if (notify === true && ((!game.user.isGM && tokenBennies < 1) || (game.user.isGM && tokenBennies < 1 && game.user.getFlag("swade", "bennies") < 1))) {
       ui.notifications.warn("You have no more bennies left.");
     }
     if (game.user.isGM) {
