@@ -5,9 +5,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+☮️ Peace in the world, or the world in pieces. 🕊️
+### Added
+- Conviction Maintenance:
+- - When a new round in combat starts, a dialogue is shown to players maintaining conviction.
+- - In the dialogue, you can choose to spend a Benny to maintain your conviction or...
+- - decline and your conviction will be deactivated.
+- - The dialogue is not shown if you are out of Bennies and conviction will end.
+- - This will only happen if the conviction condition (provided by SUCC) is active, so you can still activate conviction using another effect and maintain it indefinitely if you want.
+- New Translation strings.
+### Changed
+- The `check_bennies` function now takes an optional modifier (boolean) to stop the no more bennies left notification. It defaults to true.
 
 ## [1.1.0] - 2022-11-03
-☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Highly automated Fear Table macro. Various effects are applied to te selected targets depending on the result of the table.
 - - You need to select the cause of the fear, the macro will try to find the Fear modifier for it.

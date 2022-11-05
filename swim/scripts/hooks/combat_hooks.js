@@ -33,4 +33,47 @@ export async function combat_hooks() {
             }
         }
     })
+
+    Hooks.on("updateCombat", async (combat, updates, context, userId) => {
+        //Ask users for maintaining their Conviction
+        if (context.diff === false) { //`context.direction` is only false if a new round starts, thus making sure it only executes at the start of a new round.
+            const combatants = combat.combatants
+            for (let combatant of combatants) {
+                const actor = combatant.actor
+                const token = combatant.token
+                if (await succ.check_status(actor, 'conviction') === true) {
+                    const convEffect = await succ.get_condition_from(token, 'conviction')
+                    const initiatorId = convEffect.flags.succ.userId
+                    if (game.user.id === initiatorId) { //Only show dialogue to the player who activated conviction.
+                        let { tokenBennies, gmBennies, totalBennies } = await swim.check_bennies(token, false)
+                        if (totalBennies >= 1) {
+                            const officialClass = await swim.get_official_class()
+                            new Dialog({
+                                title: game.i18n.localize("SWIM.dialogue-convictionMaintenance"),
+                                content: game.i18n.format("SWIM.dialogue-convictionMaintenanceContent", { officialClass: officialClass, currBennies: totalBennies }),
+                                buttons: {
+                                    one: {
+                                        label: `<i class="fas fa-check"></i> ${game.i18n.localize("SWIM.dialogue-yes")}`,
+                                        callback: async (html) => {
+                                            await swim.spend_benny(token, true)
+                                        }
+                                    },
+                                    two: {
+                                        label: `<i class="fas fa-times"></i> ${game.i18n.localize("SWIM.dialogue-no")}`,
+                                        callback: async (html) => {
+                                            await succ.apply_status(actor, 'conviction', false)
+                                        }
+                                    }
+                                },
+                                default: "one"
+                            }).render(true);
+                        } else {
+                            ui.notifications.warn(game.i18n.localize("SWIM.notification-noBenniesForConviction"))
+                            await succ.apply_status(actor, 'conviction', false)
+                        }
+                    }
+                }
+            }
+        }
+    })
 }

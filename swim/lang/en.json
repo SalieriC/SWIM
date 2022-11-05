@@ -424,5 +424,8 @@
   "SWIM.dialogue-FrightenedTitle": "One or more tokens became frightened",
   "SWIM.dialogue-FrightenedContent": "Do you wish to remove the Frightened status of the following actors? (If you don't you'll have to do it manually later.)",
   "SWIM.chatMessage-healOtherCureHeartAttack": "{tokenName} saves {targetName} from dying of a heart attack. But {targetName} remains incapacitated. Any further healing rolls function normally.",
-  "SWIM.ability-fear": "Fear"
+  "SWIM.ability-fear": "Fear",
+  "SWIM.dialogue-convictionMaintenance": "Conviction Maintenance",
+  "SWIM.dialogue-convictionMaintenanceContent": "{officialClass}<p>You need to spend a Benny to maintain your conviction.<br />You have {currBennies} left. Do you wish to spend one?</p></div>",
+  "SWIM.notification-noBenniesForConviction": "You have no Bennies left to maintain your conviction."
 }
