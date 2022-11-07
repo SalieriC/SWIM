@@ -24,6 +24,7 @@ export async function effect_hooks() {
         if (condition.flags?.core?.statusId === "holding" && swim.is_first_gm() && game.combat) {
             const tokens = actor.getActiveTokens()
             const combatID = game.combat.id
+            const currentTurn = game.combat.turn
             for (let token of tokens) { await token.combatant.update({ "flags.swade.roundHeld": 1 }) }
             await swim.wait('100') // Needed to give the whole thing some time to prevent issues with jokers.
             warpgate.event.notify("SWIM.updateCombat-currentTurn", { combatID: combatID, currTurn: currentTurn })

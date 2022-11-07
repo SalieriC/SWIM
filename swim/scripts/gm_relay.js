@@ -36,7 +36,7 @@ export class gm_relay {
         const currentTurn = data.currTurn
         await swim.wait('200')
         if (currentTurn > 0) {
-            await game.combat.update({ "turn": currentTurn })
+            await combat.update({ "turn": currentTurn })
         }
     }
 }

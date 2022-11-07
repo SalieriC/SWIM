@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ☮️ Peace in the world, or the world in pieces. 🕊️
 ### Fixed
 - Skills on the power effect builder macro now get sorted properly.
+- Fixed a bug that caused the initiative tracker showing the wrong turn when toggling on the holding status effect. (SWIM will continue to provide it's own functionality as it is more expanding on the feature.)
 
 ## [1.2.0] - 2022-11-05
 ### Added
