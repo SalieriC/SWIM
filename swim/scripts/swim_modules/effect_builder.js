@@ -109,7 +109,11 @@ export async function effect_builder() {
         let targetSkills = target.actor.items.filter(s => s.type === "skill")
         if (targetSkills.length >= 1) {
             //Sort alphabetically
-            targetSkills = targetSkills.sort(function (a, b) { return a.length - b.length })
+            targetSkills.sort(function (a, b) {
+                let textA = a.name.toUpperCase();
+                let textB = b.name.toUpperCase();
+                return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+            });
             let skillOptions
             for (let skill of targetSkills) {
                 skillOptions = skillOptions + `<option value="${skill.name}">${game.i18n.localize("SUCC.dialogue.skill")} ${skill.name}</option>`
