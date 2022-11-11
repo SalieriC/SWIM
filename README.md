@@ -53,6 +53,7 @@ In this repository you can find a number of assets already.
 - **SFX:** (see their file name for origin)
 - - [Fesliyan Studios](www.fesliyanstudios.com), all used with explicit permission (thank you so much), [see their License here](https://www.fesliyanstudios.com/policy).  
 - - [Orange Free Sounds](https://orangefreesounds.com/), all used unter the [CC BY-NC 4.0 License](https://creativecommons.org/licenses/by-nc/4.0/), converted to *.ogg and possibly altered (see file name), Author is in the file names as well.  
+- - Night Vision Device sounds by [Gofrik at Soundspunos.com](https://soundspunos.com/weapons/784-night-vision-device-sound-effects.html), altered in volume and converted to OGG.  
 - **Six chase layouts**, one for foot/riding chases, one for (ground) vehicle chases and one for ship (watercraft, aircraft and spacecraft) chases/battles with regular and modern theme. You may *not* redistribute these under any circumstances. I'll may decide on a case basis to allow you to do so, please ask.  
 
 Assets are used in the macros. You can also set up your own assets in the modules configuration. There you can change file paths.
