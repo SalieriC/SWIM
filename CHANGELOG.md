@@ -6,9 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
+### Added
+- Two new SFX (night vision device toggled on and off).
+- Completely overhauled Token Vision Macro to integrate Foundry v10 features.
+- Button in lighting controls of a scene that defines the illumination level of the current scene.
+- - This will set the default selected illumination level in the Token Vision macros dialogue.
+- - If not set, the macro will make an estimation based on the darkness level of the scene.
+- New translation strings.
 ### Fixed
 - Skills on the power effect builder macro now get sorted properly.
 - Fixed a bug that caused the initiative tracker showing the wrong turn when toggling on the holding status effect. (SWIM will continue to provide it's own functionality as it is more expanding on the feature.)
+- Token Vision macro works again.
 
 ## [1.2.0] - 2022-11-05
 ### Added
