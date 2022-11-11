@@ -1,4 +1,5 @@
 import { combat_setup } from "./swim_modules/combat_setup.js";
+import { adjust_scene_light } from "./helpers/adjust_scene_light.js";
 
 export function swim_buttons(hudButtons) {
     // Add Raise Calculator Button
@@ -74,4 +75,17 @@ export function swim_buttons(hudButtons) {
         button: true,
         onClick: async () => { swim.chase_setup() }
     })
+
+    let lightHud = hudButtons.find(val => { return val.name == "lighting"; })
+    if (lightHud) {
+        if (game.user.isGM) {
+            lightHud.tools.push({
+                name: "SWIM.sceneIlluminationName",
+                title: "SWIM.sceneIlluminationName",
+                icon: "far fa-adjust",
+                button: true,
+                onClick: async () => { adjust_scene_light() }
+            })
+        }
+    }
 }
