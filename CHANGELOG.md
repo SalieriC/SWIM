@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Button in lighting controls of a scene that defines the illumination level of the current scene.
 - - This will set the default selected illumination level in the Token Vision macros dialogue.
 - - If not set, the macro will make an estimation based on the darkness level of the scene.
+- - **WARNING:** The token vision macro will **irreversibly overwrite your configured detection modes on the token!** This is because it's really hard to deal with them atm. It will set up "Basic sight" and "See heat" as the others are not that useful for SWADE right now. I will adjust that when this changes.
 - New translation strings.
 ### Fixed
 - Skills on the power effect builder macro now get sorted properly.
