@@ -1,3 +1,10 @@
+/*******************************************
+ * Token Vision macro for SWADE
+ * Created by SalieriC#8263
+ * version 5.0.0
+ * Inspired by @Sky#9453:
+ * https://github.com/Sky-Captain-13/foundry
+ ******************************************/
 export async function token_vision_script(condition = false) {
     const { speaker, _, __, token } = await swim.get_macro_variables()
 
