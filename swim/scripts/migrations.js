@@ -213,7 +213,7 @@ export async function update_migration(actor, item, currVersion) {
             let silencedfireSfx = ""
             let silencedautofireSfx = ""
             let emptyfireSfx = ""
-            if (item.system.additionalStats?.sfx?.value && typeof actor.system.additionalStats?.sfx?.value === "string") {
+            if (item.system.additionalStats?.sfx?.value && typeof item.system.additionalStats?.sfx?.value === "string") {
                 sfxSequence = item.system.additionalStats?.sfx?.value
                 let sfxSplit = sfxSequence.split("|")
                 if (item.type === "power") {

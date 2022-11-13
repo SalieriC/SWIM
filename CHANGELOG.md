@@ -5,9 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+☮️ Peace in the world, or the world in pieces. 🕊️
+## [1.2.2] - 2022-MM-DD
+### Fixed
+- Fixed a critical Bug in the migration of items. Note that this only affects items migrated manually, the migration that ran automatically was not affected and should be fine.
+- Fixed several bugs in the ammo management.
 
 ## [1.2.1] - 2022-11-11
-☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Two new SFX (night vision device toggled on and off).
 - Completely overhauled Token Vision Macro to integrate Foundry v10 features.
