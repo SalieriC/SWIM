@@ -175,10 +175,8 @@ async function shoot(selectedWeapon, selectedShots, actor) {
     const isSilenced = selectedWeapon.flags.swim.config.silenced === true;
 
     let currentAmmo;
-    let currentAmmoId;
     if (selectedWeapon.flags.swim.config.loadedAmmo) {
         currentAmmo = selectedWeapon.flags.swim.config.loadedAmmo;
-        currentAmmoId = actor.items.getName(currentAmmo).id;
     }
 
     //Calculate how many shots were fired
@@ -241,6 +239,8 @@ async function shoot(selectedWeapon, selectedShots, actor) {
     }
     //Weapon doesn't require reload action
     else if (selectedWeapon.system.autoReload === true) {
+        const currentAmmoItem = actor.items.getName(currentAmmo);
+        const currentAmmoId = currentAmmoItem?.id;
         //Throw error if no ammo is left.
         if (actor.type !== "character" && npcAmmo === false) {
             ChatMessage.create({
@@ -255,13 +255,13 @@ async function shoot(selectedWeapon, selectedShots, actor) {
                     itemWeaponName: selectedWeapon.name
                 })
             })
-        } else if (!selectedWeapon && actor.type === "character" && npcAmmo === false || !selectedWeapon && npcAmmo === true) {
+        } else if (!currentAmmoItem && actor.type === "character" && npcAmmo === false || !currentAmmoItem && npcAmmo === true) {
             return ui.notifications.error(game.i18n.localize("SWIM.notification-noRequiredAmmoAvailable"));
-        } else if (selectedWeapon.system.quantity <= 0 && actor.type === "character" && npcAmmo === false || selectedWeapon.system.quantity <= 0 && npcAmmo === true) {
+        } else if (currentAmmoItem.system.quantity <= 0 && actor.type === "character" && npcAmmo === false || currentAmmoItem.system.quantity <= 0 && npcAmmo === true) {
             return ui.notifications.error(game.i18n.format("SWIM.notification-noItemLeft", {itemName: selectedWeapon.name}));
         } else {
             //Setting new constants to overwrite the old ones
-            const currentCharges = parseInt(selectedWeapon.system.currentShots);
+            const currentCharges = currentAmmoItem.system.quantity;
             const newCharges = currentCharges - selectedShots;
             //Setting up the updates
             const updates = [
@@ -373,7 +373,7 @@ async function reloadButton(html, actor, weapons, ammo) {
 
         //get current loaded ammo
         const oldAmmoId = selectedWeapon.flags.swim.config.loadedAmmo;
-        let oldAmmo = oldAmmoId ? actor.items.getName(oldAmmoId) : selectedAmmo;
+        let oldAmmo = oldAmmoId ? actor.items.getName(oldAmmoId) : null;
         // We suspect that the ammo to reload is the same as the previously loaded one. If not chgType will tell the code to swap the ammo.
         let chgType = false;
         if (oldAmmo !== selectedAmmo) {
@@ -461,7 +461,7 @@ async function reloadButton(html, actor, weapons, ammo) {
                     "flags.swim.config.loadedAmmo": `${selectedAmmo.name}`
                 },
                 {_id: selectedAmmo.id, "system.quantity": `${newAmmo}`},
-                {_id: oldAmmo.id, "system.quantity": `${oldAmmoRefill}`},
+                {_id: oldAmmo?.id, "system.quantity": `${oldAmmoRefill}`},
             ];
 
             await actor.updateEmbeddedDocuments("Item", updates);
@@ -560,7 +560,7 @@ async function reloadButton(html, actor, weapons, ammo) {
 }
 
 async function applyActiveEffect(actor, selectedWeapon, selectedAmmo, oldAmmo) {
-    if (oldAmmo.flags?.swim?.config?.ammoActiveEffect !== undefined) {
+    if (oldAmmo?.flags?.swim?.config?.ammoActiveEffect !== undefined) {
         const effects = actor.effects.filter(e => {
             return e.flags?.swim?.ammoEffectFor === selectedWeapon.id
         });
