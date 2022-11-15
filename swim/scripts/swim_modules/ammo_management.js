@@ -258,7 +258,7 @@ async function shoot(selectedWeapon, selectedShots, actor) {
         } else if (!currentAmmoItem && actor.type === "character" && npcAmmo === false || !currentAmmoItem && npcAmmo === true) {
             return ui.notifications.error(game.i18n.localize("SWIM.notification-noRequiredAmmoAvailable"));
         } else if (currentAmmoItem.system.quantity <= 0 && actor.type === "character" && npcAmmo === false || currentAmmoItem.system.quantity <= 0 && npcAmmo === true) {
-            return ui.notifications.error(game.i18n.format("SWIM.notification-noItemLeft", {itemName: selectedWeapon.name}));
+            return ui.notifications.error(game.i18n.format("SWIM.notification-noItemLeft", {itemName: currentAmmoItem.name}));
         } else {
             //Setting new constants to overwrite the old ones
             const currentCharges = currentAmmoItem.system.quantity;
