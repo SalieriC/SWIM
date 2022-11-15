@@ -255,9 +255,9 @@ async function shoot(selectedWeapon, selectedShots, actor) {
                     itemWeaponName: selectedWeapon.name
                 })
             })
-        } else if (!currentAmmoItem && actor.type === "character" && npcAmmo === false || !currentAmmoItem && npcAmmo === true) {
+        } else if (!currentAmmoItem && (actor.type === "character" || npcAmmo === true)) {
             return ui.notifications.error(game.i18n.localize("SWIM.notification-noRequiredAmmoAvailable"));
-        } else if (currentAmmoItem.system.quantity <= 0 && actor.type === "character" && npcAmmo === false || currentAmmoItem.system.quantity <= 0 && npcAmmo === true) {
+        } else if (currentAmmoItem.system.quantity <= 0 && (actor.type === "character" || npcAmmo === true)) {
             return ui.notifications.error(game.i18n.format("SWIM.notification-noItemLeft", {itemName: currentAmmoItem.name}));
         } else {
             //Setting new constants to overwrite the old ones
