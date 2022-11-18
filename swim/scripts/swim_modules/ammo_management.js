@@ -355,8 +355,8 @@ async function reloadButton(html, actor, weapons, ammo) {
 
     //Set up variables
     const weaponImg = selectedWeapon.img;
-    const ammoImg = selectedAmmo.img;
     const npcAmmo = game.settings.get('swim', 'npcAmmo');
+    const ammoImg = npcAmmo ? selectedAmmo.img : null;
     const autoReload = selectedWeapon.system.autoReload;
 
     if (!selectedAmmo && (actor.type === 'character' || npcAmmo === true)) {
@@ -541,17 +541,12 @@ async function reloadButton(html, actor, weapons, ammo) {
             content: game.i18n.format("SWIM.chatMessage-reloadWeaponWithoutAmmoName", {
                 weaponIMG: weaponImg,
                 name: actor.name,
-                itemWeaponName: selectedWeapon.name
+                itemWeaponName: selectedWeapon.name,
+                pronoun: pronoun
             })
         })
-        const {
-            sfx_reload,
-            sfx_shot,
-            sfx_shot_auto,
-            sfx_silenced,
-            sfx_silenced_auto,
-            sfx_empty
-        } = await swim.get_weapon_sfx(selectedWeapon)
+        const all_sfx = await swim.get_weapon_sfx(selectedWeapon)
+        const sfx_reload = all_sfx.reloadSFX
         if (sfx_reload) {
             AudioHelper.play({src: `${sfx_reload}`}, true)
         }
