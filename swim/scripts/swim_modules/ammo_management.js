@@ -1,6 +1,6 @@
 /*******************************************
  * Ammo Management (Enhanced Version v2)
- * version 6.0.0
+ * version 6.0.4
  * By SalieriC#8263 & Loofou#7406. (old Dialogue Framework: Kekilla#7036)
  *
  * Makes heavy use of SFX set up on the weapon.
