@@ -163,14 +163,13 @@ async function shoot(selectedWeapon, selectedShots, actor) {
 
     const sfxDelay = game.settings.get('swim', 'sfxDelay');
 
-    const {
-        sfx_reload,
-        sfx_shot,
-        sfx_shot_auto,
-        sfx_silenced,
-        sfx_silenced_auto,
-        sfx_empty
-    } = await swim.get_weapon_sfx(selectedWeapon);
+    const all_sfx = await swim.get_weapon_sfx(selectedWeapon)
+    const sfx_reload = all_sfx.reloadSFX
+    const sfx_shot = all_sfx.fireSFX
+    const sfx_shot_auto = all_sfx.autoFireSFX
+    const sfx_silenced = all_sfx.silencedFireSFX
+    const sfx_silenced_auto = all_sfx.silencedAutoFireSFX
+    const sfx_empty = all_sfx.emptySFX
 
     const isSilenced = selectedWeapon.flags.swim.config.silenced === true;
 
@@ -633,38 +632,50 @@ async function wait(ms) {
 }
 
 async function play_sfx(isSilenced, sfx_silenced, shots, sfxDelay, sfx_silenced_auto, sfx_shot, sfx_shot_auto) {
+    console.log(
+        "isSilenced: ", isSilenced, 
+        "sfx_silenced: ", sfx_silenced, 
+        "shots: ", shots, 
+        "sfxDelay: ", sfxDelay, 
+        "sfx_silenced_auto: ", sfx_silenced_auto, 
+        "sfx_shot: ", sfx_shot, 
+        "sfx_shot_auto: ", sfx_shot_auto
+    )
+    //Get volume from setting:
+    const volume = Number(game.settings.get("swim", "defaultVolume"))
     // Play sound effects
     if (isSilenced === true && sfx_silenced) {
         if (shots === 2) {
             AudioHelper.play({src: `${sfx_silenced}`}, true);
+            swim.play_sfx(sfx_silenced, volume, true)
             await wait(`${sfxDelay}`);
-            AudioHelper.play({src: `${sfx_silenced}`}, true);
+            swim.play_sfx(sfx_silenced, volume, true)
         } else if (shots === 3) {
-            AudioHelper.play({src: `${sfx_silenced}`}, true);
+            swim.play_sfx(sfx_silenced, volume, true)
             await wait(`${sfxDelay}`);
-            AudioHelper.play({src: `${sfx_silenced}`}, true);
+            swim.play_sfx(sfx_silenced, volume, true)
             await wait(`${sfxDelay}`);
-            AudioHelper.play({src: `${sfx_silenced}`}, true);
+            swim.play_sfx(sfx_silenced, volume, true)
         } else if (shots > 3 && sfx_silenced_auto) {
-            AudioHelper.play({src: `${sfx_silenced_auto}`}, true);
+            swim.play_sfx(sfx_silenced_auto, volume, true)
         } else {
-            AudioHelper.play({src: `${sfx_silenced}`}, true);
+            swim.play_sfx(sfx_silenced, volume, true)
         }
     } else {
         if (shots === 2) {
-            AudioHelper.play({src: `${sfx_shot}`}, true);
+            swim.play_sfx(sfx_shot, volume, true)
             await wait(`${sfxDelay}`);
-            AudioHelper.play({src: `${sfx_shot}`}, true);
+            swim.play_sfx(sfx_shot, volume, true)
         } else if (shots === 3) {
-            AudioHelper.play({src: `${sfx_shot}`}, true);
+            swim.play_sfx(sfx_shot, volume, true)
             await wait(`${sfxDelay}`);
-            AudioHelper.play({src: `${sfx_shot}`}, true);
+            swim.play_sfx(sfx_shot, volume, true)
             await wait(`${sfxDelay}`);
-            AudioHelper.play({src: `${sfx_shot}`}, true);
+            swim.play_sfx(sfx_shot, volume, true)
         } else if (shots > 3 && sfx_shot_auto) {
-            AudioHelper.play({src: `${sfx_shot_auto}`}, true);
+            swim.play_sfx(sfx_shot_auto, volume, true)
         } else {
-            AudioHelper.play({src: `${sfx_shot}`}, true);
+            swim.play_sfx(sfx_shot, volume, true)
         }
     }
 }
