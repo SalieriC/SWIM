@@ -226,7 +226,7 @@ async function shoot(selectedWeapon, selectedShots, actor) {
             },
             content: game.i18n.format("SWIM.chatMessage-weaponUsed", {
                 weaponIMG: weaponImg,
-                name: actor.Name,
+                name: actor.name,
                 shots: selectedShots,
                 itemWeaponName: selectedWeapon.name,
                 newQuantity: newQuantity
