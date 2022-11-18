@@ -194,12 +194,13 @@ async function shoot(selectedWeapon, selectedShots, actor) {
         const attackSFX = meleeSFX[0];
         const frenzySFX = meleeSFX[1];
         const frenzyImpSFX = meleeSFX[2];
+        const volume = Number(game.settings.get("swim", "defaultVolume"))
         if (selectedWeapon.system.rof === 1) {
-            AudioHelper.play({src: `${attackSFX}`}, true);
+            swim.play_sfx(attackSFX, volume, true)
         } else if (rate_of_fire === 2) {
-            AudioHelper.play({src: `${frenzySFX}`}, true);
+            swim.play_sfx(frenzySFX, volume, true)
         } else if (rate_of_fire >= 3) {
-            AudioHelper.play({src: `${frenzyImpSFX}`}, true);
+            swim.play_sfx(frenzyImpSFX, volume, true)
         }
     }
     //If consumable
@@ -233,7 +234,8 @@ async function shoot(selectedWeapon, selectedShots, actor) {
         })
         // Play sound effects
         if (sfx_shot) {
-            AudioHelper.play({src: `${sfx_shot}`}, true);
+            const volume = Number(game.settings.get("swim", "defaultVolume"))
+            swim.play_sfx(sfx_shot, volume, true)
         }
     }
     //Weapon doesn't require reload action
@@ -290,7 +292,8 @@ async function shoot(selectedWeapon, selectedShots, actor) {
     else if (currentCharges < selectedShots && selectedWeapon.system.autoReload === false) {
         ui.notifications.error(game.i18n.localize("SWIM.notification-insufficientAmmoAvailable"))
         if (sfx_empty && currentCharges === 0) {
-            AudioHelper.play({src: `${sfx_empty}`}, true);
+            const volume = Number(game.settings.get("swim", "defaultVolume"))
+            swim.play_sfx(sfx_empty, volume, true)
         }
         //Normal ranged weapon
     } else {
@@ -478,7 +481,8 @@ async function reloadButton(html, actor, weapons, ammo) {
                 })
             })
             if (sfx_reload) {
-                AudioHelper.play({src: `${sfx_reload}`}, true)
+                const volume = Number(game.settings.get("swim", "defaultVolume"))
+                swim.play_sfx(sfx_reload, volume, true)
             }
 
             await applyActiveEffect(actor, selectedWeapon, selectedAmmo, oldAmmo);
@@ -507,7 +511,8 @@ async function reloadButton(html, actor, weapons, ammo) {
                 })
             })
             if (sfx_reload) {
-                AudioHelper.play({src: `${sfx_reload}`}, true)
+                const volume = Number(game.settings.get("swim", "defaultVolume"))
+                swim.play_sfx(sfx_reload, volume, true)
             }
         }
     } else {
@@ -548,7 +553,8 @@ async function reloadButton(html, actor, weapons, ammo) {
         const all_sfx = await swim.get_weapon_sfx(selectedWeapon)
         const sfx_reload = all_sfx.reloadSFX
         if (sfx_reload) {
-            AudioHelper.play({src: `${sfx_reload}`}, true)
+            const volume = Number(game.settings.get("swim", "defaultVolume"))
+            swim.play_sfx(sfx_reload, volume, true)
         }
     }
 }
@@ -641,7 +647,6 @@ async function play_sfx(isSilenced, sfx_silenced, shots, sfxDelay, sfx_silenced_
     // Play sound effects
     if (isSilenced === true && sfx_silenced) {
         if (shots === 2) {
-            AudioHelper.play({src: `${sfx_silenced}`}, true);
             swim.play_sfx(sfx_silenced, volume, true)
             await wait(`${sfxDelay}`);
             swim.play_sfx(sfx_silenced, volume, true)
