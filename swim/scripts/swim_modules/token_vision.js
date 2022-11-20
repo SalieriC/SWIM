@@ -1,7 +1,7 @@
 /*******************************************
  * Token Vision macro for SWADE
  * Created by SalieriC#8263
- * version 5.0.0
+ * version 5.1.0
  * Inspired by @Sky#9453:
  * https://github.com/Sky-Captain-13/foundry
  ******************************************/
@@ -230,10 +230,10 @@ async function changeVision(token, html, condition) {
         detectionModes[0].enabled = true
     } else if (visionType === "infraVis") {
         if (visionMode === "lightAmplification") { sfx = "modules/swim/assets/sfx/night_vision_device-off.ogg" }
-        visionRange = 0
+        visionRange = 1000
         visionRange = visionRange >= 0 ? visionRange : 0
         visionAngle = 360
-        visionMode = "basic"
+        visionMode = "infraVision"
         detectionModes[0].range = 0
         detectionModes[0].enabled = false
         detectionModes[1].range = 1000
