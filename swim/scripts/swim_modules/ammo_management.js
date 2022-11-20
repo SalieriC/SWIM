@@ -367,7 +367,7 @@ async function reloadButton(html, actor, weapons, ammo) {
     //Set up variables
     const weaponImg = selectedWeapon.img;
     const npcAmmo = game.settings.get('swim', 'npcAmmo');
-    const ammoImg = npcAmmo ? selectedAmmo.img : null;
+    const ammoImg = selectedAmmo ? selectedAmmo.img : null;
     const autoReload = selectedWeapon.system.autoReload;
 
     if (!selectedAmmo && (actor.type === 'character' || npcAmmo === true)) {
