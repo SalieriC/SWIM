@@ -384,6 +384,10 @@ async function reloadButton(html, actor, weapons, ammo) {
         //get current loaded ammo
         const oldAmmoId = selectedWeapon.flags.swim.config.loadedAmmo;
         let oldAmmo = oldAmmoId ? actor.items.getName(oldAmmoId) : null;
+        //Failsafe in case user didn't provide a loaded ammo:
+        if (oldAmmo === null) {
+            oldAmmo = selectedAmmo.name //Suspect that the loaded ammo is the same as the one used to reload.
+        }
         // We suspect that the ammo to reload is the same as the previously loaded one. If not chgType will tell the code to swap the ammo.
         let chgType = false;
         if (oldAmmo !== selectedAmmo) {
