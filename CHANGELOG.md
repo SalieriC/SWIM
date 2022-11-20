@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
 ## [1.2.2] - 2022-MM-DD
+### Added
+- New translation strings.
 ### Fixed
 - Fixed a critical Bug in the migration of items. Note that this only affects items migrated manually, the migration that ran automatically was not affected and should be fine.
 - Fixed several bugs in the ammo management.
