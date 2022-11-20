@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.2.2] - 2022-MM-DD
 ### Added
 - New translation strings.
+### Changed
+- Token vision macro always enables vision unless the "No Change" option was chosen for vision (in which case it just uses the current value).
 ### Fixed
 - Fixed a critical Bug in the migration of items. Note that this only affects items migrated manually, the migration that ran automatically was not affected and should be fine.
 - Fixed several bugs in the ammo management.

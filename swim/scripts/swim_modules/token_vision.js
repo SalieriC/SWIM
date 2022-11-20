@@ -129,6 +129,7 @@ async function changeVision(token, html, condition) {
     let visionType = html.find('[name="vision-type"]')[0].value
     let illuminationType = html.find('[name="illumination-type"]')[0].value
     let visionRange = 0
+    let enableSight = visionType === "noChange" ? token.sight.enabled : true
     let visionRangeCurr = tokenD.sight.range
     let visionAngle = tokenD.sight.angle
     let visionMode = tokenD.sight.visionMode
@@ -268,7 +269,8 @@ async function changeVision(token, html, condition) {
         sight: {
             angle: visionAngle,
             range: visionRange,
-            visionMode: visionMode
+            visionMode: visionMode,
+            enabled: enableSight
         }
     }
     await tokenD.update(updates)
