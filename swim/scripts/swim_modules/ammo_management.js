@@ -9,7 +9,7 @@
  ******************************************/
 
 export async function showWeaponAmmoDialog() {
-    const {_, __, ___, token} = await swim.get_macro_variables();
+    const { _, __, ___, token } = await swim.get_macro_variables();
     //early out
     if (!token) return ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"));
     const actor = token.actor;
@@ -156,7 +156,7 @@ async function createDialog(actor, weapons) {
     }).render(true);
 }
 
-async function shoot(selectedWeapon, selectedShots, actor) {
+async function shoot(selectedWeapon, selectedShots, actor, trait = undefined) {
     //Set up variables
     const npcAmmo = game.settings.get('swim', 'npcAmmo');
     const weaponImg = selectedWeapon.img;
@@ -205,38 +205,46 @@ async function shoot(selectedWeapon, selectedShots, actor) {
     }
     //If consumable
     else if (selectedWeapon.flags.swim.config.isConsumable === true) {
-        const currentQuantity = parseInt(selectedWeapon.system.quantity);
-        if (currentQuantity <= 0) {
-            return ui.notifications.error(game.i18n.format("SWIM.notification-noItemLeft", {itemName: selectedWeapon.name}));
-        }
-        const newQuantity = currentQuantity - selectedShots;
-        const updates = [
-            {_id: selectedWeapon.id, "system.quantity": `${newQuantity}`},
-        ];
-        // Updating the consumable weapon
-        await actor.updateEmbeddedDocuments("Item", updates);
-        // Deleting the consumable weapon if it was the last
-        if (newQuantity <= 0) {
-            selectedWeapon.delete();
-        }
-        // Creating the Chat message
-        ChatMessage.create({
-            speaker: {
-                alias: actor.name
-            },
-            content: game.i18n.format("SWIM.chatMessage-weaponUsed", {
-                weaponIMG: weaponImg,
-                name: actor.name,
-                shots: selectedShots,
-                itemWeaponName: selectedWeapon.name,
-                newQuantity: newQuantity
+        if ( //Only use consumable weapon on a proper trait so that weapons that can be used in melee don't get eaten.
+            trait === undefined || //Continues if using the dialogue
+            trait.name.toLowerCase().includes(game.i18n.localize("SWIM.skill-athletics").toLowerCase()) || //thrown weapons
+            trait.name.toLowerCase().includes(game.i18n.localize("SWIM.skill-throwing").toLowerCase()) || //thrown weapons if s/o uses old rules
+            trait.name.toLowerCase().includes(game.i18n.localize("SWIM.skill-survival").toLowerCase()) // traps I guess
+        ) {
+            const currentQuantity = parseInt(selectedWeapon.system.quantity);
+            if (currentQuantity <= 0) {
+                return ui.notifications.error(game.i18n.format("SWIM.notification-noItemLeft", { itemName: selectedWeapon.name }));
+            }
+            const newQuantity = currentQuantity - selectedShots;
+            const updates = [
+                { _id: selectedWeapon.id, "system.quantity": `${newQuantity}` },
+            ];
+            // Updating the consumable weapon
+            await actor.updateEmbeddedDocuments("Item", updates);
+            /* This is a very bad idea because BRSW cannot make rolls if the consumable was deleted.
+            // Deleting the consumable weapon if it was the last
+            if (newQuantity <= 0) {
+                selectedWeapon.delete();
+            }*/
+            // Creating the Chat message
+            ChatMessage.create({
+                speaker: {
+                    alias: actor.name
+                },
+                content: game.i18n.format("SWIM.chatMessage-weaponUsed", {
+                    weaponIMG: weaponImg,
+                    name: actor.name,
+                    shots: selectedShots,
+                    itemWeaponName: selectedWeapon.name,
+                    newQuantity: newQuantity
+                })
             })
-        })
-        // Play sound effects
-        if (sfx_shot) {
-            const volume = Number(game.settings.get("swim", "defaultVolume"))
-            swim.play_sfx(sfx_shot, volume, true)
-        }
+            // Play sound effects
+            if (sfx_shot) {
+                const volume = Number(game.settings.get("swim", "defaultVolume"))
+                swim.play_sfx(sfx_shot, volume, true)
+            }
+        } else { return }
     }
     //Weapon doesn't require reload action
     else if (selectedWeapon.system.autoReload === true) {
@@ -259,14 +267,14 @@ async function shoot(selectedWeapon, selectedShots, actor) {
         } else if (!currentAmmoItem && (actor.type === "character" || npcAmmo === true)) {
             return ui.notifications.error(game.i18n.localize("SWIM.notification-noRequiredAmmoAvailable"));
         } else if (currentAmmoItem.system.quantity <= 0 && (actor.type === "character" || npcAmmo === true)) {
-            return ui.notifications.error(game.i18n.format("SWIM.notification-noItemLeft", {itemName: currentAmmoItem.name}));
+            return ui.notifications.error(game.i18n.format("SWIM.notification-noItemLeft", { itemName: currentAmmoItem.name }));
         } else {
             //Setting new constants to overwrite the old ones
             const currentCharges = currentAmmoItem.system.quantity;
             const newCharges = currentCharges - selectedShots;
             //Setting up the updates
             const updates = [
-                {_id: currentAmmoId, "system.quantity": `${newCharges}`},
+                { _id: currentAmmoId, "system.quantity": `${newCharges}` },
             ];
             // Updating the Weapon
             await actor.updateEmbeddedDocuments("Item", updates);
@@ -298,7 +306,7 @@ async function shoot(selectedWeapon, selectedShots, actor) {
         //Normal ranged weapon
     } else {
         const updates = [
-            {_id: selectedWeapon.id, "system.currentShots": `${newCharges}`},
+            { _id: selectedWeapon.id, "system.currentShots": `${newCharges}` },
         ];
         // Updating the Weapon
         await actor.updateEmbeddedDocuments("Item", updates);
@@ -462,8 +470,8 @@ async function reloadButton(html, actor, weapons, ammo) {
                     "system.currentShots": `${newCharges}`,
                     "flags.swim.config.loadedAmmo": `${selectedAmmo.name}`
                 },
-                {_id: selectedAmmo.id, "system.quantity": `${newAmmo}`},
-                {_id: oldAmmo?.id, "system.quantity": `${oldAmmoRefill}`},
+                { _id: selectedAmmo.id, "system.quantity": `${newAmmo}` },
+                { _id: oldAmmo?.id, "system.quantity": `${oldAmmoRefill}` },
             ];
 
             await actor.updateEmbeddedDocuments("Item", updates);
@@ -493,7 +501,7 @@ async function reloadButton(html, actor, weapons, ammo) {
                     "system.currentShots": `${newCharges}`,
                     "flags.swim.config.loadedAmmo": `${selectedAmmo.name}`
                 },
-                {_id: selectedAmmo.id, "system.quantity": `${newAmmo}`},
+                { _id: selectedAmmo.id, "system.quantity": `${newAmmo}` },
             ];
 
             await actor.updateEmbeddedDocuments("Item", updates);
@@ -535,7 +543,7 @@ async function reloadButton(html, actor, weapons, ammo) {
             newCharges = maxCharges;
         }
         const updates = [
-            {_id: selectedWeapon.id, "system.currentShots": `${newCharges}`}
+            { _id: selectedWeapon.id, "system.currentShots": `${newCharges}` }
         ];
         await actor.updateEmbeddedDocuments("Item", updates);
 
@@ -583,11 +591,11 @@ async function applyActiveEffect(actor, selectedWeapon, selectedAmmo, oldAmmo) {
             if (oldKey === "system.range" && selectedWeapon.system.range.includes("/")) {
                 const oldRange = selectedWeapon.system.range;
                 let rangeNums = oldRange.split("/");
-                if(change.mode === CONST.ACTIVE_EFFECT_MODES.ADD) {
+                if (change.mode === CONST.ACTIVE_EFFECT_MODES.ADD) {
                     rangeNums[0] += change.value;
                     rangeNums[1] += change.value * 2;
                     rangeNums[2] += change.value * 4;
-                } else if(change.mode === CONST.ACTIVE_EFFECT_MODES.MULTIPLY) {
+                } else if (change.mode === CONST.ACTIVE_EFFECT_MODES.MULTIPLY) {
                     rangeNums[0] *= change.value;
                     rangeNums[1] *= change.value;
                     rangeNums[2] *= change.value;
@@ -596,7 +604,7 @@ async function applyActiveEffect(actor, selectedWeapon, selectedAmmo, oldAmmo) {
                 change.mode = CONST.ACTIVE_EFFECT_MODES.OVERRIDE;
             }
         }
-        effectObj.flags = {...effectObj.flags, ...{swim: {ammoEffectFor: selectedWeapon.id}}};
+        effectObj.flags = { ...effectObj.flags, ...{ swim: { ammoEffectFor: selectedWeapon.id } } };
 
         await CONFIG.ActiveEffect.documentClass.create(effectObj, {
             rendersheet: false,
@@ -634,12 +642,12 @@ async function wait(ms) {
 
 async function play_sfx(isSilenced, sfx_silenced, shots, sfxDelay, sfx_silenced_auto, sfx_shot, sfx_shot_auto) {
     console.log(
-        "isSilenced: ", isSilenced, 
-        "sfx_silenced: ", sfx_silenced, 
-        "shots: ", shots, 
-        "sfxDelay: ", sfxDelay, 
-        "sfx_silenced_auto: ", sfx_silenced_auto, 
-        "sfx_shot: ", sfx_shot, 
+        "isSilenced: ", isSilenced,
+        "sfx_silenced: ", sfx_silenced,
+        "shots: ", shots,
+        "sfxDelay: ", sfxDelay,
+        "sfx_silenced_auto: ", sfx_silenced_auto,
+        "sfx_shot: ", sfx_shot,
         "sfx_shot_auto: ", sfx_shot_auto
     )
     //Get volume from setting:
@@ -727,6 +735,8 @@ export async function br2_ammo_management_script(message, actor, item) {
             shots = 50;
         }
     }
+    let traitId = message.flags['betterrolls-swade2'].render_data.trait_id
+    let trait = actor.items.find(i => i.id === traitId)
 
-    await shoot(item, shots, actor);
+    await shoot(item, shots, actor, trait);
 }
