@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed a critical Bug in the migration of items. Note that this only affects items migrated manually, the migration that ran automatically was not affected and should be fine.
 - Fixed several bugs in the ammo management.
+- Bug in Power Effect Builder where a property path was declared faulty.
 
 ## [1.2.1] - 2022-11-11
 ### Added
