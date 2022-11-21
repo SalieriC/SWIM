@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 2.1.1
+ * v. 2.1.2
  * By SalieriC
  ******************************************************/
 
@@ -335,7 +335,9 @@ export async function shape_changer_gm(data) {
         let shapeShiftVFX = game.settings.get('swim', 'shapeShiftVFX');
         if (shapeShiftVFX && game.modules.get("sequencer")?.active) {
             // Initiate special effects at the token location
-            let scale = scCopy.prototypeToken.scale;
+            let scaleX = scCopy.prototypeToken.texture.scaleX;
+            let scaleY = scCopy.prototypeToken.texture.scaleY;
+            let scale = scaleX * scaleY
             let sequence = new Sequence()
                 .effect()
                 .file(`${shapeShiftVFX}`) //recommendation: "modules/jb2a_patreon/Library/2nd_Level/Misty_Step/MistyStep_01_Regular_Green_400x400.webm"
