@@ -14,8 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Token vision macro now also fully supports the systems infravision sight mode.
 ### Fixed
 - Fixed a critical Bug in the migration of items. Note that this only affects items migrated manually, the migration that ran automatically was not affected and should be fine.
-- Fixed several bugs in the ammo management.
-- Bug in Power Effect Builder where a property path was declared faulty.
+- Fixed several bugs in the ammo management which made it impossible to use.
+- Fixed a bug in Power Effect Builder where a property path was declared faulty.
+- Fixed a bug in the Shape Changer Macro that caused the user to not get permission of the actor they change into.
+- Fixed a bug in the Shape Changer Macro that caused the function to stop due to sequencer not getting a proper scale for the animation.
 
 ## [1.2.1] - 2022-11-11
 ### Added
