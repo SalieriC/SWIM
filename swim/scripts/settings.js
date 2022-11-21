@@ -81,7 +81,7 @@ export function register_settings() {
         hint: game.i18n.localize("SWIM.docReadHint"),
         type: Boolean,
         default: false,
-        scope: 'user',
+        scope: 'world',
         config: true,
     });
     game.settings.register('swim', 'allowUserConfig', {
