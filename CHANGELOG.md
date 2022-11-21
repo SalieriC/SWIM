@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug in Power Effect Builder where a property path was declared faulty.
 - Fixed a bug in the Shape Changer Macro that caused the user to not get permission of the actor they change into.
 - Fixed a bug in the Shape Changer Macro that caused the function to stop due to sequencer not getting a proper scale for the animation.
+- Fixed a few instances where functions didn't get the sound effects properly.
 
 ## [1.2.1] - 2022-11-11
 ### Added

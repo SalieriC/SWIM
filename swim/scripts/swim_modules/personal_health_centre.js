@@ -1,6 +1,6 @@
 /*******************************************
  * Personal Health Centre
- * // v.6.3.0
+ * // v.6.3.1
  * By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
  ******************************************/
 export async function personal_health_centre_script() {
@@ -296,7 +296,15 @@ export async function heal_other_gm(data) {
 
 async function healSelf(token, speaker) {
     // Setting SFX
-    const { woundedSFX, incapSFX, healSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
+    const soundEffects = await swim.get_actor_sfx(token.actor)
+    const woundedSFX = soundEffects.shakenSFX
+    const incapSFX = soundEffects.deathSFX
+    const healSFX = soundEffects.unshakeSFX
+    const stunnedSFX = soundEffects.stunnedSFX
+    const soakSFX = soundEffects.soakSFX
+    const fatiguedSFX = soundEffects.fatiguedSFX
+    const looseFatigueSFX = soundEffects.looseFatigueSFX
+    
     const pronoun = swim.get_pronoun(token)
     let potionSFX = game.settings.get(
         'swim', 'potionSFX');

@@ -1,6 +1,6 @@
 /*******************************************
  * Soak Damage
- * v. 5.2.4
+ * v. 5.2.5
  * Code by SalieriC#8263.
  *******************************************/
 export async function soak_damage_script(effect = false) {
@@ -21,7 +21,15 @@ export async function soak_damage_script(effect = false) {
     // Checking for System Benny image.
     let bennyImage = await swim.get_benny_image()
     // Setting SFX
-    const { woundedSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(actor)
+    const soundEffects = await swim.get_actor_sfx(token.actor)
+    const woundedSFX = soundEffects.shakenSFX
+    const deathSFX = soundEffects.deathSFX
+    const unshakeSFX = soundEffects.unshakeSFX
+    const stunnedSFX = soundEffects.stunnedSFX
+    const soakSFX = soundEffects.soakSFX
+    const fatiguedSFX = soundEffects.fatiguedSFX
+    const looseFatigueSFX = soundEffects.looseFatigueSFX
+
     // Injury Table for Gritty Damage
     let grit = game.settings.get(
         'swim', 'grittyDamage');
