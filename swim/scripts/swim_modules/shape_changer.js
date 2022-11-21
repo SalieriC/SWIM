@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 2.1.3
+ * v. 2.2.0
  * By SalieriC
  ******************************************************/
 
@@ -46,6 +46,16 @@ export async function shape_changer_script() {
     const officialClass = await swim.get_official_class()
 
     let totalContent = swim.get_folder_content("Shape Change Presets")
+    totalContent.sort(function (a, b) {
+        let textA = a.name.toUpperCase()
+        let textB = b.name.toUpperCase()
+        return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
+    });
+    totalContent.sort(function (a, b) {
+        let textA = a.system.stats.size
+        let textB = b.system.stats.size
+        return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
+    });
 
     async function main() {
         //Pre-selecting shape change actors based on rank:
@@ -61,7 +71,7 @@ export async function shape_changer_script() {
             if (game.settings.get("swim", "ignoreShapeChangeSizeRule") === true) { maxSize = 999 }
             //Selection for all shape change presets:
             if (size <= maxSize || game.user.isGM === true) {
-                scOptions = scOptions + `<option value="${each.id}">${each.name}</option>`;
+                scOptions = scOptions + `<option value="${each.id}">${each.name} [${game.i18n.localize("SWADE.Size")}: ${each.system.stats.size}]</option>`;
             }
         }
 
