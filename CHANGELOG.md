@@ -7,9 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
 ## [1.2.2] - 2022-MM-DD
+### Added
+- New translation strings.
+### Changed
+- Token vision macro always enables vision unless the "No Change" option was chosen for vision (in which case it just uses the current value).
+- Token vision macro now also fully supports the systems infravision sight mode.
+- Updated the deflection global actions for BRSW (thanks @grendel111111).
 ### Fixed
 - Fixed a critical Bug in the migration of items. Note that this only affects items migrated manually, the migration that ran automatically was not affected and should be fine.
-- Fixed several bugs in the ammo management.
+- Fixed several bugs in the ammo management which made it impossible to use.
+- Fixed a bug in Power Effect Builder where a property path was declared faulty.
+- Fixed a bug in the Shape Changer Macro that caused the user to not get permission of the actor they change into.
+- Fixed a bug in the Shape Changer Macro that caused the function to stop due to sequencer not getting a proper scale for the animation.
+- Fixed a few instances where functions didn't get the sound effects properly.
 
 ## [1.2.1] - 2022-11-11
 ### Added

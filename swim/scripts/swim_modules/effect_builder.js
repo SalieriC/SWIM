@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 4.3.0
+ * v. 4.3.1
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  * 
  * Powers on hold for now:
@@ -1065,7 +1065,7 @@ export async function effect_builder_gm(data) {
                     aeData.changes.push(additionalChange[0])
                 }
                 aeData.flags.swim.owner = true
-                aeData.duration.rounds = noPP ? Number(999999999999999) : data.speed.duration
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data.growth.duration
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
