@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 2.1.0
+ * v. 2.1.1
  * By SalieriC
  ******************************************************/
 
@@ -163,8 +163,8 @@ export async function shape_changer_gm(data) {
             await set_tokenSettings(scCopy, originalID);
             await update_preset(scCopy, scSize, raise, originalID);
             // Now, add permission to scCopy by copying permissions of the original actor (that should also ensure the user get the token selected automatically):
-            let perms = duplicate(actor.permission)
-            await scCopy.update({permission: perms})
+            let perms = duplicate(actor.ownership)
+            await scCopy.update({ownership: perms})
 
             await replace_token(scCopy);
             if (originalID) {
