@@ -15,6 +15,75 @@ export async function brsw_actions_setup() {
         {
             "id": "DEFLECTION-RANGE",
             "name": "Deflection (range)",
+            "button_name": "has Deflection (ranged)",
+            "skillMod": "-2",
+            "and_selector": [
+                {
+                    "selector_type": "item_type",
+                    "selector_value": "weapon"
+                },
+                {
+                    "or_selector": [
+                        {
+                            "selector_type": "skill",
+                            "selector_value": "Shooting"
+                        },
+                        {
+                            "selector_type": "skill",
+                            "selector_value": "Athletics"
+                        }
+                    ]
+                },
+                {
+                    "or_selector": [
+                        {
+                            "selector_type": "target_has_effect",
+                            "selector_value": "Deflection (range)"
+                        },
+                        {
+                            "selector_type": "target_has_effect",
+                            "selector_value": "Deflection (raise)"
+                        }
+                    ]
+                }
+            ],
+            "defaultChecked": "on",
+            "group": "The target"
+        },
+        {
+            "id": "DEFLECTION-MELEE",
+            "name": "Deflection (melee)",
+            "button_name": "has Deflection (melee)",
+            "skillMod": "-2",
+            "and_selector": [
+                {
+                    "selector_type": "item_type",
+                    "selector_value": "weapon"
+                },
+                {
+                    "selector_type": "skill",
+                    "selector_value": "Fighting"
+                },
+                {
+                    "or_selector": [
+                        {
+                            "selector_type": "target_has_effect",
+                            "selector_value": "Deflection (melee)"
+                        },
+                        {
+                            "selector_type": "target_has_effect",
+                            "selector_value": "Deflection (raise)"
+                        }
+                    ]
+                }
+            ],
+            "defaultChecked": "on",
+            "group": "The target"
+        },
+        /*
+        {
+            "id": "DEFLECTION-RANGE",
+            "name": "Deflection (range)",
             "button_name": "has Deflection",
             "skillMod": "-2",
             "and_selector": [
@@ -142,6 +211,7 @@ export async function brsw_actions_setup() {
             "defaultChecked": "on",
             "group": "Target"
         },
+        */
         //Arcane Protection:
         {
             "id": "ARCANE_PROTECTION",
