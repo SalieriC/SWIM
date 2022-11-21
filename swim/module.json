@@ -4,9 +4,9 @@
 	"description": "<p>A module providing immersion friendly macros and functionalities to enhance the gameplay experience of the SWADE System on Foundry VTT and automate some things in a non-intrusive way. <a href='https://ko-fi.com/salieric'>Please consider donating.</a> </p>",
 	"compatibility": {
 		"minimum": 10,
-		"verified": "10"
+		"verified": "10.290"
 	},
-	"version": "1.2.1",
+	"version": "1.2.2",
 	"authors": [
 		{
 		  "name": "SalieriC",
