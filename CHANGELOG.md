@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ☮️ Peace in the world, or the world in pieces. 🕊️
 ### Changed
 - Shape Change presets in the dialogue to change shape are now sorted by size and name. The options also show the size.
+### Fixed
+- Fixed a bug that caused the ToC block list of SWADE to be reset.
 
 ## [1.2.2] - 2022-11-21
 ### Added

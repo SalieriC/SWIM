@@ -95,7 +95,7 @@ Hooks.on(`ready`, () => {
     }
 
     // First Login warning
-    if (game.settings.get('swim', 'docReadV1.1.0') === false || !game.settings.get("swade", "tocBlockList")["swim.swim-actor-folders"]) {
+    if ((game.settings.get('swim', 'docReadV1.1.0') === false || !game.settings.get("swade", "tocBlockList")["swim.swim-actor-folders"]) && swim.is_first_gm()) {
         let additionalText = ""
         let unshakeWarning = "<p><strong>If you have used SWIM before: Please note that you have to replace your unshake macro with the new version in the compendium. The SWD (old) unshaken rules can now be activated in the settings.</strong></p><hr />"
         if (!game.settings.get("swade", "tocBlockList")["swim.swim-roll-tables"]) {additionalText = "<p><strong>Please note:</strong> To make some adjustments to properly use SWIM, the world will be reloaded after closing this dialogue.<p>"}
@@ -125,8 +125,12 @@ Hooks.on(`ready`, () => {
                         let readIt = html.find("#readIt")[0].checked
                         if (readIt === true) {
                             game.settings.set('swim', 'docReadV1.1.0', true)
-                            if (!game.settings.get("swade", "tocBlockList")["swim.swim-roll-tables"]) {
-                                await game.settings.set("swade", "tocBlockList", {"swim.swim-actor-folders": true, "swim.swade-immersive-macros": true, "swim.swim-roll-tables": true}) //Needed to see the folders in the compendium.
+                            let blockedTOCPacks = game.settings.get("swade", "tocBlockList")
+                            if (!blockedTOCPacks["swim.swim-roll-tables"] || !blockedTOCPacks["swim.swim-actor-folders"] || !blockedTOCPacks["swim.swade-immersive-macros"]) {
+                                blockedTOCPacks["swim.swim-actor-folders"] = true
+                                blockedTOCPacks["swim.swade-immersive-macros"] = true
+                                blockedTOCPacks["swim.swim-roll-tables"] = true
+                                await game.settings.set("swade", "tocBlockList", blockedTOCPacks) //Needed to see the folders in the compendium.
                                 window.location.reload();
                             }
                         }
