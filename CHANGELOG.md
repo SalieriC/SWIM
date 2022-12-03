@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.2.3] - 2022-12-03
 ☮️ Peace in the world, or the world in pieces. 🕊️
 ### Changed
 - Shape Change presets in the dialogue to change shape are now sorted by size and name. The options also show the size.
