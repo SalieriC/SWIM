@@ -1,7 +1,7 @@
 /*******************************************
  * Token Vision macro for SWADE
  * Created by SalieriC#8263
- * version 5.1.0
+ * version 5.2.0
  * Inspired by @Sky#9453:
  * https://github.com/Sky-Captain-13/foundry
  ******************************************/
@@ -200,9 +200,9 @@ async function changeVision(token, html, condition) {
         detectionModes[0].range = 1000
         detectionModes[0].enabled = true
     } else if (illuminationType === "dim") {
-        visionRange = 1000
+        visionRange = 25
         visionAngle = 360
-        detectionModes[0].range = 1000
+        detectionModes[0].range = 25
         detectionModes[0].enabled = true
     } else if (illuminationType === "dark") {
         visionRange = 10
@@ -224,19 +224,19 @@ async function changeVision(token, html, condition) {
     } else if (visionType === "lowLiVis") {
         if (visionMode === "lightAmplification") { sfx = "modules/swim/assets/sfx/night_vision_device-off.ogg" }
         visionMode = "darkvision"
-        visionRange = visionRange >= 1000 ? visionRange : 1000
+        visionRange = visionRange >= 25 ? visionRange : 25
         visionAngle = 360
-        detectionModes[0].range = detectionModes[0].range >= 1000 ? detectionModes[0].range : 1000
+        detectionModes[0].range = detectionModes[0].range >= 25 ? detectionModes[0].range : 25
         detectionModes[0].enabled = true
     } else if (visionType === "infraVis") {
         if (visionMode === "lightAmplification") { sfx = "modules/swim/assets/sfx/night_vision_device-off.ogg" }
-        visionRange = 1000
+        visionRange = 25
         visionRange = visionRange >= 0 ? visionRange : 0
         visionAngle = 360
         visionMode = "infraVision"
         detectionModes[0].range = 0
         detectionModes[0].enabled = false
-        detectionModes[1].range = 1000
+        detectionModes[1].range = 25
         detectionModes[1].enabled = true
     } else if (visionType === "darkVis") {
         if (visionMode === "lightAmplification") { sfx = "modules/swim/assets/sfx/night_vision_device-off.ogg" }
@@ -248,9 +248,9 @@ async function changeVision(token, html, condition) {
     } else if (visionType === "niViDi") {
         if (visionMode != "lightAmplification") { sfx = "modules/swim/assets/sfx/night_vision_device-on.ogg" }
         visionMode = "lightAmplification"
-        visionRange = visionRange >= 1000 ? visionRange : 1000
+        visionRange = visionRange >= 25 ? visionRange : 25
         visionAngle = 360
-        detectionModes[0].range = detectionModes[0].range >= 1000 ? detectionModes[0].range : 1000
+        detectionModes[0].range = detectionModes[0].range >= 25 ? detectionModes[0].range : 25
         detectionModes[0].enabled = true
     }
 
