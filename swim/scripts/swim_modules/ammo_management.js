@@ -1,6 +1,6 @@
 /*******************************************
  * Ammo Management (Enhanced Version v2)
- * version 6.0.6
+ * version 6.0.7
  * By SalieriC#8263 & Loofou#7406. (old Dialogue Framework: Kekilla#7036)
  *
  * Makes heavy use of SFX set up on the weapon.
@@ -384,10 +384,6 @@ async function reloadButton(html, actor, weapons, ammo) {
         //get current loaded ammo
         const oldAmmoId = selectedWeapon.flags.swim.config.loadedAmmo;
         let oldAmmo = oldAmmoId ? actor.items.getName(oldAmmoId) : null;
-        //Failsafe in case user didn't provide a loaded ammo:
-        if (oldAmmo === null) {
-            oldAmmo = actor.items.getName(selectedAmmo.name) //Suspect that the loaded ammo is the same as the one used to reload.
-        }
         // We suspect that the ammo to reload is the same as the previously loaded one. If not chgType will tell the code to swap the ammo.
         let chgType = false;
         if (oldAmmo !== selectedAmmo) {
@@ -398,14 +394,8 @@ async function reloadButton(html, actor, weapons, ammo) {
             return;
         }
 
-        const {
-            sfx_reload,
-            sfx_shot,
-            sfx_shot_auto,
-            sfx_silenced,
-            sfx_silenced_auto,
-            sfx_empty
-        } = await swim.get_weapon_sfx(selectedWeapon)
+        const all_sfx = await swim.get_weapon_sfx(selectedWeapon)
+        const sfx_reload = all_sfx.reloadSFX
 
         // Getting current numbers
         const currentCharges = parseInt(selectedWeapon.system.currentShots);
@@ -475,8 +465,8 @@ async function reloadButton(html, actor, weapons, ammo) {
                     "flags.swim.config.loadedAmmo": `${selectedAmmo.name}`
                 },
                 { _id: selectedAmmo.id, "system.quantity": `${newAmmo}` },
-                { _id: oldAmmo?.id, "system.quantity": `${oldAmmoRefill}` },
             ];
+            if (oldAmmo) { updates.push({ _id: oldAmmo?.id, "system.quantity": `${oldAmmoRefill}` }) }
 
             await actor.updateEmbeddedDocuments("Item", updates);
             ChatMessage.create({
@@ -562,8 +552,6 @@ async function reloadButton(html, actor, weapons, ammo) {
                 pronoun: pronoun
             })
         })
-        const all_sfx = await swim.get_weapon_sfx(selectedWeapon)
-        const sfx_reload = all_sfx.reloadSFX
         if (sfx_reload) {
             const volume = Number(game.settings.get("swim", "defaultVolume"))
             swim.play_sfx(sfx_reload, volume, true)

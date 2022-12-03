@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Shape Change presets in the dialogue to change shape are now sorted by size and name. The options also show the size.
 ### Fixed
 - Fixed a bug that caused the ToC block list of SWADE to be reset.
+- Fixed a bug in the Ammo Management that caused AEs from ammo to not be applied when the loaded ammo was empty.
+- Fixed a bug in the Ammo Management that caused the reload SFX to not be played under certain circumstances.
 
 ## [1.2.2] - 2022-11-21
 ### Added
