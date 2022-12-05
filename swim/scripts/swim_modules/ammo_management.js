@@ -1,6 +1,6 @@
 /*******************************************
  * Ammo Management (Enhanced Version v2)
- * version 6.0.7
+ * version 6.0.8
  * By SalieriC#8263 & Loofou#7406. (old Dialogue Framework: Kekilla#7036)
  *
  * Makes heavy use of SFX set up on the weapon.
@@ -370,6 +370,9 @@ async function reloadButton(html, actor, weapons, ammo) {
     const ammoImg = selectedAmmo ? selectedAmmo.img : null;
     const autoReload = selectedWeapon.system.autoReload;
 
+    const all_sfx = await swim.get_weapon_sfx(selectedWeapon)
+    const sfx_reload = all_sfx.reloadSFX
+
     if (!selectedAmmo && (actor.type === 'character' || npcAmmo === true)) {
         return ui.notifications.error(game.i18n.localize("SWIM.notification-outOfAmmo"));
     }
@@ -393,9 +396,6 @@ async function reloadButton(html, actor, weapons, ammo) {
             ui.notifications.notify(game.i18n.localize("SWIM.notification-noNeedToReload"))
             return;
         }
-
-        const all_sfx = await swim.get_weapon_sfx(selectedWeapon)
-        const sfx_reload = all_sfx.reloadSFX
 
         // Getting current numbers
         const currentCharges = parseInt(selectedWeapon.system.currentShots);
