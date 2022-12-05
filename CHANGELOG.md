@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
+### Changed
+- Changed some image styling in some chat messages in the translation strings.
 ### Fixed
 - Fixed another bug that caused the reloading sfx to not play in certain circumstances.
 
