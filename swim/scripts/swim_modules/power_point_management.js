@@ -22,6 +22,7 @@ export async function power_point_management_script(options) {
      * [] Cover Arcane Devices and such by using additional stats on powers rather than the systems real ones. (Automatically add/remove pp additional stat on flag change?)
      */
     let options = {
+        type: "someString", //"add" or "subtract"
         acorID: "someString",
         tokenID: "someString",
         powerID: "someString",
@@ -31,8 +32,9 @@ export async function power_point_management_script(options) {
         activeActions: [
             "actionID1",
             "actionID2"
-        ] //Need to get that from BRSW as well as the dialogue. It should be the alphanumeric part of the property string to the action so we can get it.
+        ], //Need to get that from BRSW as well as the dialogue. It should be the alphanumeric part of the property string to the action so we can get it.
         //Example: "2JPUbfiW" if the property path is `power.system.actions.additional["2JPUbfiW"]`
+        arcaneBackground: "someString", //Must be exakt name. Only needed if recharging and no power is given
     }
 
     // Central hub:
@@ -40,12 +42,12 @@ export async function power_point_management_script(options) {
     const token = scene.tokens.get(options.tokenID)
     const actor = token._actor
     const power = actor.items.find(p => p.id === options.powerID && p.type === "power")
-    const arcaneBackground = power.system.arcane
+    const arcaneBackground = power ? power.system.arcane : options.arcaneBackground //Use ab from options if no power is provided through the dialogue.
     // Get curr and max PP:
     let currPP = actor.system.powerPoints.general.value
     let maxPP = actor.system.powerPoints.general.max
     let isDevice = false
-    if (power.flags.swim?.config?.isDevice === true || power.system.additionalStats.devicePP?.value) { //power is a device
+    if (power && power.flags.swim?.config?.isDevice === true || power.system.additionalStats.devicePP?.value) { //power is a device
         currPP = power.system.additionalStats.devicePP?.value
         maxPP = power.system.additionalStats.devicePP?.max
         isDevice = true
@@ -53,22 +55,25 @@ export async function power_point_management_script(options) {
         currPP = actor.system.powerPoints[`${arcaneBackground}`]?.value
         maxPP = actor.system.powerPoints[`${arcaneBackground}`]?.max
     }
-    //Calculate power cost:
-    const costBasic = power.system.pp
-    const costExtra = options.extraCost ? options.extraCost : 0
-    let costsActions = []
-    let costsAllActions = 0
-    for (let actionID of options.activeActions) {
-        let actionName = power.system.actions.additional[`${actionID}`].name
-        let actionCost = power.system.actions.additional[`${actionID}`].shotsUsed
-        costsActions.push({name: actionName, cost: actionCost})
-    } for (let each of costsActions) {
-        costsAllActions = costsAllActions + each.cost
-    }
-    let costTotal = options.degree >= 1 ? costBasic + costExtra + costsAllActions : 1 //Powers cost only 1 PP on a failure.
-    if (costTotal > currPP) { //Not enough PP.
-        //Return & Error
-    } else {
-        //deduct pp
+
+    async function subtract_power_points() {
+        //Calculate power cost:
+        const costBasic = power.system.pp
+        const costExtra = options.extraCost ? options.extraCost : 0
+        let costsActions = []
+        let costsAllActions = 0
+        for (let actionID of options.activeActions) {
+            let actionName = power.system.actions.additional[`${actionID}`].name
+            let actionCost = power.system.actions.additional[`${actionID}`].shotsUsed
+            costsActions.push({ name: actionName, cost: actionCost })
+        } for (let each of costsActions) {
+            costsAllActions = costsAllActions + each.cost
+        }
+        let costTotal = options.degree >= 1 ? costBasic + costExtra + costsAllActions : 1 //Powers cost only 1 PP on a failure.
+        if (costTotal > currPP) { //Not enough PP.
+            //Return & Error
+        } else {
+            //deduct pp
+        }
     }
 }
