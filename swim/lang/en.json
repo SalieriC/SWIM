@@ -458,5 +458,6 @@
   "SWIM.tokenVision-title": "Token Vision",
   "SWIM.sceneIlluminationName": "Scene Illumination",
   "SWIM.sceneIlluminationHint": "Sets the default scenes illumination level.",
-  "SWIM.sceneIlluminationNotification": "Illumination level for this scene updated."
+  "SWIM.sceneIlluminationNotification": "Illumination level for this scene updated.",
+  "SWIM.notification-notEnoughPP": "Not enough Power Points available."
 }

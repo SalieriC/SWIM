@@ -46,6 +46,7 @@ export async function power_point_management_script(options) {
     // Get curr and max PP:
     let currPP = actor.system.powerPoints.general.value
     let maxPP = actor.system.powerPoints.general.max
+    let useGeneralPool = true
     let isDevice = false
     if (power && power.flags.swim?.config?.isDevice === true || power.system.additionalStats.devicePP?.value) { //power is a device
         currPP = power.system.additionalStats.devicePP?.value
@@ -54,6 +55,7 @@ export async function power_point_management_script(options) {
     } else if (actor.system.powerPoints[`${arcaneBackground}`]?.max != null && actor.system.powerPoints[`${arcaneBackground}`]?.value != null) { //power has AB with own PP pool
         currPP = actor.system.powerPoints[`${arcaneBackground}`]?.value
         maxPP = actor.system.powerPoints[`${arcaneBackground}`]?.max
+        useGeneralPool = true
     }
 
     async function subtract_power_points() {
@@ -71,9 +73,18 @@ export async function power_point_management_script(options) {
         }
         let costTotal = options.degree >= 1 ? costBasic + costExtra + costsAllActions : 1 //Powers cost only 1 PP on a failure.
         if (costTotal > currPP) { //Not enough PP.
-            //Return & Error
+            ui.notification.error(game.i18n.localize("SWIM.notification-notEnoughPP"))
+            return
         } else {
-            //deduct pp
+            let remainingPP = currPP - costTotal
+            let pathCurr = useGeneralPool ? `system.powerPoints.general.value` : `system.powerPoints[${arcaneBackground}].value`
+            if (isDevice) { pathCurr = `system.additionalStats.devicePP.value` }
+            let changes = {pathCurr: remainingPP}
+            if (!isDevice) {
+                await actor.update(changes)
+            } else {
+                await power.update(changes)
+            }
         }
     }
 }
