@@ -2,6 +2,7 @@
 
 import { chase_setup_script } from './swim_modules/chase_setup.js'
 import { common_bond_script } from './swim_modules/common_bond.js'
+import { craft_campfire_script } from './swim_modules/craft_campfire.js'
 import { deviation_script } from './swim_modules/deviation.js'
 import { effect_builder } from './swim_modules/effect_builder.js'
 import { falling_damage_script } from './swim_modules/falling_damage.js'
@@ -47,6 +48,7 @@ export class api {
       get_folder_content: api._get_folder_content,
       run_migration: api._run_migration,
       get_pronoun: api._get_pronoun,
+      craft_campfire: api._craft_campfire,
       // Convenience
       ammo_management: api._ammo_management,
       br2_ammo_management: api._ammo_management_br2,
@@ -307,6 +309,10 @@ export class api {
       pronoun = actor.flags.swim.config.pronoun
     }
     return pronoun
+  }
+
+  static async _craft_campfire() {
+    await craft_campfire_script()
   }
 
   /*******************************************

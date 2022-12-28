@@ -339,6 +339,8 @@
   "SWIM.button-proceed": "Proceed",
   "SWIM.ignoreShapeChangeSizeRuleName": "Ignore Shape Change Size Rule:",
   "SWIM.ignoreShapeChangeSizeRuleHint": "Enable this to ignore the characters rank when shape changing. The GM will always ignore the rank requirement, even if disabled.",
+  "SWIM.campfireImgOnName": "Lit Campfire Texture:",
+  "SWIM.campfireImgOnHint": "The texture for the lit campfire texture produced in the campfire builder.",
   "SWIM.power-other": "Other",
   "SWIM.dialogue-otherPower": "<div class='form-group'><label for='power_choice'><p>Power: </p></label><select id='power_choice'>{options}</select></div></form>",
   "SWIM.dialogue-duration": "<div class='form-group'><label for='duration_rounds'><p>Duration (rounds): </p></label><input type='number' id='duration_rounds' value='0' min='0' style='flex:1'/></input></div></form><div class='form-group'><label for='duration_minutes'><p>Duration (minutes): </p></label><input type='number' id='duration_minutes' value='0' min='0' style='flex:1'/></input></div></form>",

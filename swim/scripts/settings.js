@@ -36,6 +36,7 @@ export const settingVariables = [
     {id: 'effectBuilder-usePowerIcons', config_type: Boolean, tab: "Macro Options", default: false},
     {id: 'ammoMgm-defaultSingleReload', config_type: Boolean, tab: "Macro Options", default: false},
     {id: 'ignoreShapeChangeSizeRule', config_type: Boolean, tab: "Macro Options", default: false},
+    {id: 'campfireImgOn', config_type: window.Azzu.SettingsTypes.FilePickerVideo, tab: "Macro Options", default: "modules/jb2a_patreon/Library/Generic/Fire/Campfire/Bonfire_02_Regular_Orange_400x400.webm"},
     {id: 'br2Support', config_type: Boolean, tab: "SFX & VFX Options", default: false},
     {id: 'sfxDelay', config_type: Number, tab: "SFX & VFX Options", default: '110'},
     {id: 'defaultVolume', config_type: Number, tab: "SFX & VFX Options", default: '1' },
