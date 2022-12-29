@@ -5,7 +5,7 @@
  ******************************************/
 export async function craft_campfire_script() {
     //Get asset:
-    const campfireTextureLit = game.settings.get('swim', 'campfireImgOnName')
+    const campfireTextureLit = game.settings.get('swim', 'campfireImgOn')
     //Collecting data from warpgate:
     const data = await warpgate.crosshairs.show({
         size: 1,
@@ -16,4 +16,10 @@ export async function craft_campfire_script() {
         interval: 0, //toggles grid snapping off
         tileTexture: false,
     })
+    console.log(data)
+    warpgate.event.notify("SWIM.craftCampfire", data)
+}
+
+export async function craft_campfire_gm(data) {
+    console.log(data)
 }
