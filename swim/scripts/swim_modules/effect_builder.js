@@ -16,17 +16,6 @@
  * - Telekinesis (because of the unwilling targets problem)
  ******************************************************/
 
-function generate_id (length = 16) {
-    var result           = 'SWIM-';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
-      result += characters.charAt(Math.floor(Math.random() * 
-      charactersLength));
-    }
-   return result;
-  }
-
 export async function effect_builder() {
     if (!game.modules.get("warpgate")?.active) {
         ui.notifications.error(game.i18n.localize("SWIM.notification.warpgateRequired"));
@@ -42,7 +31,7 @@ export async function effect_builder() {
     }
 
     //Get an ID for this maintenance
-    const maintID = generate_id()
+    const maintID = swim.generate_id()
 
     //Checking if caster is also the target:
     const targetsArray = Array.from(game.user.targets)

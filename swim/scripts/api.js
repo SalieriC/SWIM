@@ -48,12 +48,13 @@ export class api {
       get_folder_content: api._get_folder_content,
       run_migration: api._run_migration,
       get_pronoun: api._get_pronoun,
-      craft_campfire: api._craft_campfire,
+      generate_id: api._generate_id,
       // Convenience
       ammo_management: api._ammo_management,
       br2_ammo_management: api._ammo_management_br2,
       chase_setup: api._chase_setup,
       common_bond: api._common_bond,
+      craft_campfire: api._craft_campfire,
       deviation: api._deviation,
       effect_builder: api._effect_builder,
       falling_damage: api._falling_damage,
@@ -86,6 +87,7 @@ export class api {
    * - Get Folder Contents
    * - Run Migration
    * - Get Pronoun
+   * - Generate ID
    ******************************************/
 
   // Get Macro Variables
@@ -311,8 +313,16 @@ export class api {
     return pronoun
   }
 
-  static async _craft_campfire() {
-    await craft_campfire_script()
+  //Generate random SWIM-ID
+  static _generate_id (length = 16) {
+    var result           = 'SWIM-';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * 
+      charactersLength));
+    }
+   return result;
   }
 
   /*******************************************
@@ -321,6 +331,7 @@ export class api {
    * - Ammo Management for BR2
    * - Chase Setup
    * - Common Bond
+   * - Craft Campfire
    * - Deviation
    * - Effect Builder
    * - Falling Damage
@@ -355,6 +366,10 @@ export class api {
   // Common Bond
   static async _common_bond() {
     common_bond_script()
+  }
+  //Craft Campfire
+  static async _craft_campfire() {
+    await craft_campfire_script()
   }
   // Deviation
   static async _deviation() {
