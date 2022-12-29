@@ -1,6 +1,6 @@
 /*******************************************
  * Craft Campfire
- * // v.1.0.0
+ * // v.1.0.1
  * By SalieriC#8263
  ******************************************/
 export async function craft_campfire_script() {
@@ -167,10 +167,10 @@ export async function craft_campfire_gm(data) {
         "height": size,
         "overhead": false,
         "z": 100,
-        "rotation": 0,
+        "rotation": Math.floor(Math.random() * (360 - 0 + 1) + 0), //random rotation,
         "alpha": 1,
         "hidden": false,
-        "locked": false,
+        "locked": true,
         "roof": false,
         "occlusion": {
             "mode": 1,
