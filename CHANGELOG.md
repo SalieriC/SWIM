@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
+### Added
+- Campfire ambient sound effect.
+- New craft campfire macro and script that allows players to create a campfire.
+- - It allows the user to select a location where then a campfire is created as a tile including a light source and ambient sound.
+- - Currently this works without a roll and no resource consumption but this may be added at a later time.
+- - Note that this works best (but does not require) [Monk's Active Tile Triggers](https://foundryvtt.com/packages/monks-active-tiles). Without this module the placed campfire tile, sound and light need to be deleted manually. With Monk's Active Tile Triggers you can simply double click the campfire to delete all of them at once.
+- New setting to choose a campfire animation or image.
 ### Changed
 - Changed some image styling in some chat messages in the translation strings.
 ### Fixed

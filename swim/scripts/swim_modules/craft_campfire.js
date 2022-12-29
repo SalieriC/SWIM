@@ -1,6 +1,6 @@
 /*******************************************
  * Craft Campfire
- * // v.0.0.1
+ * // v.1.0.0
  * By SalieriC#8263
  ******************************************/
 export async function craft_campfire_script() {
