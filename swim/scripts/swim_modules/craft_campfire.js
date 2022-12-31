@@ -19,7 +19,7 @@ export async function craft_campfire_script() {
     })
     warpgate.event.notify("SWIM.craftCampfire", data)
     if (game.modules.get('monks-active-tiles')?.active) {
-        game.notifications.notify(game.i18n.localize("SWIM.notification.campfireCreated"))
+        ui.notifications.notify(game.i18n.localize("SWIM.notification.campfireCreated"))
     }
 }
 
@@ -192,7 +192,7 @@ export async function craft_campfire_gm(data) {
         const volume = game.settings.get('swim', 'defaultVolume')
         await swim.play_sfx("modules/swim/assets/sfx/Fireball-Super-Quick-Whoosh-www.fesliyanstudios.com.ogg", volume, true)
         if (!game.modules.get('monks-active-tiles')?.active) {
-            game.notifications.warn(game.i18n.localize("SWIM.notification.monksTileTriggersNotFound"))
+            ui.notifications.warn(game.i18n.localize("SWIM.notification.monksTileTriggersNotFound"))
             console.warn("The campfires module in SWIM works best when using Monks Active Tiles module. It allows you to simply double click the campfire to delete it and its associated light and ambient sound. This is no requirement but without it you'll have to manually delete the tile, light and sound.")
         }
     }
