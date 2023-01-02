@@ -130,7 +130,7 @@ export async function craft_campfire_gm(data) {
                 "data": {
                     "entity": {
                         "id": `Scene.${data.scene._id}.AmbientLight.${light._id}`,
-                        "name": `AmbientLight: ${sound._id}`
+                        "name": `AmbientLight: ${light._id}`
                     },
                     "collection": "tiles"
                 },
