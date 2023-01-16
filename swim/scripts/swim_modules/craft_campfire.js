@@ -170,7 +170,7 @@ export async function craft_campfire_gm(data) {
         "rotation": Math.floor(Math.random() * (360 - 0 + 1) + 0), //random rotation,
         "alpha": 1,
         "hidden": false,
-        "locked": true,
+        "locked": false,
         "roof": false,
         "occlusion": {
             "mode": 1,
