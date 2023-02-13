@@ -209,7 +209,8 @@ async function shoot(selectedWeapon, selectedShots, actor, trait = undefined) {
             trait === undefined || //Continues if using the dialogue
             trait.name.toLowerCase().includes(game.i18n.localize("SWIM.skill-athletics").toLowerCase()) || //thrown weapons
             trait.name.toLowerCase().includes(game.i18n.localize("SWIM.skill-throwing").toLowerCase()) || //thrown weapons if s/o uses old rules
-            trait.name.toLowerCase().includes(game.i18n.localize("SWIM.skill-survival").toLowerCase()) || // traps I guess
+            trait.name.toLowerCase().includes(game.i18n.localize("SWIM.skill-survival").toLowerCase()) || // traps, I guess
+            trait.name.toLowerCase().includes(game.i18n.localize("SWIM.skill-stealth").toLowerCase()) || // mines, I guess
             trait.name.toLowerCase().includes(game.i18n.localize("SWIM.skill-ghost_ops-demolitions").toLowerCase()) //Savage Ghost Ops
         ) {
             const currentQuantity = parseInt(selectedWeapon.system.quantity);

@@ -464,5 +464,6 @@
   "SWIM.sceneIlluminationNotification": "Illumination level for this scene updated.",
   "SWIM.notification-notEnoughPP": "Not enough Power Points available.",
   "SWIM.notification.monksTileTriggersNotFound" : "A campfire was placed. This works best with the Monks Active Tiles. See console (F12) for details.",
-  "SWIM.notification.campfireCreated" : "Campfire created. It can be put out by double clicking it."
+  "SWIM.notification.campfireCreated" : "Campfire created. It can be put out by double clicking it.",
+  "SWIM.notification.notValidItem": "The chosen item is not valid."
 }
