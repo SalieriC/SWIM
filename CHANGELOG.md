@@ -13,8 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - - Currently this works without a roll and no resource consumption but this may be added at a later time.
 - - Note that this works best (but does not require) [Monk's Active Tile Triggers](https://foundryvtt.com/packages/monks-active-tiles). Without this module the placed campfire tile, sound and light need to be deleted manually. With Monk's Active Tile Triggers you can simply double click the campfire to delete all of them at once.
 - New setting to choose a campfire animation or image.
+- Stealth as a skill for consumable weapons, because of mines, I guess?
 ### Changed
 - Changed some image styling in some chat messages in the translation strings.
+- Consumable weapons are now deleted when the last one is used as BRSW now allows rolling damage for deleted items.
 ### Fixed
 - Fixed another bug that caused the reloading sfx to not play in certain circumstances.
 - Arcane Protection from the BRSW support will now reduce damage as it should.
