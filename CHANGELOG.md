@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
 
-## [1.3.0] - 2022-12-03
+## [1.3.0] - 2023-03-13
 ☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Campfire ambient sound effect.
