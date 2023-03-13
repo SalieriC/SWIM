@@ -218,6 +218,7 @@ export async function brsw_actions_setup() {
             "name": "Arcane Protection",
             "button_name": "has Arcane Protection",
             "skillMod": "-2",
+            "dmgMod": "-2",
             "and_selector": [
                 {
                     "selector_type": "item_type",
@@ -252,6 +253,7 @@ export async function brsw_actions_setup() {
             "name": "Arcane Protection (raise)",
             "button_name": "has Arcane Protection",
             "skillMod": "-4",
+            "dmgMod": "-4",
             "and_selector": [
                 {
                     "selector_type": "item_type",

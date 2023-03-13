@@ -1,6 +1,6 @@
 /*******************************************
  * Ammo Management (Enhanced Version v2)
- * version 6.0.8
+ * version 6.0.11
  * By SalieriC#8263 & Loofou#7406. (old Dialogue Framework: Kekilla#7036)
  *
  * Makes heavy use of SFX set up on the weapon.
@@ -209,7 +209,9 @@ async function shoot(selectedWeapon, selectedShots, actor, trait = undefined) {
             trait === undefined || //Continues if using the dialogue
             trait.name.toLowerCase().includes(game.i18n.localize("SWIM.skill-athletics").toLowerCase()) || //thrown weapons
             trait.name.toLowerCase().includes(game.i18n.localize("SWIM.skill-throwing").toLowerCase()) || //thrown weapons if s/o uses old rules
-            trait.name.toLowerCase().includes(game.i18n.localize("SWIM.skill-survival").toLowerCase()) // traps I guess
+            trait.name.toLowerCase().includes(game.i18n.localize("SWIM.skill-survival").toLowerCase()) || // traps, I guess
+            trait.name.toLowerCase().includes(game.i18n.localize("SWIM.skill-stealth").toLowerCase()) || // mines, I guess
+            trait.name.toLowerCase().includes(game.i18n.localize("SWIM.skill-ghost_ops-demolitions").toLowerCase()) //Savage Ghost Ops
         ) {
             const currentQuantity = parseInt(selectedWeapon.system.quantity);
             if (currentQuantity <= 0) {
@@ -221,11 +223,11 @@ async function shoot(selectedWeapon, selectedShots, actor, trait = undefined) {
             ];
             // Updating the consumable weapon
             await actor.updateEmbeddedDocuments("Item", updates);
-            /* This is a very bad idea because BRSW cannot make rolls if the consumable was deleted.
+            // This used to be a very bad idea because BRSW couldn't make rolls if the consumable was deleted. But nowadays it should be fine...
             // Deleting the consumable weapon if it was the last
             if (newQuantity <= 0) {
                 selectedWeapon.delete();
-            }*/
+            }
             // Creating the Chat message
             ChatMessage.create({
                 speaker: {

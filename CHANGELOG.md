@@ -6,10 +6,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
+### Added
+- Campfire ambient sound effect.
+- New craft campfire macro and script that allows players to create a campfire.
+- - It allows the user to select a location where then a campfire is created as a tile including a light source and ambient sound.
+- - Currently this works without a roll and no resource consumption but this may be added at a later time.
+- - Note that this works best (but does not require) [Monk's Active Tile Triggers](https://foundryvtt.com/packages/monks-active-tiles). Without this module the placed campfire tile, sound and light need to be deleted manually. With Monk's Active Tile Triggers you can simply double click the campfire to delete all of them at once.
+- New setting to choose a campfire animation or image.
+- Stealth as a skill for consumable weapons, because of mines, I guess?
+- Added Compatibility with the generic Unstun Bonus introduced by SWADE in v.2.2: The Unstun Script now checks for that bonus and is backwards compatible, so AEs with `SWIM.unStunMod` as change will still work. **I strongly advise to not mix and match both effect keys on the same actor as this could lead to unexpected behaviour.**
+- Effect Builder now supports the Relief: Numb power. Duration is always an hour and it is not maintained according to the rules. It sets the `system.woundsOrFatigue.ignored` property (introduced by SWADE v.2.2) to 1 or 2 with a raise.
+- Started work on a new Power Point Management. Far from being completed yet and currently unusable and inaccessible; I just lack the time to complete it right now.
 ### Changed
 - Changed some image styling in some chat messages in the translation strings.
+- Consumable weapons are now deleted when the last one is used as BRSW now allows rolling damage for deleted items.
 ### Fixed
 - Fixed another bug that caused the reloading sfx to not play in certain circumstances.
+- Arcane Protection from the BRSW support will now reduce damage as it should.
+- Fixed a bug that caused the Power Effect Builder to add Arcane Potection when Damage Field was chosen.
+- Fixed a bug in the Mighty Summoner that caused the dismiss dialogue to not appear due to changes Warpgate made. This now uses SWIM flags to make it more resilient against changes.
+- Fixed a bug in the Effect Builder that caused Pace to not get boosted on applying the Speed effect.
 
 ## [1.2.3] - 2022-12-03
 ### Changed

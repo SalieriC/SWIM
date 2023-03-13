@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 4.3.1
+ * v. 4.3.3
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  * 
  * Powers on hold for now:
@@ -15,17 +15,6 @@
  * - Light (as I'm not sure if it isn't better suited in the token vision macro)
  * - Telekinesis (because of the unwilling targets problem)
  ******************************************************/
-
-function generate_id (length = 16) {
-    var result           = 'SWIM-';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
-      result += characters.charAt(Math.floor(Math.random() * 
-      charactersLength));
-    }
-   return result;
-  }
 
 export async function effect_builder() {
     if (!game.modules.get("warpgate")?.active) {
@@ -42,7 +31,7 @@ export async function effect_builder() {
     }
 
     //Get an ID for this maintenance
-    const maintID = generate_id()
+    const maintID = swim.generate_id()
 
     //Checking if caster is also the target:
     const targetsArray = Array.from(game.user.targets)
@@ -82,6 +71,7 @@ export async function effect_builder() {
         <option value="mindLink">${game.i18n.localize("SWIM.power-mindLink")}</option>
         <option value="protection">${game.i18n.localize("SWIM.power-protection")}</option>
         <option value="puppet">${game.i18n.localize("SWIM.power-puppet")}</option>
+        <option value="relief">${game.i18n.localize("SWIM.power-relief")}</option>
         <option value="shrink">${game.i18n.localize("SWIM.power-shrink")}</option>
         <option value="silence">${game.i18n.localize("SWIM.power-silence")}</option>
         <option value="sloth">${game.i18n.localize("SWIM.power-sloth")}</option>
@@ -604,6 +594,25 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "relief") {
+                        const raise = html.find(`#raise`)[0].checked
+                        let degree = "success"
+                        if (raise === true) { degree = "raise" }
+                        durationSeconds = 3600 //always lasts an hour
+                        const data = {
+                            sceneID: sceneID,
+                            targetIDs: targetIDs,
+                            casterID: token.id,
+                            maintenanceID: maintID,
+                            type: selectedPower,
+                            relief: {
+                                degree: degree,
+                                caster: game.canvas.tokens.controlled[0].name,
+                                durationNoCombat: durationSeconds,
+                                icon: usePowerIcons ? icon : false
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "slumber") {
                         durationSeconds = concentration ? Number(120*60) : Number(60*60)
                         const data = {
@@ -730,7 +739,7 @@ export async function effect_builder() {
                     }
 
                     // If caster is not the target and noPP setting rule active, give the caster a -1 to its spellcasting:
-                    if (!casterIsTarget && !(selectedPower === "confusion" || selectedPower === "blind" || selectedPower === "sloth")) {
+                    if (!casterIsTarget && !(selectedPower === "confusion" || selectedPower === "blind" || selectedPower === "relief" || selectedPower === "sloth")) {
                         if (power) {
                             const skillName = power.system.actions.skill
                             let aeData = {
@@ -850,6 +859,8 @@ export async function effect_builder() {
                 } else if (selectedPower === "mindLink") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 } else if (selectedPower === "puppet") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
+                } else if (selectedPower === "relief") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 } else if (selectedPower === "slumber") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
@@ -1069,6 +1080,34 @@ export async function effect_builder_gm(data) {
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
+    } else if (type === "relief") {
+        for (let targetID of data.targetIDs) {
+            const target = playerScene.tokens.get(targetID)
+            let aeData = {
+                changes: [{ key: `system.woundsOrFatigue.ignored`, mode: 2, priority: undefined, value: data.relief.degree === "raise" ? 2 : 1 }],
+                icon: data.relief.icon ? data.relief.icon : "modules/swim/assets/icons/effects/m-reliefNumb.svg",
+                label: data.relief.degree === "raise" ? `${game.i18n.localize("SWIM.power-relief")}: ${game.i18n.localize("SWIM.power-relief_numb")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-relief")}: ${game.i18n.localize("SWIM.power-relief_numb")}`,
+                duration: {
+                    seconds: Number(3600), //Duration is always one hour.
+                    rounds: Number(600),
+                    startRound: target.combatant != null ? game.combat.round : 0,
+                },
+                flags: {
+                    swade: {
+                        expiration: 2
+                    },
+                    swim: {
+                        maintainedPower: false,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false,
+                        powerID: power ? power.id : undefined
+                    }
+                }
+            }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
     } else if (type === "shrink") {
         for (let targetID of data.targetIDs) {
             const target = playerScene.tokens.get(targetID)
@@ -1119,7 +1158,7 @@ export async function effect_builder_gm(data) {
             const change = data.speed.change
             const quickness = data.speed.quickness
             let aeData = {
-                changes: [{ key: `speed.stats.speed.value`, mode: 5, priority: undefined, value: target.actor.system.stats.speed.value * change }],
+                changes: [{ key: `system.stats.speed.value`, mode: 5, priority: undefined, value: target.actor.system.stats.speed.value * change }],
                 icon: data.speed.icon ? data.speed.icon : quickness ? "modules/swim/assets/icons/effects/m-quickness.svg" : "modules/swim/assets/icons/effects/m-speed.svg",
                 label: quickness ? game.i18n.localize("SWIM.power-speedQuickness") : game.i18n.localize("SWIM.power-speed"),
                 duration: {
@@ -1460,7 +1499,7 @@ export async function effect_builder_gm(data) {
             let aeData = {
                 changes: [],
                 icon: data.damageField.icon ? data.damageField.icon : "modules/swim/assets/icons/effects/m-damageField.svg",
-                label: data.damageField.damage === true ? `${game.i18n.localize("SWIM.power-damageField")} (2d6)` : `${game.i18n.localize("SWIM.power-arcaneProtection")} (2d4)`,
+                label: data.damageField.damage === true ? `${game.i18n.localize("SWIM.power-damageField")} (2d6)` : `${game.i18n.localize("SWIM.power-damageField")} (2d4)`,
                 duration: {
                     rounds: power || noPP ? Number(999999999999999) : data.damageField.duration,
                     startRound: target.combatant != null ? game.combat.round : 0,

@@ -7,6 +7,7 @@ import { summoner_gm } from './swim_modules/mighty-summoner.js'
 import { heal_other_gm } from './swim_modules/personal_health_centre.js'
 import { common_bond_gm } from './swim_modules/common_bond.js'
 import { effect_builder_gm } from './swim_modules/effect_builder.js'
+import { craft_campfire_gm } from './swim_modules/craft_campfire.js'
 import { open_swim_actor_config, open_swim_item_config } from "./swim_document_config.js";
 import { v10_migration } from "./migrations.js"
 import { effect_hooks } from "./hooks/effect_hooks.js"
@@ -183,6 +184,7 @@ Hooks.on(`ready`, () => {
     warpgate.event.watch("SWIM.updateCombat-previousTurn", gm_relay.combat_previousTurn, swim.is_first_gm)
     warpgate.event.watch("SWIM.updateCombat-nextTurn", gm_relay.combat_nextTurn, swim.is_first_gm)
     warpgate.event.watch("SWIM.updateCombat-currentTurn", gm_relay.combat_currentTurn, swim.is_first_gm)
+    warpgate.event.watch("SWIM.craftCampfire", craft_campfire_gm, swim.is_first_gm)
 
     //SWIM per-actor/item config header button
     if (game.user.isGM || game.settings.get('swim', 'allowUserConfig')) {

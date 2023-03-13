@@ -1,6 +1,6 @@
 /*******************************************
  * Unstun macro for SWADE
- * version v.4.3.0
+ * version v.4.3.1
  * Made and maintained by SalieriC#8263 using original Code from Shteff.
  ******************************************/
 
@@ -47,18 +47,21 @@ export async function unstun_script(effect = false) {
         }
 
         //Get generic actor unstun bonus and check if it is from an AE:
-        let effectName = [];
-        let effectIcon = [];
-        let effectValue = [];
+        const unStunBonus = token.actor.system.attributes.vigor.unStunBonus
+        let effectName = []
+        let effectIcon = []
+        let effectValue = []
+        let unStunBonusFromEffects = 0
         if (token.actor.effects.size > 0) {
             for (let effect of token.actor.effects) {
                 if (effect.disabled === false && !edgeNames.includes(effect.label)) { // only apply changes if effect is enabled and not made by a recognised Edge.
                     for (let change of effect.changes) {
-                        if (change.key === "SWIM.unStunMod") {
+                        if (change.key === "SWIM.unStunMod" || change.key === "system.attributes.vigor.unStunBonus") {
                             //Building array of effect names and icons that affect the unStunBonus
-                            effectName.push(effect.label);
-                            effectIcon.push(effect.icon);
-                            effectValue.push(change.value);
+                            effectName.push(effect.label)
+                            effectIcon.push(effect.icon)
+                            effectValue.push(change.value)
+                            unStunBonusFromEffects += change.value
                         }
                     }
                 }
@@ -75,6 +78,10 @@ export async function unstun_script(effect = false) {
                 }
                 edgeText += `<br/><i>${indicator} ${effectMod} <img src="${effectIcon[i]}" alt="" width="15" height="15" style="border:0" />${effectName[i]}</i>`;
             }
+        } if (unStunBonus > unStunBonusFromEffects) { //Add remaining UnstunBonus if it is bigger than those from AEs:
+            const remainingBonus = unStunBonus - unStunBonusFromEffects
+            rollWithEdge += parseFloat(remainingBonus);
+            edgeText += `<br/><i>+ ${remainingBonus} Generic Bonus</i>`;
         }
 
         // Apply +2 if Elan is present and if it is a reroll.
