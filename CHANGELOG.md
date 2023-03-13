@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Stealth as a skill for consumable weapons, because of mines, I guess?
 - Added Compatibility with the generic Unstun Bonus introduced by SWADE in v.2.2: The Unstun Script now checks for that bonus and is backwards compatible, so AEs with `SWIM.unStunMod` as change will still work. **I strongly advise to not mix and match both effect keys on the same actor as this could lead to unexpected behaviour.**
 - Effect Builder now supports the Relief: Numb power. Duration is always an hour and it is not maintained according to the rules. It sets the `system.woundsOrFatigue.ignored` property (introduced by SWADE v.2.2) to 1 or 2 with a raise.
+- Started work on a new Power Point Management. Far from being completed yet and currently unusable and inaccessible; I just lack the time to complete it right now.
 ### Changed
 - Changed some image styling in some chat messages in the translation strings.
 - Consumable weapons are now deleted when the last one is used as BRSW now allows rolling damage for deleted items.
