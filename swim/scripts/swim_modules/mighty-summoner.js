@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 1.2.5
+ * v. 1.2.6
  * By SalieriC
  ******************************************************/
  function generate_id (length = 16) {
@@ -323,7 +323,7 @@
     let commandAeData = {
         changes: [
             {
-                "key": "SWIM.unStunMod",
+                "key": "system.attributes.vigor.unStunBonus",
                 "value": "1",
                 "mode": 2
             },
