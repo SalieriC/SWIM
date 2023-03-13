@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 1.2.4
+ * v. 1.2.5
  * By SalieriC
  ******************************************************/
  function generate_id (length = 16) {
@@ -196,7 +196,8 @@
                                     maintainedSummon: true,
                                     maintenanceID: maintID,
                                     owner: false,
-                                    isSummonedCreature: true
+                                    isSummonedCreature: true,
+                                    userId: game.user.id
                                 }
                             }
                         }
@@ -235,7 +236,7 @@
         }).render(true);
     }
 
-    if ((token.document.flags?.warpgate?.sourceActorId && actor.flags?.warpgate?.control?.user) && (game.user.isGM || game.user.id === actor.flags?.warpgate?.control?.user)) {
+    if ((token.document.flags?.swim?.isSummonedCreature === true) && (game.user.isGM || game.user.id === token.document.flags?.swim?.userId)) {
         dismiss()
     } else {
         main();
@@ -270,6 +271,14 @@
     //Duration is now handled on the summoners AE, no need to do it here.
     let durationRounds = Number(999999999999999)
     let durationSeconds = Number(999999999999999)
+
+    //Add Flags to token:
+    const tokenFlags = {
+        flags: {
+            swim: data.flags.swim
+        }
+    }
+    await newToken.document.update(tokenFlags)
 
     // Setting up AE with duration that notifies about the powers end time.
     let aeData = {
