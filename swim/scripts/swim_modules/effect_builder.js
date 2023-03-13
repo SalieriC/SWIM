@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 4.3.1
+ * v. 4.3.2
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  * 
  * Powers on hold for now:
@@ -1449,7 +1449,7 @@ export async function effect_builder_gm(data) {
             let aeData = {
                 changes: [],
                 icon: data.damageField.icon ? data.damageField.icon : "modules/swim/assets/icons/effects/m-damageField.svg",
-                label: data.damageField.damage === true ? `${game.i18n.localize("SWIM.power-damageField")} (2d6)` : `${game.i18n.localize("SWIM.power-arcaneProtection")} (2d4)`,
+                label: data.damageField.damage === true ? `${game.i18n.localize("SWIM.power-damageField")} (2d6)` : `${game.i18n.localize("SWIM.power-damageField")} (2d4)`,
                 duration: {
                     rounds: power || noPP ? Number(999999999999999) : data.damageField.duration,
                     startRound: target.combatant != null ? game.combat.round : 0,

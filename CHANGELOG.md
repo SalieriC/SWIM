@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed another bug that caused the reloading sfx to not play in certain circumstances.
 - Arcane Protection from the BRSW support will now reduce damage as it should.
+- Fixed a bug that caused the Power Effect Builder to add Arcane Potection when Damage Field was chosen.
 
 ## [1.2.3] - 2022-12-03
 ### Changed
