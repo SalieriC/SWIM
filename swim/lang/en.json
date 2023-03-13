@@ -280,6 +280,8 @@
   "SWIM.power-sloth": "Sloth",
   "SWIM.power-speed": "Speed",
   "SWIM.power-speedQuickness": "Quickness",
+  "SWIM.power-relief": "Relief",
+  "SWIM.power-relief_numb": "Numb",
   "SWIM.power-easeBurden-tes": "Ease Burden",
   "SWIM.power-burden-tes": "Burden",
   "SWIM.notification-selectSingleTargetMultiToken": "Please select a single token and target one or more first.",

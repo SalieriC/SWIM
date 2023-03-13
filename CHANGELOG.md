@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New setting to choose a campfire animation or image.
 - Stealth as a skill for consumable weapons, because of mines, I guess?
 - Added Compatibility with the generic Unstun Bonus introduced by SWADE in v.2.2: The Unstun Script now checks for that bonus and is backwards compatible, so AEs with `SWIM.unStunMod` as change will still work. **I strongly advise to not mix and match both effect keys on the same actor as this could lead to unexpected behaviour.**
+- Effect Builder now supports the Relief: Numb power. Duration is always an hour and it is not maintained according to the rules. It sets the `system.woundsOrFatigue.ignored` property (introduced by SWADE v.2.2) to 1 or 2 with a raise.
 ### Changed
 - Changed some image styling in some chat messages in the translation strings.
 - Consumable weapons are now deleted when the last one is used as BRSW now allows rolling damage for deleted items.
@@ -23,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Arcane Protection from the BRSW support will now reduce damage as it should.
 - Fixed a bug that caused the Power Effect Builder to add Arcane Potection when Damage Field was chosen.
 - Fixed a bug in the Mighty Summoner that caused the dismiss dialogue to not appear due to changes Warpgate made. This now uses SWIM flags to make it more resilient against changes.
+- Fixed a bug in the Effect Builder that caused Pace to not get boosted on applying the Speed effect.
 
 ## [1.2.3] - 2022-12-03
 ### Changed
