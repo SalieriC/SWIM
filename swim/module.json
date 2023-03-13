@@ -4,9 +4,9 @@
 	"description": "<p>A module providing immersion friendly macros and functionalities to enhance the gameplay experience of the SWADE System on Foundry VTT and automate some things in a non-intrusive way. <a href='https://ko-fi.com/salieric'>Please consider donating.</a> </p>",
 	"compatibility": {
 		"minimum": 10,
-		"verified": "10.290"
+		"verified": "10.291"
 	},
-	"version": "1.2.3",
+	"version": "1.3.0",
 	"authors": [
 		{
 		  "name": "SalieriC",
@@ -26,8 +26,8 @@
 				"type": "system",
 				"manifest": "https://gitlab.com/api/v4/projects/16269883/packages/generic/swade/latest/system.json",
 				"compatibility": {
-					"minimum": "2.1.6",
-					"verified": "2.1.6"
+					"minimum": "2.2.0",
+					"verified": "2.2.5"
 				}
 			}
 		],
@@ -38,7 +38,7 @@
 				"manifest": "https://raw.githubusercontent.com/ruipin/fvtt-lib-wrapper/master/module.json",
 				"compatibility": {
 					"minimum": "1.12.10.0",
-					"verified": "1.12.10.0"
+					"verified": "1.12.12.0"
 				}
 			},
 			{
@@ -55,17 +55,17 @@
 				"type": "module",
 				"manifest": "https://raw.githubusercontent.com/SalieriC/SUCC/main/succ/module.json",
 				"compatibility": {
-					"minimum": "0.2.4",
-					"verified": "0.2.4"
+					"minimum": "0.2.6",
+					"verified": "0.2.6"
 				}
 			},
 			{
 				"id": "warpgate",
 				"type": "module",
-				"manifest": "https://github.com/trioderegion/warpgate/releases/latest/download/module.json",
+				"manifest": "https://raw.githubusercontent.com/trioderegion/warpgate/master/module.json",
 				"compatibility": {
 					"minimum": "1.14.0",
-					"verified": "1.14.0"
+					"verified": "1.16.2"
 				}
 			}
 		]

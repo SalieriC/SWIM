@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
+
+## [1.3.0] - 2022-12-03
+☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Campfire ambient sound effect.
 - New craft campfire macro and script that allows players to create a campfire.
