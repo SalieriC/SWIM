@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
+### Added
+- Added a couple failsafes to the Fear Table macro hopefully improving its ability to find what it is looking for.
 
 ## [1.3.0] - 2023-03-13
 ☮️ Peace in the world, or the world in pieces. 🕊️

@@ -1,6 +1,6 @@
 /*******************************************
  * Fear Table Macro.
- * v. 3.0.0 by SalieriC#8263, original creator unknown.
+ * v. 3.0.1 by SalieriC#8263, original creator unknown.
  *******************************************/
 export async function fear_table_script() {
     let { speaker, _, __, token } = await swim.get_macro_variables()
@@ -13,15 +13,20 @@ export async function fear_table_script() {
         return;
     }
 
-    const fearAbility = token.actor.items.find(a => a.name.toLowerCase().includes(game.i18n.localize("SWIM.ability-fear").toLowerCase()))
+    const fearAbility = token.actor.items.find(a => a.name.toLowerCase().includes(game.i18n.localize("SWIM.ability-fear").toLowerCase()) && a.type === "ability") //Failsafe in case other items include the word "Fear".
     let fearPenalty = 0
     let fearPenaltyInverse = 0
     if (fearAbility) {
         const name = fearAbility.name
         let num = name.match(/[-−+‐][0-9]/gm)
-        num = num[0].replace(/[-−‐]/gm, "-")
-        fearPenalty = Number(num)
-        fearPenaltyInverse = fearPenalty * -1 //Make the modifier positive for the table.
+        if (num) {
+            num = num[0].replace(/[-−‐]/gm, "-")
+            fearPenalty = Number(num)
+            fearPenaltyInverse = fearPenalty * -1 //Make the modifier positive for the table.
+        } else { //Failsafe in case there is no number on the found item.
+            fearPenalty = 0
+            fearPenaltyInverse = 0
+        }
     }
 
     const dialog = new Dialog({
