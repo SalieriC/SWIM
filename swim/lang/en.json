@@ -469,6 +469,12 @@
   "SWIM.notification.monksTileTriggersNotFound" : "A campfire was placed. This works best with the Monks Active Tiles. See console (F12) for details.",
   "SWIM.notification.campfireCreated" : "Campfire created. It can be put out by double clicking it.",
   "SWIM.notification.notValidItem": "The chosen item is not valid.",
+  "SWIM.blindModeName": "Blind Power Effect:",
+  "SWIM.blindModeHint": "Here you can configure the visiual effects of the Blind power effect. 'No Effect' means tokens will retain their sight, 'Full Blind' will remove all vision from the token (which means the player won't be able to target). Both other options are suitable for tactic players, they will be able to target but won't be able to easily identify what they target.",
+  "SWIM.Option-noEffect": "No Effect",
+  "SWIM.Option-senseAll": "Sense All",
+  "SWIM.Option-tremorSense": "Feel Tremor",
+  "SWIM.Option-fullBlind": "Full Blind (no vision)",
   "SWIM.tester": "Tester",
   "SWIM.dialogue-testerContent": "{officialClass}<p>Your target(s) will be tested, please select a Trait to roll the test with.</p><div class='form-group'><label for='selected_trait'><p>Trait: </p></label><select id='selected_trait'>{options}</select></div><form class='tester'><div class='form-group'><label>Modifier:</label><input type='number' name='modifier' value='0' /></div></form></div>"
 }

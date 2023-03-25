@@ -37,6 +37,13 @@ export const settingVariables = [
     {id: 'ammoMgm-defaultSingleReload', config_type: Boolean, tab: "Macro Options", default: false},
     {id: 'ignoreShapeChangeSizeRule', config_type: Boolean, tab: "Macro Options", default: false},
     {id: 'campfireImgOn', config_type: window.Azzu.SettingsTypes.FilePickerVideo, tab: "Macro Options", default: "modules/jb2a_patreon/Library/Generic/Fire/Campfire/Bonfire_02_Regular_Orange_400x400.webm"},
+    {id: 'blindMode', config_type: String, tab: 'Macro Options', default: 'none', 
+        options: [
+            {value: 'none', locaString: 'SWIM.Option-noEffect'},
+            {value: 'sense', locaString: 'SWIM.Option-senseAll'},
+            {value: 'tremor', locaString: 'SWIM.Option-tremorSense'},
+            {value: 'full', locaString: 'SWIM.Option-fullBlind'},
+        ]},
     {id: 'br2Support', config_type: Boolean, tab: "SFX & VFX Options", default: false},
     {id: 'sfxDelay', config_type: Number, tab: "SFX & VFX Options", default: '110'},
     {id: 'defaultVolume', config_type: Number, tab: "SFX & VFX Options", default: '1' },
