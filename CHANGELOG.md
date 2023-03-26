@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Added a couple failsafes to the Fear Table macro hopefully improving its ability to find what it is looking for.
+### Fixed
+- Fixed a bug where SWIM didn't pass the proper actor when damage was applied from a BRSW chat card.
 
 ## [1.3.0] - 2023-03-13
 ☮️ Peace in the world, or the world in pieces. 🕊️
