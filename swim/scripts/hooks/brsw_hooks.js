@@ -8,6 +8,14 @@ export async function brsw_hooks() {
             }
         }
     })
+    Hooks.on(`BRSW-Unstun`, async (message, actor) => {
+        if (game.settings.get("swim", "br2Support") === true) {
+            const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(actor)
+            if (unshakeSFX) {
+                await swim.play_sfx(unshakeSFX)
+            }
+        }
+    })
     /*Hooks.on("BRSW-AfterShowDamageCard", async (actor, wounds, message) => {
         console.log(actor, wounds, message)
     });*/
@@ -24,7 +32,7 @@ export async function brsw_hooks() {
             }
         }
     });
-    Hooks.on("BRSW-InjuryAEApplied", async (chatCard, effects, type) => {
+    Hooks.on("BRSW-InjuryAEApplied", async (message, effects, type) => {
         if (game.settings.get("swim", "br2Support") === true) {
             if (swim.is_first_gm() === false) { return } //Let the GM user handle things.
             for (let effect of effects) {

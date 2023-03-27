@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Added a couple failsafes to the Fear Table macro hopefully improving its ability to find what it is looking for.
+- Play the unshake SFX when successfully removing Stunned from a BRSW chat card.
+- Added full support for injuries added by BRSW. The injury active effect will...
+- - ... be given a new name so that it is in line with those placed by SWIM.
+- - ... be given a new icon unique to the injury.
+- - ... be given new effects that respect the rules a bit better, especially in the case of leg and scar injuries.
+- - ... be given the proper SWIM flags needed to remove the injuries with the Personal Health Centre.
 ### Fixed
 - Fixed a bug where SWIM didn't pass the proper actor when damage was applied from a BRSW chat card.
 
