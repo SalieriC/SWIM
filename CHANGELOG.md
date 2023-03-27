@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - - ... be given the proper SWIM flags needed to remove the injuries with the Personal Health Centre.
 - Brought back the token merging effect on the Shape Changer.
 ### Fixed
-- Fixed a bug where SWIM didn't pass the proper actor when damage was applied from a BRSW chat card.
+- Fixed a bug where SWIM didn't pass the proper actor when damage was applied from a BRSW chat card, resulting in sfx not playing.
 
 ## [1.3.0] - 2023-03-13
 ☮️ Peace in the world, or the world in pieces. 🕊️
