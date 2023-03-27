@@ -43,7 +43,7 @@ export async function brsw_hooks() {
 }
 
 async function update_brsw_injury(effect, type) {
-    console.warn("You are using SWIM with BRSW support, injury Active Effects from BRSW will be adjusted. Please report on the SWIM repository in case of unexpected results and bugs!")
+    console.log("You are using SWIM with BRSW support, injury Active Effects from BRSW will be adjusted. Please report on the SWIM repository in case of unexpected results and bugs!")
     const actor = effect.parent
     let img
     let newLabel
