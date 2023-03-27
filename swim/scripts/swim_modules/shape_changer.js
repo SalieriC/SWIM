@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 2.2.0
+ * v. 2.2.1
  * By SalieriC
  ******************************************************/
 
@@ -373,8 +373,8 @@ export async function shape_changer_gm(data) {
             let oldCombatData = token.combatant.toObject()
             await update_combat(newTokenID, oldCombatData)
         }
-        // Morph the tokens from old to new. - Currently throws tons of errors, thus disabled until further investigation.
-        //await morph_tokens(token, newToken, scCopy);
+        // Morph the tokens from old to new.
+        await morph_tokens(token, newToken, scCopy);
         // Remove the old token
         await warpgate.dismiss(token.id)
         // For GM, need to manually set the focus; include a short delay to allow the new token to appear.
@@ -392,14 +392,17 @@ export async function shape_changer_gm(data) {
         let oldAlpha = oldToken.alpha;
         let newAlpha = SWIM.ALMOST_INVISIBLE;
         // Scale:
-        let oldScale = oldToken.document.scale;
+        let oldScaleX = oldToken.document.texture.scaleX
+        let oldScaleY = oldToken.document.texture.scaleY
         // When shifting to the same creature, WarpGate wants to use the old actor ID, which has the old scale.
         // Use the scale as calculated for the desired shape change data.
-        let newScale = scCopy.prototypeToken.scale; //newToken.data.scale;
+        let newScaleX = scCopy.prototypeToken.texture.scaleX
+        let newScaleY = scCopy.prototypeToken.texture.scaleY
         // How much to adjust each attribute per iteration is the difference between the two, divided by the number of iterations (+1).
         let NUM_MORPHS = game.settings.get("swim", "shapeChange-numMorphs");
         let alphaAdj = decimal((newAlpha - oldAlpha) / (NUM_MORPHS + 1), 4);
-        let scaleAdj = decimal((newScale - oldScale) / (NUM_MORPHS + 1), 4);
+        let scaleAdjX = decimal((newScaleX - oldScaleX) / (NUM_MORPHS + 1), 4);
+        let scaleAdjY = decimal((newScaleY - oldScaleY) / (NUM_MORPHS + 1), 4);
         //console.warn('alpha: adj ' + alphaAdj + ' old ' + oldAlpha + ' new ' + newAlpha);
         //console.warn('scale: adj ' + scaleAdj + ' old ' + oldScale + ' new ' + newScale);
         for (let i=0; i<NUM_MORPHS; i++) {
@@ -407,17 +410,18 @@ export async function shape_changer_gm(data) {
             oldAlpha = decimal(oldAlpha + alphaAdj, 4);
             newAlpha = decimal(newAlpha - alphaAdj, 4);
             // For scale, only change the old token.
-            oldScale = decimal(oldScale + scaleAdj, 4);
+            oldScaleX = decimal(oldScaleX + scaleAdjX, 4);
+            oldScaleY = decimal(oldScaleY + scaleAdjY, 4);
             // Set token attribute structure values.
-            oldUpdate = { 'alpha': oldAlpha, 'scale': oldScale };
-            newUpdate = { 'alpha': newAlpha, 'scale': newScale };
+            oldUpdate = { 'alpha': oldAlpha, 'texture.scaleX': Number(oldScaleX.toFixed(10)), 'texture.scaleY': Number(oldScaleY.toFixed(10)) };
+            newUpdate = { 'alpha': newAlpha, 'texture.scaleX': Number(newScaleX.toFixed(10)), 'texture.scaleY': Number(newScaleY.toFixed(10)) };
             // Now apply them.
             await oldToken.document.update(oldUpdate);
             await newToken.document.update(newUpdate);
             //console.warn('alpha: old ' + oldAlpha + ' new ' + newAlpha + '  scale: old ' + oldScale + ' new ' + newScale);
         }
         // Final token setting (only need to do new token).
-        newUpdate = { 'alpha': 1, 'scale': newToken.document.scale };
+        newUpdate = { 'alpha': 1, 'texture.scaleX': newToken.document.scaleX, 'texture.scaleY': newToken.document.scaleY };
         await newToken.document.update(newUpdate);
     }
 
