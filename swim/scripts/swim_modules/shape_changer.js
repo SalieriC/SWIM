@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 2.2.1
+ * v. 2.3.0
  * By SalieriC
  ******************************************************/
 
@@ -106,7 +106,8 @@ export async function shape_changer_script() {
                             scID: scID,
                             mainFolder: mainFolder,
                             tokenID: token.id,
-                            userID: game.user.id
+                            userID: game.user.id,
+                            sceneID: game.scenes.current._id
                         }
                         warpgate.event.notify("SWIM.shapeChanger", data)
                     }
@@ -121,6 +122,8 @@ export async function shape_changer_script() {
                             mainFolder: mainFolder,
                             tokenID: token.id,
                             ownerActorID: ownerActorID,
+                            userID: game.user.id,
+                            sceneID: game.scenes.current._id
                         }
                         warpgate.event.notify("SWIM.shapeChanger", data)
                     }
@@ -133,6 +136,16 @@ export async function shape_changer_script() {
 }
 
 export async function shape_changer_gm(data) {
+    const sceneID = data.sceneID
+    if (sceneID != game.scenes.current._id) {
+        const user = game.users.get(data.userID)
+        const scene = game.scenes.get(sceneID)
+        ui.notifications.warn(game.i18n.format("SWIM.notification.shapeChangeOnOtherScene", {
+            userName: user.name,
+            sceneName: scene.name
+        }), { permanent: true })
+        return
+    }
     const tokenID = data.tokenID
     const token = canvas.tokens.get(tokenID)
     const actor = token.actor
@@ -176,6 +189,8 @@ export async function shape_changer_gm(data) {
             let perms = duplicate(actor.ownership)
             await scCopy.update({"ownership": perms})
 
+            await update_linked_actor(scCopy._id, actor._id) //Update the linked actor on user if it's not a GM account.
+
             await replace_token(scCopy);
             if (originalID) {
                 actor.delete()
@@ -185,6 +200,7 @@ export async function shape_changer_gm(data) {
             const ownerActor = game.actors.get(ownerActorID)
             await update_pc(ownerActor);
             await replace_token(ownerActor);
+            await update_linked_actor(ownerActorID, data.actorID) //Update the linked actor on user if it's not a GM account.
             await actor.delete();
         } else {
             console.error("Invalid shape change request from player.")
@@ -239,7 +255,7 @@ export async function shape_changer_gm(data) {
             "prototypeToken.lockRotation": actor.prototypeToken.lockRotation,
             "prototypeToken.name": actor.prototypeToken.name,
             "prototypeToken.randomImg": actor.prototypeToken.randomImg,
-            "prototypeToken.vision": actor.prototypeToken.vision,
+            //"prototypeToken.sight": actor.prototypeToken.sight, //Not sure this is a good idea because it updates sight even for creatures with superior sight. Without it though, it needs to be properly configured beforehand though...
             "prototypeToken.displayBars": actor.prototypeToken.displayBars,
             "prototypeToken.displayName": actor.prototypeToken.displayName,
             "prototypeToken.alpha": 1, //SWIM.ALMOST_INVISIBLE,
@@ -444,6 +460,14 @@ export async function shape_changer_gm(data) {
             "system.details.conviction.active": npc.system.details.conviction.active,
             "system.powerPoints.value": npc.system.powerPoints.value,
         })
+    }
+
+    async function update_linked_actor(newActorId, oldActorId) {
+        const user = game.users.get(userID)
+        if (user.isGM) { return } //Don't want to link actors for GMs.
+        else if (user.character._id === oldActorId) { //only update the linked actor, if the old one is currently linked. This prevents linkind actor when shape changing other tokens the user controls.
+            await user.update({"character": newActorId})
+        }
     }
 
     main()

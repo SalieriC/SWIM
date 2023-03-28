@@ -476,6 +476,7 @@
   "SWIM.Option-senseAll": "Sense All",
   "SWIM.Option-tremorSense": "Feel Tremor",
   "SWIM.Option-fullBlind": "Full Blind (no vision)",
+  "SWIM.notification.shapeChangeOnOtherScene" : "{userName} requested a Shape Change on scene {sceneName}. Please move there and ask them to try again.",
   "SWIM.tester": "Tester",
   "SWIM.dialogue-testerContent": "{officialClass}<p>Your target(s) will be tested, please select a Trait to roll the test with.</p><div class='form-group'><label for='selected_trait'><p>Trait: </p></label><select id='selected_trait'>{options}</select></div><form class='tester'><div class='form-group'><label>Modifier:</label><input type='number' name='modifier' value='0' /></div></form></div>"
 }

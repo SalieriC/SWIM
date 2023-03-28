@@ -16,13 +16,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - - ... be given the proper SWIM flags needed to remove the injuries with the Personal Health Centre.
 - Brought back the token merging effect on the Shape Changer.
 - Added `affected` to power effect builder flags.
+- Added a warning when a player tries to shape change while the GM is on a different scene. The Warning is displayed to the GM only.
+- Shape Changer now sets the linked actor to the one created from the Shape Changer. This happens only if the actor who changes form is currently the linked actor of the user who shape changes (to prevent allied extras from becoming linked). This will never happen for GMs.
 ### Changed
 - Invisible Power Effect doesn't turn tokens fully invisible anymore, instead they get a transparency to not hinder gameplay.
 - - The previous alpha value is saved on the token and restored when the effect is removed.
 - - As a consequence, SWIM doesn't use the invisible status effect anymore but creates its own AE.
 - - Invisible in this fashion sets Alpha to 0.25 and for Intangibility the Alpha was changed to 0.5.
+- Updated the Wiki with the new changes.
 ### Fixed
 - Fixed a bug where SWIM didn't pass the proper actor when damage was applied from a BRSW chat card, resulting in sfx not playing.
+### Breaking
+- Shape Changer doesn't adopt sight and detection modes from the original actor. This was done to prevent the assumed form from becoming worse eyesight in case the creature has superior eyesight compared to the actor assuming the form. As a result, GMs have to set sight and detection modes properly for the Shape Change template.
 
 ## [1.3.0] - 2023-03-13
 ☮️ Peace in the world, or the world in pieces. 🕊️
