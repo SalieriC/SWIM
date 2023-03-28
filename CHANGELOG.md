@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - - ... be given new effects that respect the rules a bit better, especially in the case of leg and scar injuries.
 - - ... be given the proper SWIM flags needed to remove the injuries with the Personal Health Centre.
 - Brought back the token merging effect on the Shape Changer.
+- Added `affected` to power effect builder flags.
+### Changed
+- Invisible Power Effect doesn't turn tokens fully invisible anymore, instead they get a transparency to not hinder gameplay.
+- - The previous alpha value is saved on the token and restored when the effect is removed.
+- - As a consequence, SWIM doesn't use the invisible status effect anymore but creates its own AE.
+- - Invisible in this fashion sets Alpha to 0.25 and for Intangibility the Alpha was changed to 0.5.
 ### Fixed
 - Fixed a bug where SWIM didn't pass the proper actor when damage was applied from a BRSW chat card, resulting in sfx not playing.
 

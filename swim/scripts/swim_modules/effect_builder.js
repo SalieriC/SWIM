@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 4.3.3
+ * v. 4.3.4
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  * 
  * Powers on hold for now:
@@ -761,7 +761,8 @@ export async function effect_builder() {
                                         targets: targetIDs,
                                         maintenanceID: maintID,
                                         owner: true,
-                                        powerID: power.id
+                                        powerID: power.id,
+                                        affected: false
                                     }
                                 }
                             }
@@ -939,7 +940,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }}
                 },
                 force: true
@@ -966,7 +968,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }}
                 },
                 force: true
@@ -993,7 +996,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }}
                 },
                 force: true
@@ -1020,7 +1024,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }}
                 },
                 force: true
@@ -1054,7 +1059,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1102,7 +1108,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1130,7 +1137,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1175,7 +1183,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1215,7 +1224,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1248,7 +1258,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1282,7 +1293,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1297,11 +1309,10 @@ export async function effect_builder_gm(data) {
     } else if (type === "invisibility") {
         for (let targetID of data.targetIDs) {
             const target = playerScene.tokens.get(targetID)
-            const condition = await succ.apply_status(target, 'invisible', true, false)
             let aeData = {
                 changes: [],
                 icon: data.invisibility.icon ? data.invisibility.icon : "modules/succ/assets/icons/m-invisible.svg",
-                label: data.invisibility.degree === "raise" ? `${condition.label} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${condition.label}`,
+                label: data.invisibility.degree === "raise" ? `${game.i18n.localize("SWIM.power-invisibility")} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize("SWIM.power-invisibility")}`,
                 duration: {
                     rounds: power || noPP ? Number(999999999999999) : data.invisibility.duration,
                     startRound: target.combatant != null ? game.combat.round : 0,
@@ -1311,7 +1322,7 @@ export async function effect_builder_gm(data) {
                         expiration: 3
                     },
                     succ: {
-                        updatedAE: true
+                        updatedAE: false
                     },
                     swim: {
                         maintainedPower: true,
@@ -1319,7 +1330,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1328,7 +1340,7 @@ export async function effect_builder_gm(data) {
                 aeData.flags.swim.owner = true
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data.invisibility.duration
             }
-            await condition.update(aeData)
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
     } else if (type === "confusion") {
         for (let targetID of data.targetIDs) {
@@ -1370,7 +1382,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1406,7 +1419,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1441,7 +1455,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1482,7 +1497,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1517,7 +1533,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1553,7 +1570,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1589,7 +1607,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1624,7 +1643,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1660,7 +1680,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1697,7 +1718,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1733,7 +1755,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1767,7 +1790,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1804,7 +1828,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1840,7 +1865,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1876,7 +1902,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1912,7 +1939,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1948,7 +1976,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -1984,7 +2013,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -2020,7 +2050,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -2055,7 +2086,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -2090,7 +2122,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -2125,7 +2158,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -2167,7 +2201,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }
@@ -2202,7 +2237,8 @@ export async function effect_builder_gm(data) {
                         targets: data.targetIDs,
                         maintenanceID: data.maintenanceID,
                         owner: false,
-                        powerID: power ? power.id : undefined
+                        powerID: power ? power.id : undefined,
+                        affected: true
                     }
                 }
             }

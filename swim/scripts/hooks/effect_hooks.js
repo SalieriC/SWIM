@@ -3,16 +3,12 @@ export async function effect_hooks() {
     Hooks.on(`createActiveEffect`, async (condition, _, userID) => {
         const actor = condition.parent
         // Invisible
-        if (((actor.hasPlayerOwner && condition.flags?.core?.statusId === "invisible") || condition.label.toLowerCase() === game.i18n.localize("SWIM.power-intangibility").toLowerCase()) && swim.is_first_gm()) {
+        if (((swim.is_first_gm() && condition.flags?.swim?.maintaining === game.i18n.localize(`SWIM.power-invisibility`) && condition.flags?.swim?.affected === true) || condition.flags?.swim?.maintaining === game.i18n.localize("SWIM.power-intangibility")) && swim.is_first_gm() && condition.flags?.swim?.affected === true) {
             const tokens = actor.getActiveTokens()
             for (let token of tokens) {
-                if (condition.flags?.core?.statusId === "invisible") { await token.document.update({ "alpha": 0.5 }) }
-                else if (condition.label.toLowerCase() === game.i18n.localize("SWIM.power-intangibility").toLowerCase()) { await token.document.update({ "alpha": 0.75 }) }
-            }
-        } else if (!actor.hasPlayerOwner && swim.is_first_gm() && condition.flags?.core?.statusId === "invisible") {
-            const tokens = actor.getActiveTokens()
-            for (let token of tokens) {
-                if (token.document.hidden === false) { await token.toggleVisibility() }
+                await token.document.setFlag('swim', 'originalAlpha', token.alpha) //store original alpha on token.
+                if (condition.flags?.swim?.maintaining === game.i18n.localize(`SWIM.power-invisibility`)) { await token.document.update({ "alpha": 0.25 }) }
+                else if (condition.flags?.swim?.maintaining === game.i18n.localize("SWIM.power-intangibility")) { await token.document.update({ "alpha": 0.5 }) }
             }
         }
         // Light
@@ -33,15 +29,12 @@ export async function effect_hooks() {
     Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
         const actor = condition.parent
         // Invisible
-        if (((actor.hasPlayerOwner && condition.flags?.core?.statusId === "invisible") || condition.label.toLowerCase() === game.i18n.localize("SWIM.power-intangibility").toLowerCase()) && swim.is_first_gm()) {
+        if (((swim.is_first_gm() && condition.flags?.swim?.maintaining === game.i18n.localize(`SWIM.power-invisibility`) && condition.flags?.swim?.affected === true) || condition.flags?.swim?.maintaining === game.i18n.localize("SWIM.power-intangibility")) && swim.is_first_gm() && condition.flags?.swim?.affected === true) {
             const tokens = actor.getActiveTokens()
             for (let token of tokens) {
-                await token.document.update({ "alpha": 1 })
-            }
-        } else if (!actor.hasPlayerOwner && swim.is_first_gm() && condition.flags?.core?.statusId === "invisible") {
-            const tokens = actor.getActiveTokens()
-            for (let token of tokens) {
-                if (token.document.hidden === true) { await token.toggleVisibility() }
+                const originalAlpha = token.document.flags?.swim?.originalAlpha //restore tokens alpha to previous value if available.
+                await token.document.update({ "alpha" : originalAlpha ? originalAlpha : 1 })
+                if (originalAlpha) { await token.document.unsetFlag('swim', 'originalAlpha') } //delete flag for original alpha.
             }
         }
         // Cancel maintained power
