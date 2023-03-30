@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 1.2.6
+ * v. 1.2.7
  * By SalieriC
  ******************************************************/
  function generate_id (length = 16) {
@@ -133,7 +133,7 @@
                         let updates
                         if (raise === false) {
                             updates = {
-                                token: {name: `${summonersName}'s ${scName}`},
+                                token: {name: `${summonersName}'s ${scName}`, actorLink: false}, //don't want to mess with the source actor in case it is linked.
                                 actor: {name: `${summonersName}'s ${scName}`},
                             }
                         } else if (raise === true) {

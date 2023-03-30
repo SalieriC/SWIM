@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
+### Changed
+- Mighty Summoner will now summon tokens without actor link to prevent changes to the original actor. This means GMs don't have to unlink the actors manually anymore.
 
 ## [1.4.0] - 2023-03-28
 ☮️ Peace in the world, or the world in pieces. 🕊️
