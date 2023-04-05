@@ -449,15 +449,17 @@ export class api {
   //Stun a token
   static async _stun(token) {
     const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
+    let conditionsToApply = []
     if (await succ.check_status(token, 'stunned') === false) {
-      await succ.apply_status(token, 'stunned', true)
+      conditionsToApply.push('stunned')
     };
 
     if (await succ.check_status(token, 'prone') === false) {
-      await succ.apply_status(token, 'prone', true)
+      conditionsToApply.push('prone')
     };
-    await succ.apply_status(token, 'distracted', true)
-    await succ.apply_status(token, 'vulnerable', true)
+    conditionsToApply.push('distracted')
+    conditionsToApply.push('vulnerable')
+    await succ.apply_status(token, conditionsToApply, true)
     if (stunnedSFX) {
       AudioHelper.play({ src: `${stunnedSFX}` }, true);
     }
