@@ -1,0 +1,3 @@
+[submodule "wiki"]
+	path = wiki
+	url = https://github.com/SalieriC/SWADE-Immersive-Macros.wiki.git
