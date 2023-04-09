@@ -64,15 +64,20 @@ export async function effect_builder() {
         <option value="environmentalProtection">${game.i18n.localize("SWIM.power-environmentalProtection")}</option>
         <option value="farsight">${game.i18n.localize("SWIM.power-farsight")}</option>
         <option value="fly">${game.i18n.localize("SWIM.power-fly")}</option>
+        <option value="glow">${game.i18n.localize("SWIM.powerModPrefix")}${game.i18n.localize("SWIM.powerMod-glow")}</option>
         <option value="growth">${game.i18n.localize("SWIM.power-growth")}</option>
-		<option value="intangibility">${game.i18n.localize("SWIM.power-intangibility")}</option>
+        <option value="hinder">${game.i18n.localize("SWIM.powerModPrefix")}${game.i18n.localize("SWIM.powerMod-hinder")}</option>
+        <option value="hurry">${game.i18n.localize("SWIM.powerModPrefix")}${game.i18n.localize("SWIM.powerMod-hurry")}</option>
+        <option value="intangibility">${game.i18n.localize("SWIM.power-intangibility")}</option>
         <option value="invisibility">${game.i18n.localize("SWIM.power-invisibility")}</option>
+        <option value="lingeringDamage">${game.i18n.localize("SWIM.powerModPrefix")}${game.i18n.localize("SWIM.powerMod-lingeringDamage")}</option>
         <option value="lower">${game.i18n.localize("SWIM.power-lowerTrait")}</option>
         <option value="mindLink">${game.i18n.localize("SWIM.power-mindLink")}</option>
         <option value="protection">${game.i18n.localize("SWIM.power-protection")}</option>
         <option value="puppet">${game.i18n.localize("SWIM.power-puppet")}</option>
         <option value="relief">${game.i18n.localize("SWIM.power-relief")}</option>
         <option value="shrink">${game.i18n.localize("SWIM.power-shrink")}</option>
+        <option value="shroud">${game.i18n.localize("SWIM.powerModPrefix")}${game.i18n.localize("SWIM.powerMod-shroud")}</option>
         <option value="silence">${game.i18n.localize("SWIM.power-silence")}</option>
         <option value="sloth">${game.i18n.localize("SWIM.power-sloth")}</option>
         <option value="slumber">${game.i18n.localize("SWIM.power-slumber")}</option>
@@ -713,6 +718,38 @@ export async function effect_builder() {
                             }
                         }
                         warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "glow" || selectedPower === "shroud" || selectedPower === "hurry" || selectedPower === "hinder") {
+                        const raise = false
+                        const degree = "success"
+                        const data = {
+                            sceneID: sceneID,
+                            targetIDs: targetIDs,
+                            casterID: token.id,
+                            maintenanceID: maintID,
+                            type: selectedPower,
+                            [selectedPower]: {
+                                degree: degree,
+                                duration: duration,
+                                icon: usePowerIcons ? icon : false
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "lingeringDamage") {
+                        const raise = false
+                        const degree = "success"
+                        const data = {
+                            sceneID: sceneID,
+                            targetIDs: targetIDs,
+                            casterID: token.id,
+                            maintenanceID: maintID,
+                            type: selectedPower,
+                            [selectedPower]: {
+                                degree: degree,
+                                //duration: duration,
+                                icon: usePowerIcons ? icon : false
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
                     } else if (selectedPower === "other") {
                         const raise = html.find(`#raise`)[0].checked
                         durationRounds = noPP ? Number(999999999999999) : Number(html.find(`#duration_rounds`)[0].value)
@@ -875,6 +912,10 @@ export async function effect_builder() {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
                 } else if (selectedPower === "blind") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
+                } else if (selectedPower === "glow" || selectedPower === "shroud" || selectedPower === "hurry" || selectedPower === "hinder") {
+                    if (noPP === false) { effectContent.innerHTML = game.i18n.localize("SWIM.dialogue-duration") }
+                } else if (selectedPower === "lingeringDamage") {
+                    effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
                 } else if (selectedPower === "other") {
                     let powers = token.actor.items.filter(p => p.type === "power")
                     let powerOptions
@@ -2205,6 +2246,80 @@ export async function effect_builder_gm(data) {
                         affected: true
                     }
                 }
+            }
+            if (targetID === casterID) {
+                if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
+                aeData.flags.swim.owner = true
+            }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
+    } else if (type === 'lingeringDamage' || type === "glow" || type === "shroud" || type === "hurry" || type === "hinder") {
+        for (let targetID of data.targetIDs) {
+            const target = playerScene.tokens.get(targetID)
+            let duration = {
+                rounds: power || noPP ? Number(999999999999999) : data[type].duration,
+                startRound: target.combatant != null ? game.combat.round : 0,
+            }
+            let changes = []
+            if (type === 'lingeringDamage') {
+                duration = {
+                    rounds: 0,
+                    startRound: target.combatant != null ? game.combat.round : 0,
+                    startTurn: 0,
+                    // Same trickery as with confusion
+                    turns: 1
+                }
+            } else if (type === 'glow') {
+                changes.push({
+                    key: `@Skill{Stealth}[system.die.modifier]`,
+                    mode: foundry.CONST.ACTIVE_EFFECT_MODES.ADD,
+                    priority: undefined,
+                    value: "-2"
+                })
+            } else if (type === 'shroud') {
+                changes.push({
+                    key: `@Skill{Stealth}[system.die.modifier]`,
+                    mode: foundry.CONST.ACTIVE_EFFECT_MODES.ADD,
+                    priority: undefined,
+                    value: "+1"
+                })
+            } else if (type === 'hinder') {
+                changes.push({
+                    key: `system.stats.speed.value`,
+                    mode: foundry.CONST.ACTIVE_EFFECT_MODES.ADD,
+                    priority: undefined,
+                    value: "-2"
+                })
+            } else if (type === 'hurry') {
+                changes.push({
+                    key: `system.stats.speed.value`,
+                    mode: foundry.CONST.ACTIVE_EFFECT_MODES.ADD,
+                    priority: undefined,
+                    value: "+2"
+                })
+            }
+
+            let aeData = {
+                changes: changes,
+                icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
+                label: `${game.i18n.localize(`SWIM.powerMod-${type}`)}`,
+                duration: duration,
+                flags: {
+                    swade: { expiration: CONFIG.SWADE.CONST.STATUS_EFFECT_EXPIRATION.EndOfTurnPrompt },
+                    succ: { updatedAE: true },
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.powerMod-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false,
+                        powerID: power ? power.id : undefined,
+                        affected: true
+                    }
+                }
+            }
+            if (type === 'lingeringDamage') {
+                aeData.flags.swade.expiration = CONFIG.SWADE.CONST.STATUS_EFFECT_EXPIRATION.StartOfTurnPrompt
             }
             if (targetID === casterID) {
                 if (additionalChange) { aeData.changes = aeData.changes.concat(additionalChange) }
