@@ -17,12 +17,13 @@
 	"SWIM.chaseDeckName": "Baralho de Perseguição:",
 	"SWIM.chaseDeckHint": "Este deve ser o nome exato da tabela que contém suas Cartas de Perseguição para a Macro Configuração da Caça. Esta será sua opção padrão, você ainda pode escolher outro baralho, mas esse aqui sempre estará no topo.",
 	"SWIM.injuryTableName": "Tabela de Lesões:",
-	"SWIM.injuryTableHint": "Tabela de Lesões usada para Gritty Damage. Você precisa definir o nome EXATO da Tabela de Lesões. Gritty damage é usado apenas por contas não-MJ.",
+	"SWIM.injuryTableHint": "Tabela de Lesões usada para Dano Severo. Você precisa definir o nome EXATO da Tabela de Lesões. Dano Severo é usado apenas por contas não-MJ.",
 	"SWIM.swdUnshakeName": "Usar regras do SWD para deixar de estar abalado:",
 	"SWIM.chatMessage-unshakeResultNoShakenCannotAct": " e não está mais Abalado, mas não pode agir neste turno.",
 	"SWIM.chatMessage-unshakeResultNoShakenCanAct": ", não está mais Abalado e pode agir normalmente.",
 	"SWIM.chatMessage-unshakeResultStillShaken": ", ainda está Abalado, pode apenas se mover apenas a metade de seu Movimento, mas pode tomar ações livres.",
 	"SWIM.chatMessage-unshakeResultRemainShaken": " e continua Abalado.",
 	"SWIM.dialogue-spentBennyToUnshake": "<p><img style=\"border: none;\" src=\"{bennyImage}\" height=\"25\" /> {player} gastou um Bene e {name} pode agir normalmente agora.</p>",
-	"SWIM.Config_UnshakeSFXName": "SFX de deixar de estar abalado:"
+	"SWIM.Config_UnshakeSFXName": "SFX de deixar de estar abalado:",
+	"SWIM.grittyDamageName": "Usar Dano Severo?"
 }
