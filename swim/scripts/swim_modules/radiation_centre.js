@@ -1,6 +1,6 @@
 /*******************************************
  * Radiation Centre Macro
- * version 3.0.1
+ * version 3.1.0
  * By SalieriC#8263.
  ******************************************/
 export async function radiation_centre_script() {
@@ -50,7 +50,7 @@ export async function radiation_centre_script() {
         // Apply +2 if Elan is present and if it is a reroll.
         if (typeof elanBonus === "number") {
             rollWithEdge += 2;
-            edgeText = edgeText + `<br/><i>+ Elan</i>.`;
+            edgeText = edgeText + `<br/><i>+ ${game.i18n.localize("SWIM.edge-elan")}</i>.`;
         }
 
         // Apply Rad Resistance Additional Stat.
@@ -59,10 +59,10 @@ export async function radiation_centre_script() {
         let radResVal = `${radRes}`;
         if (radRes >= 1) { radResVal = `+${radRes}`; }
         else if (radRes <= -1) { radResVal = `-${radRes}`; }
-        if (radRes && radRes != 0) { edgeText = edgeText + `<br/><i>including ${radResVal} from current Rad Resistance</i>.`; }
+        if (radRes && radRes != 0) { edgeText = edgeText + `${game.i18n.format("SWIM.chatMessage-includingRadRes", {radResVal: radResVal})}`; }
 
         // Roll Vigor
-        let chatData = `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge} </span>`;
+        let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultRoll", {name: actorAlias, rollWithEdge: rollWithEdge});
         rounded = Math.floor(rollWithEdge / 4);
 
         // Making rounded 0 if it would be negative.
@@ -75,15 +75,15 @@ export async function radiation_centre_script() {
         if (token.actor.system.wildcard === false && token.actor.type === "npc") { wildCard = false }
         let critFail = await swim.critFail_check(wildCard, r)
         if (critFail === true) {
-            ui.notifications.notify("You've rolled a Critical Failure! Applying Fatigue from Radiation now...");
-            let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure! </span>`;
+            ui.notifications.notify(game.i18n.localize("SWIM.notification-critFailApplyFatigue"));
+            let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultCritFail", {name: actorAlias});
             applyFatigue();
             ChatMessage.create({ content: chatData });
         }
         else {
             if (rounded < 1) {
                 let { _, __, totalBennies } = await swim.check_bennies(token)
-                chatData += ` and would take a Level of Fatigue from Radiation.`;
+                chatData += ` ${game.i18n.format("SWIM.chatMessage-wouldTakeFatigueFromSource", {source: game.i18n.localize("SWIM.hazard-radiation").toLowerCase()})}`;
                 if (soldier && soldierSwitch === false) {
                     dialogReroll();
                 } else if (totalBennies < 1) {
@@ -93,7 +93,7 @@ export async function radiation_centre_script() {
                     dialogReroll();
                 }
             } else if (rounded >= 1) {
-                chatData += ` and takes no Fatigue from radiation.`;
+                chatData += ` ${game.i18n.format("SWIM.chatMessage-takesNoFatigueFromSource", {source: game.i18n.localize("SWIM.hazard-radiation").toLowerCase()})}`;
             }
             chatData += ` ${edgeText}`;
 
@@ -112,10 +112,6 @@ export async function radiation_centre_script() {
         }
         else {
             token.actor.update({ "system.fatigue.value": fm });
-            /*game.cub.addCondition("Incapacitated");
-            if (incapSFX) {
-                AudioHelper.play({ src: `${incapSFX}` }, true);
-            }*/
             swim.mark_dead();
             await apply_disease_effect(token.actor)
         }
@@ -124,13 +120,13 @@ export async function radiation_centre_script() {
     // Buttons for the main Dialogue.
     let buttonsMain = {
         one: {
-            label: `<i class="fas fa-dice"></i>Roll to resist Radiation`,
+            label: `<i class="fas fa-dice"></i>${game.i18n.format("SWIM.dialogue-rollToResistSource", {source: game.i18n.localize("SWIM.hazard-radiation")})}`,
             callback: () => {
                 rollVigor();
             }
         },
         two: {
-            label: `<i class="fas fa-radiation"></i>Apply immediately`,
+            label: `<i class="fas fa-radiation"></i>${game.i18n.localize("SWIM.dialogue-applyFatigue")}`,
             callback: () => {
                 rounded = 0
                 applyFatigue();
@@ -143,9 +139,8 @@ export async function radiation_centre_script() {
     new Dialog({
         title: 'Radiation Centre',
         content: await TextEditor.enrichHTML(`<form class="swade-core">
-         <p>You currently have <b>${fv}/${fm}</b> Fatigue and <b>${totalBennies}</b> Bennies.</p>
-         <p><i class="fas fa-radiation"></i> @UUID[Compendium.swade-core-rules.swade-rules.swadecor04theadv.JournalEntryPage.04radiation00000]{Radiation} requires you to roll Vigor or you'll take <b>1 Level of Fatigue</b>.</p>
-         <p>Instead you may choose to take the Level of Fatigue without a roll.</p>
+         ${game.i18n.format("SWIM.dialogue-radiationCentre-1", {fv: fv, fm: fm, totalBennies: totalBennies})}
+         <p><i class="fas fa-radiation"></i> @UUID[Compendium.swade-core-rules.swade-rules.swadecor04theadv.JournalEntryPage.04radiation00000]{${game.i18n.localize("SWIM.hazard-radiation")}} ${game.i18n.localize("SWIM.dialogue-radiationCentre-2")}
      </form>`, { async: true }),
         buttons: buttonsMain,
         default: "one",
@@ -160,32 +155,30 @@ export async function radiation_centre_script() {
             if (soldier && soldierSwitch === false) {
                 buttons = {
                     one: {
-                        label: `<i class="fas fa-dice"></i>Reroll`,
+                        label: `<i class="fas fa-dice"></i>${game.i18n.localize("SWIM.dialogue-reroll")}`,
                         callback: async () => {
                             soldierSwitch = true
                             rollVigor();
                         }
                     },
                     two: {
-                        label: `<i class="fas fa-radiation"></i>No, apply Fatigue now`,
+                        label: `<i class="fas fa-radiation"></i>${game.i18n.localize("SWIM.dialogue-decisionToApplyFatigue")}`,
                         callback: () => {
-                            ui.notifications.notify("Fatigue will be applied now.");
+                            ui.notifications.notify(game.i18n.localize("SWIM.notification-applyFatigue"));
                             applyFatigue();
                         }
                     }
                 }
                 text = `<form class="swade-core">
-                            <p>You've failed your roll</b>; you will <b>receive 1 Level of Fatigue</b>.</p>
-                            <p>Do you want to use your free reroll?</p>
+                            ${game.i18n.localize("SWIM.dialogue-failedFatigueRoll-decisionFreeReroll")}
                         </form>`
             } else {
                 text = `<form class="swade-core">
-                            <p>You've failed your roll</b>; you will <b>receive 1 Level of Fatigue</b>.</p>
-                            <p>Do you want to reroll your Vigor Roll (you have <b>${totalBennies} Bennies</b> left)</p?
+                            ${game.i18n.format("SWIM.dialogue-failedFatigueRoll-decisionBennyReroll", {totalBennies: totalBennies})}
                         </form>`
                 buttons = {
                     one: {
-                        label: `<i class="fas fa-dice"></i>Reroll`,
+                        label: `<i class="fas fa-dice"></i>${game.i18n.localize("SWIM.dialogue-reroll")}`,
                         callback: async () => {
                             let message = true
                             await swim.spend_benny(token, message)
@@ -196,23 +189,23 @@ export async function radiation_centre_script() {
                         }
                     },
                     two: {
-                        label: `<i class="fas fa-radiation"></i>No, apply Fatigue now`,
+                        label: `<i class="fas fa-radiation"></i>${game.i18n.localize("SWIM.dialogue-decisionToApplyFatigue")}`,
                         callback: () => {
-                            ui.notifications.notify("Fatigue will be applied now.");
+                            ui.notifications.notify(game.i18n.localize("SWIM.notification-applyFatigue"));
                             applyFatigue();
                         }
                     }
                 }
             }
             new Dialog({
-                title: 'Reroll',
+                title: game.i18n.localize("SWIM.dialogue-reroll"),
                 content: text,
                 buttons: buttons,
                 default: "one",
             }).render(true);
         }
         else {
-            ui.notifications.notify("You have no more bennies, Fatigue will be applied now.");
+            ui.notifications.notify(game.i18n.localize("SWIM.dialogue-outOfBenniesApplyFatigue"));
             applyFatigue();
         }
     }
