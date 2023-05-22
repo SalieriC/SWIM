@@ -37,9 +37,7 @@ Hooks.on("setup", () => {
     api.registerFunctions;
     register_settings();
     if (game.settings.get("swim", "raise-calculator")) {
-        Hooks.on("getSceneControlButtons", function (hudButtons) {
-            swim_buttons(hudButtons);
-        });
+        Hooks.on("getSceneControlButtons", swim_buttons);
     }
 });
 
