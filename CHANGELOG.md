@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ☮️ Peace in the world, or the world in pieces. 🕊️
 ### Changed
 - Mighty Summoner will now summon tokens without actor link to prevent changes to the original actor. This means GMs don't have to unlink the actors manually anymore.
+- Overhauled the Radiation Centre Macro:
+- - Radiation Centre doesn't add a condition for Fatigue from radiation any longer (see below). This deprecation was needed as the new SUCC version doesn't currently have API support to add conditions. This makes the macro work closer to RAW however.
+- - Radiation Centre *does* however add an Active Effect if the actor becomes Incapacitated from radiation: As in core this AE represents a chronic disease. A chat message will be created in this case.
+### Fixed
+- Bug in the Radiation Centre which made it non-functional for NPCs.
+### Deprecated
+- The Irradiated condition was deprecated to suit the new SUCC version better.
 
 ## [1.4.0] - 2023-03-28
 ☮️ Peace in the world, or the world in pieces. 🕊️

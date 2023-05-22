@@ -1,7 +1,6 @@
 /*******************************************
  * Radiation Centre Macro
- * Requires the Irradiated condition.
- * version 2.1.1
+ * version 3.0.1
  * By SalieriC#8263.
  ******************************************/
 export async function radiation_centre_script() {
@@ -10,31 +9,6 @@ export async function radiation_centre_script() {
     if (!token || canvas.tokens.controlled.length > 1) {
         ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"));
         return;
-    }
-    if (!succ.get_condition('irradiated')) {
-        if (game.user.isGM) {
-            return new Dialog({
-                title: "Irradiated Condition missing",
-                content: `
-                 <p>SWIM detected, that you have not set up the "Irradiated" condition.</p>
-                 <p>This condition is required to use this macro. You can easily set it up by checking the checkbox in SWIMs configuration.</p>
-                 <p>Do you want to set it up now (requires the world to be reloaded)?</p>
-                 `,
-                buttons: {
-                    one: {
-                        label: "Yes please.",
-                        callback: async (_) => {
-                            await game.settings.set('swim', 'irradiationSetting', true)
-                            window.location.reload();
-                        }
-                    },
-                    two: {
-                        label: "No thanks.",
-                    }
-                }
-            }).render(true)
-        }
-        return ui.notifications.error('Your GM has not activated the Irradiation Condition. Ask your GM to do so and try again.')
     }
     // Checking for SWADE Spices & Flavours and setting up the Benny image.
     let bennyImage = await swim.get_benny_image()
@@ -51,13 +25,6 @@ export async function radiation_centre_script() {
     const soldier = token.actor.items.find(function (item) {
         return item.name.toLowerCase() === game.i18n.localize("SWIM.edge-soldier").toLowerCase() && item.type === "edge";
     });
-    //Check for actor status and adjust bennies based on edges.
-    let actorLuck = token.actor.items.find(function (item) { return (item.name.toLowerCase() === "luck") });
-    let actorGreatLuck = token.actor.items.find(function (item) { return (item.name.toLowerCase() === "great luck") });
-    if ((token.actor.system.wildcard === false) && (actorGreatLuck === undefined)) {
-        if ((!(actorLuck === undefined)) && (bennies > 1) && ((actorGreatLuck === undefined))) { bennies = 1; }
-        else { bennies = 0; }
-    }
     let rounded;
     let elanBonus;
     let newFatigue;
@@ -150,9 +117,7 @@ export async function radiation_centre_script() {
                 AudioHelper.play({ src: `${incapSFX}` }, true);
             }*/
             swim.mark_dead();
-        }
-        if (await succ.check_status(token, 'irradiated') === false) {
-            await succ.apply_status(token, 'irradiated', true)
+            await apply_disease_effect(token.actor)
         }
     }
 
@@ -250,5 +215,62 @@ export async function radiation_centre_script() {
             ui.notifications.notify("You have no more bennies, Fatigue will be applied now.");
             applyFatigue();
         }
+    }
+
+    async function apply_disease_effect(actor) {
+        //Target is incapacitated by Radiation, thus apply the chronic disease unless already present:
+        const radPoisoningEfect = actor.effects.find(e => e.flags.swim?.isDisease && e.flags.swim?.diseaseData?.isRadPoisoning)
+        if (radPoisoningEfect) {
+            console.log("SWIM | Actor already got Radiation Poisoning, no effect applied.")
+            return
+        }
+        const effectData = {
+            "label": `${game.i18n.localize("SWIM.disease-chronic")}: ${game.i18n.localize("SWIM.disease-radPoisoning")}`,
+            "_id": randomID(16),
+            "changes": [],
+            "disabled": false,
+            "duration": {
+                "startTime": game.time.worldTime,
+                "seconds": null,
+                "combat": null,
+                "rounds": null,
+                "turns": null,
+                "startRound": null,
+                "startTurn": null
+            },
+            "icon": "modules/succ/assets/icons/0-irradiated.svg",
+            "origin": null,
+            "tint": null,
+            "transfer": false,
+            "flags": {
+                "swade": {
+                    "expiration": null,
+                    "loseTurnOnHold": false
+                },
+                "swim": {
+                    isDisease: true,
+                    diseaseData: {
+                        isChronic: true,
+                        isRadPoisoning: true,
+                        name: "Radiation Poisoning"
+                    }
+                }
+            }
+        }
+        await actor.createEmbeddedDocuments('ActiveEffect', [effectData]);
+        ui.notifications.warn(game.i18n.localize("SWIM.notification.diseaseWarning"))
+        //Chat Message to let the everyone know what happened:
+        ChatMessage.create({
+            user: game.user.id,
+            content: `${game.i18n.format(game.i18n.format("SWIM.chatMessage-radPoisoning-1", {
+                actorName: actor.name,
+                class: 'swade-core',
+                img: 'modules/succ/assets/icons/0-irradiated.svg'
+            }))} @UUID[Compendium.swade-core-rules.swade-rules.swadecor04theadv.JournalEntryPage.04disease0000000#disease-categories]{${game.i18n.localize("SWIM.disease-chronic").toLowerCase()}}. 
+            ${game.i18n.format(game.i18n.format("SWIM.chatMessage-radPoisoning-2", {
+                actorName: actor.name,
+            }))}`,
+        });
+        //UUID links don't fit into the game.i18n.format as the {label} is interpreted as a variable, so the chat message needs to be split in multiple parts. -.-
     }
 }

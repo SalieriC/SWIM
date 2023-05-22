@@ -85,11 +85,6 @@ Hooks.on(`ready`, () => {
         game.swade.effectCallbacks.set("bleeding-out", swim.soak_damage)
     }
 
-    // Setting up new conditions
-    if (game.settings.get('swim', 'irradiationSetting') === true) {
-        CONFIG.statusEffects.push({ id: "irradiated", label: "Irradiated", icon: "modules/succ/assets/icons/0-irradiated.svg" });
-    }
-
     // Set Health Estimate up
     if (game.modules.get('healthEstimate')?.active && swim.is_first_gm()) {
         let incapIcon = CONFIG.statusEffects.filter(e => e.id === "incapacitated").icon
