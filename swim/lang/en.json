@@ -53,8 +53,6 @@
   "SWIM.shapeShiftSFXHint": "The sound effect to be played when an actor shape changes.",
   "SWIM.shapeShiftVFXName": "Shape Change VFX:",
   "SWIM.shapeShiftVFXHint": "The visual effect to be played when an actor shape changes. I recommend Misty Step for everyone with access to the jb2a patreon module. Playing VFX requires Sequencer.",
-  "SWIM.irradiationSettingName": "Irradiation Condition:",
-  "SWIM.irradiationSettingHint": "This enables the Irradiation condition, which is required if you want to use the Radiation Centre Macro.",
   "SWIM.ChaseSetup": "Chase Layout Manager",
   "SWIM.chaseDeck-MaxCardsName": "Maximum Cards:",
   "SWIM.chaseDeck-MaxCardsHint": "The maximum number of cards for your layout. Default: 18",
@@ -478,5 +476,10 @@
   "SWIM.Option-fullBlind": "Full Blind (no vision)",
   "SWIM.notification.shapeChangeOnOtherScene" : "{userName} requested a Shape Change on scene {sceneName}. Please move there and ask them to try again.",
   "SWIM.tester": "Tester",
-  "SWIM.dialogue-testerContent": "{officialClass}<p>Your target(s) will be tested, please select a Trait to roll the test with.</p><div class='form-group'><label for='selected_trait'><p>Trait: </p></label><select id='selected_trait'>{options}</select></div><form class='tester'><div class='form-group'><label>Modifier:</label><input type='number' name='modifier' value='0' /></div></form></div>"
+  "SWIM.dialogue-testerContent": "{officialClass}<p>Your target(s) will be tested, please select a Trait to roll the test with.</p><div class='form-group'><label for='selected_trait'><p>Trait: </p></label><select id='selected_trait'>{options}</select></div><form class='tester'><div class='form-group'><label>Modifier:</label><input type='number' name='modifier' value='0' /></div></form></div>",
+  "SWIM.disease-chronic": "Chronic disease",
+  "SWIM.disease-radPoisoning": "Radiation Poisoning",
+  "SWIM.notification.diseaseWarning": "I feel sick, I should seek medical atention when this is over...",
+  "SWIM.chatMessage-radPoisoning-1": "<div class={class}><img src={img} width='50' height='50' style='border: none; margin-right: 10px; float: left'><p>{actorName} is sick with radiation poisoning, a",
+  "SWIM.chatMessage-radPoisoning-2": "{actorName} needs to roll Vigor at the start of each session. Radiation poisoning might be curable at the GMs discrection.</p></div>"
 }
