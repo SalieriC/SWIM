@@ -51,6 +51,7 @@ export function swim_buttons(hudButtons) {
                 }).render(true);
             }
         });
+        /* Currently a little buggy so taking that out for now.
         if (game.user.isGM) {
             hud.tools.push({
                 name: "SWIM.combatSetupName",
@@ -60,6 +61,7 @@ export function swim_buttons(hudButtons) {
                 onClick: async () => { combat_setup() }
             })
         }
+        */
     }
 
     // Hijack the systems chase setup:
