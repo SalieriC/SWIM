@@ -1,103 +1,133 @@
-import { api } from './api.js';
-import { register_settings } from './settings.js'
-import { swim_buttons } from './buttons.js'
-import { gm_relay } from './gm_relay.js'
-import { shape_changer_gm } from './swim_modules/shape_changer.js'
-import { summoner_gm } from './swim_modules/mighty-summoner.js'
-import { heal_other_gm } from './swim_modules/personal_health_centre.js'
-import { common_bond_gm } from './swim_modules/common_bond.js'
-import { effect_builder_gm } from './swim_modules/effect_builder.js'
-import { craft_campfire_gm } from './swim_modules/craft_campfire.js'
+import { api } from "./api.js";
+import { swim_buttons } from "./buttons.js";
+import { gm_relay } from "./gm_relay.js";
+import { brsw_actions_setup } from "./helpers/brsw_actions_setup.js";
+import { raise_calculator } from "./helpers/raise-calculator.js";
+import { actor_hooks } from "./hooks/actor_hooks.js";
+import { brsw_hooks } from "./hooks/brsw_hooks.js";
+import { combat_hooks } from "./hooks/combat_hooks.js";
+import { effect_hooks } from "./hooks/effect_hooks.js";
+import { v10_migration } from "./migrations.js";
+import { register_settings } from "./settings.js";
 import { open_swim_actor_config, open_swim_item_config } from "./swim_document_config.js";
-import { v10_migration } from "./migrations.js"
-import { effect_hooks } from "./hooks/effect_hooks.js"
-import { actor_hooks } from "./hooks/actor_hooks.js"
-import { combat_hooks } from "./hooks/combat_hooks.js"
-import { brsw_hooks } from "./hooks/brsw_hooks.js"
-import { brsw_actions_setup } from "./helpers/brsw_actions_setup.js"
+import { common_bond_gm } from "./swim_modules/common_bond.js";
+import { craft_campfire_gm } from "./swim_modules/craft_campfire.js";
+import { effect_builder_gm } from "./swim_modules/effect_builder.js";
+import { summoner_gm } from "./swim_modules/mighty-summoner.js";
+import { heal_other_gm } from "./swim_modules/personal_health_centre.js";
+import { shape_changer_gm } from "./swim_modules/shape_changer.js";
 
 /*Hooks.on('getCardsDirectoryEntryContext', function (stuff) {
     console.log(stuff)
 })*/
 
-Hooks.on('getSceneControlButtons', function (hudButtons) {
-    swim_buttons(hudButtons)
+Hooks.on("init", () => {
+    game.keybindings.register("swim", "toggleTokenRotation", {
+        name: "SWIM.openRaiseCalculatorName",
+        hint: "SWIM.openRaiseCalculatorHint",
+        onDown: async () => {
+            raise_calculator();
+        },
+        restricted: false,
+        precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
+    });
 });
 
-Hooks.on('setup', api.registerFunctions)
+Hooks.on("setup", () => {
+    api.registerFunctions;
+    register_settings();
+    if (game.settings.get("swim", "raise-calculator")) {
+        Hooks.on("getSceneControlButtons", function (hudButtons) {
+            swim_buttons(hudButtons);
+        });
+    }
+});
 
 Hooks.on(`ready`, () => {
     // Set round time to 6 as appropriate to the system:
-    if (CONFIG.time.roundTime != 6 && swim.is_first_gm()) { CONFIG.time.roundTime = 6 }
+    if (CONFIG.time.roundTime != 6 && swim.is_first_gm()) {
+        CONFIG.time.roundTime = 6;
+    }
     // Check Dependencies
-    if (!game.modules.get('settings-extender')?.active && game.user.isGM) {
+    if (!game.modules.get("settings-extender")?.active && game.user.isGM) {
         let key = "install and activate";
-        if (game.modules.get('settings-extender')) key = "activate";
-        ui.notifications.error(`SWIM requires the 'settings-extender' module. Please ${key} it.`)
+        if (game.modules.get("settings-extender")) key = "activate";
+        ui.notifications.error(`SWIM requires the 'settings-extender' module. Please ${key} it.`);
     }
-    if (!game.modules.get('compendium-folders')?.active && game.user.isGM) {
+    if (!game.modules.get("compendium-folders")?.active && game.user.isGM) {
         let key = "install and activate";
-        if (game.modules.get('compendium-folders')) key = "activate";
-        ui.notifications.error(`SWIM requires the 'compendium-folders' module. Please ${key} it.`)
+        if (game.modules.get("compendium-folders")) key = "activate";
+        ui.notifications.error(`SWIM requires the 'compendium-folders' module. Please ${key} it.`);
     }
-    if (!game.modules.get('warpgate')?.active && game.user.isGM) {
+    if (!game.modules.get("warpgate")?.active && game.user.isGM) {
         let key = "install and activate";
-        if (game.modules.get('warpgate')) key = "activate";
-        ui.notifications.error(`SWIM requires the 'warpgate' module. Please ${key} it.`)
+        if (game.modules.get("warpgate")) key = "activate";
+        ui.notifications.error(`SWIM requires the 'warpgate' module. Please ${key} it.`);
     }
 
     //Run functions to register hooks:
-    effect_hooks()
-    actor_hooks()
-    combat_hooks()
-    brsw_hooks()
+    effect_hooks();
+    actor_hooks();
+    combat_hooks();
+    brsw_hooks();
 
     // Ready stuff
-    console.log("  █████████  █████   ███   █████ █████ ██████   ██████\n ███░░░░░███░░███   ░███  ░░███ ░░███ ░░██████ ██████ \n░███    ░░░  ░███   ░███   ░███  ░███  ░███░█████░███ \n░░█████████  ░███   ░███   ░███  ░███  ░███░░███ ░███ \n ░░░░░░░░███ ░░███  █████  ███   ░███  ░███ ░░░  ░███ \n ███    ░███  ░░░█████░█████░    ░███  ░███      ░███ \n░░█████████     ░░███ ░░███      █████ █████     █████\n ░░░░░░░░░       ░░░   ░░░      ░░░░░ ░░░░░     ░░░░░ ")
-    console.log('SWADE Immersion Module | Ready');
-    register_settings();
+    console.log(
+        "  █████████  █████   ███   █████ █████ ██████   ██████\n ███░░░░░███░░███   ░███  ░░███ ░░███ ░░██████ ██████ \n░███    ░░░  ░███   ░███   ░███  ░███  ░███░█████░███ \n░░█████████  ░███   ░███   ░███  ░███  ░███░░███ ░███ \n ░░░░░░░░███ ░░███  █████  ███   ░███  ░███ ░░░  ░███ \n ███    ░███  ░░░█████░█████░    ░███  ░███      ░███ \n░░█████████     ░░███ ░░███      █████ █████     █████\n ░░░░░░░░░       ░░░   ░░░      ░░░░░ ░░░░░     ░░░░░ "
+    );
+    console.log("SWADE Immersion Module | Ready");
 
     //Setup actions for BRSW:
-    if (game.settings.get('swim', 'br2Support') === true) {
-        brsw_actions_setup()
+    if (game.settings.get("swim", "br2Support") === true) {
+        brsw_actions_setup();
     }
 
     // Registering SWIM functions to effect callbacks of SWIM:
-    let version = "SWADE"
-    if (game.settings.get('swim', 'swdUnshake') === true) {
-        version = "SWD"
+    let version = "SWADE";
+    if (game.settings.get("swim", "swdUnshake") === true) {
+        version = "SWD";
         // Disable subtracting Wounds from Pace if SWD Unshake is used:
-        if ( game.settings.get("swade", "enableWoundPace") === true && swim.is_first_gm() ) {
-            game.settings.set("swade", "enableWoundPace", false)
-            ui.notifications.notify(game.i18n.localize("SWIM.notification-adjustPaceDisabled"))
+        if (game.settings.get("swade", "enableWoundPace") === true && swim.is_first_gm()) {
+            game.settings.set("swade", "enableWoundPace", false);
+            ui.notifications.notify(game.i18n.localize("SWIM.notification-adjustPaceDisabled"));
         }
         // Add half pace effect to Shaken:
         for (let status of CONFIG.statusEffects) {
-            if (status.id === 'shaken') {
-                status.changes.push({key: "system.stats.speed.value", mode: 1, priority: undefined, value: "0.5"})
+            if (status.id === "shaken") {
+                status.changes.push({ key: "system.stats.speed.value", mode: 1, priority: undefined, value: "0.5" });
             }
         }
     }
-    const callbackMode = game.settings.get("swim", "callbackMode")
+    const callbackMode = game.settings.get("swim", "callbackMode");
     if (callbackMode === "manual" || callbackMode === "automatic") {
-        game.swade.effectCallbacks.set("shaken", swim.unshake)
-        game.swade.effectCallbacks.set("stunned", swim.unstun)
-        game.swade.effectCallbacks.set("bleeding-out", swim.soak_damage)
+        game.swade.effectCallbacks.set("shaken", swim.unshake);
+        game.swade.effectCallbacks.set("stunned", swim.unstun);
+        game.swade.effectCallbacks.set("bleeding-out", swim.soak_damage);
     }
 
     // Set Health Estimate up
-    if (game.modules.get('healthEstimate')?.active && swim.is_first_gm()) {
-        let incapIcon = CONFIG.statusEffects.filter(e => e.id === "incapacitated").icon
-        if (game.settings.get("healthEstimate", "core.deathMarker") != incapIcon) {game.settings.set("healthEstimate", "core.deathMarker", incapIcon)}
+    if (game.modules.get("healthEstimate")?.active && swim.is_first_gm()) {
+        let incapIcon = CONFIG.statusEffects.filter((e) => e.id === "incapacitated").icon;
+        if (game.settings.get("healthEstimate", "core.deathMarker") != incapIcon) {
+            game.settings.set("healthEstimate", "core.deathMarker", incapIcon);
+        }
     }
 
     // First Login warning
-    if ((game.settings.get('swim', 'docReadV1.1.0') === false || !game.settings.get("swade", "tocBlockList")["swim.swim-actor-folders"]) && swim.is_first_gm()) {
-        let additionalText = ""
-        let unshakeWarning = "<p><strong>If you have used SWIM before: Please note that you have to replace your unshake macro with the new version in the compendium. The SWD (old) unshaken rules can now be activated in the settings.</strong></p><hr />"
-        if (!game.settings.get("swade", "tocBlockList")["swim.swim-roll-tables"]) {additionalText = "<p><strong>Please note:</strong> To make some adjustments to properly use SWIM, the world will be reloaded after closing this dialogue.<p>"}
+    if (
+        (game.settings.get("swim", "docReadV1.1.0") === false ||
+            !game.settings.get("swade", "tocBlockList")["swim.swim-actor-folders"]) &&
+        swim.is_first_gm()
+    ) {
+        let additionalText = "";
+        let unshakeWarning =
+            "<p><strong>If you have used SWIM before: Please note that you have to replace your unshake macro with the new version in the compendium. The SWD (old) unshaken rules can now be activated in the settings.</strong></p><hr />";
+        if (!game.settings.get("swade", "tocBlockList")["swim.swim-roll-tables"]) {
+            additionalText =
+                "<p><strong>Please note:</strong> To make some adjustments to properly use SWIM, the world will be reloaded after closing this dialogue.<p>";
+        }
         new Dialog({
-            title: 'Welcome to SWIM',
+            title: "Welcome to SWIM",
             content: `<form>
                 <h1>Welcome to SWIM</h1>
                 ${unshakeWarning}
@@ -119,27 +149,35 @@ Hooks.on(`ready`, () => {
                 one: {
                     label: "Let me play already!",
                     callback: async (html) => {
-                        let readIt = html.find("#readIt")[0].checked
+                        let readIt = html.find("#readIt")[0].checked;
                         if (readIt === true) {
-                            game.settings.set('swim', 'docReadV1.1.0', true)
-                            let blockedTOCPacks = game.settings.get("swade", "tocBlockList")
-                            if (!blockedTOCPacks["swim.swim-roll-tables"] || !blockedTOCPacks["swim.swim-actor-folders"] || !blockedTOCPacks["swim.swade-immersive-macros"]) {
-                                blockedTOCPacks["swim.swim-actor-folders"] = true
-                                blockedTOCPacks["swim.swade-immersive-macros"] = true
-                                blockedTOCPacks["swim.swim-roll-tables"] = true
-                                await game.settings.set("swade", "tocBlockList", blockedTOCPacks) //Needed to see the folders in the compendium.
+                            game.settings.set("swim", "docReadV1.1.0", true);
+                            let blockedTOCPacks = game.settings.get("swade", "tocBlockList");
+                            if (
+                                !blockedTOCPacks["swim.swim-roll-tables"] ||
+                                !blockedTOCPacks["swim.swim-actor-folders"] ||
+                                !blockedTOCPacks["swim.swade-immersive-macros"]
+                            ) {
+                                blockedTOCPacks["swim.swim-actor-folders"] = true;
+                                blockedTOCPacks["swim.swade-immersive-macros"] = true;
+                                blockedTOCPacks["swim.swim-roll-tables"] = true;
+                                await game.settings.set("swade", "tocBlockList", blockedTOCPacks); //Needed to see the folders in the compendium.
                                 window.location.reload();
                             }
                         }
-                    }
-                }
+                    },
+                },
             },
         }).render(true);
-    } else if (game.settings.get('swim', 'v1MigrationDone') === false) {
-        v10_migration()
-    } else if (game.settings.get('swim', 'br2Message') === false && game.modules.get('betterrolls-swade2')?.active && game.user.isGM === true) {
+    } else if (game.settings.get("swim", "v1MigrationDone") === false) {
+        v10_migration();
+    } else if (
+        game.settings.get("swim", "br2Message") === false &&
+        game.modules.get("betterrolls-swade2")?.active &&
+        game.user.isGM === true
+    ) {
         new Dialog({
-            title: 'Better Rolls 2 support for SWIM.',
+            title: "Better Rolls 2 support for SWIM.",
             content: `<form>
                 <h1>Better Rolls 2 support for SWIM.</h1>
                 <p>Good news everyone!<p>
@@ -157,47 +195,47 @@ Hooks.on(`ready`, () => {
                 one: {
                     label: "Damn you Sal! Let. Me. Play. NOW!",
                     callback: async (html) => {
-                        let activate = html.find("#activate")[0].checked
+                        let activate = html.find("#activate")[0].checked;
                         if (activate === true) {
-                            game.settings.set('swim', 'br2Support', true)
+                            game.settings.set("swim", "br2Support", true);
                         }
-                        game.settings.set('swim', 'br2Message', true)
-                        await swim.wait('20')
+                        game.settings.set("swim", "br2Message", true);
+                        await swim.wait("20");
                         window.location.reload();
-                    }
-                }
+                    },
+                },
             },
         }).render(true);
     }
 
     // Warpgate Watches
-    warpgate.event.watch("SWIM.shapeChanger", shape_changer_gm, swim.is_first_gm)
-    warpgate.event.watch("SWIM.summoner", summoner_gm, swim.is_first_gm)
-    warpgate.event.watch("SWIM.healOther", heal_other_gm, swim.is_first_gm)
-    warpgate.event.watch("SWIM.commonBond", common_bond_gm, swim.is_first_gm)
-    warpgate.event.watch("SWIM.effectBuilder", effect_builder_gm, swim.is_first_gm)
-    warpgate.event.watch("SWIM.deleteActor", gm_relay.gmDeleteActor, swim.is_first_gm)
-    warpgate.event.watch("SWIM.updateCombat-previousTurn", gm_relay.combat_previousTurn, swim.is_first_gm)
-    warpgate.event.watch("SWIM.updateCombat-nextTurn", gm_relay.combat_nextTurn, swim.is_first_gm)
-    warpgate.event.watch("SWIM.updateCombat-currentTurn", gm_relay.combat_currentTurn, swim.is_first_gm)
-    warpgate.event.watch("SWIM.craftCampfire", craft_campfire_gm, swim.is_first_gm)
+    warpgate.event.watch("SWIM.shapeChanger", shape_changer_gm, swim.is_first_gm);
+    warpgate.event.watch("SWIM.summoner", summoner_gm, swim.is_first_gm);
+    warpgate.event.watch("SWIM.healOther", heal_other_gm, swim.is_first_gm);
+    warpgate.event.watch("SWIM.commonBond", common_bond_gm, swim.is_first_gm);
+    warpgate.event.watch("SWIM.effectBuilder", effect_builder_gm, swim.is_first_gm);
+    warpgate.event.watch("SWIM.deleteActor", gm_relay.gmDeleteActor, swim.is_first_gm);
+    warpgate.event.watch("SWIM.updateCombat-previousTurn", gm_relay.combat_previousTurn, swim.is_first_gm);
+    warpgate.event.watch("SWIM.updateCombat-nextTurn", gm_relay.combat_nextTurn, swim.is_first_gm);
+    warpgate.event.watch("SWIM.updateCombat-currentTurn", gm_relay.combat_currentTurn, swim.is_first_gm);
+    warpgate.event.watch("SWIM.craftCampfire", craft_campfire_gm, swim.is_first_gm);
 
     //SWIM per-actor/item config header button
-    if (game.user.isGM || game.settings.get('swim', 'allowUserConfig')) {
-        Hooks.on('getItemSheetHeaderButtons', function (sheet, buttons) {
+    if (game.user.isGM || game.settings.get("swim", "allowUserConfig")) {
+        Hooks.on("getItemSheetHeaderButtons", function (sheet, buttons) {
             buttons.unshift({
-                class: 'swim_config_button',
-                label: 'SWIM',
-                icon: 'fas fa-swimmer',
-                onclick: () => open_swim_item_config(sheet.item)
+                class: "swim_config_button",
+                label: "SWIM",
+                icon: "fas fa-swimmer",
+                onclick: () => open_swim_item_config(sheet.item),
             });
         });
-        Hooks.on('getActorSheetHeaderButtons', function (sheet, buttons) {
+        Hooks.on("getActorSheetHeaderButtons", function (sheet, buttons) {
             buttons.unshift({
-                class: 'swim_config_button',
-                label: 'SWIM',
-                icon: 'fas fa-swimmer',
-                onclick: () => open_swim_actor_config(sheet.actor)
+                class: "swim_config_button",
+                label: "SWIM",
+                icon: "fas fa-swimmer",
+                onclick: () => open_swim_actor_config(sheet.actor),
             });
         });
     }
