@@ -42,7 +42,7 @@ In this repository you can find a number of assets already.
 - - Farsight: [Eye target by Delapouite](https://game-icons.net/1x1/delapouite/eye-target.html)
 - - Intangibility: [Ghost ally by Lorc](https://game-icons.net/1x1/lorc/ghost-ally.html)
 - - Ming Link: [Telepathy by Lorc](https://game-icons.net/1x1/lorc/telepathy.html)
-- - Slumber: [Night sleep by Delapouite](https://game-icons.net/1x1/delapouite/night-sleep.html)
+- - Slumber: [Night sleep by Delapoutite](https://game-icons.net/1x1/delapouite/night-sleep.html)
 - - Silence: [Mute by Delapouite](https://game-icons.net/1x1/delapouite/mute.html)
 - - Speak Language: [Talk by Skoll](https://game-icons.net/1x1/skoll/talk.html)
 - - Wall Walker: [Brick wall by Delapouite](https://game-icons.net/1x1/delapouite/brick-wall.html) and [Footprint by Lorc](https://game-icons.net/1x1/lorc/footprint.html)
