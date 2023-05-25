@@ -1,4 +1,4 @@
-import { combat_setup } from "./swim_modules/combat_setup.js";
+//import { combat_setup } from "./swim_modules/combat_setup.js";
 import { adjust_scene_light } from "./helpers/adjust_scene_light.js";
 
 export function swim_buttons(hudButtons) {
