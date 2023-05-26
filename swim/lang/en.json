@@ -420,6 +420,8 @@
   "SWIM.Option-manual": "Manual",
   "SWIM.callbackModeName": "Condition Roll Mode:",
   "SWIM.callbackModeHint": "Determines if and how the SWIM functions to remove certain conditions (i.e. Shaken) should execute when the characters turn starts. Manual: A dialogue will ask for a roll. | Disabled: The system default rolls will be initiated (can be disabled in SUCC).",
+  "SWIM.deleteEffectsAfterCombatName": "Delete Active Effects after combat:",
+  "SWIM.deleteEffectsAfterCombatHint": "This will prompt you with a dialogue after combat ends which allows you to delete all active effects with a duration on end of combat. This allows you to remove conditions like Shaken and from powers but not permanent AEs such as Incapacitated. Be mindful that this will also delete effects that are maintained with no power points setting rule enabled. If you don't want to remove those, do not use this setting.",
   "SWIM.fearResult-AdrenalineSurge": "Adrenaline Surge",
   "SWIM.fearResult-MarkOfFear": "Mark of Fear",
   "SWIM.fearResult-MarkOfFearDesc": "You have faced something truly terrifying and from now on wear the mark of fear. A white strak in your hair or constantly twitching eyes or anything else you can think of. Change this description here in consultation of your Game Master and adjust the change you've gone through.",

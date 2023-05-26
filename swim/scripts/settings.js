@@ -80,6 +80,7 @@ export const settingVariables = [
             //{value: 'automatic', locaString: 'SWIM.Option-automatic'},
             {value: 'disabled', locaString: 'SWIM.Option-disabled'}
         ]},
+    {id: 'deleteEffectsAfterCombat', config_type: Boolean, tab: "Misc",  default: false},
 ];
 
 export function register_settings() {

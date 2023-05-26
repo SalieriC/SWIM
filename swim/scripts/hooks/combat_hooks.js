@@ -32,6 +32,13 @@ export async function combat_hooks() {
                 await combatPlaylist.stopAll()
             }
         }
+        if (game.settings.get("swim", "deleteEffectsAfterCombat") === true) {
+            if (swim.is_first_gm() === false) { return }
+            const sceneId = combat.scene.id
+            if (sceneId) {
+                game.succ.removeTemporaryEffects(sceneId, false)
+            }
+        }
     })
 
     Hooks.on("updateCombat", async (combat, updates, context, userId) => {
