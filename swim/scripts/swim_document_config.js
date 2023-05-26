@@ -128,20 +128,14 @@ function swim_config_options() {
             hint: "SWIM.Config_PronounHint",
             value: ""
         },
-    ]
-
-    if (game.settings.get("swim", "irradiationSetting")) {
-        configs.push({
+        {
             isNumber: true,
             showFor: ['character', 'npc'],
             id: 'radRes',
             label: 'SWIM.Config_RadResName',
             hint: 'SWIM.Config_RadResHint',
             value: 0,
-        })
-    }
-
-    configs.push(
+        },
         //SFX shown at the bottom(?):
         //Actor SFX:
         {
@@ -280,7 +274,7 @@ function swim_config_options() {
             useFilePicker: true,
             filePickerData: "audio"
         },
-    )
+    ]
     return configs
 }
 
