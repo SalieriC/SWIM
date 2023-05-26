@@ -1,6 +1,6 @@
 /*******************************************
  * Ammo Management (Enhanced Version v2)
- * version 6.0.11
+ * version 6.0.13
  * By SalieriC#8263 & Loofou#7406. (old Dialogue Framework: Kekilla#7036)
  *
  * Makes heavy use of SFX set up on the weapon.
@@ -249,7 +249,7 @@ async function shoot(selectedWeapon, selectedShots, actor, trait = undefined) {
         } else { return }
     }
     //Weapon doesn't require reload action
-    else if (selectedWeapon.system.autoReload === true) {
+    else if (selectedWeapon.system.reloadType === "none") { //system.reloadType
         const currentAmmoItem = actor.items.getName(currentAmmo);
         const currentAmmoId = currentAmmoItem?.id;
         //Throw error if no ammo is left.
@@ -299,7 +299,7 @@ async function shoot(selectedWeapon, selectedShots, actor, trait = undefined) {
         await play_sfx(isSilenced, sfx_silenced, selectedShots, sfxDelay, sfx_silenced_auto, sfx_shot, sfx_shot_auto);
     }
     // Check if enough bullets are in the weapon to fire the given amount of shots if this is not a consumable weapon and does require loading action.
-    else if (currentCharges < selectedShots && selectedWeapon.system.autoReload === false) {
+    else if (currentCharges < selectedShots && selectedWeapon.system.reloadType !== "none") {
         ui.notifications.error(game.i18n.localize("SWIM.notification-insufficientAmmoAvailable"))
         if (sfx_empty && currentCharges === 0) {
             const volume = Number(game.settings.get("swim", "defaultVolume"))
@@ -370,7 +370,7 @@ async function reloadButton(html, actor, weapons, ammo) {
     const weaponImg = selectedWeapon.img;
     const npcAmmo = game.settings.get('swim', 'npcAmmo');
     const ammoImg = selectedAmmo ? selectedAmmo.img : null;
-    const autoReload = selectedWeapon.system.autoReload;
+    const autoReload = selectedWeapon.system.reloadType === "none" ? true : false;
 
     const all_sfx = await swim.get_weapon_sfx(selectedWeapon)
     const sfx_reload = all_sfx.reloadSFX
@@ -412,7 +412,10 @@ async function reloadButton(html, actor, weapons, ammo) {
         let newAmmo;
         let oldAmmoRefill;
 
-        // Checking if the Ammo is a charge pack. If not or flag is not present ignore it. Charge Packs can only refill if curr and max shots are equal.
+        // Checking if the Ammo is a charge pack. If not or flag is not present run migration. Charge Packs can only refill if curr and max shots are equal.
+        if (!selectedAmmo.flags.swim || !selectedAmmo.flags.swim) {
+            await swim.run_migration(false, selectedAmmo)
+        }
         if (selectedAmmo.flags.swim.config.isPack === true) {
             // Charge Packs only use 1 Quantity to fully charge the weapon
             amountToRecharge = parseInt(selectedWeapon.system.shots);
@@ -526,7 +529,7 @@ async function reloadButton(html, actor, weapons, ammo) {
         const maxCharges = parseInt(selectedWeapon.system.shots);
         if (selectedWeapon.flags.swim.config.isConsumable === true) {
             return ui.notifications.error(game.i18n.localize("SWIM.notification-cannotReloadConsumableWeapons"));
-        } else if (selectedWeapon.system.autoReload === true) {
+        } else if (selectedWeapon.system.reloadType === "none") {
             return ui.notifications.error(game.i18n.localize("SWIM.notification-cannotChangeAmmoTypeIfNPCDontUseAmmoFromInventory"));
         } else if (currentCharges === maxCharges) {
             return ui.notifications.error(game.i18n.localize("SWIM.notification-weaponAlreadyFull"));
