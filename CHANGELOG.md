@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - New translation strings, Radiation Centre is now fully localised.
+- Support for the Soak Bonus modifier in SWADE. The Soak macro tries to exclude edges which are already set up with an Active Effect but that's not a fuzzy search so it will only exclude its own Edge findings if the edges corresponding AE is named *exactly* like the edge itself. Otherwise it will add the bonus twice. There is no real way around it as it could cause false matchings if I were to introduce a fuzzy search.
 ### Changed
 - Mighty Summoner will now summon tokens without actor link to prevent changes to the original actor. This means GMs don't have to unlink the prototype tokens manually anymore.
 - Overhauled the Radiation Centre Macro:
@@ -15,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - - Radiation Centre *does* however add an Active Effect if the actor becomes Incapacitated from radiation: As in core this AE represents a chronic disease. A chat message will be created in this case.
 ### Fixed
 - Bug in the Radiation Centre which made it non-functional for NPCs.
+- Bugs in Ammo Management resulting from the overhaul in SWADE.
 ### Deprecated
 - The Irradiated condition was deprecated to suit the new SUCC version better.
 - Combat setup button as the function behind it is a little buggy and due for an overhaul. Let me know if anyone ever used it, otherwise it won't be a priority.

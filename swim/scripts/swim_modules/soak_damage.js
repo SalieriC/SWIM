@@ -1,6 +1,6 @@
 /*******************************************
  * Soak Damage
- * v. 5.2.5
+ * v. 5.3.0
  * Code by SalieriC#8263.
  *******************************************/
 export async function soak_damage_script(effect = false) {
@@ -75,9 +75,53 @@ export async function soak_damage_script(effect = false) {
         });
         let rollWithEdge = r.total;
         let edgeText = "";
+
+        //Get generic actor unstun bonus and check if it is from an AE:
+        const soakBonus = token.actor.system.attributes.vigor.soakBonus
+        let effectName = []
+        let effectIcon = []
+        let effectValue = []
+        let soakBonusFromEffects = 0
+        if (token.actor.effects.size > 0) {
+            for (let effect of token.actor.effects) {
+                if (effect.disabled === false && !edgeNames.includes(effect.label)) { // only apply changes if effect is enabled and not made by a recognised Edge.
+                    for (let change of effect.changes) {
+                        if (change.key === "system.attributes.vigor.soakBonus") {
+                            //Building array of effect names and icons that affect the unStunBonus
+                            effectName.push(effect.label)
+                            effectIcon.push(effect.icon)
+                            effectValue.push(change.value)
+                            soakBonusFromEffects += change.value
+                        }
+                    }
+                }
+            }
+            for (let i = 0; i < effectName.length; i++) {
+                // Apply mod using parseFloat() to make it a Number:
+                rollWithEdge += parseFloat(effectValue[i]);
+                // Change indicator in case the modifier from AE is negative:
+                let indicator = "+";
+                let effectMod = effectValue[i];
+                if (parseFloat(effectValue[i]) < 0) {
+                    indicator = "-";
+                    effectMod = effectValue[i].replace("-", "");
+                }
+                edgeText += `<br/><i>${indicator} ${effectMod} <img src="${effectIcon[i]}" alt="" width="15" height="15" style="border:0" />${effectName[i]}</i>`;
+            }
+        } if (soakBonus > soakBonusFromEffects) { //Add remaining UnstunBonus if it is bigger than those from AEs:
+            const remainingBonus = soakBonus - soakBonusFromEffects
+            rollWithEdge += parseFloat(remainingBonus);
+            edgeText += `<br/><i>+ ${remainingBonus} Generic Bonus</i>`;
+        }
+
+        //Now check for edges but don't include them if they are already covered by AEs:
         for (let edge of edges) {
-            rollWithEdge += 2;
-            edgeText += `<br/><em>+ 2 <img src="${edge.img}" alt="" width="15" height="15" style="border:0" />${edge.name}</em>`;
+            //Only add if the edge name is not included in effect names:
+            const lowercaseEffectNames = effectName.map(element => element.toLowerCase())
+            if (!lowercaseEffectNames.includes(edge.name.toLowerCase())) { //This is deliberately not a fuzzy search as that could cause issues.
+                rollWithEdge += 2;
+                edgeText += `<br/><em>+ 2 <img src="${edge.img}" alt="" width="15" height="15" style="border:0" />${edge.name}</em>`;
+            }
         }
 
         // If Holy Warrior or Unholy Warrior is used: Include the amount of PPs used as a bonus to the roll.
