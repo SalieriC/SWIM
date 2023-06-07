@@ -1,30 +1,47 @@
 import { api } from './api.js';
-import { register_settings } from './settings.js'
-import { swim_buttons } from './buttons.js'
-import { gm_relay } from './gm_relay.js'
-import { shape_changer_gm } from './swim_modules/shape_changer.js'
-import { summoner_gm } from './swim_modules/mighty-summoner.js'
-import { heal_other_gm } from './swim_modules/personal_health_centre.js'
-import { common_bond_gm } from './swim_modules/common_bond.js'
-import { effect_builder_gm } from './swim_modules/effect_builder.js'
-import { craft_campfire_gm } from './swim_modules/craft_campfire.js'
+import { swim_buttons } from './buttons.js';
+import { gm_relay } from './gm_relay.js';
+import { brsw_actions_setup } from "./helpers/brsw_actions_setup.js";
+import { raise_calculator } from './helpers/raise-calculator.js';
+import { actor_hooks } from "./hooks/actor_hooks.js";
+import { brsw_hooks } from "./hooks/brsw_hooks.js";
+import { combat_hooks } from "./hooks/combat_hooks.js";
+import { effect_hooks } from "./hooks/effect_hooks.js";
+import { v10_migration } from "./migrations.js";
+import { register_settings } from './settings.js';
 import { open_swim_actor_config, open_swim_item_config } from "./swim_document_config.js";
-import { v10_migration } from "./migrations.js"
-import { effect_hooks } from "./hooks/effect_hooks.js"
-import { actor_hooks } from "./hooks/actor_hooks.js"
-import { combat_hooks } from "./hooks/combat_hooks.js"
-import { brsw_hooks } from "./hooks/brsw_hooks.js"
-import { brsw_actions_setup } from "./helpers/brsw_actions_setup.js"
+import { common_bond_gm } from './swim_modules/common_bond.js';
+import { craft_campfire_gm } from './swim_modules/craft_campfire.js';
+import { effect_builder_gm } from './swim_modules/effect_builder.js';
+import { summoner_gm } from './swim_modules/mighty-summoner.js';
+import { heal_other_gm } from './swim_modules/personal_health_centre.js';
+import { shape_changer_gm } from './swim_modules/shape_changer.js';
 
 /*Hooks.on('getCardsDirectoryEntryContext', function (stuff) {
     console.log(stuff)
 })*/
 
-Hooks.on('getSceneControlButtons', function (hudButtons) {
-    swim_buttons(hudButtons)
+Hooks.on("init", () => {
+    game.keybindings.register("swim", "raise-calculator", {
+        name: "SWIM.openRaiseCalculatorName",
+        hint: "SWIM.openRaiseCalculatorHint",
+        onDown: async () => {
+            raise_calculator();
+        },
+        restricted: false,
+        precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
+    });
 });
 
-Hooks.on('setup', api.registerFunctions)
+Hooks.on('getSceneControlButtons', function (hudButtons) {
+    if (game.settings.get("swim", "raise-calculator")) {
+        swim_buttons(hudButtons)
+    }
+});
+
+Hooks.on('setup', () => {
+    register_settings();
+})
 
 Hooks.on(`ready`, () => {
     // Set round time to 6 as appropriate to the system:
@@ -55,7 +72,6 @@ Hooks.on(`ready`, () => {
     // Ready stuff
     console.log("  █████████  █████   ███   █████ █████ ██████   ██████\n ███░░░░░███░░███   ░███  ░░███ ░░███ ░░██████ ██████ \n░███    ░░░  ░███   ░███   ░███  ░███  ░███░█████░███ \n░░█████████  ░███   ░███   ░███  ░███  ░███░░███ ░███ \n ░░░░░░░░███ ░░███  █████  ███   ░███  ░███ ░░░  ░███ \n ███    ░███  ░░░█████░█████░    ░███  ░███      ░███ \n░░█████████     ░░███ ░░███      █████ █████     █████\n ░░░░░░░░░       ░░░   ░░░      ░░░░░ ░░░░░     ░░░░░ ")
     console.log('SWADE Immersion Module | Ready');
-    register_settings();
 
     //Setup actions for BRSW:
     if (game.settings.get('swim', 'br2Support') === true) {
