@@ -107,7 +107,10 @@
 			"path": "packs/swade-immersive-macros.db",
 			"module": "swim",
 			"type": "Macro",
-			"private": true
+			"ownership": {
+        		"PLAYER": "NONE",
+        		"ASSISTANT": "OWNER"
+      		}
 		},
 		{
 			"name": "chase-layouts",
@@ -116,7 +119,10 @@
 			"path": "packs/chase-layouts.db",
 			"module": "swim",
 			"type": "Scene",
-			"private": true
+			"ownership": {
+        		"PLAYER": "NONE",
+        		"ASSISTANT": "OWNER"
+      		}
 		},
 		{
 			"label": "SWIM Actor Folders",
@@ -125,7 +131,10 @@
 			"system": "swade",
 			"module": "swim",
 			"type": "Actor",
-			"private": true
+			"ownership": {
+        		"PLAYER": "NONE",
+        		"ASSISTANT": "OWNER"
+      		}
 		},
 		{
 			"label": "SWIM Chase Cards",
@@ -134,7 +143,10 @@
 			"system": "swade",
 			"module": "swim",
 			"type": "JournalEntry",
-			"private": true
+			"ownership": {
+        		"PLAYER": "NONE",
+        		"ASSISTANT": "OWNER"
+      		}
 		},
 		{
 			"label": "SWIM Roll Tables",
@@ -143,7 +155,10 @@
 			"system": "swade",
 			"module": "swim",
 			"type": "RollTable",
-			"private": true
+			"ownership": {
+        		"PLAYER": "NONE",
+        		"ASSISTANT": "OWNER"
+      		}
 		}
 	],
 	"url": "https://github.com/SalieriC/SWADE-Immersive-Macros",
