@@ -1,6 +1,6 @@
 /*******************************************
  * Fear Table Macro.
- * v. 3.0.1 by SalieriC#8263, original creator unknown.
+ * v. 3.0.2 by SalieriC#8263, original creator unknown.
  *******************************************/
 export async function fear_table_script() {
     let { speaker, _, __, token } = await swim.get_macro_variables()
@@ -200,7 +200,8 @@ export async function fear_table_script() {
                 const pronoun = swim.get_pronoun(actor)
                 const roundRoll = await new Roll(`2d6`).evaluate({ async: false });
                 const rounds = roundRoll.total
-                const eff = await succ.apply_status(token, "heart-attack", true, true)
+                const effects = await succ.apply_status(token, "heart-attack", true, true)
+                const eff = effects[0] //Only expect a single effect returned.
                 const data = {
                     duration: {
                         rounds: rounds,

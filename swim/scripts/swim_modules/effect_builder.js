@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 4.3.4
+ * v. 4.3.5
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  * 
  * Powers on hold for now:
@@ -1801,7 +1801,8 @@ export async function effect_builder_gm(data) {
                 aeData.flags.swim.owner = true
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data.fly.duration
             }
-            const effect = await succ.apply_status(target, "flying", true, false)
+            const effects = await succ.apply_status(target, "flying", true, false)
+            const effect = effects[0] //Only expect a single returned AE here.
             await effect.update(aeData)
         }
     } else if (type === "intangibility") {
