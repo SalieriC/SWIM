@@ -343,7 +343,7 @@ class DocumentConfigForm extends FormApplication {
 
         if (typeof oldVal === 'string' && oldVal.length === 0) {
             defaults = {
-                label: `Ammo Effect (${this.object.name})`,
+                name: `Ammo Effect (${this.object.name})`,
                 icon: this.object.data.img
             }
         } else {

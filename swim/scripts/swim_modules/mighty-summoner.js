@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 1.2.7
+ * v. 1.2.8
  * By SalieriC
  ******************************************************/
  function generate_id (length = 16) {
@@ -157,7 +157,7 @@
                         let aeData = {
                             changes: [],
                             icon: "modules/swim/assets/icons/effects/0-summoned.svg",
-                            label: `${game.i18n.localize("SWIM.label-summonedEntity")} ${scName}`,
+                            name: `${game.i18n.localize("SWIM.label-summonedEntity")} ${scName}`,
                             duration: {
                                 rounds: durationRounds,
                                 seconds: durationSeconds
@@ -284,7 +284,7 @@
     let aeData = {
         changes: [],
         icon: "modules/swim/assets/icons/effects/0-summoned.svg",
-        label: game.i18n.localize("SWIM.label-summoned"),
+        name: game.i18n.localize("SWIM.label-summoned"),
         duration: {
             rounds: durationRounds,
             seconds: durationSeconds
@@ -334,7 +334,7 @@
             }
         ],
         icon: "",
-        label: "",
+        name: "",
     }
     let command = summoner.actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-command").toLowerCase())
     let holdLine = summoner.actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-holdTheLine").toLowerCase())

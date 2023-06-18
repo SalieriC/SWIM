@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - The Power Effect Builder now adds the powers description to the active effect if a power item is found on the actor. This currently only works for power effects not handled by SUCC (so every AE except Boost, Lower, Protection and Smite).
+### Changed
+- Migrated all active effect creations to use the 'name' property instead of 'label' as this was changed in Foundry v11.
 ### Fixed
 - Effect Builder and Fear Table macros being partially broken due to changes in SUCC.
 
