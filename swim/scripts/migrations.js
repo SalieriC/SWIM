@@ -63,7 +63,7 @@ export async function v10_migration() {
                                     flags: {
                                         swim: {
                                             config: {
-                                                _version: SWIM.CONFIG_VERSION
+                                                _version: 1
                                             }
                                         }
                                     }
@@ -136,7 +136,7 @@ export async function v10_migration() {
                                             isConsumable: isConsumable,
                                             isSilenced: silenced,
                                             loadedAmmo: loadedAmmo,
-                                            _version: SWIM.CONFIG_VERSION
+                                            _version: 1
                                         }
                                     }
                                 }
@@ -145,6 +145,74 @@ export async function v10_migration() {
                         }
                     }
                     await game.settings.set('swim', 'v1MigrationDone', true)
+                    window.location.reload();
+                }
+            }
+        },
+    }).render(true);
+}
+
+export async function v11_migration() {
+    new Dialog({
+        title: 'SWIM v.2.0.0 Migration',
+        content: `<form>
+                <h1>SWIM v.2.0.0 Migration</h1>
+                <p>In Foundry v11 there was a change in the way active effects are named, while all actual AEs should be migrated by Foundry itself, the data stored by SWIM will not. 
+                You need to run this migration to update all of SWIMs data to v11. This cannot be undone and will affect all of your actors and items in this world. 
+                Actors and items in compendiums will be migrated once they are accessed by SWIM. Please make sure to create a backup before you proceed.</p>
+                <hr />
+                <div class="form-group">
+                    <label for="startMigration">I have made a backup and now wish to start your fancy migration: </label>
+                    <input id="startMigration" name="Start Migration" type="checkbox"></input>
+                </div>
+                <hr />
+                <p>Please also consider to donate if you really like SWIM. This is one of the few ways of letting me know that SWIM is actually used and appreciated by some. =)</p>
+                <p><a href="https://ko-fi.com/salieric"><img style="border: 0px; display: block; margin-left: auto; margin-right: auto;" src="https://www.ko-fi.com/img/githubbutton_sm.svg" width="223" height="30" /></a></p>
+            </form>`,
+        buttons: {
+            one: {
+                label: "Run Migration",
+                callback: async (html) => {
+                    let start = html.find("#startMigration")[0].checked
+                    if (start === true) {
+                        ui.notifications.warn("Starting Migration now, please be patient. Your world will reload after completion.", { permanent: true })
+                        let allItems = []
+                        for (let item of game.items) { allItems.push(item) }
+                        for (let actor of game.actors) {
+                            //Process all actors...
+                            console.log("Starting migration for", actor)
+                            for (let item of actor.items) { allItems.push(item) }
+                            const flagData = {
+                                flags: {
+                                    swim: {
+                                        config: {
+                                            _version: SWIM.CONFIG_VERSION
+                                        }
+                                    }
+                                }
+                            }
+                            await actor.update(flagData)
+                        } for (let item of allItems) {
+                            console.log("Starting migration for", item)
+                            //Process all items...
+                            if (item.flags?.swim?.config?.ammoActiveEffect) {
+                                const oldAmmoAE = item.flags.swim.config.ammoActiveEffect
+                                const newAmmoAE = oldAmmoAE.replace(/"label":/g, '"name":');
+                                const flagData = {
+                                    flags: {
+                                        swim: {
+                                            config: {
+                                                ammoActiveEffect: newAmmoAE,
+                                                _version: SWIM.CONFIG_VERSION
+                                            }
+                                        }
+                                    }
+                                }
+                                await item.update(flagData)
+                            }
+                        }
+                    }
+                    await game.settings.set('swim', 'v2MigrationDone', true)
                     window.location.reload();
                 }
             }
@@ -176,7 +244,7 @@ export async function update_migration(actor, item, currVersion) {
                                 deathSFX: deathSFX,
                                 unshakeSFX: unshakeSFX,
                                 soakSFX: soakSFX,
-                                _version: SWIM.CONFIG_VERSION
+                                _version: 1
                             }
                         }
                     }
@@ -188,7 +256,7 @@ export async function update_migration(actor, item, currVersion) {
                     flags: {
                         swim: {
                             config: {
-                                _version: SWIM.CONFIG_VERSION
+                                _version: 1
                             }
                         }
                     }
@@ -260,7 +328,7 @@ export async function update_migration(actor, item, currVersion) {
                             isConsumable: isConsumable,
                             isSilenced: silenced,
                             loadedAmmo: loadedAmmo,
-                            _version: SWIM.CONFIG_VERSION
+                            _version: 1
                         }
                     }
                 }
@@ -268,5 +336,43 @@ export async function update_migration(actor, item, currVersion) {
             await item.update(flagData)
         }
         ui.notifications.notify(`Migration for ${actor.name} finished.`)
+    } if (currVersion < 2) {
+        let name = actor ? actor.name : item.name
+        ui.notifications.warn(`Starting Migration for ${name}, please wait.`)
+        let allItems = []
+        if (item) { allItems.push(item) }
+        if (actor) {
+            //Process actor...
+            console.log("Starting migration for", actor)
+            for (let item of actor.items) { allItems.push(item) }
+            const flagData = {
+                flags: {
+                    swim: {
+                        config: {
+                            _version: SWIM.CONFIG_VERSION
+                        }
+                    }
+                }
+            }
+            await actor.update(flagData)
+        } for (let item of allItems) {
+            console.log("Starting migration for", item)
+            //Process all items...
+            if (item.flags?.swim?.config?.ammoActiveEffect) {
+                const oldAmmoAE = item.flags.swim.config.ammoActiveEffect
+                const newAmmoAE = oldAmmoAE.replace(/"label":/g, '"name":');
+                const flagData = {
+                    flags: {
+                        swim: {
+                            config: {
+                                ammoActiveEffect: newAmmoAE,
+                                _version: SWIM.CONFIG_VERSION
+                            }
+                        }
+                    }
+                }
+                await item.update(flagData)
+            }
+        }
     }
 }

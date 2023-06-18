@@ -6,7 +6,7 @@
  ******************************************************/
 
 // Update this whenever SWIM actor/item config changes:
-export const CONFIG_VERSION = 1;
+export const CONFIG_VERSION = 2;
 
 export const ALMOST_INVISIBLE = 0.1;
 export const RAISE_SCALE_DEFAULT = 1.0;
