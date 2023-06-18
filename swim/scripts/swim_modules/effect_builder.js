@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 4.3.5
+ * v. 5.0.0
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  * 
  * Powers on hold for now:
@@ -751,6 +751,7 @@ export async function effect_builder() {
                                     startRound: token.combatant != null ? game.combat.round : 0,
                                     rounds: noPP ? Number(999999999999999) : durationRounds,
                                 },
+                                description: power ? power.system.description : "",
                                 flags: {
                                     swade: {
                                         expiration: 3
@@ -1018,6 +1019,7 @@ export async function effect_builder_gm(data) {
                     duration: power || noPP ? Number(999999999999999) : data.smite.duration,
                     icon: data.smite.icon,
                     additionalChanges: target.targetID === casterID ? additionalChange : false,
+                    description: power ? power.system.description : "",
                     flags: {swim: {
                         maintainedPower: true,
                         maintaining: game.i18n.localize(`SWIM.power-${type}`),
@@ -1049,6 +1051,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data.growth.duration,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -1098,6 +1101,7 @@ export async function effect_builder_gm(data) {
                     rounds: Number(600),
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 2
@@ -1127,6 +1131,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data.shrink.duration,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -1173,6 +1178,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data.speed.duration,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -1214,6 +1220,7 @@ export async function effect_builder_gm(data) {
                 icon: data.sloth.icon ? data.sloth.icon : "modules/swim/assets/icons/effects/m-sloth.svg",
                 label: game.i18n.localize("SWIM.power-sloth"),
                 duration: duration,
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -1248,6 +1255,7 @@ export async function effect_builder_gm(data) {
                     startRound: target.combatant != null ? game.combat.round : 0,
                     seconds: power || noPP ? Number(999999999999999) : data.burden.durationNoCombat,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -1283,6 +1291,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration / 6,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -1317,6 +1326,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data.invisibility.duration,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -1372,6 +1382,7 @@ export async function effect_builder_gm(data) {
                 icon: data.confusion.icon ? data.confusion.icon : "modules/swim/assets/icons/effects/m-confusion.svg",
                 label: game.i18n.localize("SWIM.power-confusion"),
                 duration: duration,
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 2
@@ -1406,6 +1417,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data.deflection.duration,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -1442,6 +1454,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data.arcaneProtection.duration,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -1484,6 +1497,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data.burrow.duration,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -1520,6 +1534,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data.damageField.duration,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -1557,6 +1572,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration / 6,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -1594,6 +1610,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data.detectArcana.duration,
                     startRound: target.combatant != null ? game.combat.data.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -1630,6 +1647,7 @@ export async function effect_builder_gm(data) {
                     seconds: power || noPP ? Number(999999999999999) : data.concealArcana.duration,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -1667,6 +1685,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration / 6,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -1705,6 +1724,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration / 6,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -1742,6 +1762,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data.farsight.duration,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -1777,6 +1798,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data.fly.duration,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -1816,6 +1838,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data.intangibility.duration,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -1853,6 +1876,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration / 6,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -1890,6 +1914,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -1927,6 +1952,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration / 6,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -1964,6 +1990,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -2001,6 +2028,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration / 6,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -2038,6 +2066,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -2074,6 +2103,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -2110,6 +2140,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -2146,6 +2177,7 @@ export async function effect_builder_gm(data) {
                     rounds: power || noPP ? Number(999999999999999) : data[type].duration,
                     startRound: target.combatant != null ? game.combat.round : 0,
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -2189,6 +2221,7 @@ export async function effect_builder_gm(data) {
                 icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
                 label: data[type].degree === "raise" ? `${game.i18n.localize(`SWIM.power-${type}`)} (${game.i18n.localize("SWIM.raise").toLowerCase()})` : `${game.i18n.localize(`SWIM.power-${type}`)}`,
                 duration: duration,
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
@@ -2225,6 +2258,7 @@ export async function effect_builder_gm(data) {
                     startRound: target.combatant != null ? game.combat.round : 0,
                     seconds: power || noPP ? Number(999999999999999) : data[type].durationSeconds
                 },
+                description: power ? power.system.description : "",
                 flags: {
                     swade: {
                         expiration: 3
