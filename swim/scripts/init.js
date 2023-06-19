@@ -15,16 +15,34 @@ import { actor_hooks } from "./hooks/actor_hooks.js"
 import { combat_hooks } from "./hooks/combat_hooks.js"
 import { brsw_hooks } from "./hooks/brsw_hooks.js"
 import { brsw_actions_setup } from "./helpers/brsw_actions_setup.js"
+import { raise_calculator } from './helpers/raise-calculator.js'
 
 /*Hooks.on('getCardsDirectoryEntryContext', function (stuff) {
     console.log(stuff)
 })*/
 
-Hooks.on('getSceneControlButtons', function (hudButtons) {
-    swim_buttons(hudButtons)
+Hooks.on("init", () => {
+    game.keybindings.register("swim", "raiseCalculator", {
+        name: "SWIM.openRaiseCalculatorName",
+        hint: "SWIM.openRaiseCalculatorHint",
+        onDown: async () => {
+            raise_calculator();
+        },
+        restricted: false,
+        precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
+    });
 });
 
-Hooks.on('setup', api.registerFunctions)
+Hooks.on('getSceneControlButtons', function (hudButtons) {
+    if (game.settings.get("swim", "raiseCalculator")) {
+        swim_buttons(hudButtons)
+    }
+});
+
+Hooks.on('setup', () => {
+    register_settings()
+    api.registerFunctions()
+})
 
 Hooks.on(`ready`, () => {
     // Set round time to 6 as appropriate to the system:
@@ -50,7 +68,6 @@ Hooks.on(`ready`, () => {
     // Ready stuff
     console.log("  █████████  █████   ███   █████ █████ ██████   ██████\n ███░░░░░███░░███   ░███  ░░███ ░░███ ░░██████ ██████ \n░███    ░░░  ░███   ░███   ░███  ░███  ░███░█████░███ \n░░█████████  ░███   ░███   ░███  ░███  ░███░░███ ░███ \n ░░░░░░░░███ ░░███  █████  ███   ░███  ░███ ░░░  ░███ \n ███    ░███  ░░░█████░█████░    ░███  ░███      ░███ \n░░█████████     ░░███ ░░███      █████ █████     █████\n ░░░░░░░░░       ░░░   ░░░      ░░░░░ ░░░░░     ░░░░░ ")
     console.log('SWADE Immersion Module | Ready');
-    register_settings();
 
     //Setup actions for BRSW:
     if (game.settings.get('swim', 'br2Support') === true) {

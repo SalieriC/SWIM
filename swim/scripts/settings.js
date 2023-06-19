@@ -100,6 +100,19 @@ export function register_settings() {
         scope: 'world',
         config: true,
     });
+    game.settings.register("swim", "raiseCalculator", {
+        name: "SWIM.activateRaiseCalculatorButtonName",
+        hint: "SWIM.activateRaiseCalculatorButtonHint",
+        type: Boolean,
+        default: true,
+        scope: "world",
+        config: true,
+        onChange: (value) => {
+            if (value) Hooks.on("getSceneControlButtons", swim_buttons);
+            else Hooks.off("getSceneControlButtons", swim_buttons);
+            ui.controls.initialize();
+        },
+    });
     game.settings.register('swim', 'br2Message', {
         name: "br2MessageName",
         hint: "br2MessageHint",

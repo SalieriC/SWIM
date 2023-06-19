@@ -497,5 +497,15 @@
   "SWIM.dialogue-radiationCentre-2": "requires you to roll Vigor or you'll take <b>1 Level of Fatigue</b>.</p><p>Instead you may choose to take the Level of Fatigue without a roll.</p>",
   "SWIM.notification-applyFatigue": "Fatigue will be applied now.",
   "SWIM.dialogue-failedFatigueRoll-decisionFreeReroll": "<p>You've failed your roll</b>; you will <b>receive 1 Level of Fatigue</b>.</p><p>Do you want to use your free reroll?</p>",
-  "SWIM.dialogue-failedFatigueRoll-decisionBennyReroll": "<p>You've failed your roll</b>; you will <b>receive 1 Level of Fatigue</b>.</p><p>Do you want to reroll your Vigor Roll (you have <b>{totalBennies} Bennies</b> left)?</p"
+  "SWIM.dialogue-failedFatigueRoll-decisionBennyReroll": "<p>You've failed your roll</b>; you will <b>receive 1 Level of Fatigue</b>.</p><p>Do you want to reroll your Vigor Roll (you have <b>{totalBennies} Bennies</b> left)?</p",
+  "SWIM.activateRaiseCalculatorButtonName": "Add Raise Calculator Button",
+  "SWIM.activateRaiseCalculatorButtonHint": "Adds a Raise Calculator button to the Scene Control Buttons.",
+  "SWIM.raiseCalculator-label": "Raise Calculator",
+  "SWIM.raiseCalculator-targetNumber": "Target Number",
+  "SWIM.raiseCalculator-roll": "Roll",
+  "SWIM.raiseCalculator-result": "Result",
+  "SWIM.raiseCalculator-failure": "Failure",
+  "SWIM.raiseCalculator-success": "Success",
+  "SWIM.raiseCalculator-raises-singular": "{raises} Raise",
+  "SWIM.raiseCalculator-raises-plural": "{raises} Raises"
 }
