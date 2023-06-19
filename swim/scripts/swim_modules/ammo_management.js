@@ -1,6 +1,6 @@
 /*******************************************
  * Ammo Management (Enhanced Version v2)
- * version 6.0.13
+ * version 6.0.14
  * By SalieriC#8263 & Loofou#7406. (old Dialogue Framework: Kekilla#7036)
  *
  * Makes heavy use of SFX set up on the weapon.
@@ -30,8 +30,6 @@ function checkWeapon(item) {
 }
 
 async function createDialog(actor, weapons) {
-    const defaultSingleReload = game.settings.get("swim", "ammoMgm-defaultSingleReload") ? " checked" : "";
-
     const shotsPerRof = [0, 1, 5, 10, 20, 40, 50];
 
     let defaultWeapon = weapons[0];
@@ -40,6 +38,7 @@ async function createDialog(actor, weapons) {
     let loadedAmmo = defaultWeapon.flags.swim.config.loadedAmmo;
     let currentShots = defaultWeapon.system.currentShots;
     let currentMaxShots = defaultWeapon.system.shots;
+    let defaultSingleReload = defaultWeapon.system.reloadType === "single" ? " checked" : "";
 
     await new Dialog({
         title: game.i18n.localize("SWIM.dialogue-ammoManagement"),
@@ -113,6 +112,7 @@ async function createDialog(actor, weapons) {
                 const selectedAmmoForm = form.querySelector('select[name="ammo"]');
                 const selectedShotsForm = form.querySelector('input[name="shots"]');
                 const selectedLoadedAmmoForm = form.querySelector('label[name="loaded_ammo"]');
+                const selectedsingleReloadForm = form.querySelector('input[name="singleReload"]');
 
                 const selectedWeapon = weapons[selectedWeaponForm.selectedIndex];
 
@@ -128,6 +128,8 @@ async function createDialog(actor, weapons) {
 
                     defaultAmmo = selectedWeapon.system.ammo.trim().split('|').filter(a => !!actor.items.getName(a));
                     selectedAmmoForm.innerHTML = defaultAmmo.reduce((acc, val) => acc += `<option value="${val}" ${val === loadedAmmo ? `selected` : ``}>${val}</option>`, ``);
+                    
+                    selectedsingleReloadForm.checked = (selectedWeapon.system.reloadType === 'single');
 
                     defaultWeapon = selectedWeapon;
                 }
