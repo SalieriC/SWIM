@@ -9,11 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - The Power Effect Builder now adds the powers description to the active effect if a power item is found on the actor. This currently only works for power effects not handled by SUCC (so every AE except Boost, Lower, Protection and Smite).
 - Migration to change all AE data for ammunition to use the new 'name' property instead of 'label'.
+- Mighty Summoner now is aware of the Edges "Summoner" and "Druid" (Fantasy Companion) and adjusts the duration accordingly (duration in minutes for Summoner, one hour for Druid). It uses a base duration of 5 however so there might be problems with powers of a different duration. If the "Concentration" Edge is found the duration is doubled after respecting the duration increase from "Druid" or "Summoner". The duration can still be changed manually.
+- New Translation strings.
 ### Changed
 - Migrated all active effect creations to use the 'name' property instead of 'label' as this was changed in Foundry v11.
 - Ammo Management now respects the reload type 'single reload' and defaults to one bullet relaod if the weapon is set up like that. As a result, the setting in SWIM that sets the checkbox in the ammo management dialogue was deprecated.
 ### Fixed
 - Effect Builder and Fear Table macros being partially broken due to changes in SUCC.
+### Removed
+- Some translation strings no longer needed.
 
 ## [1.5.0] - 2023-05-28
 ☮️ Peace in the world, or the world in pieces. 🕊️

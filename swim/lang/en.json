@@ -271,6 +271,8 @@
   "SWIM.effectBuilder-usePowerIconsName": "Use power icon of caster in Effect Builder:",
   "SWIM.effectBuilder-usePowerIconsHint": "If checked, SWIM will use the power icon of the casters power (if found) as the icon for the active effect. Otherwise those icons provided by SWIM will be used.",
   "SWIM.edge-concentration": "Concentration",
+  "SWIM.edge-summoner-fc": "Summoner",
+  "SWIM.edge-druid-fc": "Druid",
   "SWIM.power-boostLower": "Boost/Lower Trait",
   "SWIM.power-boostTrait": "Boost Trait",
   "SWIM.power-lowerTrait": "Lower Trait",
