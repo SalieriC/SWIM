@@ -396,7 +396,7 @@ async function reloadButton(html, actor, weapons, ammo) {
         if (oldAmmo !== selectedAmmo) {
             chgType = true;
         }
-        if (chgType === false && autoReload) {
+        if (chgType === false && autoReload) { //Stop here if the weapon doesn't need a reloading action and ammo isn't changed.
             ui.notifications.notify(game.i18n.localize("SWIM.notification-noNeedToReload"))
             return;
         }
