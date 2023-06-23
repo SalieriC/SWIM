@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 1.3.0
+ * v. 1.3.1
  * By SalieriC
  ******************************************************/
  function generate_id (length = 16) {
@@ -88,7 +88,7 @@
             <label for="raise"><p>Cast with a raise: </label>
             <input id="raise" name="raiseBox" type="checkbox"></input></p>
         </div>`
-        if (noPP === false) {
+        if (!noPP) {
             content += `<p>Enter a Duration in rounds. (Permanent is -1; an hour is 600.)</p>
         <div class="form-group">
             <label for="duration"><p>Duration: </label>
@@ -344,10 +344,10 @@
     let holdLine = summoner.actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-holdTheLine").toLowerCase())
     let fervor = summoner.actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-fervor").toLowerCase())
     if (fervor) {
-        commandAeData.label = "Is under exceptional command"
+        commandAeData.name = "Is under exceptional command"
         commandAeData.icon = fervor.img
     } else if (command) {
-        commandAeData.label = "Is under command"
+        commandAeData.name = "Is under command"
         commandAeData.icon = command.img
     } 
     if (holdLine) {
