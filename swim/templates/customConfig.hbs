@@ -19,7 +19,13 @@
                                 <select name="{{this.id}}"> 
                                     {{#select this.value}}
                                         {{#each this.options}}
-                                            <option value="{{this.value}}">{{localize this.locaString}}</option>
+                                            <option value="{{this.value}}">
+                                                {{#if this.locaString }}
+                                                    {{localize this.locaString}}
+                                                {{else}}
+                                                    {{this.name}}
+                                                {{/if}}
+                                            </option>
                                         {{/each}}
                                     {{/select}}
                                 </select>
