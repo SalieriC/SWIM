@@ -19,18 +19,18 @@
  * v. 1.3.1
  * By SalieriC
  ******************************************************/
- function generate_id (length = 16) {
-    var result           = 'SWIM-';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+function generate_id(length = 16) {
+    var result = 'SWIM-';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
-      result += characters.charAt(Math.floor(Math.random() * 
-      charactersLength));
+    for (var i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() *
+            charactersLength));
     }
-   return result;
-  }
+    return result;
+}
 
- export async function summoner_script() {
+export async function summoner_script() {
     const { speaker, _, __, token } = await swim.get_macro_variables()
 
     if (!game.modules.get("warpgate")?.active) {
@@ -55,7 +55,7 @@
 
     //Get an ID for this maintenance
     const maintID = generate_id()
-    
+
     //Set div class based on enabled official module:
     const officialClass = await swim.get_official_class()
 
@@ -137,12 +137,12 @@
                         let updates
                         if (raise === false) {
                             updates = {
-                                token: {name: `${summonersName}'s ${scName}`, actorLink: false}, //don't want to mess with the source actor in case it is linked.
-                                actor: {name: `${summonersName}'s ${scName}`},
+                                token: { name: `${summonersName}'s ${scName}`, actorLink: false }, //don't want to mess with the source actor in case it is linked.
+                                actor: { name: `${summonersName}'s ${scName}` },
                             }
                         } else if (raise === true) {
                             updates = {
-                                token: {name: `${summonersName}'s ${scName}`},
+                                token: { name: `${summonersName}'s ${scName}`, actorLink: false },
                                 actor: {
                                     name: `${summonersName}'s ${scName}`,
                                     "system.wounds.max": scMaxWounds + 1
@@ -156,7 +156,7 @@
                         let durationRounds
                         let durationSeconds
                         if (duration === -1) { durationRounds = Number(999999999999999); durationSeconds = Number(999999999999999) }
-                        else { durationRounds = duration ; durationSeconds = duration * 6 }
+                        else { durationRounds = duration; durationSeconds = duration * 6 }
 
                         let aeData = {
                             changes: [],
@@ -216,7 +216,7 @@
     async function dismiss() {
         new Dialog({
             title: 'Mighty Summoner: Dismiss',
-            content: game.i18n.format("SWIM.dialogue-dismiss", {officialClass: officialClass, name: token.name}),
+            content: game.i18n.format("SWIM.dialogue-dismiss", { officialClass: officialClass, name: token.name }),
             buttons: {
                 one: {
                     label: `<i class="fas fa-paw"></i> Dismiss Creature`,
@@ -264,9 +264,9 @@
             await swim.wait(`800`);
         }
     }
- }
+}
 
- export async function summoner_gm(data) {
+export async function summoner_gm(data) {
     const newTokenID = data.tokenID
     const newToken = canvas.tokens.get(newTokenID)
     const summonerID = data.summonerID
@@ -295,10 +295,6 @@
         },
         flags: data.flags
     }
-
-    // Double the duration if the caster has concentration:
-    const concentration = summoner.actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-concentration") && i.type === "edge")
-    if (concentration) { aeData.duration.rounds = aeData.duration.rounds * 2 }
 
     if (summoner.combatant != null) {
         let oldCombatData = summoner.combatant.toObject()
@@ -349,7 +345,7 @@
     } else if (command) {
         commandAeData.name = "Is under command"
         commandAeData.icon = command.img
-    } 
+    }
     if (holdLine) {
         commandAeData.changes.push(
             {
@@ -362,4 +358,4 @@
     if (fervor || command) {
         await newToken.actor.createEmbeddedDocuments('ActiveEffect', [commandAeData]);
     }
- }
+}
