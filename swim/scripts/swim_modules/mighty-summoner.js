@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 1.4.1
+ * v. 1.4.2
  * By SalieriC
  ******************************************************/
 function generate_id(length = 16) {
@@ -314,6 +314,9 @@ export async function summoner_gm(data) {
             if (constructAbility) { await scCopy.createEmbeddedDocuments('Item', [constructAbility]) }
             if (fearlessAbility) { await scCopy.createEmbeddedDocuments('Item', [fearlessAbility]) }
         }
+        //And delete the power to the mirror can't reproduce itself:
+        const power = scCopy.items.find(p => p.type === 'power' && p.name.toLowerCase() === game.i18n.localize("SWIM.power-summonAlly").toLowerCase())
+        if (power) { await power.delete() }
         let newTokenIDs = await warpgate.spawnAt(center, scCopy.name) //then spawn a token for it
         newTokenID = newTokenIDs[0]
         await warpgate.dismiss(newToken.id) //then dismiss the faulty token that carried over
