@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 1.3.1
+ * v. 1.4.0
  * By SalieriC
  ******************************************************/
 function generate_id(length = 16) {
@@ -77,6 +77,7 @@ export async function summoner_script() {
         for (let each of totalContent) {
             scOptions = scOptions + `<option value="${each.id}">${each.name}</option>`;
         }
+        scOptions = scOptions + `<option value="mirror">${game.i18n.localize("SWIM.power-mirrorSelf")}</option>`;
         let content = `${officialClass}
         <p>Please select a creature you want to summon and confirm.</p>
         <p>Afterwards please select a position on the canvas by clicking anywhere within your range.</p>
@@ -123,7 +124,7 @@ export async function summoner_script() {
                     label: `<i class="fas fa-paw"></i> Summon Creature`,
                     callback: async (html) => {
                         //Get actor based on provided ID:
-                        const scID = html.find(`#selected_sc`)[0].value;
+                        const scID = html.find(`#selected_sc`)[0].value === 'mirror' ? actor.id : html.find(`#selected_sc`)[0].value;
                         //Fetching raise:
                         const raise = html.find(`#raise`)[0].checked;
                         const summonersName = token.name
@@ -133,7 +134,7 @@ export async function summoner_script() {
                         //Get Duration:
                         const duration = noPP ? Number(-1) : Number(html.find(`#duration`)[0].value)
                         const skillName = noPP ? html.find(`#skillSelection`)[0].value : false
-
+                        
                         let updates
                         if (raise === false) {
                             updates = {
@@ -192,6 +193,9 @@ export async function summoner_script() {
                             tokenID: spawnData[0],
                             maintID: maintID,
                             duration: duration,
+                            mirror: scID === actor.id ? true : false,
+                            mainFolderID: mainFolder.id,
+                            raise: raise,
                             flags: {
                                 swade: {
                                     expiration: 3
@@ -267,10 +271,51 @@ export async function summoner_script() {
 }
 
 export async function summoner_gm(data) {
-    const newTokenID = data.tokenID
-    const newToken = canvas.tokens.get(newTokenID)
+    let newTokenID = data.tokenID
+    let newToken = canvas.tokens.get(newTokenID)
     const summonerID = data.summonerID
     const summoner = canvas.tokens.get(summonerID)
+
+    //Time for some real bad trickery in case it's a mirrored self:
+    if (data.mirror) {
+        const summonerActor = summoner.actor
+        const scene = newToken.scene
+        const center = newToken.center
+        let scPreset = game.actors.find(a => (a.id === summonerActor.id)).toObject();
+        const packName = game.settings.get('swim', 'specialAbilitiesPack')
+        //Creating a copy of the summoner with a few changes:
+        scPreset.folder = data.mainFolderID
+        scPreset.type = 'npc'
+        scPreset.system.wounds.max = data.raise ? 1 : 0
+        scPreset.system.wounds.value = 0
+        scPreset.system.fatigue.value = 0
+        scPreset.system.wildcard = false
+        scPreset.system.bennies.max = 0
+        scPreset.system.bennies.value = 0
+        scPreset.name = `${game.i18n.localize("SWIM.word-Mirrored")} ${summonerActor.name}`
+        scPreset.prototypeToken.name = `${game.i18n.localize("SWIM.word-Mirrored")} ${summoner.name}`
+        scPreset.prototypeToken.actorLink = true
+        scPreset.flags.swim = data.flags.swim
+        if (packName === 'none' || !packName) {
+            scPreset.system.wounds.ignored = scPreset.system.wounds.ignored + 1
+            scPreset.system.attributes.spirit.unShakeBonus = scPreset.system.attributes.spirit.unShakeBonus + 2
+        }
+        let scCopy = await Actor.create(scPreset) //create the new actor first
+        //Now that a new actor is created, we need the Construct and Fearless abilities if a pack is defined:
+        if (packName || packName != 'none') {
+            const pack = game.packs.get(packName)
+            const contents = await pack.getDocuments()
+            const constructAbility = contents.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.ability-construct").toLowerCase())
+            const fearlessAbility = contents.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.ability-fearless").toLowerCase())
+            if (constructAbility) { await scCopy.createEmbeddedDocuments('Item', [constructAbility]) }
+            if (fearlessAbility) { await scCopy.createEmbeddedDocuments('Item', [fearlessAbility]) }
+        }
+        let newTokenIDs = await warpgate.spawnAt(center, scCopy.name) //then spawn a token for it
+        newTokenID = newTokenIDs[0]
+        await warpgate.dismiss(newToken.id) //then dismiss the faulty token that carried over
+        newToken = canvas.tokens.get(newTokenID) //then assign that new token for the rest of the function below
+    }
+
     //let duration = data.duration
     //Duration is now handled on the summoners AE, no need to do it here.
     let durationRounds = Number(999999999999999)
@@ -284,7 +329,7 @@ export async function summoner_gm(data) {
     }
     await newToken.document.update(tokenFlags)
 
-    // Setting up AE with duration that notifies about the powers end time.
+    // Setting up AE.
     let aeData = {
         changes: [],
         icon: "modules/swim/assets/icons/effects/0-summoned.svg",

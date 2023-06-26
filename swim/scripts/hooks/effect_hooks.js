@@ -64,6 +64,7 @@ export async function effect_hooks() {
                 const dismissData = [actor.token.id]
                 await play_sfx(dismissData)
                 await warpgate.dismiss(actor.token.id, game.scenes.current.id)
+                await delete_mirror(condition.flags?.swim?.maintenanceID)
             } else if (condition.flags.swim.owner === true) {
                 for (let each of game.scenes.current.tokens) {
                     const maintEffect = each.actor.effects.find(e => e.flags?.swim?.maintenanceID === condition.flags?.swim?.maintenanceID)
@@ -71,8 +72,16 @@ export async function effect_hooks() {
                         const dismissData = [each.id]
                         await play_sfx(dismissData)
                         await warpgate.dismiss(each.id, game.scenes.current.id)
+                        await delete_mirror(condition.flags?.swim?.maintenanceID)
                         return
                     }
+                }
+            }
+            async function delete_mirror(maintenanceID) {
+                //Also check if it was a mirrored self and delete the corresponding actor:
+                const mirrorActor = game.actors.find(a => a.flags?.swim?.maintenanceID === maintenanceID)
+                if (mirrorActor) {
+                    await mirrorActor.delete()
                 }
             }
             async function play_sfx(spawnData) {
