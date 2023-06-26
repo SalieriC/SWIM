@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 1.4.0
+ * v. 1.4.1
  * By SalieriC
  ******************************************************/
 function generate_id(length = 16) {
@@ -236,6 +236,10 @@ export async function summoner_script() {
                             if (maintEffect) {
                                 await maintEffect.delete()
                             }
+                        }
+                        const mirrorActor = game.actors.find(a => a.flags?.swim?.maintenanceID === maintenanceID)
+                        if (mirrorActor) {
+                            await mirrorActor.delete()
                         }
                     }
                 }
