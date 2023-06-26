@@ -507,5 +507,7 @@
   "SWIM.raiseCalculator-failure": "Failure",
   "SWIM.raiseCalculator-success": "Success",
   "SWIM.raiseCalculator-raises-singular": "{raises} Raise",
-  "SWIM.raiseCalculator-raises-plural": "{raises} Raises"
+  "SWIM.raiseCalculator-raises-plural": "{raises} Raises",
+  "SWIM.specialAbilitiesPackName": "Special Abilities Compendium:",
+  "SWIM.specialAbilitiesPackHint": "Here you can specify the compendium pack containing all your special abilities. This is useful for certain functionalities like 'Mirror Self'. Make sure the Special Abilities have Active Effects adjusting the actor accordingly. SWIM will not apply the changes by itself to allow for houserules. If you select no compendium here, SWIM will set up its own abilities and effects from core."
 }

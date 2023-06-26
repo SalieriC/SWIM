@@ -13,6 +13,10 @@ export const settingVariables = [
         default: 'Minor Health Potion|Health Potion|Greater Health Potion|Minor Healing Potion|Healing Potion|Greater Healing Potion'},
     {id: 'fatiguePotionOptions', config_type: String, tab: "Item Options",
         default: 'Minor Potion of Well-Being|Potion of Well-Being|Greater Potion of Well-Being|Minor Recreational Potion|Recreational Potion|Greater Recreational Potion'},
+    {id: 'specialAbilitiesPack', config_type: String, tab: "Tables & Playlists", default: 'none', 
+        //assigned the function get_compendim_list to options instead of its results. As the function is not called it is not executed yet.
+        options: SWIM.get_compendiums_list, type: 'item'
+    },
     {id: 'injuryTable', config_type: String, tab: "Tables & Playlists", default: 'Injury Table'},
     {id: 'fearTable', config_type: String, tab: "Tables & Playlists", default: 'Fear Table'},
     {id: 'chaseDeck', config_type: String, tab: "Tables & Playlists", default: 'Chase Deck'},
@@ -145,6 +149,13 @@ export function register_settings() {
         type: CustomConfigForm
     });
     for (let setting of settingVariables) {
+        //Check if a setting has an options property and if this option is a function. If both are true, sustitute the function for its result with a param of setting.type. That way we dealy when it is called.
+        if (Object.hasOwn(setting, 'options') && setting.options instanceof Function) {
+            console.log("SWIM | LOADING OPTIONS")
+            setting.options = setting.options(setting.type);
+            console.log(setting.type)
+            console.log(SWIM.get_compendiums_list(setting.type));
+        }
         game.settings.register('swim', setting.id, {
             name: game.i18n.localize(`SWIM.${setting.id}Name`),
             hint: game.i18n.localize(`SWIM.${setting.id}Hint`),

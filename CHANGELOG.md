@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New Translation strings.
 - Keybinding option for the Raise Calculator (mclemente)
 - SWIM compendiums get sorted into its own folder if not manually sorted (mclemente)
+- Added a setting to allow the selection of a compendium containing special abilities (javierriveracastro)
 ### Changed
 - Migrated all active effect creations to use the 'name' property instead of 'label' as this was changed in Foundry v11.
 - Ammo Management now respects the reload type 'single reload' and defaults to one bullet relaod if the weapon is set up like that. As a result, the setting in SWIM that sets the checkbox in the ammo management dialogue was deprecated.
