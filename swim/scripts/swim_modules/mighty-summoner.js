@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 1.4.2
+ * v. 1.4.3
  * By SalieriC
  ******************************************************/
 function generate_id(length = 16) {
@@ -162,7 +162,7 @@ export async function summoner_script() {
                         let aeData = {
                             changes: [],
                             icon: "modules/swim/assets/icons/effects/0-summoned.svg",
-                            name: `${game.i18n.localize("SWIM.label-summonedEntity")} ${scName}`,
+                            name: actor.id === scID ? `${game.i18n.localize("SWIM.label-summonedEntity")} ${game.i18n.localize("SWIM.word-Mirrored")} ${scName}` : `${game.i18n.localize("SWIM.label-summonedEntity")} ${scName}`,
                             duration: {
                                 rounds: durationRounds,
                                 seconds: durationSeconds
@@ -300,6 +300,12 @@ export async function summoner_gm(data) {
         scPreset.prototypeToken.name = `${game.i18n.localize("SWIM.word-Mirrored")} ${summoner.name}`
         scPreset.prototypeToken.actorLink = true
         scPreset.flags.swim = data.flags.swim
+        
+        //The copied actor needs to loose the maintenance AE just created, conviniently, it must be the one last created:
+        const effIndex = scPreset.effects.length - 1
+        console.log(scPreset, effIndex, data.maintID)
+        if (scPreset.effects[effIndex].flags?.swim?.owner === true) { scPreset.effects.splice(effIndex, 1) }
+
         if (packName === 'none' || !packName) {
             scPreset.system.wounds.ignored = scPreset.system.wounds.ignored + 1
             scPreset.system.attributes.spirit.unShakeBonus = scPreset.system.attributes.spirit.unShakeBonus + 2
@@ -313,6 +319,10 @@ export async function summoner_gm(data) {
             const fearlessAbility = contents.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.ability-fearless").toLowerCase())
             if (constructAbility) { await scCopy.createEmbeddedDocuments('Item', [constructAbility]) }
             if (fearlessAbility) { await scCopy.createEmbeddedDocuments('Item', [fearlessAbility]) }
+        }
+        //And also reduce the skills by one die type (min d4):
+        for (let skill of scCopy.items.filter(s => s.type === 'skill')) {
+            if (skill.system.die.sides > 4) { await skill.update({"system.die.sides": skill.system.die.sides - 2}) }
         }
         //And delete the power to the mirror can't reproduce itself:
         const power = scCopy.items.find(p => p.type === 'power' && p.name.toLowerCase() === game.i18n.localize("SWIM.power-summonAlly").toLowerCase())

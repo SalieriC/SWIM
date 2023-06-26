@@ -24,6 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug that caused some summoned creatures from the Mighty Summoner potentially being actor linked.
 ### Removed
 - Some translation strings no longer needed.
+### Known issues
+- Mirror Self only properly works if the summoning token is linked.
 
 ## [1.5.0] - 2023-05-28
 ☮️ Peace in the world, or the world in pieces. 🕊️
