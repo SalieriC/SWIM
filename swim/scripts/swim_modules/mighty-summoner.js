@@ -303,7 +303,6 @@ export async function summoner_gm(data) {
         
         //The copied actor needs to loose the maintenance AE just created, conviniently, it must be the one last created:
         const effIndex = scPreset.effects.length - 1
-        console.log(scPreset, effIndex, data.maintID)
         if (scPreset.effects[effIndex].flags?.swim?.owner === true) { scPreset.effects.splice(effIndex, 1) }
 
         if (packName === 'none' || !packName) {

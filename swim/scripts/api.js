@@ -26,7 +26,7 @@ export class api {
 
   // Exposing the globnals.
   static registerFunctions() {
-    console.log("SWIM API initialised.")
+    console.log("SWIM | API initialised.")
     api.globals()
   }
 

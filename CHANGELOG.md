@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Migrated all active effect creations to use the 'name' property instead of 'label' as this was changed in Foundry v11.
 - Ammo Management now respects the reload type 'single reload' and defaults to one bullet relaod if the weapon is set up like that. As a result, the setting in SWIM that sets the checkbox in the ammo management dialogue was deprecated.
 - The Raise Calculator button in the scene controls can now be turned off (mclemente)
+- Most console logs will now appear with `SWIM | ` in front of them in order to make their source easier to identify for the user.
 ### Fixed
 - Effect Builder and Fear Table macros being partially broken due to changes in SUCC.
 - Fixed a bug that caused some summoned creatures from the Mighty Summoner potentially being actor linked.

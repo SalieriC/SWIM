@@ -49,7 +49,7 @@ export async function adjust_scene_light() {
                   }
                 await scene.update(updateData)
                 ui.notifications.notify(game.i18n.format("SWIM.sceneIlluminationNotification"))
-                console.log("Flags set on scene.", scene)
+                console.log("SWIM | Flags set on scene.", scene)
             }
         },
         no: {

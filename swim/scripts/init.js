@@ -67,7 +67,7 @@ Hooks.on(`ready`, () => {
 
     // Ready stuff
     console.log("  █████████  █████   ███   █████ █████ ██████   ██████\n ███░░░░░███░░███   ░███  ░░███ ░░███ ░░██████ ██████ \n░███    ░░░  ░███   ░███   ░███  ░███  ░███░█████░███ \n░░█████████  ░███   ░███   ░███  ░███  ░███░░███ ░███ \n ░░░░░░░░███ ░░███  █████  ███   ░███  ░███ ░░░  ░███ \n ███    ░███  ░░░█████░█████░    ░███  ░███      ░███ \n░░█████████     ░░███ ░░███      █████ █████     █████\n ░░░░░░░░░       ░░░   ░░░      ░░░░░ ░░░░░     ░░░░░ ")
-    console.log('SWADE Immersion Module | Ready');
+    console.log('SWIM | SWADE Immersion Module | Ready');
 
     //Setup actions for BRSW:
     if (game.settings.get('swim', 'br2Support') === true) {

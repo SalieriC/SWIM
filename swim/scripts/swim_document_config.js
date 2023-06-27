@@ -387,7 +387,7 @@ class DocumentConfigForm extends FormApplication {
             for (let eff of this.object.effects) {
                 if (eff.flags?.swim?.ammoAeTempEff === true) { await eff.delete() }
             }
-            console.log(`Flags set on ${this.object.name}.`, this.object);
+            console.log(`SWIM | Flags set on ${this.object.name}.`, this.object);
         } catch (err) {
             console.log(err)
         }

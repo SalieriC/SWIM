@@ -34,7 +34,7 @@ export async function v10_migration() {
                         for (let item of game.items) { allItems.push(item) }
                         for (let actor of game.actors) {
                             //Process all actors...
-                            console.log("Starting migration for", actor)
+                            console.log("SWIM | Starting migration for", actor)
                             for (let item of actor.items) { allItems.push(item) }
                             if (actor.system.additionalStats?.sfx?.value && typeof actor.system.additionalStats?.sfx?.value === "string") {
                                 const sfxSequence = actor.system.additionalStats?.sfx?.value
@@ -75,7 +75,7 @@ export async function v10_migration() {
                                 await actor.update(flagData)
                             }
                         } for (let item of allItems) {
-                            console.log("Starting migration for", item)
+                            console.log("SWIM | Starting migration for", item)
                             //Process all items...
                             let isPack = false
                             let loadedAmmo = ""
@@ -180,7 +180,7 @@ export async function v11_migration() {
                         for (let item of game.items) { allItems.push(item) }
                         for (let actor of game.actors) {
                             //Process all actors...
-                            console.log("Starting migration for", actor)
+                            console.log("SWIM | Starting migration for", actor)
                             for (let item of actor.items) { allItems.push(item) }
                             const flagData = {
                                 flags: {
@@ -193,7 +193,7 @@ export async function v11_migration() {
                             }
                             await actor.update(flagData)
                         } for (let item of allItems) {
-                            console.log("Starting migration for", item)
+                            console.log("SWIM | Starting migration for", item)
                             //Process all items...
                             if (item.flags?.swim?.config?.ammoActiveEffect) {
                                 const oldAmmoAE = item.flags.swim.config.ammoActiveEffect
@@ -227,7 +227,7 @@ export async function update_migration(actor, item, currVersion) {
         let allItems = []
         if (item) { allItems.push(item) }
         if (actor) {
-            console.log("Starting migration for", actor)
+            console.log("SWIM | Starting migration for", actor)
             for (let item of actor.items) { allItems.push(item) }
             if (actor.system.additionalStats?.sfx?.value && typeof actor.system.additionalStats?.sfx?.value === "string") {
                 const sfxSequence = actor.system.additionalStats?.sfx?.value
@@ -343,7 +343,7 @@ export async function update_migration(actor, item, currVersion) {
         if (item) { allItems.push(item) }
         if (actor) {
             //Process actor...
-            console.log("Starting migration for", actor)
+            console.log("SWIM | Starting migration for", actor)
             for (let item of actor.items) { allItems.push(item) }
             const flagData = {
                 flags: {
@@ -356,7 +356,7 @@ export async function update_migration(actor, item, currVersion) {
             }
             await actor.update(flagData)
         } for (let item of allItems) {
-            console.log("Starting migration for", item)
+            console.log("SWIM | Starting migration for", item)
             //Process all items...
             if (item.flags?.swim?.config?.ammoActiveEffect) {
                 const oldAmmoAE = item.flags.swim.config.ammoActiveEffect

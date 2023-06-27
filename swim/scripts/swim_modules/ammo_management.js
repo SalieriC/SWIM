@@ -640,7 +640,7 @@ async function wait(ms) {
 }
 
 async function play_sfx(isSilenced, sfx_silenced, shots, sfxDelay, sfx_silenced_auto, sfx_shot, sfx_shot_auto) {
-    console.log(
+    /*console.log(
         "isSilenced: ", isSilenced,
         "sfx_silenced: ", sfx_silenced,
         "shots: ", shots,
@@ -648,7 +648,7 @@ async function play_sfx(isSilenced, sfx_silenced, shots, sfxDelay, sfx_silenced_
         "sfx_silenced_auto: ", sfx_silenced_auto,
         "sfx_shot: ", sfx_shot,
         "sfx_shot_auto: ", sfx_shot_auto
-    )
+    )*/
     //Get volume from setting:
     const volume = Number(game.settings.get("swim", "defaultVolume"))
     // Play sound effects

@@ -122,7 +122,7 @@ export async function falling_damage_script() {
                             let fallingDepth = Number(html.find(`#fallingDepth-${token.id}`)[0].value);
                             let snowDepth = Number(html.find(`#snowDepth-${token.id}`)[0].value);
                             let waterSuccess = html.find(`#water-${token.id}`)[0].value;
-                            console.log(fallingDepth, snowDepth, waterSuccess)
+                            //console.log(fallingDepth, snowDepth, waterSuccess)
                             if (waterSuccess != "na" && snowDepth != 0) {
                                 return ui.notifications.error(`You can't combine water and snow.`)
                             }

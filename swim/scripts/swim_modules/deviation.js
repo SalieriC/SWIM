@@ -97,7 +97,7 @@ export async function deviation_script(weapontype = false, range = false) {
     }
 
     function directionCheck(direction) {
-        console.log(direction);
+        //console.log(direction);
         if (direction == 4 || direction == 5 || direction == 6 || direction == 7 || direction == 8) {
             return true
         } else {
