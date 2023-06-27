@@ -6,7 +6,7 @@
 		"minimum": 11,
 		"verified": "11.301"
 	},
-	"version": "1.5.0",
+	"version": "2.0.0",
 	"authors": [
 		{
 			"name": "SalieriC",
@@ -28,7 +28,7 @@
 				"manifest": "https://gitlab.com/api/v4/projects/16269883/packages/generic/swade/latest/system.json",
 				"compatibility": {
 					"minimum": "3.0.0",
-					"verified": "3.0.0"
+					"verified": "3.0.4"
 				}
 			}
 		],
