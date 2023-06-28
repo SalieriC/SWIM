@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Effect Builder and Fear Table macros being partially broken due to changes in SUCC.
 - Fixed a bug that caused some summoned creatures from the Mighty Summoner potentially being actor linked.
+- BRSW unable to roll damage for a deleted consumable weapon. This was supposed to be fixed but isn't, so reverted this back to never delete a consumable weapon if it gets to quantity zero.
 ### Removed
 - Some translation strings no longer needed.
 ### Known issues

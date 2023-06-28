@@ -1,6 +1,6 @@
 /*******************************************
  * Ammo Management (Enhanced Version v2)
- * version 6.0.14
+ * version 6.0.15
  * By SalieriC#8263 & Loofou#7406. (old Dialogue Framework: Kekilla#7036)
  *
  * Makes heavy use of SFX set up on the weapon.
@@ -225,11 +225,10 @@ async function shoot(selectedWeapon, selectedShots, actor, trait = undefined) {
             ];
             // Updating the consumable weapon
             await actor.updateEmbeddedDocuments("Item", updates);
-            // This used to be a very bad idea because BRSW couldn't make rolls if the consumable was deleted. But nowadays it should be fine...
-            // Deleting the consumable weapon if it was the last
-            if (newQuantity <= 0) {
+            // This apparently is still a bad idea on BRSW, so don't delete the item because then BRSW isn't able to roll damage from it:
+            /*if (newQuantity <= 0) {
                 selectedWeapon.delete();
-            }
+            }*/
             // Creating the Chat message
             ChatMessage.create({
                 speaker: {
