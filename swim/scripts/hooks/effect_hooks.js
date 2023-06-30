@@ -12,12 +12,12 @@ export async function effect_hooks() {
             }
         }
         // Light
-        if (condition.flags?.core?.statusId === "torch" && game.user.id === userID) {
+        if (condition.flags?.succ?.conditionId === "torch" && game.user.id === userID) {
             if (condition.flags?.succ?.additionalData?.swim?.activatedFromMacro === true) { return } //Prevent second execution if macro was used.
             swim.token_vision(condition)
         }
         // Hold
-        if (condition.flags?.core?.statusId === "holding" && swim.is_first_gm() && game.combat) {
+        if (condition.flags?.succ?.conditionId === "holding" && swim.is_first_gm() && game.combat) {
             const tokens = actor.getActiveTokens()
             const combatID = game.combat.id
             const currentTurn = game.combat.turn
@@ -105,12 +105,12 @@ export async function effect_hooks() {
             }
         }
         // Light
-        if (condition.flags?.core?.statusId === "torch" && game.user.id === userID) {
+        if (condition.flags?.succ?.conditionId === "torch" && game.user.id === userID) {
             if (condition.flags?.swim?.deactivatedFromMacro === true) { return } //Prevent second execution if macro was used.
             swim.token_vision(condition)
         }
         // Hold
-        if (condition.flags?.core?.statusId === "holding" && game.user.id === userID) {
+        if (condition.flags?.succ?.conditionId === "holding" && game.user.id === userID) {
             if (game.combat) {
                 const tokens = actor.getActiveTokens()
                 const currentCardValue = game.combat.combatant.flags.swade.cardValue

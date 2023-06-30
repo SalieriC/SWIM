@@ -3,13 +3,13 @@ export async function actor_hooks() {
     Hooks.on("createActiveEffect", async (effect, _, userID) => {
         if (swim.is_first_gm() === false) { return } //Play SFX for all from GM account only.
         const actor = effect.parent
-        const id = effect.flags.core.statusId ? effect.flags.core.statusId : effect.label.toLowerCase()
+        const id = condition.flags?.succ?.conditionId ? condition.flags?.succ?.conditionId : effect.label.toLowerCase()
         await audio_player(actor, id)
     });
     Hooks.on("deleteActiveEffect", async (effect, _, userID) => {
         if (swim.is_first_gm() === false) { return } //Play SFX for all from GM account only.
         const actor = effect.parent
-        const id = effect.flags.core.statusId ? "undo" + effect.flags.core.statusId : "undo" + effect.label.toLowerCase()
+        const id = condition.flags?.succ?.conditionId ? "undo" + condition.flags?.succ?.conditionId : "undo" + effect.label.toLowerCase()
         await audio_player(actor, id)
     });
     */

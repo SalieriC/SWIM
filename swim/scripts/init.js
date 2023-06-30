@@ -219,25 +219,25 @@ Hooks.on(`ready`, () => {
 
 /* This produces duplicate sound effects, leaving it commented until a good solution to exclude them on a condition is found.
 Hooks.on(`createActiveEffect`, async (condition, _, userID) => {
-    if (condition.flags?.core?.statusId === "incapacitated" || condition.flags?.core?.statusId === "shaken") {
+    if (condition.flags?.succ?.conditionId === "incapacitated" || condition.flags?.succ?.conditionId === "shaken") {
         const actor = condition.parent
         const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(actor)
         const volume = Number(game.settings.get("swim", "defaultVolume"))
-        if (condition.flags?.core?.statusId === "incapacitated") {
+        if (condition.flags?.succ?.conditionId === "incapacitated") {
             await swim.play_sfx(deathSFX, volume)
-        } else if (condition.flags?.core?.statusId === "shaken") {
+        } else if (condition.flags?.succ?.conditionId === "shaken") {
             await swim.play_sfx(shakenSFX, volume)
         }
     }
 })
 Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
-    if (condition.flags?.core?.statusId === "incapacitated" || condition.flags?.core?.statusId === "shaken") {
+    if (condition.flags?.succ?.conditionId === "incapacitated" || condition.flags?.succ?.conditionId === "shaken") {
         const actor = condition.parent
         const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(actor)
         const volume = Number(game.settings.get("swim", "defaultVolume"))
-        if (condition.flags?.core?.statusId === "incapacitated") {
+        if (condition.flags?.succ?.conditionId === "incapacitated") {
             await swim.play_sfx(soakSFX, volume)
-        } else if (condition.flags?.core?.statusId === "shaken") {
+        } else if (condition.flags?.succ?.conditionId === "shaken") {
             await swim.play_sfx(unshakeSFX, volume)
         }
     }
