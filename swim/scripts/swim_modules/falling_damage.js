@@ -2,7 +2,7 @@
  * Falling Damage Macro.
  * This macro automatically calculates falling damage for all selected tokens.
  * It is capable of factoring in water and snow/soft surfaces as per the core rules.
- * v. 2.2.0 by SalieriC#8263, CSS of the dialogue by Kyane von Schnitzel#8654
+ * v. 2.2.1 by SalieriC#8263, CSS of the dialogue by Kyane von Schnitzel#8654
  * (Do not remove credits, even if editing.)
  *******************************************/
 
@@ -12,23 +12,10 @@ export async function falling_damage_script() {
     if (tokens.length === 0) {
         return ui.notifications.error(game.i18n.localize("SWIM.notification-selectOrTargetOneOrMoreTokens"));
     }
+    const officialClass = await swim.get_official_class()
     const icon = "modules/swim/assets/icons/macros/falling_sbed_game-icons.net.png"
-    let messageContent = `<div class="swade-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> ${game.i18n.localize("SWIM.fallingDamageCalculator-damageFromFalling")}</h2>`;
-    let officialModule = false;
+    let messageContent = `${officialClass}<h2><img style="border: 0;" src=${icon} width="35" height="35" /> ${game.i18n.localize("SWIM.fallingDamageCalculator-damageFromFalling")}</h2>`;
 
-    if (game.modules.get("swpf-core-rules")?.active) {
-        messageContent = `<div class="swpf-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> ${game.i18n.localize("SWIM.fallingDamageCalculator-damageFromFalling")}</h2>`;
-        officialModule = true;
-    } else if (game.modules.get("deadlands-core-rules")?.active) {
-        messageContent = `<div class="deadlands-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> ${game.i18n.localize("SWIM.fallingDamageCalculator-damageFromFalling")}</h2>`;
-        officialModule = true;
-    }/* else if (game.modules.get("sprawl-core-rules")?.active) {
-    messageContent = `<div class="sprawl-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> @Compendium[swade-core-rules.swade-rules.KrNAAJXr91wkfxtY]{Damage from Falling}</h2>`;
-    officialModule = true;
-}*/ else if (game.modules.get("swade-core-rules")?.active) {
-        messageContent = `<div class="swade-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> ${game.i18n.localize("SWIM.fallingDamageCalculator-damageFromFalling")}</h2>`;
-        officialModule = true;
-    }
     const options = `<option value="na">${game.i18n.localize("SWIM.word-na")}</option>
     <option value="success">${game.i18n.localize("SWIM.raiseCalculator-success")}</option>
     <option value="raise">${game.i18n.localize("SWIM.gameTerm-Raise")}</option>`;
@@ -57,10 +44,10 @@ export async function falling_damage_script() {
     }
 
     async function calculate_damage(token, damage) {
-        const toughness = token.document._actor.system.stats.toughness.value;
-        const isShaken = token.document._actor.system.status.isShaken;
+        const toughness = token.actor.system.stats.toughness.value;
+        const isShaken = token.actor.system.status.isShaken;
         const raises = Math.floor((damage - toughness) / 4);
-        const isHardy = token.document._actor.items.find(function (item) {
+        const isHardy = token.actor.items.find(function (item) {
             return ((item.name.toLowerCase() === game.i18n.localize("SWIM.ability-hardy").toLowerCase()) && item.type === "ability");
         });
         if (toughness > damage) {
@@ -120,9 +107,7 @@ export async function falling_damage_script() {
                             messageContent += `<h3><img style="border: 0;" src=${token.document.texture.src} width="35" height="35" /> ${token.name}</h3>`;
                             await roll_damage(token, fallingDepth, snowDepth, waterSuccess);
                         }
-                        if (officialModule === true) {
-                            messageContent += `</div>`;
-                        }
+                        messageContent += `</div>`;
                         ChatMessage.create({
                             content: messageContent
                         });
