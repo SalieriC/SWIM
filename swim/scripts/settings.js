@@ -39,7 +39,7 @@ export const settingVariables = [
         min: SWIM.NUM_MORPHS_MIN, max: SWIM.NUM_MORPHS_MAX, step: 1},
     {id: 'effectBuilder-usePowerIcons', config_type: Boolean, tab: "Macro Options", default: false},
     {id: 'ignoreShapeChangeSizeRule', config_type: Boolean, tab: "Macro Options", default: false},
-    {id: 'campfireImgOn', config_type: window.Azzu.SettingsTypes.FilePickerVideo, tab: "Macro Options", default: "modules/jb2a_patreon/Library/Generic/Fire/Campfire/Bonfire_02_Regular_Orange_400x400.webm"},
+    {id: 'campfireImgOn', config_type: window.Azzu.SettingsTypes.FilePickerVideo, tab: "Macro Options", default: ""}, //recommendation: modules/jb2a_patreon/Library/Generic/Fire/Campfire/Bonfire_02_Regular_Orange_400x400.webm
     /* Comment that out for the moment as I have no idea yet how to change the behaviour on blind. Maybe this is better suited in SUCC anyway.
     {id: 'blindMode', config_type: String, tab: 'Macro Options', default: 'none', 
         options: [
