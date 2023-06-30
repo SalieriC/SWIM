@@ -1,16 +1,7 @@
 export async function brsw_actions_setup() {
+    const brswAmmoMgm = game.settings.get('swim', 'br2ammoMgm')
+
     const SWIM_ACTIONS = [
-        //Ammo Management:
-        {
-            "id": "SWIM-AMMO-MGM",
-            "name": "SWIM: Ammo usage",
-            "button_name": "SWIM: Ammo usage",
-            "runSkillMacro": "SWIM: Ammo usage",
-            "selector_type": "item_type",
-            "selector_value": "weapon",
-            "defaultChecked": "on",
-            "group": "SWIM Macros"
-        },
         //Deflection:
         {
             "id": "DEFLECTION-RANGE",
@@ -628,5 +619,22 @@ export async function brsw_actions_setup() {
             "group": "Target"
         }
     ]
+
+    if (brswAmmoMgm === 'full' || brswAmmoMgm === 'sfx') {
+        SWIM_ACTIONS.push(
+            //Ammo Management:
+            {
+                "id": "SWIM-AMMO-MGM",
+                "name": "SWIM: Ammo usage",
+                "button_name": "SWIM: Ammo usage",
+                "runSkillMacro": "SWIM: Ammo usage",
+                "selector_type": "item_type",
+                "selector_value": "weapon",
+                "defaultChecked": "on",
+                "group": "SWIM Macros"
+            },
+        )
+    }
+
     game.brsw.add_actions(SWIM_ACTIONS)
 }

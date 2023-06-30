@@ -49,6 +49,12 @@ export const settingVariables = [
             {value: 'full', locaString: 'SWIM.Option-fullBlind'},
         ]},*/
     {id: 'br2Support', config_type: Boolean, tab: "SFX & VFX Options", default: false},
+    {id: 'br2ammoMgm', config_type: String, tab: "SFX & VFX Options", default: "full", 
+        options: [
+            {value: 'full', locaString: 'SWIM.Option-full'},
+            {value: 'sfx', locaString: 'SWIM.Option-sfxOnly'},
+            {value: 'disabled', locaString: 'SWIM.Option-disabled'}
+        ]},
     {id: 'sfxDelay', config_type: Number, tab: "SFX & VFX Options", default: '110'},
     {id: 'defaultVolume', config_type: Number, tab: "SFX & VFX Options", default: '1' },
     {id: 'shakenSFX', config_type: window.Azzu.SettingsTypes.FilePickerAudio, tab: "SFX & VFX Options",

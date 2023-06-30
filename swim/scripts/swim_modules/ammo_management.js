@@ -697,6 +697,9 @@ async function play_sfx(isSilenced, sfx_silenced, shots, sfxDelay, sfx_silenced_
 
 export async function br2_ammo_management_script(message, actor, item) {
     const npcAmmo = game.settings.get('swim', 'npcAmmo');
+    const brswAmmoMgm = game.settings.get('swim', 'br2ammoMgm')
+
+    if (brswAmmoMgm === 'disabled') { return } //Failsafe as disabled shouldn't lead anyone here in the first place.
 
     //Don't execute the macro on a reroll by checking if the old_rolls is empty:
     if (message.flags['betterrolls-swade2'].render_data.trait_roll.old_rolls.length >= 1) {
@@ -736,5 +739,24 @@ export async function br2_ammo_management_script(message, actor, item) {
     let traitId = message.flags['betterrolls-swade2'].render_data.trait_id
     let trait = actor.items.find(i => i.id === traitId)
 
-    await shoot(item, shots, actor, trait);
+    if (brswAmmoMgm === 'sfx') { //If the user only want the SFX, play them, otherwise go to ammo management:
+        const sfxDelay = game.settings.get('swim', 'sfxDelay');
+        const all_sfx = await swim.get_weapon_sfx(item)
+        const sfx_shot = all_sfx.fireSFX
+        const sfx_shot_auto = all_sfx.autoFireSFX
+        const sfx_silenced = all_sfx.silencedFireSFX
+        const sfx_silenced_auto = all_sfx.silencedAutoFireSFX
+        const sfx_empty = all_sfx.emptySFX
+        const isSilenced = item.flags?.swim?.config?.silenced ? item.flags?.swim?.config?.silenced : false
+        const currentShots = item.system.currentShots
+        const volume = Number(game.settings.get("swim", "defaultVolume"))
+
+        if (currentShots === 0) {
+            swim.play_sfx(sfx_empty, volume, true)
+        } else {
+            await play_sfx(isSilenced, sfx_silenced, shots, sfxDelay, sfx_silenced_auto, sfx_shot, sfx_shot_auto)
+        }
+    } else {
+        await shoot(item, shots, actor, trait);
+    }
 }

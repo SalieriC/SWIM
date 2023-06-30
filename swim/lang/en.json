@@ -267,8 +267,8 @@
   "SWIM.dialogue-dismiss": "{officialClass}<p>Do you want to dismiss {name}? <strong>This can not be undone.</strong></p></div>",
   "SWIM.shapeChange-numMorphsName": "Shape Change Blendings:",
   "SWIM.shapeChange-numMorphsHint": "The Shape Changer supports blending of the new token into the old one for a smooth transition. If you experience delays or performance issues or prefer a faster blending reduce this number. '0' will make the transition very fast without delays. Default: 50",
-  "SWIM.br2SupportName": "BR2 Support:",
-  "SWIM.br2SupportHint": "SWIM supports Better Rolls 2 for SWADE to add Sound Effects on certain functions (applying damage, unshaking and soaking damage). This setting enables these sound effects.",
+  "SWIM.br2SupportName": "BRSW Support:",
+  "SWIM.br2SupportHint": "SWIM supports Better Rolls for SWADE (BRSW aka BR2) to add Sound Effects on certain functions (applying damage, unshaking and soaking damage). This setting enables these sound effects.",
   "SWIM.lightSFXName": "Light SFX:",
   "SWIM.lightSFXHint": "The sound effect to be played when a light source is selected and applied in the Token Vision macro.",
   "SWIM.label-summoned": "Summoned Creature Duration",
@@ -427,6 +427,8 @@
   "SWIM.Option-disabled": "Disabled",
   "SWIM.Option-automatic": "Automatic -> | Automatic: The roll will automatically be made. | ",
   "SWIM.Option-manual": "Manual",
+  "SWIM.Option-full": "Full",
+  "SWIM.Option-sfxOnly": "SFX only",
   "SWIM.callbackModeName": "Condition Roll Mode:",
   "SWIM.callbackModeHint": "Determines if and how the SWIM functions to remove certain conditions (i.e. Shaken) should execute when the characters turn starts. Manual: A dialogue will ask for a roll. | Disabled: The system default rolls will be initiated (can be disabled in SUCC).",
   "SWIM.deleteEffectsAfterCombatName": "Delete Active Effects after combat:",
@@ -526,5 +528,7 @@
   "SWIM.fallingDamageCalculator-resultShakenAnd": "Shaken and {raises}",
   "SWIM.fallingDamageCalculator-resultNoHarm": "No harm.",
   "SWIM.fallingDamageCalculator-dialogue": "{officialClass}<p>Who falls how deep?</p><p>Provide a falling depth in &rdquo; (squares on the tabletop; each equals 2 yards &cong; 2 meters).</p><p>Snow and other soft ground reduces the damage. Provide a depth in feet (&cong; 30 cm) if applicable or leave it at 0 if not.</p><p>Falling in water allows an Athletics roll. If applicable provide the degree of success. If not applicable or if the roll was failed, leave it at 'n/a'.</p><div style='display: grid; grid-template-columns: 5fr 1.2fr 1fr 1.3fr; grid-gap: 2px;'><strong style='text-align: left;'>Token</strong><strong style='text-align: center;'>Depth</strong><strong style='text-align: center;'>Snow</strong><strong style='text-align: center;'>Athletics</strong>",
-  "SWIM.fallingDamageCalculator-cantCombineWaterAndSnow": "You can't combine water and snow."
+  "SWIM.fallingDamageCalculator-cantCombineWaterAndSnow": "You can't combine water and snow.",
+  "SWIM.br2ammoMgmName": "BRSW Support Ammo Management:",
+  "SWIM.br2ammoMgmHint": "Here you can configure how you want to integrate SWIMs Ammo Management into BRSW (aka BR2). 'Full' gives you the complete experience with reducing ammunition and SFX, 'SFX only' will not expend any ammunition but plays the sound effects, 'Disabled' will completely disable it and won't show the button on BRSW chat cards. This only works with BRSW Support (see above) turned on."
 }
