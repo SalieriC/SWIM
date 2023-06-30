@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SWIM compendiums get sorted into its own folder if not manually sorted (mclemente)
 - Added a setting to allow the selection of a compendium containing special abilities (javierriveracastro)
 - Mighty Summoner is now capable of creating a 'Mirror Self'. For that the macros dialogue received a new entry in the selector which is always available and always the last option. It needs to resort to some trickery and creates a new actor in the `[SWIM] Summon Creature` folder structure which is deleted after the mirror is dismissed.
+- The 'Mirror Self' token image can be mirrored horizontally, set up in the macro options tab in the SWIM settings.
 - Falling damage calculator fully localised.
 - New Setting that allows the user to configure the BRSW integration for SWIMs Ammo Management. It can be set to either 'full' (works as before with SFX and reducing ammo), 'sfx only' (only plays SFX but won't reduce any ammo) or 'disabled' (fully disables Ammo Management and SFX and won't show the red button on the BRSW chat card). This allows you - for the first time - to enjoy the sound effects without having to worry about ammunition.
 - When soaking wounds, the function now will keep track of your best result and will use that number for the rest of the procedure (rerolling, applying wounds, etc.) until you either roll an even better result or a critical failure (in which case the original amount of wounds is used in the apply wounds dialogue (you can still change it there though)).

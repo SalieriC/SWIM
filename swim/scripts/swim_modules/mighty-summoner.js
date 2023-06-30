@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 1.4.3
+ * v. 1.4.4
  * By SalieriC
  ******************************************************/
 function generate_id(length = 16) {
@@ -285,6 +285,13 @@ export async function summoner_gm(data) {
         const summonerActor = summoner.actor
         const scene = newToken.scene
         const center = newToken.center
+        
+        const originalType = summonerActor.type
+        const mirrorType = game.settings.get('swim', 'mirrorToken')
+        const originalScaleX = summoner.document.texture.scaleX
+        let newScaleX = originalScaleX
+        if (mirrorType === 'all' || mirrorType === originalType) { newScaleX = originalScaleX * -1 } //Mirror token if setting chosen.
+
         let scPreset = game.actors.find(a => (a.id === summonerActor.id)).toObject();
         const packName = game.settings.get('swim', 'specialAbilitiesPack')
         //Creating a copy of the summoner with a few changes:
@@ -299,6 +306,7 @@ export async function summoner_gm(data) {
         scPreset.name = `${game.i18n.localize("SWIM.word-Mirrored")} ${summonerActor.name}`
         scPreset.prototypeToken.name = `${game.i18n.localize("SWIM.word-Mirrored")} ${summoner.name}`
         scPreset.prototypeToken.actorLink = true
+        scPreset.prototypeToken.texture.scaleX = newScaleX
         scPreset.flags.swim = data.flags.swim
         
         //The copied actor needs to loose the maintenance AE just created, conviniently, it must be the one last created:

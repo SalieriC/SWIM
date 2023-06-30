@@ -429,6 +429,9 @@
   "SWIM.Option-manual": "Manual",
   "SWIM.Option-full": "Full",
   "SWIM.Option-sfxOnly": "SFX only",
+  "SWIM.Option-characterAndNPC": "Characters & NPCs",
+  "SWIM.Option-characterOnly": "Characters only",
+  "SWIM.Option-npcOnly": "NPCs only",
   "SWIM.callbackModeName": "Condition Roll Mode:",
   "SWIM.callbackModeHint": "Determines if and how the SWIM functions to remove certain conditions (i.e. Shaken) should execute when the characters turn starts. Manual: A dialogue will ask for a roll. | Disabled: The system default rolls will be initiated (can be disabled in SUCC).",
   "SWIM.deleteEffectsAfterCombatName": "Delete Active Effects after combat:",
@@ -530,5 +533,7 @@
   "SWIM.fallingDamageCalculator-dialogue": "{officialClass}<p>Who falls how deep?</p><p>Provide a falling depth in &rdquo; (squares on the tabletop; each equals 2 yards &cong; 2 meters).</p><p>Snow and other soft ground reduces the damage. Provide a depth in feet (&cong; 30 cm) if applicable or leave it at 0 if not.</p><p>Falling in water allows an Athletics roll. If applicable provide the degree of success. If not applicable or if the roll was failed, leave it at 'n/a'.</p><div style='display: grid; grid-template-columns: 5fr 1.2fr 1fr 1.3fr; grid-gap: 2px;'><strong style='text-align: left;'>Token</strong><strong style='text-align: center;'>Depth</strong><strong style='text-align: center;'>Snow</strong><strong style='text-align: center;'>Athletics</strong>",
   "SWIM.fallingDamageCalculator-cantCombineWaterAndSnow": "You can't combine water and snow.",
   "SWIM.br2ammoMgmName": "BRSW Support Ammo Management:",
-  "SWIM.br2ammoMgmHint": "Here you can configure how you want to integrate SWIMs Ammo Management into BRSW (aka BR2). 'Full' gives you the complete experience with reducing ammunition and SFX, 'SFX only' will not expend any ammunition but plays the sound effects, 'Disabled' will completely disable it and won't show the button on BRSW chat cards. This only works with BRSW Support (see above) turned on."
+  "SWIM.br2ammoMgmHint": "Here you can configure how you want to integrate SWIMs Ammo Management into BRSW (aka BR2). 'Full' gives you the complete experience with reducing ammunition and SFX, 'SFX only' will not expend any ammunition but plays the sound effects, 'Disabled' will completely disable it and won't show the button on BRSW chat cards. This only works with BRSW Support (see above) turned on.",
+  "SWIM.mirrorTokenName": "Mirror Token image on 'Mirror Self' for:",
+  "SWIM.mirrorTokenHint": "The Mighty Summoner can summon a 'Mirror Self'. To make the mirror identifiable, SWIM can mirror the tokens image horizontally. Here you can choose whether you want this to apply to PCs, NPCs, both or none. (It could be useful for not have NPCs affected if it is part of a riddle or a challenge to find the real one.)"
 }
