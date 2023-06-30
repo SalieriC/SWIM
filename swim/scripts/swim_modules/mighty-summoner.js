@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 1.4.4
+ * v. 1.4.5
  * By SalieriC
  ******************************************************/
 function generate_id(length = 16) {
@@ -50,8 +50,7 @@ export async function summoner_script() {
         ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"));
         return;
     }
-    const actor = token.actor;
-    const range = actor.system.attributes.smarts.die.sides
+    const actor = token.actor ? token.actor : token.actorData
 
     //Get an ID for this maintenance
     const maintID = generate_id()
@@ -62,9 +61,9 @@ export async function summoner_script() {
     let totalContent = swim.get_folder_content("Summon Creature Presets")
 
     let duration = 5
-    const concentration = token.actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-concentration").toLowerCase() && i.type === "edge")
-    const summoner = token.actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-summoner-fc").toLowerCase() && i.type === "edge")
-    const druid = token.actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-druid-fc").toLowerCase() && i.type === "edge")
+    const concentration = actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-concentration").toLowerCase() && i.type === "edge")
+    const summoner = actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-summoner-fc").toLowerCase() && i.type === "edge")
+    const druid = actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-druid-fc").toLowerCase() && i.type === "edge")
     if (summoner) { duration = duration * 10 }
     else if (druid) { duration = 600 }
     if (concentration) { duration = duration * 2 }
@@ -182,10 +181,10 @@ export async function summoner_script() {
                         if (noPP) {
                             aeData.changes.push({ key: `@Skill{${skillName}}[system.die.modifier]`, mode: 2, priority: undefined, value: -1 })
                         }
-                        if (token.actor.system.additionalStats?.maintainedPowers) {
+                        if (actor.system.additionalStats?.maintainedPowers) {
                             aeData.changes.push({ key: `system.additionalStats.maintainedPowers.value`, mode: 2, priority: undefined, value: 1 })
                         }
-                        await token.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+                        await actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
 
                         const data = {
                             summonerID: token.id,
@@ -225,14 +224,15 @@ export async function summoner_script() {
                 one: {
                     label: `<i class="fas fa-paw"></i> Dismiss Creature`,
                     callback: async (_) => {
-                        const tokenMaintEffect = token.actor.effects.find(e => e.flags?.swim?.isSummonedCreature === true)
+                        const tokenMaintEffect = actor.effects.find(e => e.flags?.swim?.isSummonedCreature === true)
                         const maintenanceID = tokenMaintEffect.flags?.swim?.maintenanceID
                         const dismissData = [token.id]
                         await play_sfx(dismissData)
                         await swim.wait(`200`) // delay script execution so that the vfx has time to get the tokens position
                         await warpgate.dismiss(token.id, game.scenes.current.id)
                         for (let each of game.scenes.current.tokens) {
-                            const maintEffect = each.actor.effects.find(e => e.flags?.swim?.maintenanceID === maintenanceID)
+                            console.log(each)
+                            const maintEffect = each.actor ? each.actor.effects.find(e => e.flags?.swim?.maintenanceID === maintenanceID) : each.actorData.effects.find(e => e.flags?.swim?.maintenanceID === maintenanceID)
                             if (maintEffect) {
                                 await maintEffect.delete()
                             }
@@ -311,7 +311,7 @@ export async function summoner_gm(data) {
         
         //The copied actor needs to loose the maintenance AE just created, conviniently, it must be the one last created:
         const effIndex = scPreset.effects.length - 1
-        if (scPreset.effects[effIndex].flags?.swim?.owner === true) { scPreset.effects.splice(effIndex, 1) }
+        if (effIndex >= 0 && scPreset.effects[effIndex].flags?.swim?.owner && scPreset.effects[effIndex].flags?.swim?.owner === true) { scPreset.effects.splice(effIndex, 1) }
 
         if (packName === 'none' || !packName) {
             scPreset.system.wounds.ignored = scPreset.system.wounds.ignored + 1

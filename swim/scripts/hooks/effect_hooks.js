@@ -52,7 +52,7 @@ export async function effect_hooks() {
         if (condition.flags?.swim?.maintainedSummon === true && swim.is_first_gm()) {
             if (condition.flags.swim.owner === false) {
                 for (let each of game.scenes.current.tokens) {
-                    const maintEffect = each.actor.effects.find(e => e.flags?.swim?.maintenanceID === condition.flags?.swim?.maintenanceID)
+                    const maintEffect = each.actor ? each.actor.effects.find(e => e.flags?.swim?.maintenanceID === condition.flags?.swim?.maintenanceID) : each.actorData.effects.find(e => e.flags?.swim?.maintenanceID === condition.flags?.swim?.maintenanceID)
                     if (maintEffect) {
                         await maintEffect.delete()
                     }
@@ -68,7 +68,7 @@ export async function effect_hooks() {
                 await delete_mirror(condition.flags?.swim?.maintenanceID)
             } else if (condition.flags.swim.owner === true) {
                 for (let each of game.scenes.current.tokens) {
-                    const maintEffect = each.actor.effects.find(e => e.flags?.swim?.maintenanceID === condition.flags?.swim?.maintenanceID)
+                    const maintEffect = each.actor ? each.actor.effects.find(e => e.flags?.swim?.maintenanceID === condition.flags?.swim?.maintenanceID) : each.actorData.effects.find(e => e.flags?.swim?.maintenanceID === condition.flags?.swim?.maintenanceID)
                     if (maintEffect) {
                         const dismissData = [each.id]
                         await play_sfx(dismissData)

@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug that caused some summoned creatures from the Mighty Summoner potentially being actor linked.
 - BRSW unable to roll damage for a deleted consumable weapon. This was supposed to be fixed but isn't, so reverted this back to never delete a consumable weapon if it gets to quantity zero.
 - Fixed a bug in the falling damage calculator that resulted in it not finding the toughness of a tokens actor.
+- Fixed some other bugs when dismissing summoned tokens.
 ### Removed
 - Some translation strings no longer needed.
 - Default value for campfire as leaving that in was an oversight. SWIM does not come with a texture for campfires yet, I hiighly recommend the animated one from JB2A though.
