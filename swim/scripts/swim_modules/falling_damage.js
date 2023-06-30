@@ -2,7 +2,7 @@
  * Falling Damage Macro.
  * This macro automatically calculates falling damage for all selected tokens.
  * It is capable of factoring in water and snow/soft surfaces as per the core rules.
- * v. 2.1.0 by SalieriC#8263, CSS of the dialogue by Kyane von Schnitzel#8654
+ * v. 2.2.0 by SalieriC#8263, CSS of the dialogue by Kyane von Schnitzel#8654
  * (Do not remove credits, even if editing.)
  *******************************************/
 
@@ -13,23 +13,25 @@ export async function falling_damage_script() {
         return ui.notifications.error(game.i18n.localize("SWIM.notification-selectOrTargetOneOrMoreTokens"));
     }
     const icon = "modules/swim/assets/icons/macros/falling_sbed_game-icons.net.png"
-    let messageContent = `<div class="swade-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> Damage from Falling</h2>`;
+    let messageContent = `<div class="swade-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> ${game.i18n.localize("SWIM.fallingDamageCalculator-damageFromFalling")}</h2>`;
     let officialModule = false;
 
     if (game.modules.get("swpf-core-rules")?.active) {
-        messageContent = `<div class="swpf-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> Damage from Falling</h2>`;
+        messageContent = `<div class="swpf-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> ${game.i18n.localize("SWIM.fallingDamageCalculator-damageFromFalling")}</h2>`;
         officialModule = true;
     } else if (game.modules.get("deadlands-core-rules")?.active) {
-        messageContent = `<div class="deadlands-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> Damage from Falling</h2>`;
+        messageContent = `<div class="deadlands-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> ${game.i18n.localize("SWIM.fallingDamageCalculator-damageFromFalling")}</h2>`;
         officialModule = true;
     }/* else if (game.modules.get("sprawl-core-rules")?.active) {
     messageContent = `<div class="sprawl-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> @Compendium[swade-core-rules.swade-rules.KrNAAJXr91wkfxtY]{Damage from Falling}</h2>`;
     officialModule = true;
 }*/ else if (game.modules.get("swade-core-rules")?.active) {
-        messageContent = `<div class="swade-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> Damage from Falling</h2>`;
+        messageContent = `<div class="swade-core"><h2><img style="border: 0;" src=${icon} width="35" height="35" /> ${game.i18n.localize("SWIM.fallingDamageCalculator-damageFromFalling")}</h2>`;
         officialModule = true;
     }
-    const options = `<option value="na">n/a</option><option value="success">Success</option><option value="raise">Raise</option>`;
+    const options = `<option value="na">${game.i18n.localize("SWIM.word-na")}</option>
+    <option value="success">${game.i18n.localize("SWIM.raiseCalculator-success")}</option>
+    <option value="raise">${game.i18n.localize("SWIM.gameTerm-Raise")}</option>`;
 
     main();
 
@@ -47,9 +49,9 @@ export async function falling_damage_script() {
             else if (waterSuccess === "raise") { waterRaise = true; damage = 0; }
         }
         if (waterRaise === false) {
-            messageContent += `<p>${token.name} falls ${fallingDepth}&rdquo; and takes <strong><span style="font-size:115%">${damage}</strong></span> damage.</p>`
+            messageContent += `${game.i18n.format("SWIM.fallingDamageCalculator-fallsAndTakesDamage", {tokenName: token.name, fallingDepth: fallingDepth, damage: damage})}`
         } else if (waterRaise === true) {
-            messageContent += `<p>${token.name} falls ${fallingDepth}&rdquo; but dives into the water gracefully, taking no damage in the process.</p>`
+            messageContent += `${game.i18n.format("SWIM.fallingDamageCalculator-fallsButDives", {tokenName: token.name, fallingDepth: fallingDepth})}`
         }
         await calculate_damage(token, damage);
     }
@@ -59,43 +61,32 @@ export async function falling_damage_script() {
         const isShaken = token.document._actor.system.status.isShaken;
         const raises = Math.floor((damage - toughness) / 4);
         const isHardy = token.document._actor.items.find(function (item) {
-            return ((item.name.toLowerCase() === "hardy") && item.type === "ability");
+            return ((item.name.toLowerCase() === game.i18n.localize("SWIM.ability-hardy").toLowerCase()) && item.type === "ability");
         });
         if (toughness > damage) {
-            messageContent += `<p>=> No harm.</p>`
+            messageContent += `<p>=> ${game.i18n.localize("SWIM.fallingDamageCalculator-resultNoHarm")}</p>`
         } else if (toughness <= damage) {
             if (isShaken === false && raises <= 0) {
                 //swim.start_macro(`[Script] Unshake (SWD)`); //Can't use it for there are potentially multiple tokens selected. Need to find a way to pass the proper actor or something.
-                messageContent += `<p>=> Shaken</p>`
+                messageContent += `<p>=> ${game.i18n.localize("SWIM.gameTerm-Shaken")}</p>`
             } else if (isShaken === false && raises >= 1) {
-                messageContent += `<p>=> Shaken and ${raises} @Compendium[swim.swade-immersive-macros.AWEIhBfGUmhQlww5]{Wounds}.</p>`
+                messageContent += `<p>=> ${game.i18n.format("SWIM.fallingDamageCalculator-resultShakenAnd", {raises})} @Compendium[swim.swade-immersive-macros.AWEIhBfGUmhQlww5]{${game.i18n.localize("SWIM.gameTerm-Wound-plural")}}.</p>`
             } else if (isShaken === true && raises <= 1) {
                 if (!isHardy || raises === 1) {
-                    messageContent += `<p>=> 1 @Compendium[swim.swade-immersive-macros.AWEIhBfGUmhQlww5]{Wound}.</p>`
+                    messageContent += `<p>=> 1 @Compendium[swim.swade-immersive-macros.AWEIhBfGUmhQlww5]{${game.i18n.localize("SWIM.gameTerm-Wound-singular")}}.</p>`
                 } else if (isHardy) {
-                    messageContent += `<p>=> No harm.</p>`
+                    messageContent += `<p>=> ${game.i18n.localize("SWIM.fallingDamageCalculator-resultNoHarm")}</p>`
                 }
             } else if (isShaken === true && raises >= 1) {
                 let wounds = raises - 1;
-                messageContent += `<p>=> ${wounds} @Compendium[swim.swade-immersive-macros.AWEIhBfGUmhQlww5]{Wounds}.</p>`
+                messageContent += `<p>=> ${wounds} @Compendium[swim.swade-immersive-macros.AWEIhBfGUmhQlww5]{${game.i18n.localize("SWIM.gameTerm-Wound-plural")}}.</p>`
             }
         }
     }
 
     async function main() {
-        let content =
-            `
-    <div class="swade-core">
-        <p>Who falls how deep?</p>
-        <p>Provide a falling depth in &rdquo; (squares on the tabletop; each equals 2 yards &cong; 2 meters).</p>
-        <p>Snow and other soft ground reduces the damage. Provide a depth in feet (&cong; 30 cm) if applicable or leave it at 0 if not.</p>
-        <p>Falling in water allows an Athletics roll. If applicable provide the degree of success. If not applicable or if the roll was failed, leave it at "n/a".</p>
-        <div style="display: grid; grid-template-columns: 5fr 1.2fr 1fr 1.3fr; grid-gap: 2px;">
-        <strong style="text-align: left;">Token</strong>
-        <strong style="text-align: center;">Depth</strong>
-        <strong style="text-align: center;">Snow</strong>
-        <strong style="text-align: center;">Athletics</strong>
-    `;
+        const officialClass = await swim.get_official_class()
+        let content = game.i18n.format("SWIM.fallingDamageCalculator-dialogue", {officialClass})
         for (let token of tokens) {
             content += `
         <p>
@@ -111,11 +102,11 @@ export async function falling_damage_script() {
         </div>
     </div>`;
         new Dialog({
-            title: "Falling damage calculator",
+            title: game.i18n.localize("SWIM.fallingDamageCalculator"),
             content: content,
             buttons: {
                 roll: {
-                    label: "Roll",
+                    label: game.i18n.localize("SWIM.dialogue-roll"),
                     callback: async (html) => {
                         for (let token of tokens) {
                             //Getting results from checkboxes and making the rolls.
@@ -124,7 +115,7 @@ export async function falling_damage_script() {
                             let waterSuccess = html.find(`#water-${token.id}`)[0].value;
                             //console.log(fallingDepth, snowDepth, waterSuccess)
                             if (waterSuccess != "na" && snowDepth != 0) {
-                                return ui.notifications.error(`You can't combine water and snow.`)
+                                return ui.notifications.error(game.i18n.localize("SWIM.fallingDamageCalculator-cantCombineWaterAndSnow"))
                             }
                             messageContent += `<h3><img style="border: 0;" src=${token.document.texture.src} width="35" height="35" /> ${token.name}</h3>`;
                             await roll_damage(token, fallingDepth, snowDepth, waterSuccess);
@@ -138,7 +129,7 @@ export async function falling_damage_script() {
                     }
                 },
                 cancel: {
-                    label: "Cancel"
+                    label: game.i18n.localize("SWIM.dialogue-cancel")
                 }
             }
         }).render(true)

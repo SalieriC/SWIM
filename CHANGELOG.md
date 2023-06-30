@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SWIM compendiums get sorted into its own folder if not manually sorted (mclemente)
 - Added a setting to allow the selection of a compendium containing special abilities (javierriveracastro)
 - Mighty Summoner is now capable of creating a 'Mirror Self'. For that the macros dialogue received a new entry in the selector which is always available and always the last option. It needs to resort to some trickery and creates a new actor in the `[SWIM] Summon Creature` folder structure which is deleted after the mirror is dismissed.
+- Falling damage calculator fully localised.
 ### Changed
 - Migrated all active effect creations to use the 'name' property instead of 'label' as this was changed in Foundry v11.
 - Ammo Management now respects the reload type 'single reload' and defaults to one bullet relaod if the weapon is set up like that. As a result, the setting in SWIM that sets the checkbox in the ammo management dialogue was deprecated.
