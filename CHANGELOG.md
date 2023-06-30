@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug in the falling damage calculator that resulted in it not finding the toughness of a tokens actor.
 ### Removed
 - Some translation strings no longer needed.
+- Default value for campfire as leaving that in was an oversight. SWIM does not come with a texture for campfires yet, I hiighly recommend the animated one from JB2A though.
 ### Known issues
 - Mirror Self only properly works if the summoning token is linked.
 
