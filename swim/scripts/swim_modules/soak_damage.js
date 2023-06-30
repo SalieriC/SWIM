@@ -1,6 +1,6 @@
 /*******************************************
  * Soak Damage
- * v. 5.3.0
+ * v. 5.4.0
  * Code by SalieriC#8263.
  *******************************************/
 export async function soak_damage_script(effect = false) {
@@ -17,6 +17,7 @@ export async function soak_damage_script(effect = false) {
         ui.notifications.notify(game.i18n.format("SWIM.notification-bleedingRoll", {tokenName: nameKey}));
     }
     const actor = token.actor
+    const pronoun = swim.get_pronoun(actor)
 
     // Checking for System Benny image.
     let bennyImage = await swim.get_benny_image()
@@ -56,6 +57,9 @@ export async function soak_damage_script(effect = false) {
     let rounded;
     let elanBonus;
     let newWounds;
+    let lastWoundsSoaked = 0
+    let maxWoundsSoaked = 0
+    let critFail = false
     let { ___, ____, totalBennies } = await swim.check_bennies(token)
     const bleedingOut = await succ.check_status(token, 'bleeding-out')
     const inc = await succ.check_status(token, 'incapacitated')
@@ -148,7 +152,7 @@ export async function soak_damage_script(effect = false) {
         // Checking for a Critical Failure.
         let wildCard = true;
         if (token.actor.system.wildcard === false && token.actor.type === "npc") { wildCard = false }
-        let critFail = await swim.critFail_check(wildCard, r)
+        critFail = await swim.critFail_check(wildCard, r)
         if (critFail === true) {
             ui.notifications.notify(game.i18n.localize("SWIM.notification-critFailApplyWounds"));
             let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultCritFail", { name: actorAlias });
@@ -156,8 +160,10 @@ export async function soak_damage_script(effect = false) {
             ChatMessage.create({ content: chatData });
         } else {
             let { _, __, totalBennies } = await swim.check_bennies(token)
-            if (rounded < 1) {
+            if (rounded < 1 && maxWoundsSoaked <= rounded) {
                 chatData += game.i18n.localize("SWIM.chatMessage-soakNoWounds");
+                lastWoundsSoaked = 0
+                maxWoundsSoaked = maxWoundsSoaked > lastWoundsSoaked ? maxWoundsSoaked : lastWoundsSoaked
                 if (totalBennies < 1) {
                     applyWounds();
                 }
@@ -165,7 +171,9 @@ export async function soak_damage_script(effect = false) {
                     dialogReroll();
                 }
             } else if (rounded < numberWounds) {
-                chatData += game.i18n.format("SWIM.chatMessage-soakSomeWounds", { rounded: rounded });
+                lastWoundsSoaked = rounded
+                maxWoundsSoaked = maxWoundsSoaked > lastWoundsSoaked ? maxWoundsSoaked : lastWoundsSoaked
+                chatData += game.i18n.format("SWIM.chatMessage-soakSomeWounds", { rounded: maxWoundsSoaked, pronoun: pronoun });
                 if (soakSFX) { AudioHelper.play({ src: `${soakSFX}` }, true); }
                 if (totalBennies < 1) {
                     applyWounds();
@@ -174,7 +182,9 @@ export async function soak_damage_script(effect = false) {
                     dialogReroll();
                 };
             } else if (rounded >= numberWounds) {
-                chatData += game.i18n.localize("SWIM.chatMessage-soakAllWounds");
+                lastWoundsSoaked = rounded
+                maxWoundsSoaked = maxWoundsSoaked > lastWoundsSoaked ? maxWoundsSoaked : lastWoundsSoaked
+                chatData += game.i18n.format("SWIM.chatMessage-soakAllWounds", {pronoun: pronoun});
                 if (soakSFX) { AudioHelper.play({ src: `${soakSFX}` }, true); }
                 if (await succ.check_status(token, 'shaken') === true) {
                     await succ.apply_status(token, 'shaken', false)
@@ -188,8 +198,8 @@ export async function soak_damage_script(effect = false) {
 
     // Apply wounds if not all wounds were soaked.
     async function applyWounds() {
-        newWounds = numberWounds - rounded;
-        //Translate TODO
+        if (critFail === true) { newWounds = numberWounds }
+        else { newWounds = numberWounds - maxWoundsSoaked }
         new Dialog({
             title: game.i18n.localize("SWIM.dialogue-applyWounds"),
             content: `<form>
@@ -270,7 +280,6 @@ export async function soak_damage_script(effect = false) {
         label: game.i18n.localize("SWIM.dialogue-soakWoundsWithUnHolyWarrior"),
         callback: (html) => {
             numberWounds = Number(html.find("#numWounds")[0].value);
-            //Translate ToDo
             new Dialog({
                 title: game.i18n.localize("SWIM.dialogue-soakWounds"),
                 content: game.i18n.format("SWIM.dialogue-soakWoundsWithUnHolyWarriorContent", { ppv: ppv }),
@@ -313,7 +322,6 @@ export async function soak_damage_script(effect = false) {
     else if (inc === true) { incVigor() }
     else {
         // Main Dialogue
-        //Translate ToDo
         new Dialog({
             title: game.i18n.localize("SWIM.dialogue-soakWounds"),
             content: game.i18n.format("SWIM.dialogue-soakWoundsMainContent", { wv: wv, wm: wm, totalBennies: totalBennies }),
@@ -330,7 +338,7 @@ export async function soak_damage_script(effect = false) {
     async function dialogReroll() {
         let { _, __, totalBennies } = await swim.check_bennies(token)
         if (totalBennies > 0) {
-            let currWounds = numberWounds - rounded;
+            let currWounds = numberWounds - maxWoundsSoaked;
             new Dialog({
                 title: game.i18n.localize("SWIM.dialogue-reroll"),
                 content: game.i18n.format("SWIM.dialogue-rerollText", { rounded: rounded, currWounds: currWounds, totalBennies: totalBennies }),
@@ -804,6 +812,7 @@ export async function soak_damage_script(effect = false) {
         }
 
         async function bleedReroll(dialog_content) {
+            //Translation TODO
             dialog_content += `<p>Unless you roll a Critical Failure, your best result will be kept.</p>`
             if (elan) {
                 elanBonus = 2
