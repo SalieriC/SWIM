@@ -21,7 +21,6 @@ export async function mark_dead_script() {
         for (let e of canvas.tokens.controlled) {
             const isInc = await succ.check_status(e, 'incapacitated')
             const apply = !isInc //invert the result to remove if applied and vice versa.
-            console.log(e, isInc, apply)
             await succ.toggle_status(e, 'incapacitated', apply, true)
         }
         ui.notifications.info(game.i18n.localize("SWIM.notification.markDeadAlive"));
