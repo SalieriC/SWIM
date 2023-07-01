@@ -12,7 +12,7 @@
   "SWIM.injuryTableName": "Injury Table:",
   "SWIM.injuryTableHint": "Injury table used for Gritty Damage. You need to set up the EXACT name of your Injury Table. Gritty damage is only used for non-GM accounts.",
   "SWIM.swdUnshakeName": "Use SWD unshake rules:",
-  "SWIM.swdUnshakeHint": "If activated, SWIM will use the unshake rules from SWD (raise required to act immediately, movement halved if Shaken) instead of SWADE. For the full SWD rules, remember to add a change to Shaken in SUCCs Condition lab using 'system.stats.speed.value', 'multiply' and '0.5'. Adjusting pace with wounds will be disabled by SWIM already.",
+  "SWIM.swdUnshakeHint": "If activated, SWIM will use the unshake rules from SWD (raise required to act immediately, movement halved if Shaken) instead of SWADE. Adjusting pace with wounds will be disabled and halved movement added to Shaken by SWIM.",
   "SWIM.grittyDamageName": "Use Gritty Damage?",
   "SWIM.grittyDamageHint": "Activate this if you want to use Gritty Damage. By default it only affects PCs.",
   "SWIM.grittyDamageNPCName": "Use Gritty Damage on NPCs?",
