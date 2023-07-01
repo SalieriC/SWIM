@@ -97,11 +97,13 @@ Hooks.on(`ready`, () => {
         game.swade.effectCallbacks.set("bleeding-out", swim.soak_damage)
     }
 
+    /* Not a setting in HE anymore. Removing the HE support for now.
     // Set Health Estimate up
     if (game.modules.get('healthEstimate')?.active && swim.is_first_gm()) {
         let incapIcon = CONFIG.statusEffects.filter(e => e.id === "incapacitated").icon
         if (game.settings.get("healthEstimate", "core.deathMarker") != incapIcon) {game.settings.set("healthEstimate", "core.deathMarker", incapIcon)}
     }
+    */
 
     // First Login warning
     if ((game.settings.get('swim', 'docReadV1.1.0') === false || !game.settings.get("swade", "tocBlockList")["swim.swim-actor-folders"]) && swim.is_first_gm()) {
