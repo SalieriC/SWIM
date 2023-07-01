@@ -13,7 +13,7 @@ export async function effect_hooks() {
         }
         // Light
         if (condition.flags?.succ?.conditionId === "torch" && game.user.id === userID) {
-            if (condition.flags?.succ?.additionalData?.swim?.activatedFromMacro === true) { return } //Prevent second execution if macro was used.
+            if (condition.flags?.succ?.effectOptions?.swim?.activatedFromMacro === true) { return } //Prevent second execution if macro was used.
             swim.token_vision(condition)
         }
         // Hold

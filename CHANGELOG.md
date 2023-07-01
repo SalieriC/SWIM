@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug in the falling damage calculator that resulted in it not finding the toughness of a tokens actor.
 - Fixed some other bugs when dismissing summoned tokens.
 - Fixed deprecation warning resulting from using `effect.flags.core.statusId`.
+- Fixed a bug that opened the token vision macro if the macro was used to create the effect.
 ### Removed
 - Some translation strings no longer needed.
 - Default value for campfire as leaving that in was an oversight. SWIM does not come with a texture for campfires yet, I hiighly recommend the animated one from JB2A though.
