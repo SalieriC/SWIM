@@ -56,8 +56,8 @@
 				"type": "module",
 				"manifest": "https://raw.githubusercontent.com/SalieriC/SUCC/main/succ/module.json",
 				"compatibility": {
-					"minimum": "2.1.0",
-					"verified": "2.1.0"
+					"minimum": "2.0.1",
+					"verified": "2.0.1"
 				}
 			},
 			{
