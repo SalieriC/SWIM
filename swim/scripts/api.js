@@ -16,6 +16,7 @@ import { scale_calculator } from './swim_modules/scale_calculator.js'
 import { shape_changer_script } from './swim_modules/shape_changer.js'
 import { soak_damage_script } from './swim_modules/soak_damage.js'
 import { token_vision_script } from './swim_modules/token_vision.js'
+import { travel_calculator } from './swim_modules/travel_calculator.js'
 import { unshake_swd_script, unshake_swade_script } from './swim_modules/unshake.js'
 import { unstun_script } from './swim_modules/unstun.js'
 import { update_migration } from './migrations.js'
@@ -68,6 +69,7 @@ export class api {
       shape_changer: api._shape_changer,
       soak_damage: api._soak_damage,
       token_vision: api._token_vision,
+      travel_calculator: api._travel_calculator,
       unshake: api._unshake,
       shake: api._shake,
       unstun: api._unstun,
@@ -345,6 +347,7 @@ export class api {
    * - Shape Changer
    * - Soak Damage
    * - Token Vision
+   * - Travel Calculator
    * - (Un-)Shake
    * - Shake
    * - (Un-)Stun
@@ -422,6 +425,10 @@ export class api {
   // Token Vision
   static async _token_vision() {
     token_vision_script()
+  }
+  // Travel Calculator
+  static async _travel_calculator() {
+    travel_calculator()
   }
   // Unshake script
   static async _unshake(effect) {
