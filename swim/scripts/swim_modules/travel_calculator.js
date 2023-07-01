@@ -1,6 +1,6 @@
 /*******************************************
  * Travel Calculator Macro
- * version v.1.0.0
+ * version v.1.1.0
  * Made and maintained by SalieriC#8263
  * Future plan: Include random encounters as
  * per the core rules pg.144.
@@ -123,14 +123,22 @@ async function calculate_results(distance, unit, method) {
     // Calculate the result based on distance and speedPerHour
     const speedPerDay = speedPerHour * 8
     let result = distance / speedPerDay;
+    let resultRaw = distance / speedPerHour
     //Convert result to days and hours:
     let days = Math.floor(result);
     let hours = Math.floor((result - days) * 24);
     let resultText = days + ` ${game.i18n.localize("SWIM.word-days")}` + ", " + hours + ` ${game.i18n.localize("SWIM.word-hours")}`
-    show_results(originalDistance, unit, method, resultText)
+
+    // Convert resultRaw to days and hours
+    days = Math.floor(resultRaw / 24);
+    hours = Math.floor(resultRaw % 24);
+
+    let resultTextRaw = days + ` ${game.i18n.localize("SWIM.word-days")}` + ", " + hours + ` ${game.i18n.localize("SWIM.word-hours")}`;
+
+    show_results(originalDistance, unit, method, resultText, resultTextRaw)
 }
 
-async function show_results(distance, unit, method, resultText) {
+async function show_results(distance, unit, method, resultText, resultTextRaw) {
     const officialClass = await swim.get_official_class()
     const ip = new ImagePopout(`modules/swim/assets/travel/${method}.webp`).render(true);
     ip.options.title = game.i18n.localize(`SWIM.travelOption-${method}`)
@@ -146,6 +154,7 @@ async function show_results(distance, unit, method, resultText) {
             distance,
             unit,
             resultText,
+            resultTextRaw,
             method: game.i18n.localize(`SWIM.travelOption-${method}`)
         }),
         buttons: {
