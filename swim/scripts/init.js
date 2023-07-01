@@ -83,12 +83,14 @@ Hooks.on(`ready`, () => {
             game.settings.set("swade", "enableWoundPace", false)
             ui.notifications.notify(game.i18n.localize("SWIM.notification-adjustPaceDisabled"))
         }
+        /* Currently not possible in SUCC.
         // Add half pace effect to Shaken:
-        for (let status of CONFIG.statusEffects) {
-            if (status.id === 'shaken') {
-                status.changes.push({key: "system.stats.speed.value", mode: 1, priority: undefined, value: "0.5"})
-            }
+        console.log(game.succ.conditions)
+        const status = game.succ.conditions.find(c => c.id === 'shaken')
+        if (status) {
+            status.activeEffect.changes.push({key: "system.stats.speed.value", mode: 1, priority: undefined, value: "0.5"})
         }
+        */
     }
     const callbackMode = game.settings.get("swim", "callbackMode")
     if (callbackMode === "manual" || callbackMode === "automatic") {

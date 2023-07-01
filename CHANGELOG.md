@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Old compendium .db-files no longer used in v11.
 - Compendium Folders is no longer a dependancy.
 - Removed Health Estimate support with a heavy heart as changes in the module prevent SWIM from supporting it.
+- Removed adding `system.stats.speed.value` to Shaken if SWD rules are active as this is currently not possible in SUCC. Please remember to add it yourself in the Condition Lab.
 
 ## [1.5.0] - 2023-05-28
 ☮️ Peace in the world, or the world in pieces. 🕊️
