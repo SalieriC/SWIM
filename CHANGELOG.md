@@ -32,11 +32,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed some other bugs when dismissing summoned tokens.
 - Fixed deprecation warning resulting from using `effect.flags.core.statusId`.
 - Fixed a bug that opened the token vision macro if the macro was used to create the effect.
+- Fixed a bug in the Mark Dead macro that prevented the removal of Incapacitation. It now toggles on/off again.
 ### Removed
 - Some translation strings no longer needed.
 - Default value for campfire as leaving that in was an oversight. SWIM does not come with a texture for campfires yet, I hiighly recommend the animated one from JB2A though.
 - Old compendium .db-files no longer used in v11.
 - Compendium Folders is no longer a dependancy.
+- Removed Health Estimate support with a heavy heart as changes in the module prevent SWIM from supporting it.
 ### Known issues
 - Mirror Self only properly works if the summoning token is linked.
 
