@@ -39,7 +39,7 @@
 				"manifest": "https://raw.githubusercontent.com/ruipin/fvtt-lib-wrapper/master/module.json",
 				"compatibility": {
 					"minimum": "1.12.10.0",
-					"verified": "1.12.12.0"
+					"verified": "1.12.12.1"
 				}
 			},
 			{

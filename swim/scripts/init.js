@@ -65,10 +65,6 @@ Hooks.on(`ready`, () => {
     combat_hooks()
     brsw_hooks()
 
-    // Ready stuff
-    console.log("  █████████  █████   ███   █████ █████ ██████   ██████\n ███░░░░░███░░███   ░███  ░░███ ░░███ ░░██████ ██████ \n░███    ░░░  ░███   ░███   ░███  ░███  ░███░█████░███ \n░░█████████  ░███   ░███   ░███  ░███  ░███░░███ ░███ \n ░░░░░░░░███ ░░███  █████  ███   ░███  ░███ ░░░  ░███ \n ███    ░███  ░░░█████░█████░    ░███  ░███      ░███ \n░░█████████     ░░███ ░░███      █████ █████     █████\n ░░░░░░░░░       ░░░   ░░░      ░░░░░ ░░░░░     ░░░░░ ")
-    console.log('SWIM | SWADE Immersion Module | Ready');
-
     //Setup actions for BRSW:
     if (game.settings.get('swim', 'br2Support') === true) {
         brsw_actions_setup()
@@ -85,7 +81,6 @@ Hooks.on(`ready`, () => {
         }
         // Add half pace effect to Shaken:
         Hooks.once('succReady', (api) => {
-            console.log(api.conditions)
             const status = api.conditions.find(c => c.id === 'shaken')
             if (status) {
                 status.activeEffect.changes.push({key: "system.stats.speed.value", mode: 1, priority: undefined, value: "0.5"})
@@ -99,13 +94,11 @@ Hooks.on(`ready`, () => {
         game.swade.effectCallbacks.set("bleeding-out", swim.soak_damage)
     }
 
-    /* Not a setting in HE anymore. Removing the HE support for now.
     // Set Health Estimate up
     if (game.modules.get('healthEstimate')?.active && swim.is_first_gm()) {
-        let incapIcon = CONFIG.statusEffects.filter(e => e.id === "incapacitated").icon
-        if (game.settings.get("healthEstimate", "core.deathMarker") != incapIcon) {game.settings.set("healthEstimate", "core.deathMarker", incapIcon)}
+        console.log("SWIM | Health Estimate found, setting it up for SWIM.")
+        if (game.settings.get("healthEstimate", "core.deathState")) {game.settings.set("healthEstimate", "core.deathState", true)}
     }
-    */
 
     // First Login warning
     if ((game.settings.get('swim', 'docReadV1.1.0') === false || !game.settings.get("swade", "tocBlockList")["swim.swim-actor-folders"]) && swim.is_first_gm()) {
@@ -219,6 +212,10 @@ Hooks.on(`ready`, () => {
             });
         });
     }
+
+    // Ready notification stuff
+    console.log("  █████████  █████   ███   █████ █████ ██████   ██████\n ███░░░░░███░░███   ░███  ░░███ ░░███ ░░██████ ██████ \n░███    ░░░  ░███   ░███   ░███  ░███  ░███░█████░███ \n░░█████████  ░███   ░███   ░███  ░███  ░███░░███ ░███ \n ░░░░░░░░███ ░░███  █████  ███   ░███  ░███ ░░░  ░███ \n ███    ░███  ░░░█████░█████░    ░███  ░███      ░███ \n░░█████████     ░░███ ░░███      █████ █████     █████\n ░░░░░░░░░       ░░░   ░░░      ░░░░░ ░░░░░     ░░░░░ ")
+    console.log('SWIM | SWADE Immersion Module | Ready');
 });
 
 /* This produces duplicate sound effects, leaving it commented until a good solution to exclude them on a condition is found.
