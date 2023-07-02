@@ -23,6 +23,8 @@ import { update_migration } from './migrations.js'
 import * as SWIM from './constants.js'
 import { showWeaponAmmoDialog, br2_ammo_management_script } from "./swim_modules/ammo_management.js";
 
+let deck = [...SWIM.DECK_OF_CARDS]
+
 export class api {
 
   // Exposing the globnals.
@@ -50,6 +52,8 @@ export class api {
       run_migration: api._run_migration,
       get_pronoun: api._get_pronoun,
       generate_id: api._generate_id,
+      draw_cards: api._draw_cards,
+      shuffle_deck: api._shuffle_deck,
       // Convenience
       ammo_management: api._ammo_management,
       br2_ammo_management: api._ammo_management_br2,
@@ -90,6 +94,7 @@ export class api {
    * - Run Migration
    * - Get Pronoun
    * - Generate ID
+   * - Get random cards
    ******************************************/
 
   // Get Macro Variables
@@ -316,15 +321,62 @@ export class api {
   }
 
   //Generate random SWIM-ID
-  static _generate_id (length = 16) {
-    var result           = 'SWIM-';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  static _generate_id(length = 16) {
+    var result = 'SWIM-';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
-      result += characters.charAt(Math.floor(Math.random() * 
-      charactersLength));
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() *
+        charactersLength));
     }
-   return result;
+    return result;
+  }
+
+  //Get random cards
+  static _draw_cards(numCards, sound = true) {
+    if (numCards <= 0) {
+      console.log("SWIM | Invalid number of cards.")
+      ui.notifications.warn(game.i18n.localize("SWIM.notification-invalidNumber"))
+      return []
+    } else if (numCards > deck.length) {
+      console.log("SWIM | There are not enough cards in the deck left. Use 'swim.shuffle_deck()' to shuffle.")
+      ui.notification.warn(game.i18n.localize("SWIM.notification-notEnoughCards"))
+      return []
+    }
+
+    const drawnCards = [];
+    for (let i = 0; i < numCards; i++) {
+      drawnCards.push(deck.shift());
+    }
+
+    if (sound) {
+      const volume = game.settings.get('swim', 'defaultVolume')
+      swim.play_sfx('systems/swade/assets/card-flip.wav', volume, false)
+    }
+
+    console.log("SWIM | Cards drawn:", drawnCards)
+    return drawnCards;
+  }
+
+  //Shuffle Deck
+  static _shuffle_deck(sound = true, notification = true) {
+    //First get the original deck of cards:
+    deck = [...SWIM.DECK_OF_CARDS]
+
+    // Now do a Fisher-Yates shuffle starting from the last element and swap it with a randomly selected element:
+    for (let i = deck.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [deck[i], deck[j]] = [deck[j], deck[i]];
+    }
+
+    if (sound) {
+      const volume = game.settings.get('swim', 'defaultVolume')
+      swim.play_sfx('systems/swade/assets/card-flip.wav', volume, false)
+    } if (notification) {
+      ui.notifications.notify(game.i18n.localize("SWIM.notification-deckShuffled"))
+    }
+
+    return deck;
   }
 
   /*******************************************
@@ -445,9 +497,9 @@ export class api {
   static async _shake(token) {
     const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
     await succ.apply_status(token, 'shaken', true)
-        if (shakenSFX) {
-            AudioHelper.play({ src: `${shakenSFX}` }, true);
-        }
+    if (shakenSFX) {
+      AudioHelper.play({ src: `${shakenSFX}` }, true);
+    }
   }
   // Unstun script
   static async _unstun(effect) {

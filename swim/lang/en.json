@@ -556,5 +556,8 @@
   "SWIM.travelOption-modernPassengerTrain": "Modern Passenger Train",
   "SWIM.travelOption-propPlane": "Prop Plane",
   "SWIM.travelOption-commercialJet": "Commercial Jet",
-  "SWIM.dialogue-travelCalculatorResults": "{officialClass}<p><b>Travel distance:</b> {distance} {unit}</p><p><b>Means of travel:</b> {method}</p><p><b>Required time (8 hrs per day, aprox.):</b> {resultText}</p><b>Required time (non-stop, aprox.):</b> {resultTextRaw}</p><p>Usually the game assumes that the characters travel 8 hours per day in average conditions. Better or worse conditions may result in an earlier or later arrival. Also, for many vehicles it seems more reasonable to use the non-stop value.</p></div>"
+  "SWIM.dialogue-travelCalculatorResults": "{officialClass}<p><b>Travel distance:</b> {distance} {unit}</p><p><b>Means of travel:</b> {method}</p><p><b>Required time (8 hrs per day, aprox.):</b> {resultText}</p><b>Required time (non-stop, aprox.):</b> {resultTextRaw}</p><p>Usually the game assumes that the characters travel 8 hours per day in average conditions. Better or worse conditions may result in an earlier or later arrival. Also, for many vehicles it seems more reasonable to use the non-stop value.</p></div>",
+  "SWIM.notification-deckShuffled": "Deck shuffled.",
+  "SWIM.notification-invalidNumber": "Invalid number of cards.",
+  "SWIM.notification-notEnoughCards": "There are not enough cards in the deck left. Use 'swim.shuffle_deck()' to shuffle."
 }
