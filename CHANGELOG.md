@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A new travel calculator macro that takes some inputs and calculates the time needed to travel the given distance with the given means of travel. It'll then show a flavour image and the results of the calculation.
 - A bunch of flavour images for travelling. They are used in the new travel calculator to create some immersion.
 - SWIMs own deck of cards (poker deck with jokers left in) with corresponding functions to draw and shuffle. These are considered helper functions and won't appear anywhere in the module but can be called using `swim.draw_cards(numberOfCards, playSound)` (numberOfCards is the amount you want to draw, playSound is a boolean) and `swim.shuffle_deck(playSound, notification)` (both variables are a boolean). Why? It was easier to write from scratch than dealing with the Foundry card API.
+- Four Roll Tables with travel encounters that may or may not fit the setting you're playing. Their main purpose is to be used in the future version of the Travel Calculator.
 ### Changed
 - Migrated all active effect creations to use the 'name' property instead of 'label' as this was changed in Foundry v11.
 - Ammo Management now respects the reload type 'single reload' and defaults to one bullet relaod if the weapon is set up like that. As a result, the setting in SWIM that sets the checkbox in the ammo management dialogue was deprecated.
