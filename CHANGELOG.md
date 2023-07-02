@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
+
+## [2.0.0] - 2023-07-02
 ### Added
 - The Power Effect Builder now adds the powers description to the active effect if a power item is found on the actor. This currently only works for power effects not handled by SUCC (so every AE except Boost, Lower, Protection and Smite).
 - Migration to change all AE data for ammunition to use the new 'name' property instead of 'label'.
