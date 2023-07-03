@@ -223,6 +223,7 @@ export class api {
     else if (game.modules.get("deadlands-core-rules")?.active) { officialClass = '<div class="swade-core">' }
     else if (game.modules.get("sprawl-core-rules")?.active) { officialClass = '<div class="sprawl-core">' }
     else if (game.modules.get("swade-core-rules")?.active) { officialClass = '<div class="swade-core">' }
+    else if (game.modules.get("swade-core-rules-ptbr")?.active) { officialClass = '<div class="swade-core">' }
     return officialClass
   }
   // Get SFX

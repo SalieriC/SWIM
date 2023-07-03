@@ -232,6 +232,7 @@ async function gain_phobia(actor, major, total) {
     let originalText = ``
     if (game.modules.get("swpf-core-rules")?.active) { hindranceCompendium = "swpf-core-rules.swpf-hindrances" }
     else if (game.modules.get("swade-core-rules")?.active) { hindranceCompendium = "swade-core-rules.swade-hindrances" }
+    else if (game.modules.get("swade-core-rules-ptbr")?.active) { hindranceCompendium = "swade-core-rules-ptbr.swade-hindrances" }
     if (hindranceCompendium) {
         //Get the phobia hindrance from compendium:
         const pack = game.packs.get(hindranceCompendium)

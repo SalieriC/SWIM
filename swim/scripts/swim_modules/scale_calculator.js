@@ -8,15 +8,13 @@ export async function scale_calculator() {
     const chatimage = "icons/tools/hand/scale-balances-merchant-brown.webp";
 
     /* Size Scale p106 SWADE
-    
+
     source: https://raw.githubusercontent.com/brunocalado/mestre-digital/master/Foundry%20VTT/Macros/Savage%20Worlds/SizeScaleCalculator.js
     icon: icons/tools/hand/scale-balances-merchant-brown.webp
     */
 
     let tokenActor = canvas.tokens.controlled[0];
     let tokenTarget = Array.from(game.user.targets)[0];
-    let coreRules = false;
-    if (game.modules.get("swade-core-rules")?.active) { coreRules = true; }
 
     if (tokenActor === undefined || tokenTarget === undefined) {
         ui.notifications.warn(game.i18n.localize("SWIM.notification-selectAndTargetOneToken"));
@@ -37,9 +35,18 @@ export async function scale_calculator() {
             let targetModifier = sizeToModifier(targetSize);
             let modifier = calc(actorModifier, targetModifier);
 
+            let coreRules = "";
+            if (game.modules.get("swade-core-rules")?.active) {
+                coreRules = "en";
+            } else if (game.modules.get("swade-core-rules-ptbr")?.active) {
+                coreRules = "ptbr";
+            }
+
             let message = `<h2><img style="vertical-align:middle" src=${chatimage} width="28" height="28"> Size & Scale Calculator</h2>`;
-            if (coreRules === true) {
+            if (coreRules === "en") {
                 message = `<div class="swade-core"><h2><img style="vertical-align:middle" src=${chatimage} width="28" height="28"> @Compendium[swade-core-rules.swade-rules.mbP0fwcquD98QtwX]{Size & Scale} Calculator</h2>`;
+            } else if (coreRules === "ptbr") {
+                message = `<div class="swade-core"><h2><img style="vertical-align:middle" src=${chatimage} width="28" height="28"> Calculadora de @UUID[Compendium.swade-core-rules-ptbr.swade-rules.JournalEntry.YqkGb1HsubFuZycb.JournalEntryPage.mwLhiYqMcWKnTdyK]{Tamanho e Escala}</h2>`;
             }
             message += `<ul><li><b>${tokenActor.name}:</b> Size = ${actorSize} / Modifier = ${actorModifier}</li>`;
             message += `<li><b>${tokenTarget.name}:</b> Size = ${targetSize} / Modifier = ${targetModifier}</li></ul>`;
@@ -54,12 +61,14 @@ export async function scale_calculator() {
                     message += ` and has Swat*.</li></ul>`;
                 } else { message += `.</li></ul>` }
                 if ((actorSwat && targetSwat) || (actorSwat || targetSwat)) {
-                    if (coreRules === true) {
+                    if (coreRules === "en") {
                         message += `<p>*<b>@Compendium[swade-core-rules.swade-rules.q5sk5hEw6TED0FOU]{Swat}:</b> Ignore up to 4 points of penalties from Scale for the specified action(s).</p>`;
+                    } else if (coreRules === "ptbr") {
+                        message += `<p>*<b>@UUID[Compendium.swade-core-rules-ptbr.swade-rules.JournalEntry.i1doThAoZoNyspVL.JournalEntryPage.2PsyiX7nTwDbDEWb]{Esmagar}:</b> Ignora até 4 pontos de penalidades por Escala para a ação específica.</p>`;
                     } else {
                         message += `<p>*<b>Swat:</b> Ignore up to 4 points of penalties from Scale for the specified action(s).</p>`;
                     }
-                    if (coreRules === true) {
+                    if (coreRules) {
                         message += `</div>`;
                     }
                 }

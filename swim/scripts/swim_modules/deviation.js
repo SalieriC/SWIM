@@ -7,9 +7,6 @@
 export async function deviation_script(weapontype = false, range = false) {
     const chatimage = "https://raw.githubusercontent.com/brunocalado/mestre-digital/master/Foundry%20VTT/Macros/Savage%20Worlds/icons/clock.webp";
 
-    let coreRules = false;
-    if (game.modules.get("swade-core-rules")?.active) { coreRules = true; }
-
     if (weapontype && range) {
         rollForIt()
     } else {
@@ -66,13 +63,23 @@ export async function deviation_script(weapontype = false, range = false) {
         let direction = await new Roll('1d12').roll();
         let roll = await new Roll(die).roll();
         let message = `<h2>Deviation</h2>`;
-        if (coreRules === true) { message = `<div class="swade-core"><h2>@Compendium[swade-core-rules.swade-rules.Deviation]{Deviation}</h2>`; }
+        let coreRules = "";
+        if (game.modules.get("swade-core-rules")?.active) {
+            coreRules = "en";
+        } else if (game.modules.get("swade-core-rules-ptbr")?.active) {
+            coreRules = "ptbr";
+        }
+        if (coreRules === "en") {
+            message = `<div class="swade-core"><h2>@Compendium[swade-core-rules.swade-rules.Deviation]{Deviation}</h2>`;
+        } else if (coreRules === "ptbr") {
+            message = `<div class="swade-core"><h2>@UUID[Compendium.swade-core-rules-ptbr.swade-rules.JournalEntry.YqkGb1HsubFuZycb.JournalEntryPage.vL3TExJeOXzRXAi3#desvio]{Desvio}</h2>`;
+        }
         message += `<p>Move the blast <b>${roll.total * rangeMultiplier}"</b> to <b style="color:red">${direction.total}</b> O'Clock.</p>`;
         if (directionCheck(direction.total)) {
             message += `<p><b style="color:red">A weapon can never deviate more than half the distance to the original target (that keeps it from going behind the thrower).</b></p>`;
         }
         message += `<p style="text-align:center"><img style="vertical-align:middle; border: none;" src=${chatimage} width="200" height="200"><p>`;
-        if (coreRules === true) { message += `</div>` }
+        if (coreRules) { message += `</div>` }
 
         let tempChatData = {
             //type: CHAT_MESSAGE_TYPES.ROLL,

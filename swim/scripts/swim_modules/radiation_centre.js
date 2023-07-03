@@ -136,11 +136,14 @@ export async function radiation_centre_script() {
 
     // Main Dialogue
     let { ___, ____, totalBennies } = await swim.check_bennies(token)
+    let compendiumLink = game.i18n.localize("SWIM.hazard-radiation");
+    if (game.modules.get("swade-core-rules")?.active) { compendiumLink = `@UUID[Compendium.swade-core-rules.swade-rules.swadecor04theadv.JournalEntryPage.04radiation00000]{${game.i18n.localize("SWIM.hazard-radiation")}` }
+    else if (game.modules.get("swade-core-rules-ptbr")?.active) { compendiumLink = `@UUID[Compendium.swade-core-rules-ptbr.swade-rules.JournalEntry.iVtlDDh7A3L9Lbhs.JournalEntryPage.x6XR8bHzQwnKve5r#radiacao]{Radiação}` }
     new Dialog({
         title: 'Radiation Centre',
         content: await TextEditor.enrichHTML(`<form class="swade-core">
          ${game.i18n.format("SWIM.dialogue-radiationCentre-1", {fv: fv, fm: fm, totalBennies: totalBennies})}
-         <p><i class="fas fa-radiation"></i> @UUID[Compendium.swade-core-rules.swade-rules.swadecor04theadv.JournalEntryPage.04radiation00000]{${game.i18n.localize("SWIM.hazard-radiation")}} ${game.i18n.localize("SWIM.dialogue-radiationCentre-2")}
+         <p><i class="fas fa-radiation"></i> ${compendiumLink}} ${game.i18n.localize("SWIM.dialogue-radiationCentre-2")}
      </form>`, { async: true }),
         buttons: buttonsMain,
         default: "one",
@@ -259,7 +262,7 @@ export async function radiation_centre_script() {
                 actorName: actor.name,
                 class: 'swade-core',
                 img: 'modules/succ/assets/icons/0-irradiated.svg'
-            }))} @UUID[Compendium.swade-core-rules.swade-rules.swadecor04theadv.JournalEntryPage.04disease0000000#disease-categories]{${game.i18n.localize("SWIM.disease-chronic").toLowerCase()}}. 
+            }))} @UUID[Compendium.swade-core-rules.swade-rules.swadecor04theadv.JournalEntryPage.04disease0000000#disease-categories]{${game.i18n.localize("SWIM.disease-chronic").toLowerCase()}}.
             ${game.i18n.format(game.i18n.format("SWIM.chatMessage-radPoisoning-2", {
                 actorName: actor.name,
             }))}`,
