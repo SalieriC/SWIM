@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
+### Added
+- Travel Calculator is now able to generate encounters.
+- - If checked (requires random tables such as those provided by SWIM) it draws a card for each day of travel.
+- - Cards with values of 10 or lower are ignored.
+- - Face cards and higher trigger an encounter drawn from the tables depending on suit (as per the core rules pg. 144).
+- - On a Joker, two more cards are drawn and the results are combined (as per the core rules pg. 144).
+- - If a Joker is drawn as part of a card draw triggered from a Joker, the card is redrawn and the Joker is discarded without effect.
+- - If encounters are calculated, there won't be a dialogue showing the results, instead a JournalEntry will be created with all the data.
+- - The JournalEntry is carefully crafted and created in a folder that is created if not present yet.
+- - The image gets shown to all as usual, the JournalEntry is shown to the GM.
+### Fixed
+- Calculation bug in travel calulator that sometimes caused faulty results.
 
 ## [2.0.1] - 2023-07-03
 ### Fixed
