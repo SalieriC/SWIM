@@ -149,7 +149,7 @@ async function calculate_results(distance, unit, method, generateEncounters) {
     //Convert result to days and hours:
     let days = Math.floor(result);
     const travelDays = days
-    let hours = Math.floor((result - days) * 24);
+    let hours = Math.floor((result - days) * 8);
     let resultText = days + ` ${game.i18n.localize("SWIM.word-days")}` + ", " + hours + ` ${game.i18n.localize("SWIM.word-hours")}`
 
     // Convert resultRaw to days and hours
