@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 1.4.5
+ * v. 1.4.6
  * By SalieriC
  ******************************************************/
 function generate_id(length = 16) {
@@ -319,7 +319,7 @@ export async function summoner_gm(data) {
         }
         let scCopy = await Actor.create(scPreset) //create the new actor first
         //Now that a new actor is created, we need the Construct and Fearless abilities if a pack is defined:
-        if (packName || packName != 'none') {
+        if (packName && packName != 'none') {
             const pack = game.packs.get(packName)
             const contents = await pack.getDocuments()
             const constructAbility = contents.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.ability-construct").toLowerCase())

@@ -1,6 +1,7 @@
 /* globals game, FormApplication, $ */
 
 import * as SWIM from './constants.js'
+import { swim_buttons } from './buttons.js'
 
 export const settingVariables = [
     {id: 'swdUnshake', config_type: Boolean, tab: "Setting Rules", default: false},

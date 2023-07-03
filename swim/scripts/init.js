@@ -66,7 +66,7 @@ Hooks.on(`ready`, () => {
     brsw_hooks()
 
     //Setup actions for BRSW:
-    if (game.settings.get('swim', 'br2Support') === true) {
+    if (game.modules.get('betterrolls-swade2')?.active && game.settings.get('swim', 'br2Support') === true) {
         brsw_actions_setup()
     }
 
