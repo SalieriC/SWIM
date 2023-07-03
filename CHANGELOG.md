@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
 
+## [2.0.1] - 2023-07-03
+### Fixed
+- Fixed a bug in the Mighty Summoner where it always tried to find the Special Abilities, even with no compendium provided, thus causing an error.
+- Fixed a bug that caused an error message if the raise calculator button was turned off.
+- Fixed error messages that occured if BRSW support was turned on but with the module itself not active in the world.
+
 ## [2.0.0] - 2023-07-02
 ### Added
 - The Power Effect Builder now adds the powers description to the active effect if a power item is found on the actor. This currently only works for power effects not handled by SUCC (so every AE except Boost, Lower, Protection and Smite).
