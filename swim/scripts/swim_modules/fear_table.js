@@ -1,6 +1,6 @@
 /*******************************************
  * Fear Table Macro.
- * v. 3.0.2 by SalieriC#8263, original creator unknown.
+ * v. 3.0.1 by SalieriC#8263, original creator unknown.
  *******************************************/
 export async function fear_table_script() {
     let { speaker, _, __, token } = await swim.get_macro_variables()
@@ -228,10 +228,8 @@ export async function fear_table_script() {
 
 async function gain_phobia(actor, major, total) {
     const officialClass = await swim.get_official_class()
-    let hindranceCompendium = false
+    const hindranceCompendium = await swim.get_official_compendium_key('hindrances')
     let originalText = ``
-    if (game.modules.get("swpf-core-rules")?.active) { hindranceCompendium = "swpf-core-rules.swpf-hindrances" }
-    else if (game.modules.get("swade-core-rules")?.active) { hindranceCompendium = "swade-core-rules.swade-hindrances" }
     if (hindranceCompendium) {
         //Get the phobia hindrance from compendium:
         const pack = game.packs.get(hindranceCompendium)

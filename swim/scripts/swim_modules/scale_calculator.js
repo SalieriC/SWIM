@@ -1,11 +1,14 @@
 /*******************************************
  * Unstun macro for SWADE
- * version v.2.0.2
+ * version v.2.0.3
  * Original code by brunocalado, modified by SalieriC#8263.
  ******************************************/
 export async function scale_calculator() {
     const { speaker, _, __, token } = await swim.get_macro_variables()
     const chatimage = "icons/tools/hand/scale-balances-merchant-brown.webp";
+    const officialClass = await swim.get_official_class()
+    const sizeScaleLink = await swim.get_official_journal_link("size_and_scale")
+    const swatLink = await swim.get_official_journal_link("swat")
 
     /* Size Scale p106 SWADE
     
@@ -15,8 +18,6 @@ export async function scale_calculator() {
 
     let tokenActor = canvas.tokens.controlled[0];
     let tokenTarget = Array.from(game.user.targets)[0];
-    let coreRules = false;
-    if (game.modules.get("swade-core-rules")?.active) { coreRules = true; }
 
     if (tokenActor === undefined || tokenTarget === undefined) {
         ui.notifications.warn(game.i18n.localize("SWIM.notification-selectAndTargetOneToken"));
@@ -37,9 +38,9 @@ export async function scale_calculator() {
             let targetModifier = sizeToModifier(targetSize);
             let modifier = calc(actorModifier, targetModifier);
 
-            let message = `<h2><img style="vertical-align:middle" src=${chatimage} width="28" height="28"> Size & Scale Calculator</h2>`;
-            if (coreRules === true) {
-                message = `<div class="swade-core"><h2><img style="vertical-align:middle" src=${chatimage} width="28" height="28"> @Compendium[swade-core-rules.swade-rules.mbP0fwcquD98QtwX]{Size & Scale} Calculator</h2>`;
+            let message = `${officialClass}<h2><img style="vertical-align:middle" src=${chatimage} width="28" height="28"> Size & Scale Calculator</h2>`;
+            if (sizeScaleLink) {
+                message = `${officialClass}<h2><img style="vertical-align:middle" src=${chatimage} width="28" height="28"> ${sizeScaleLink}{Size & Scale} Calculator</h2>`;
             }
             message += `<ul><li><b>${tokenActor.name}:</b> Size = ${actorSize} / Modifier = ${actorModifier}</li>`;
             message += `<li><b>${tokenTarget.name}:</b> Size = ${targetSize} / Modifier = ${targetModifier}</li></ul>`;
@@ -54,14 +55,12 @@ export async function scale_calculator() {
                     message += ` and has Swat*.</li></ul>`;
                 } else { message += `.</li></ul>` }
                 if ((actorSwat && targetSwat) || (actorSwat || targetSwat)) {
-                    if (coreRules === true) {
-                        message += `<p>*<b>@Compendium[swade-core-rules.swade-rules.q5sk5hEw6TED0FOU]{Swat}:</b> Ignore up to 4 points of penalties from Scale for the specified action(s).</p>`;
+                    if (swatLink) {
+                        message += `<p>*<b>${swatLink}{Swat}:</b> Ignore up to 4 points of penalties from Scale for the specified action(s).</p>`;
                     } else {
                         message += `<p>*<b>Swat:</b> Ignore up to 4 points of penalties from Scale for the specified action(s).</p>`;
                     }
-                    if (coreRules === true) {
-                        message += `</div>`;
-                    }
+                    message += `</div>`;
                 }
             } else {
                 message += `<p><b>There is no modifier.</b> They have the same Scale.</p>`;

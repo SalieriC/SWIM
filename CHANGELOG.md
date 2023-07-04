@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Travel Calculator is now able to generate encounters.
 - - If checked (requires random tables such as those provided by SWIM) it draws a card for each day of travel.
+- - SWIM uses its own card deck API introduced in 2.0.0. Yes, it is a card deck and it is fair.
 - - Cards with values of 10 or lower are ignored.
 - - Face cards and higher trigger an encounter drawn from the tables depending on suit (as per the core rules pg. 144).
 - - On a Joker, two more cards are drawn and the results are combined (as per the core rules pg. 144).
@@ -16,8 +17,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - - If encounters are calculated, there won't be a dialogue showing the results, instead a JournalEntry will be created with all the data.
 - - The JournalEntry is carefully crafted and created in a folder that is created if not present yet.
 - - The image gets shown to all as usual, the JournalEntry is shown to the GM.
+- Official modules file in which the div classes and links for the official modules are stored.
+- - You can contribute to that list by adding the official modules of your language to the bottom of the list.
+- - If you do so please create a PR with the updated file.
+- - Also please sort the modules by language, all official modules of a language should be after each other.
+- - Please note that SWIM checks from the bottom up, so you'll have to put specialised modules lower and general ones towards the beginning, that's why SWADE Core and SWPF appear first since these are the ones carrying all the basic rules.
+- New API function that finds a journal link in the Official modules file.
+- New API function that finds a compendium key in the Official modules file.
+- Some minimal support for Brazilian Portugese core rules (mclemente).
+### Changed
+- The API function to get the official div class of modules was rewritten to be less hard coded and to use the Official modules files contents instead.
 ### Fixed
 - Calculation bug in travel calulator that sometimes caused faulty results.
+- Broken Journal link in Deviation and Scale Calculator.
 
 ## [2.0.1] - 2023-07-03
 ### Fixed

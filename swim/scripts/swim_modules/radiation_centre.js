@@ -1,6 +1,6 @@
 /*******************************************
  * Radiation Centre Macro
- * version 3.1.0
+ * version 3.1.1
  * By SalieriC#8263.
  ******************************************/
 export async function radiation_centre_script() {
@@ -136,11 +136,14 @@ export async function radiation_centre_script() {
 
     // Main Dialogue
     let { ___, ____, totalBennies } = await swim.check_bennies(token)
+    let radiationLink = await swim.get_official_journal_link("radiation")
+    if (radiationLink) { radiationLink += `{${game.i18n.localize("SWIM.hazard-radiation")}}` }
+    else {radiationLink = game.i18n.localize("SWIM.hazard-radiation")}
     new Dialog({
         title: 'Radiation Centre',
         content: await TextEditor.enrichHTML(`<form class="swade-core">
          ${game.i18n.format("SWIM.dialogue-radiationCentre-1", {fv: fv, fm: fm, totalBennies: totalBennies})}
-         <p><i class="fas fa-radiation"></i> @UUID[Compendium.swade-core-rules.swade-rules.swadecor04theadv.JournalEntryPage.04radiation00000]{${game.i18n.localize("SWIM.hazard-radiation")}} ${game.i18n.localize("SWIM.dialogue-radiationCentre-2")}
+         <p><i class="fas fa-radiation"></i> ${radiationLink} ${game.i18n.localize("SWIM.dialogue-radiationCentre-2")}
      </form>`, { async: true }),
         buttons: buttonsMain,
         default: "one",
@@ -253,13 +256,16 @@ export async function radiation_centre_script() {
         await actor.createEmbeddedDocuments('ActiveEffect', [effectData]);
         ui.notifications.warn(game.i18n.localize("SWIM.notification.diseaseWarning"))
         //Chat Message to let the everyone know what happened:
+        let diseaseLink = await swim.get_official_journal_link('disease_categories')
+        if (diseaseLink) { diseaseLink += `{${game.i18n.localize("SWIM.disease-chronic").toLowerCase()}}` }
+        else { diseaseLink = game.i18n.localize("SWIM.disease-chronic").toLowerCase() }
         ChatMessage.create({
             user: game.user.id,
             content: `${game.i18n.format(game.i18n.format("SWIM.chatMessage-radPoisoning-1", {
                 actorName: actor.name,
                 class: 'swade-core',
                 img: 'modules/succ/assets/icons/0-irradiated.svg'
-            }))} @UUID[Compendium.swade-core-rules.swade-rules.swadecor04theadv.JournalEntryPage.04disease0000000#disease-categories]{${game.i18n.localize("SWIM.disease-chronic").toLowerCase()}}. 
+            }))} ${diseaseLink}. 
             ${game.i18n.format(game.i18n.format("SWIM.chatMessage-radPoisoning-2", {
                 actorName: actor.name,
             }))}`,
