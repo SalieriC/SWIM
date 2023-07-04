@@ -21,7 +21,8 @@ import { unshake_swd_script, unshake_swade_script } from './swim_modules/unshake
 import { unstun_script } from './swim_modules/unstun.js'
 import { update_migration } from './migrations.js'
 import * as SWIM from './constants.js'
-import { showWeaponAmmoDialog, br2_ammo_management_script } from "./swim_modules/ammo_management.js";
+import { OFFICIAL_MODULES } from './official_modules.js'
+import { showWeaponAmmoDialog, br2_ammo_management_script } from "./swim_modules/ammo_management.js"
 
 let deck = [...SWIM.DECK_OF_CARDS]
 
@@ -45,6 +46,8 @@ export class api {
       is_first_gm: api._is_first_gm,
       wait: api._wait,
       get_official_class: api._get_official_class,
+      get_official_journal_link: api._get_official_journal_link,
+      get_official_compendium_key: api._get_official_compendium_key,
       get_actor_sfx: api._get_actor_sfx,
       get_weapon_sfx: api._get_weapon_sfx,
       play_sfx: api._play_sfx,
@@ -88,6 +91,12 @@ export class api {
    * - Get Benny Image
    * - Check Bennies
    * - Spend Benny
+   * - First GM
+   * - Is First GM
+   * - Wait
+   * - Get Official Class
+   * - Get Official Journal Link
+   * - Get Official Compendium Key
    * - Get SFX
    * - Play SFX
    * - Get Folder Contents
@@ -218,12 +227,48 @@ export class api {
   }
   // Get official Class for HTML
   static async _get_official_class() {
-    let officialClass = '<div>'
-    if (game.modules.get("swpf-core-rules")?.active) { officialClass = '<div class="swade-core">' }
-    else if (game.modules.get("deadlands-core-rules")?.active) { officialClass = '<div class="swade-core">' }
-    else if (game.modules.get("sprawl-core-rules")?.active) { officialClass = '<div class="sprawl-core">' }
-    else if (game.modules.get("swade-core-rules")?.active) { officialClass = '<div class="swade-core">' }
-    return officialClass
+    const moduleIDs = Object.keys(OFFICIAL_MODULES).reverse();
+
+    for (const moduleID of moduleIDs) {
+      const module = OFFICIAL_MODULES[moduleID];
+      const isActive = game.modules.get(moduleID)?.active;
+
+      if (isActive) {
+        return module.class;
+      }
+    }
+
+    return "<div>"; //Return a regular div if no active modules class div is found.
+  }
+  // Get Journal Link from active official module
+  static async _get_official_journal_link(searchString) {
+    const moduleIDs = Object.keys(OFFICIAL_MODULES).reverse();
+
+    for (const moduleID of moduleIDs) {
+      const module = OFFICIAL_MODULES[moduleID];
+      const isActive = game.modules.get(moduleID)?.active;
+
+      if (isActive && module.links && module.links[searchString]) {
+        return module.links[searchString];
+      }
+    }
+
+    return null; // Return null if no active module with matching link is found
+  }
+  // Get Compendium Key from active official module
+  static async _get_official_compendium_key(searchString) {
+    const moduleIDs = Object.keys(OFFICIAL_MODULES).reverse();
+
+    for (const moduleID of moduleIDs) {
+      const module = OFFICIAL_MODULES[moduleID];
+      const isActive = game.modules.get(moduleID)?.active;
+
+      if (isActive && module.compendiums && module.compendiums[searchString]) {
+        return module.compendiums[searchString];
+      }
+    }
+
+    return null; // Return null if no active module with matching compendium key is found
   }
   // Get SFX
   static async _get_actor_sfx(actor) {
