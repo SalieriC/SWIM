@@ -1,6 +1,6 @@
 /*******************************************
  * Travel Calculator Macro
- * version v.1.1.0
+ * version v.2.0.3
  * Made and maintained by SalieriC#8263
  * Future plan: Include random encounters as
  * per the core rules pg.144.
