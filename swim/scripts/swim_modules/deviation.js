@@ -1,11 +1,11 @@
 /*******************************************
  * Unshake macro for SWD
- * version 2.1.3
+ * version 2.2.0
  * (c): brunocalado; altered by SalieriC.
  ******************************************/
 
 export async function deviation_script(weapontype = false, range = false) {
-    const chatimage = "https://raw.githubusercontent.com/brunocalado/mestre-digital/master/Foundry%20VTT/Macros/Savage%20Worlds/icons/clock.webp";
+    const chatimage = "modules/swim/assets/svg/clock.svg";
 
     const officialClass = await swim.get_official_class()
     const deviationLink = await swim.get_official_journal_link("deviation")
@@ -21,17 +21,17 @@ export async function deviation_script(weapontype = false, range = false) {
   <h2>${game.i18n.localize("SWIM.word-weaponType")}</h2>
   <table style="width:100%">
   <tr>
-    <td><input type="radio" id="thrown" name="weapontype" value="thrown"><label for="thrown">${game.i18n.localize("SWIM.word-ThrownWeapon")}</label></td>
-    <td><input type="radio" id="projectile" name="weapontype" value="projectile" checked="checked><label for="projectile">${game.i18n.localize("SWIM.word-Projectile")}</label></td>    
+    <td><input type="radio" id="thrown" name="weapontype" value="thrown"><label for="thrown"> ${game.i18n.localize("SWIM.word-ThrownWeapon")}</label></td>
+    <td><input type="radio" id="projectile" name="weapontype" value="projectile" checked="checked><label for="projectile"> ${game.i18n.localize("SWIM.word-Projectile")}</label></td>    
   </tr>
   </table>  
   <h2>${game.i18n.localize("SWIM.gameTerm-range")}</h2>
   <table style="width:100%">
   <tr>
-    <td><input type="radio" id="short" name="range" value="short" checked="checked><label for="thrown">${game.i18n.localize("SWIM.gameTerm-range-short")}</label></td>
-    <td><input type="radio" id="medium" name="range" value="medium"><label for="projectile">${game.i18n.localize("SWIM.gameTerm-range-medium")}</label></td>
-    <td><input type="radio" id="long" name="range" value="long"><label for="projectile">${game.i18n.localize("SWIM.gameTerm-range-long")}</label></td>
-    <td><input type="radio" id="extreme" name="range" value="extreme"><label for="projectile">${game.i18n.localize("SWIM.gameTerm-range-extrme")}</label></td>
+    <td><input type="radio" id="short" name="range" value="short" checked="checked><label for="thrown"> ${game.i18n.localize("SWIM.gameTerm-range-short")}</label></td>
+    <td><input type="radio" id="medium" name="range" value="medium"><label for="projectile"> ${game.i18n.localize("SWIM.gameTerm-range-medium")}</label></td>
+    <td><input type="radio" id="long" name="range" value="long"><label for="projectile"> ${game.i18n.localize("SWIM.gameTerm-range-long")}</label></td>
+    <td><input type="radio" id="extreme" name="range" value="extreme"><label for="projectile"> ${game.i18n.localize("SWIM.gameTerm-range-extreme")}</label></td>
   </tr>
   </table>
   </div>
