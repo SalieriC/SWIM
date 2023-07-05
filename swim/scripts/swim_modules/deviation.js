@@ -1,6 +1,6 @@
 /*******************************************
  * Unshake macro for SWD
- * version 2.1.2
+ * version 2.1.3
  * (c): brunocalado; altered by SalieriC.
  ******************************************/
 
@@ -18,30 +18,30 @@ export async function deviation_script(weapontype = false, range = false) {
 
     function getRequirements() {
         let template = `${officialClass}
-  <h2>Weapon Type</h2>
+  <h2>${game.i18n.localize("SWIM.word-weaponType")}</h2>
   <table style="width:100%">
   <tr>
-    <td><input type="radio" id="thrown" name="weapontype" value="thrown"><label for="thrown">Thrown weapon</label></td>
-    <td><input type="radio" id="projectile" name="weapontype" value="projectile" checked="checked><label for="projectile">Projectile</label></td>    
+    <td><input type="radio" id="thrown" name="weapontype" value="thrown"><label for="thrown">${game.i18n.localize("SWIM.word-ThrownWeapon")}</label></td>
+    <td><input type="radio" id="projectile" name="weapontype" value="projectile" checked="checked><label for="projectile">${game.i18n.localize("SWIM.word-Projectile")}</label></td>    
   </tr>
   </table>  
-  <h2>Range</h2>
+  <h2>${game.i18n.localize("SWIM.gameTerm-range")}</h2>
   <table style="width:100%">
   <tr>
-    <td><input type="radio" id="short" name="range" value="short" checked="checked><label for="thrown">Short</label></td>
-    <td><input type="radio" id="medium" name="range" value="medium"><label for="projectile">Medium</label></td>    
-    <td><input type="radio" id="long" name="range" value="long"><label for="projectile">Long</label></td>    
-    <td><input type="radio" id="extreme" name="range" value="extreme"><label for="projectile">Extreme</label></td>    
+    <td><input type="radio" id="short" name="range" value="short" checked="checked><label for="thrown">${game.i18n.localize("SWIM.gameTerm-range-short")}</label></td>
+    <td><input type="radio" id="medium" name="range" value="medium"><label for="projectile">${game.i18n.localize("SWIM.gameTerm-range-medium")}</label></td>
+    <td><input type="radio" id="long" name="range" value="long"><label for="projectile">${game.i18n.localize("SWIM.gameTerm-range-long")}</label></td>
+    <td><input type="radio" id="extreme" name="range" value="extreme"><label for="projectile">${game.i18n.localize("SWIM.gameTerm-range-extrme")}</label></td>
   </tr>
   </table>
   </div>
   `;
         new Dialog({
-            title: "Deviation",
+            title: game.i18n.localize("SWIM.dialogue-DeviationTile"),
             content: template,
             buttons: {
                 ok: {
-                    label: "Go!",
+                    label: game.i18n.localize("SWIM.button-proceed"),
                     callback: async (html) => {
                         weapontype = html.find('input[name="weapontype"]:checked').val();
                         range = html.find('input[name="range"]:checked').val();
@@ -66,13 +66,13 @@ export async function deviation_script(weapontype = false, range = false) {
         const rangeMultiplier = rangeCheck(range);
         let direction = await new Roll('1d12').roll();
         let roll = await new Roll(die).roll();
-        let message = `${officialClass}<h2>Deviation</h2>`;
-        if (deviationLink) { message = `${officialClass}<h2>${deviationLink}{Deviation}</h2>`; }
-        message += `<p>Move the blast <b>${roll.total * rangeMultiplier}"</b> to <b style="color:red">${direction.total}</b> O'Clock.</p>`;
+        let message = `${officialClass}<h2>${game.i18n.localize("SWIM.dialogue-DeviationTile")}</h2>`;
+        if (deviationLink) { message = `${officialClass}<h2>${deviationLink}{${game.i18n.localize("SWIM.dialogue-DeviationTile")}}</h2>`; }
+        message += game.i18n.format("SWIM.dialogue-DeviationMessage1", {modifiedTotal: roll.total * rangeMultiplier, direction: direction.total});
         if (directionCheck(direction.total)) {
-            message += `<p><b style="color:red">A weapon can never deviate more than half the distance to the original target (that keeps it from going behind the thrower).</b></p>`;
+            message += game.i18n.localize("SWIM.dialogue-DeviationMessage2");
         }
-        message += `<p style="text-align:center"><img style="vertical-align:middle; border: none;" src=${chatimage} width="200" height="200"><p>`;
+        message += game.i18n.format("SWIM.dialogue-DeviationMessage3", {chatimage});
         message += `</div>`
 
         let tempChatData = {

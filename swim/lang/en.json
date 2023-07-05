@@ -375,6 +375,9 @@
   "SWIM.word-Mirrored": "Mirrored",
   "SWIM.word-na": "n/a",
   "SWIM.word-Statistics": "Statistics",
+  "SWIM.word-weaponType": "Weapon Type",
+  "SWIM.word-ThrownWeapon": "Thrown Weapon",
+  "SWIM.word-Projectile": "Projectile",
   "SWIM.notification-shakenRoll": "{tokenName} Shaken, please roll to unshake.",
   "SWIM.notification-stunnedRoll": "{tokenName} Stunned, please roll to unstun.",
   "SWIM.notification-bleedingRoll": "{tokenName} bleeding out, please roll to avoid death.",
@@ -565,6 +568,11 @@
   "SWIM.gameTerm-travel-Strangers": "Strangers",
   "SWIM.gameTerm-travel-Treasure": "Treasure",
   "SWIM.gameTerm-travel-Obstacle": "Obstacle",
+  "SWIM.gameTerm-range": "Range",
+  "SWIM.gameTerm-range-short": "Short",
+  "SWIM.gameTerm-range-medium": "Medium",
+  "SWIM.gameTerm-range-long": "Long",
+  "SWIM.gameTerm-range-extreme": "Extreme",
   "SWIM.dialogue-travelCalculatorResults": "{officialClass}<p><b>Travel distance:</b> {distance} {unit}</p><p><b>Means of travel:</b> {method}</p><p><b>Required time (8 hrs per day, aprox.):</b> {resultText}</p><b>Required time (non-stop, aprox.):</b> {resultTextRaw}</p><p>Usually the game assumes that the characters travel 8 hours per day in average conditions. Better or worse conditions may result in an earlier or later arrival. Also, for many vehicles it seems more reasonable to use the non-stop value.</p>",
   "SWIM.dialogue-travelCalculatorWarning": "<p><i>If you wish to generate random encounters along the way, make sure the roll table names are exactly those set up in the SWIM settings and imported in your world.</i></p>",
   "SWIM.dialogue-travelCalculatorJourneyOverview": "Journey Overview",
@@ -582,5 +590,9 @@
   "encounterTableStrangersName": "Encounter Table for Strangers:",
   "encounterTableStrangersHint": "This table is used to generate random encounters for the Travel Calculator. You may replace the name with the exact name of your own table. Make sure that it is lmported in your world though.",
   "encounterTableTreasuresName": "Encounter Table for Treasures:",
-  "encounterTableTreasuresHint": "This table is used to generate random encounters for the Travel Calculator. You may replace the name with the exact name of your own table. Make sure that it is lmported in your world though."
+  "encounterTableTreasuresHint": "This table is used to generate random encounters for the Travel Calculator. You may replace the name with the exact name of your own table. Make sure that it is lmported in your world though.",
+  "SWIM.dialogue-DeviationTile": "Deviation",
+  "SWIM.dialogue-DeviationMessage1": "<p>Move the blast template <b>{modifiedTotal}'</b> to <b style='color:red'>{direction}</b> O'Clock.</p>",
+  "SWIM.dialogue-DeviationMessage2": "<p><b style='color:red'>A weapon can never deviate more than half the distance to the original target (that keeps it from going behind the thrower).</b></p>",
+  "SWIM.dialogue-DeviationMessage3": "<p style='text-align:center'><img style='vertical-align:middle; border: none;' src={chatimage} width='200' height='200'><p></p>"
 }
