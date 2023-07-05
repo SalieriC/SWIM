@@ -1,6 +1,6 @@
 /*******************************************
  * Unstun macro for SWADE
- * version v.2.0.3
+ * version v.2.0.4
  * Original code by brunocalado, modified by SalieriC#8263.
  ******************************************/
 export async function scale_calculator() {
@@ -38,32 +38,32 @@ export async function scale_calculator() {
             let targetModifier = sizeToModifier(targetSize);
             let modifier = calc(actorModifier, targetModifier);
 
-            let message = `${officialClass}<h2><img style="vertical-align:middle" src=${chatimage} width="28" height="28"> Size & Scale Calculator</h2>`;
+            let message = `${officialClass}<h2><img style="vertical-align:middle" src=${chatimage} width="28" height="28"> ${game.i18n.localize("SWIM.message-SizeScaleCalculatorTitle")}</h2>`;
             if (sizeScaleLink) {
-                message = `${officialClass}<h2><img style="vertical-align:middle" src=${chatimage} width="28" height="28"> ${sizeScaleLink}{Size & Scale} Calculator</h2>`;
+                message = `${officialClass}<h2><img style="vertical-align:middle" src=${chatimage} width="28" height="28"> ${sizeScaleLink}{${game.i18n.localize("SWIM.message-SizeScaleCalculatorTitle")}}</h2>`;
             }
             message += `<ul><li><b>${tokenActor.name}:</b> Size = ${actorSize} / Modifier = ${actorModifier}</li>`;
             message += `<li><b>${tokenTarget.name}:</b> Size = ${targetSize} / Modifier = ${targetModifier}</li></ul>`;
-            message += `<h3>Result:</h3>`;
+            message += `<h3>${game.i18n.localize("SWIM.raiseCalculator-result")}:</h3>`;
             if (modifier != 0) {
-                message += `<ul><li>${tokenActor.name} has <b style="color:red">${modifier}</b> to attack ${tokenTarget.name}`;
+                message += `<ul><li>${tokenActor.name} has <b style="color:red">${modifier}</b> ${game.i18n.localize("SWIM.message-SizeScaleCalculator-toAttack")} ${tokenTarget.name}`;
                 if (actorSwat) {
-                    message += ` and has Swat*.</li>`;
+                    message += ` ${game.i18n.localize("SWIM.message-SizeScaleCalculator-andHasSwat")}*.</li>`;
                 } else { message += `.</li>` }
-                message += `<li>${tokenTarget.name} has <b style="color:red">${calc(targetModifier, actorModifier)}</b> to attack ${tokenActor.name}`;
+                message += `<li>${tokenTarget.name} has <b style="color:red">${calc(targetModifier, actorModifier)}</b> ${game.i18n.localize("SWIM.message-SizeScaleCalculator-toAttack")} ${tokenActor.name}`;
                 if (targetSwat) {
-                    message += ` and has Swat*.</li></ul>`;
+                    message += ` ${game.i18n.localize("SWIM.message-SizeScaleCalculator-andHasSwat")}*.</li></ul>`;
                 } else { message += `.</li></ul>` }
                 if ((actorSwat && targetSwat) || (actorSwat || targetSwat)) {
                     if (swatLink) {
-                        message += `<p>*<b>${swatLink}{Swat}:</b> Ignore up to 4 points of penalties from Scale for the specified action(s).</p>`;
+                        message += `<p>*<b>${swatLink}{${game.i18n.localize("SWIM.ability-swat")}}:</b> ${game.i18n.localize("SWIM.message-SizeScaleCalculator-SwatInfo")}</p>`;
                     } else {
-                        message += `<p>*<b>Swat:</b> Ignore up to 4 points of penalties from Scale for the specified action(s).</p>`;
+                        message += `<p>*<b>${game.i18n.localize("SWIM.ability-swat")}:</b> ${game.i18n.localize("SWIM.message-SizeScaleCalculator-SwatInfo")}</p>`;
                     }
                     message += `</div>`;
                 }
             } else {
-                message += `<p><b>There is no modifier.</b> They have the same Scale.</p>`;
+                message += game.i18n.localize("SWIM.message-SizeScaleCalculator-noModifier");
             }
 
             // send message

@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Some support for the Brazilian Portuguese core rules module (mclemente).
 - Deviation macro localised.
 - New art for the deviation clock.
+- Size & Scale Calculator localised.
 - New localisation strings.
 ### Changed
 - The API function to get the official div class of modules was rewritten to be less hard coded and to use the Official modules files contents instead.

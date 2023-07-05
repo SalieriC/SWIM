@@ -594,5 +594,10 @@
   "SWIM.dialogue-DeviationTile": "Deviation",
   "SWIM.dialogue-DeviationMessage1": "<p>Move the blast template <b>{modifiedTotal}'</b> to <b style='color:red'>{direction}</b> O'Clock.</p>",
   "SWIM.dialogue-DeviationMessage2": "<p><b style='color:red'>A weapon can never deviate more than half the distance to the original target (that keeps it from going behind the thrower).</b></p>",
-  "SWIM.dialogue-DeviationMessage3": "<p style='text-align:center'><img style='vertical-align:middle; border: none;' src={chatimage} width='200' height='200'><p></p>"
+  "SWIM.dialogue-DeviationMessage3": "<p style='text-align:center'><img style='vertical-align:middle; border: none;' src={chatimage} width='200' height='200'><p></p>",
+  "SWIM.message-SizeScaleCalculatorTitle": "Size & Scale Calculator",
+  "SWIM.message-SizeScaleCalculator-toAttack": "to attack",
+  "SWIM.message-SizeScaleCalculator-andHasSwat": "and has Swat",
+  "SWIM.message-SizeScaleCalculator-SwatInfo": "Ignore up to 4 points of penalties from Scale for the specified action(s).",
+  "SWIM.message-SizeScaleCalculator-noModifier": "<p><b>There is no modifier.</b> They have the same Scale.</p>"
 }
