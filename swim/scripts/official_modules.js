@@ -142,7 +142,19 @@ export const OFFICIAL_MODULES = {
             "wound_cap": "@UUID[Compendium.swade-core-rules.swade-rules.swadecor04theadv.JournalEntryPage.04woundcap000000]"
         },
         "compendiums": {
+            "edges": "swade-core-rules.swade-edges",
+            "equipment": "swade-core-rules.swade-equipment",
             "hindrances": "swade-core-rules.swade-hindrances",
+            "powers": "swade-core-rules.swade-powers",
+            "rules": "swade-core-rules.swade-rules",
+            "skills": "swade-core-rules.swade-skills",
+            "races": "swade-core-rules.swade-races",
+            "abilities": "swade-core-rules.swade-specialabilities",
+            "tables": "swade-core-rules.swade-tables",
+            "macros": "swade-core-rules.swade-macros",
+            "bestiary": "swade-core-rules.swade-bestiary",
+            "action_deck": "swade-core-rules.swade-action-deck",
+            "vehicles": "swade-core-rules.swade-vehicles"
         }
     },
     "swpf-core-rules": {
