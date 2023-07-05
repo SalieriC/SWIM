@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
+
+## [2.1.0] - 2023-07-05
 ### Added
 - Travel Calculator is now able to generate encounters.
 - - If checked (requires random tables such as those provided by SWIM) it draws a card for each day of travel.
@@ -34,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Calculation bug in travel calulator that sometimes caused faulty results.
 - Broken Journal link in Deviation and Scale Calculator.
+- Some Weblate issues and manually merged translations (thanks at everyone contributing to the translations).
 
 ## [2.0.1] - 2023-07-03
 ### Fixed
