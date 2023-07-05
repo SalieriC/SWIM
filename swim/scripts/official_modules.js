@@ -1,3 +1,14 @@
+/***********************************************
+ * -_-_-_- Official Modules File -_-_-_-
+ * 
+ * This file contains relevant data from the
+ * official modules of various languages.
+ * This file is community driven and needs YOUR
+ * help to serve all languages. If you'd like to
+ * contribute, please read this first:
+ * https://github.com/SalieriC/SWADE-Immersive-Macros/wiki/Contributing-to-SWIM#adjust-the-official-modules-file
+ ***********************************************/
+
 export const OFFICIAL_MODULES = {
     "swade-core-rules": {
         "class": "<div class='swade-core'>",
