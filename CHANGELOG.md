@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - - Please note that SWIM checks from the bottom up, so you'll have to put specialised modules lower and general ones towards the beginning, that's why SWADE Core and SWPF appear first since these are the ones carrying all the basic rules.
 - New API function that finds a journal link in the Official modules file.
 - New API function that finds a compendium key in the Official modules file.
-- Some minimal support for Brazilian Portuguese core rules (mclemente).
+- Some support for the Brazilian Portuguese core rules module (mclemente).
 ### Changed
 - The API function to get the official div class of modules was rewritten to be less hard coded and to use the Official modules files contents instead.
 ### Fixed
