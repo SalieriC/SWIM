@@ -16,6 +16,7 @@ import { combat_hooks } from "./hooks/combat_hooks.js"
 import { brsw_hooks } from "./hooks/brsw_hooks.js"
 import { brsw_actions_setup } from "./helpers/brsw_actions_setup.js"
 import { raise_calculator } from './helpers/raise-calculator.js'
+import { tester_gm } from './swim_modules/tester.js';
 
 /*Hooks.on('getCardsDirectoryEntryContext', function (stuff) {
     console.log(stuff)
@@ -192,6 +193,7 @@ Hooks.on(`ready`, () => {
     warpgate.event.watch("SWIM.updateCombat-nextTurn", gm_relay.combat_nextTurn, swim.is_first_gm)
     warpgate.event.watch("SWIM.updateCombat-currentTurn", gm_relay.combat_currentTurn, swim.is_first_gm)
     warpgate.event.watch("SWIM.craftCampfire", craft_campfire_gm, swim.is_first_gm)
+    warpgate.event.watch("SWIM.summoner", tester_gm, swim.is_first_gm)
 
     //SWIM per-actor/item config header button
     if (game.user.isGM || game.settings.get('swim', 'allowUserConfig')) {

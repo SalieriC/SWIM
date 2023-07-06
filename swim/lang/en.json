@@ -206,7 +206,7 @@
   "SWIM.dialogue-insufficientPowerPoints":"You have insufficient Power Points.",
   "SWIM.dialogue-cannotUseMoreThanFourPP":"You can't use more than 4 Power Points.",
   "SWIM.dialogue-soakWoundsWithUnHolyWarriorContent": "<form><div class='form-group'><form>You can spend a <b>maximum of 4 Power Points</b> to add a bonus to your Soaking Roll equal to the amount of Power Points used.</br>You have <b>{ppv} Power Points</b> left.</form><label for='numPP'>Power Points to spend: </label><input id='numPP' name='num' type='number' min='1' max='4' value='1'></input></div></form>",
-  "SWIM.dialogue-reroll":"Reroll",
+  "SWIM.dialogue-reroll":"<i class='fa-solid fa-dice'></i> Reroll",
   "SWIM.dialogue-rerollText":"<form>You've soaked <strong>{rounded} Wounds</strong>; you will <strong>receive {currWounds} Wounds</strong>.</br>Do you want to reroll your Soaking Roll (you have <strongb>{totalBennies} Bennies</strong> left)? (Unless you roll a Critical Failure, your best result will be kept.)</form>",
   "SWIM.dialogue-decisionToApplyWounds":"No, apply Wounds now",
   "SWIM.dialogue-decisionToApplyFatigue": "No, apply Fatigue now",
@@ -599,5 +599,14 @@
   "SWIM.message-SizeScaleCalculator-toAttack": "to attack",
   "SWIM.message-SizeScaleCalculator-andHasSwat": "and has Swat",
   "SWIM.message-SizeScaleCalculator-SwatInfo": "Ignore up to 4 points of penalties from Scale for the specified action(s).",
-  "SWIM.message-SizeScaleCalculator-noModifier": "<p><b>There is no modifier.</b> They have the same Scale.</p>"
+  "SWIM.message-SizeScaleCalculator-noModifier": "<p><b>There is no modifier.</b> They have the same Scale.</p>",
+  "SWIM.dialogue-selectSkill": "Select a Skill:",
+  "SWIM.dialogue-testerDesiredResult": "Desired result:",
+  "SWIM.dialogue-testerIntroPartial1": "Here you can",
+  "SWIM.dialogue-testerIntroPartial2": "support your allies",
+  "SWIM.dialogue-testerIntroPartial3": "test your enemies",
+  "SWIM.dialogue-testerIntroPartial4": "What would you like to do?",
+  "SWIM.word-or": "or",
+  "SWIM.gameTerm-Support": "Support",
+  "SWIM.gameTerm-Test": "Test"
 }

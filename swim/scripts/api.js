@@ -23,6 +23,7 @@ import { update_migration } from './migrations.js'
 import * as SWIM from './constants.js'
 import { OFFICIAL_MODULES } from './official_modules.js'
 import { showWeaponAmmoDialog, br2_ammo_management_script } from "./swim_modules/ammo_management.js"
+import { tester_script } from './swim_modules/tester.js'
 
 let deck = [...SWIM.DECK_OF_CARDS]
 
@@ -81,6 +82,7 @@ export class api {
       shake: api._shake,
       unstun: api._unstun,
       stun: api._stun,
+      tester: api._tester
     }
   }
 
@@ -449,6 +451,7 @@ export class api {
    * - Shake
    * - (Un-)Stun
    * - Stun
+   * - Tester
    ******************************************/
 
   // Ammo Management
@@ -567,5 +570,9 @@ export class api {
     if (stunnedSFX) {
       AudioHelper.play({ src: `${stunnedSFX}` }, true);
     }
+  }
+  //Tester
+  static async _tester() {
+    await tester_script()
   }
 }
