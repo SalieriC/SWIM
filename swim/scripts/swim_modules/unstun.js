@@ -1,6 +1,6 @@
 /*******************************************
  * Unstun macro for SWADE
- * version v.4.3.1
+ * version v.4.3.2
  * Made and maintained by SalieriC#8263 using original Code from Shteff.
  ******************************************/
 
@@ -26,7 +26,7 @@ export async function unstun_script(effect = false) {
 
     //Checking for Elan
     const elan = token.actor.items.find(function (item) {
-        return item.name.toLowerCase() === "elan" && item.type === "edge";
+        return item.name.toLowerCase() === game.i18n.localize("SWIM.edge-elan").toLowerCase() && item.type === "edge";
     });
     let elanBonus;
 
