@@ -9,6 +9,7 @@ export async function tester_script() {
     const officialClass = await swim.get_official_class()
     const supportLink = await swim.get_official_journal_link("support")
     const testLink = await swim.get_official_journal_link("test")
+    let supportedSkillId
 
     // No Token is Selected
     if (!token || canvas.tokens.controlled.length > 1 || targets.length < 1) {
@@ -23,10 +24,24 @@ export async function tester_script() {
     for (let skill of actor.items.filter((i) => i.type === "skill")) {
         skillOptions += `<option value="${skill._id}">${skill.name}</option>`;
     }
+    let supportSkillOptions = `
+    <option value="agility">${game.i18n.localize("ENHANCED_CONDITIONS.Dialog.Attribute")} ${game.i18n.localize("SWADE.AttrAgi")}</option>
+    <option value="smarts">${game.i18n.localize("ENHANCED_CONDITIONS.Dialog.Attribute")} ${game.i18n.localize("SWADE.AttrSma")}</option>
+    <option value="spirit">${game.i18n.localize("ENHANCED_CONDITIONS.Dialog.Attribute")} ${game.i18n.localize("SWADE.AttrSpr")}</option>
+    <option value="strength">${game.i18n.localize("ENHANCED_CONDITIONS.Dialog.Attribute")} ${game.i18n.localize("SWADE.AttrStr")}</option>
+    <option value="vigor">${game.i18n.localize("ENHANCED_CONDITIONS.Dialog.Attribute")} ${game.i18n.localize("SWADE.AttrVig")}</option>
+    `
+    for (let skill of targetToken.actor.items.filter((i) => i.type === "skill")) {
+        supportSkillOptions += `<option value="${skill._id}">${game.i18n.localize("ENHANCED_CONDITIONS.Dialog.Skill")} ${skill.name}</option>`;
+    }
 
     const supportContent = `<div class='form-group'>
   <label for='selected_skill'><p><b>${game.i18n.localize("SWIM.dialogue-selectSkill")}</b></p></label>
   <select id='selected_skill'>${skillOptions}</select>
+</div>
+<div class='form-group'>
+  <label for='supported_skill'><p><b>${game.i18n.localize("SWIM.dialogue-selectSupportSkill")}</b></p></label>
+  <select id='supported_skill'>${supportSkillOptions}</select>
 </div> </div>`
 
     const testContent = `<div class='form-group'>
@@ -69,16 +84,13 @@ export async function tester_script() {
                     const selectedSkill = html.find("#selected_skill").val();
                     // Handle the selected action and skill
                     if (selectedAction === "support") {
+                        supportedSkillId = html.find("#supported_skill").val();
                         // Perform support action
                         await support(selectedSkill)
                     } else if (selectedAction === "test") {
                         const selectedResult = html.find('input[name="selected_result"]:checked').val();
                         // Perform test action
-                        console.log(
-                            "Action:", selectedAction,
-                            "Skill:", selectedSkill,
-                            "Result:", selectedResult
-                        )
+                        await test(selectedSkill, selectedResult)
                     }
                 },
             },
@@ -100,9 +112,284 @@ export async function tester_script() {
         id: "tester-dialogue"
     }).render(true);
 
-    
+    async function support(skillId, reroll = false, elan = false, rerollCount = 0) {
+        const roll = await token.actor.rollSkill(skillId);
+        let rollWithEdge = roll.total
+        let edgeText = ""
+        if (reroll && elan) {
+            edgeText = edgeText + `<br/><i>+ ${game.i18n.localize("SWIM.edge-elan")}</i>.`
+            rollWithEdge += 2
+        }
+        const critFail = await swim.critFail_check(token.actor.system.wildcard, roll);
+        const raise = rollWithEdge >= 8; // Check if the roll was a raise
+        const bennyData = await swim.check_bennies(token, true);
+        const totalBennies = bennyData.totalBennies;
+
+        const data = {
+            tokenId: token.id,
+            targetId: targets[0].id,
+            sceneId: token.scene._id,
+            action: "support",
+            skillId,
+            roll,
+            rollWithEdge,
+            critFail,
+            totalBennies,
+            edgeText,
+            supportedSkillId
+        };
+
+        if (critFail) {
+            warpgate.event.notify("SWIM.tester", data); // Notify GM with data
+            ui.notifications.warn(game.i18n.localize("SWIM.notification-critFail"))
+            return;
+        } if (raise) {
+            warpgate.event.notify("SWIM.tester", data); // Notify GM with data
+            return; // Early return after applying the result
+        } if (totalBennies === 0) {
+            ui.notifications.warn(game.i18n.localize("SWIM.notification-noBenniesLeft"));
+            warpgate.event.notify("SWIM.tester", data); // Notify GM with data
+            return; // Early return if out of Bennies
+        }
+
+        const reliableEdge = token.actor.items.find(e => e.type === "edge" && e.name.toLowerCase() === game.i18n.localize("SWIM.edge-reliable").toLowerCase())
+        const freeRerollNotification = reliableEdge && rerollCount === 0 ? game.i18n.localize("SWIM.dialogue-supportRerollFree") : ""
+        const content = game.i18n.format("SWIM.dialogue-supportReroll", { result: rollWithEdge, totalBennies, freeRerollNotification })
+
+        new Dialog({
+            title: game.i18n.localize("SWIM.gameTerm-Support"),
+            content,
+            buttons: {
+                reroll: {
+                    label: game.i18n.localize("SWIM.dialogue-reroll"),
+                    callback: async () => {
+                        const elanEdge = token.actor.items.find(e => e.type === "edge" && e.name.toLowerCase() === game.i18n.localize("SWIM.edge-elan").toLowerCase())
+                        elan = elanEdge ? true : false
+                        rerollCount += 1
+                        if (rerollCount === 1 && reliableEdge) {
+                            await support(skillId, true, elan, rerollCount) // Free reroll
+                            return;
+                        }
+                        await swim.spend_benny(token, true); // Spend a Benny
+                        await support(skillId, true, elan, rerollCount); // Reroll
+                    },
+                },
+                apply: {
+                    label: game.i18n.localize("SWIM.dialogue-apply"),
+                    callback: async () => {
+                        console.log("Sending data:", data)
+                        warpgate.event.notify("SWIM.tester", data); // Notify GM with data
+                    },
+                },
+            },
+        }).render(true);
+    }
+
+    async function test(skillId, selectedResult, reroll = false, elan = false, rerollCount = 0) {
+        const roll = await token.actor.rollSkill(skillId);
+        let rollWithEdge = roll.total;
+        let edgeText = "";
+        if (reroll && elan) {
+            edgeText = edgeText + `<br/><i>+ ${game.i18n.localize("SWIM.edge-elan")}</i>.`;
+            rollWithEdge += 2;
+        }
+        const critFail = await swim.critFail_check(token.actor.system.wildcard, roll);
+        const raise = rollWithEdge >= 8; // Check if the roll was a raise
+        const bennyData = await swim.check_bennies(token, true);
+        const totalBennies = bennyData.totalBennies;
+
+        const data = {
+            tokenId: token.id,
+            targetId: targets[0].id,
+            sceneId: token.scene._id,
+            action: "test",
+            skillId,
+            roll,
+            rollWithEdge,
+            critFail,
+            totalBennies,
+            edgeText,
+            selectedResult,
+            supportedSkillId
+        };
+
+        if (critFail) {
+            warpgate.event.notify("SWIM.tester", data); // Notify GM with data
+            ui.notifications.warn(game.i18n.localize("SWIM.notification-critFail"))
+            return;
+        } if (raise) {
+            warpgate.event.notify("SWIM.tester", data); // Notify GM with data
+            return; // Early return after applying the result
+        } if (totalBennies === 0) {
+            ui.notifications.warn(game.i18n.localize("SWIM.notification-noBenniesLeft"));
+            warpgate.event.notify("SWIM.tester", data); // Notify GM with data
+            return; // Early return if out of Bennies
+        }
+
+        const skillName = token.actor.items.find(s => s.type === "skill" && s.id === skillId).name
+        const usingTaunt = skillName.toLowerCase() === game.i18n.localize("SWIM.skill-taunt").toLowerCase() ? true : false
+        const humiliateEdge = token.actor.items.find(e => e.type === "edge" && e.name.toLowerCase() === game.i18n.localize("SWIM.edge-humiliate").toLowerCase())
+        const freeRerollNotification = usingTaunt && humiliateEdge && rerollCount === 0 ? game.i18n.localize("SWIM.dialogue-supportRerollFree") : ""
+        const content = game.i18n.format("SWIM.dialogue-testReroll", {
+            result: rollWithEdge,
+            totalBennies,
+            pronoun: swim.get_pronoun(targetToken),
+            freeRerollNotification
+        });
+
+        new Dialog({
+            title: game.i18n.localize("SWIM.gameTerm-Test"),
+            content,
+            buttons: {
+                reroll: {
+                    label: game.i18n.localize("SWIM.dialogue-reroll"),
+                    callback: async () => {
+                        const elanEdge = token.actor.items.find(e => e.type === "edge" && e.name.toLowerCase() === game.i18n.localize("SWIM.edge-elan").toLowerCase())
+                        elan = elanEdge ? true : false;
+                        rerollCount += 1;
+                        if (rerollCount === 1 && humiliateEdge && usingTaunt) {
+                            await support(skillId, true, elan, rerollCount) // Free reroll
+                            return;
+                        }
+                        await swim.spend_benny(token, true); // Spend a Benny
+                        await test(skillId, selectedResult, true, elan, rerollCount); // Reroll
+                    },
+                },
+                apply: {
+                    label: game.i18n.localize("SWIM.dialogue-apply"),
+                    callback: async () => {
+                        console.log("Sending data:", data);
+                        warpgate.event.notify("SWIM.tester", data); // Notify GM with data
+                        // Handle applying the result
+                        // You can access the total with: roll.total
+                    },
+                },
+            },
+        }).render(true);
+    }
 
     //warpgate.event.notify("SWIM.tester", data)
 }
 
-export async function tester_gm(data) { }
+export async function tester_gm(data) {
+    console.log(data)
+    const tokenId = data.tokenId;
+    const targetId = data.targetId;
+    const sceneId = data.sceneId;
+    const action = data.action;
+    const skillId = data.skillId;
+    const supportedSkillId = data.supportedSkillId;
+    const roll = data.roll;
+    const rollWithEdge = data.rollWithEdge;
+    const critFail = data.critFail;
+    const totalBennies = data.totalBennies;
+    const edgeText = data.edgeText;
+    const selectedResult = data.selectedResult;
+
+    const scene = game.scenes.get(sceneId);
+    const token = scene.tokens.find(t => t.id === tokenId);
+    const targetToken = scene.tokens.find(t => t.id === targetId);
+    const targetActor = targetToken.actor;
+    const actor = token.actor;
+
+    const skill = actor.items.find(s => s.id === skillId && s.type === "skill");
+    const attribute = skill.system.attribute;
+    let supportedAttribute = false;
+    let supportedSkill;
+    if (
+        supportedSkillId === "agility" ||
+        supportedSkillId === "smarts" ||
+        supportedSkillId === "spirit" ||
+        supportedSkillId === "strength" ||
+        supportedSkillId === "vigor"
+    ) {
+        supportedAttribute = true;
+    } else {
+        supportedSkill = targetActor.items.find(s => s.id === supportedSkillId && s.type === "skill");
+    }
+
+    if (action === "support") {
+        if (rollWithEdge >= 4 || critFail) {
+            let supportValue = rollWithEdge >= 8 ? 2 : 1;
+            if (critFail) { supportValue = -2 }
+            const supportMode = 2;
+            const supportKey = supportedAttribute
+                ? `system.attributes.${supportedSkillId}.die.modifier`
+                : `@Skill{${supportedSkill.name}}[system.die.modifier]`;
+            const supportEffect = targetActor.effects.find(e => e.flags?.swim?.isSupportEffect);
+
+            if (supportEffect) {
+                const relevantChangeIndex = supportEffect.changes.findIndex(c => c.key === supportKey)
+                if (typeof relevantChangeIndex === "number") {
+                    const newChanges = [...supportEffect.changes] //Creating a copy of the array to edit and update it.
+                    const currValue = Number(supportEffect.changes[relevantChangeIndex].value)
+                    newChanges[relevantChangeIndex].value = Math.min( currValue + supportValue, 4)
+                    await supportEffect.update({ changes: newChanges }); //add support value but max out at 4
+                } else {
+                    const newChange = {
+                        key: supportKey,
+                        value: supportValue,
+                        mode: supportMode,
+                    }
+                    const newChanges = [...supportEffect.changes] //Creating a copy of the array to edit and update it.
+                    newChanges.push(newChange)
+                    await supportEffect.update({ changes: newChanges });
+                }
+            } else {
+                await targetActor.createEmbeddedDocuments("ActiveEffect", [{
+                    label: game.i18n.localize("SWIM.gameTerm-Support"),
+                    icon: "icons/skills/social/diplomacy-handshake.webp",
+                    duration: {
+                        "startTime": game.time._time.worldTime,
+                        "seconds": null,
+                        "rounds": 1,
+                        "turns": null,
+                        "startRound": game.combats.active ? game.combats.current.round : null,
+                        "startTurn": null,
+                        "type": "turns"
+                    },
+                    changes: [
+                        {
+                            key: supportKey,
+                            value: supportValue,
+                            mode: supportMode,
+                        },
+                    ],
+                    flags: {
+                        swim: {
+                            isSupportEffect: true,
+                        },
+                        swade: {
+                            "expiration": 2,
+                            "loseTurnOnHold": false
+                        }
+                    },
+                }]);
+            }
+        }
+    } else if (action === "test") {
+        if (critFail) {
+            return;
+        }
+
+        const resistRoll = await targetActor.rollAttribute(attribute);
+        const resistRollWithEdge = resistRoll.total;
+        const resistCritFail = await swim.critFail_check(
+            targetActor.system.wildcard,
+            resistRoll
+        );
+
+        if (resistCritFail) {
+            await swim.spend_benny(targetToken, true);
+            await test(skillId, selectedResult, true);
+            return;
+        }
+
+        if (resistRollWithEdge < rollWithEdge) {
+            await game.succ.addCondition(selectedResult, targetToken);
+            if (rollWithEdge >= 8) {
+                await game.succ.addCondition("shaken", targetToken);
+            }
+        }
+    }
+}

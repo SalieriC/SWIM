@@ -601,6 +601,7 @@
   "SWIM.message-SizeScaleCalculator-SwatInfo": "Ignore up to 4 points of penalties from Scale for the specified action(s).",
   "SWIM.message-SizeScaleCalculator-noModifier": "<p><b>There is no modifier.</b> They have the same Scale.</p>",
   "SWIM.dialogue-selectSkill": "Select a Skill:",
+  "SWIM.dialogue-selectSupportSkill": "Skill to support:",
   "SWIM.dialogue-testerDesiredResult": "Desired result:",
   "SWIM.dialogue-testerIntroPartial1": "Here you can",
   "SWIM.dialogue-testerIntroPartial2": "support your allies",
@@ -608,5 +609,12 @@
   "SWIM.dialogue-testerIntroPartial4": "What would you like to do?",
   "SWIM.word-or": "or",
   "SWIM.gameTerm-Support": "Support",
-  "SWIM.gameTerm-Test": "Test"
+  "SWIM.gameTerm-Test": "Test",
+  "SWIM.dialogue-supportReroll": "<p>Your result is: <b>{result}</b></p><p>You may spend a benny to improve your result. Bennies left: <b>{totalBennies}</b></p>{freeRerollNotification}",
+  "SWIM.dialogue-supportRerollFree": "<p>Your first reroll is free however.</p>",
+  "SWIM.dialogue-testReroll": "<p>Your result is: <b>{result}</b></p><p>You may spend a benny to improve your result, this cannot be done after your opponent makes {pronoun} roll. Bennies left: <b>{totalBennies}</b></p>{freeRerollNotification}",
+  "SWIM.edge-reliable": "Reliable",
+  "SWIM.edge-humiliate": "Humiliate",
+  "SWIM.skill-taunt": "Taunt",
+  "SWIM.dialogue-apply": "Apply"
 }
