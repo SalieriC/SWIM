@@ -170,7 +170,7 @@ export class api {
 
     // Non GM token has <1 bennie OR GM user AND selected token has <1 benny
     if (notify === true && ((!game.user.isGM && tokenBennies < 1) || (game.user.isGM && tokenBennies < 1 && game.user.getFlag("swade", "bennies") < 1))) {
-      ui.notifications.warn("You have no more bennies left.");
+      ui.notifications.warn(game.i18n.localize("SWIM.notification-noBenniesLeft"));
     }
     if (game.user.isGM) {
       gmBennies = game.user.bennies;
