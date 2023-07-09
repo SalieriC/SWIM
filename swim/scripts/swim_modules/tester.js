@@ -2,6 +2,13 @@
  * Test and Support Macro
  * version v.0.0.0
  * Made and maintained by SalieriC#8263
+ * Covered Edges:
+ * - Elan
+ * - Humiliate
+ * - Menacing
+ * - Reliable
+ * - Retort
+ * - Strong Willed
  ******************************************/
 export async function tester_script() {
     let { speaker, _, __, token } = await swim.get_macro_variables()
@@ -186,12 +193,18 @@ export async function tester_script() {
     }
 
     async function test(skillId, selectedResult, reroll = false, elan = false, rerollCount = 0) {
+        const skill = actor.items.find(s => s.id === skillId && s.type === "skill");
         const roll = await token.actor.rollSkill(skillId);
         let rollWithEdge = roll.total;
         let edgeText = "";
         if (reroll && elan) {
-            edgeText = edgeText + `<br/><i>+ ${game.i18n.localize("SWIM.edge-elan")}</i>.`;
+            edgeText = edgeText + `<br/><i>+ ${game.i18n.localize("SWIM.edge-elan")}</i>.`
             rollWithEdge += 2;
+        }
+        const menacingEdge = token.actor.items.find(e => e.type === "edge" && e.name.toLowerCase() === game.i18n.localize("SWIM.edge-menacing").toLowerCase())
+        if (menacingEdge && skill.name.toLowerCase() === game.i18n.localize("SWIM.skill-intimidation").toLowerCase()) {
+            rollWithEdge += 2
+            edgeText += `<br/><i>+ ${game.i18n.localize("SWIM.edge-menacing")}</i>.`
         }
         const critFail = await swim.critFail_check(token.actor.system.wildcard, roll);
         const raise = rollWithEdge >= 8; // Check if the roll was a raise
@@ -283,7 +296,7 @@ export async function tester_gm(data) {
     const rollWithEdge = data.rollWithEdge;
     const critFail = data.critFail;
     const totalBennies = data.totalBennies;
-    const edgeText = data.edgeText;
+    const edgeTextToken = data.edgeText;
     const selectedResult = data.selectedResult;
 
     const scene = game.scenes.get(sceneId);
@@ -308,6 +321,9 @@ export async function tester_gm(data) {
         supportedSkill = targetActor.items.find(s => s.id === supportedSkillId && s.type === "skill");
     }
 
+    const officialClass = await swim.get_official_class()
+    let chatContent
+
     if (action === "support") {
         if (rollWithEdge >= 4 || critFail) {
             let supportValue = rollWithEdge >= 8 ? 2 : 1;
@@ -323,7 +339,7 @@ export async function tester_gm(data) {
                 if (typeof relevantChangeIndex === "number") {
                     const newChanges = [...supportEffect.changes] //Creating a copy of the array to edit and update it.
                     const currValue = Number(supportEffect.changes[relevantChangeIndex].value)
-                    newChanges[relevantChangeIndex].value = Math.min( currValue + supportValue, 4)
+                    newChanges[relevantChangeIndex].value = Math.min(currValue + supportValue, 4)
                     await supportEffect.update({ changes: newChanges }); //add support value but max out at 4
                 } else {
                     const newChange = {
@@ -367,29 +383,115 @@ export async function tester_gm(data) {
                 }]);
             }
         }
+        //Chat message:
+        chatContent = game.i18n.format("SWIM.chatMessage-supportResult-1", { officialClass, tokenName: token.name, rollWithEdge, targetName: targetToken.name }) + edgeTextToken
+        chatContent += critFail ? game.i18n.localize("SWIM.chatMessage-supportResult-2-critFail") : game.i18n.format("SWIM.chatMessage-supportResult-2-success", { supportValue: rollWithEdge >= 8 ? 2 : 1 })
+        createMessage()
     } else if (action === "test") {
+        chatContent = game.i18n.format("SWIM.chatMessage-testResult-1", { officialClass, tokenName: token.name, rollWithEdge, targetName: targetToken.name }) + edgeTextToken
+        let edgeTextTarget = ""
         if (critFail) {
-            return;
-        }
+            chatContent += game.i18n.localize("SWIM.chatMessage-testResult-1-critFail")
+            createMessage()
+        } else { resistTest() }
 
-        const resistRoll = await targetActor.rollAttribute(attribute);
-        const resistRollWithEdge = resistRoll.total;
-        const resistCritFail = await swim.critFail_check(
-            targetActor.system.wildcard,
-            resistRoll
-        );
+        async function resistTest(reroll = false, elan = false, rerollCount = 0) {
+            const resistRoll = await targetActor.rollAttribute(attribute);
+            let resistRollWithEdge = resistRoll.total;
+            if (elan) {
+                resistRollWithEdge += 2
+                edgeTextTarget += `<br/><i>+ ${game.i18n.localize("SWIM.edge-elan")}</i>.`
+            }
+            const resistCritFail = await swim.critFail_check(
+                targetActor.system.wildcard,
+                resistRoll
+            );
+            const { _, __, targetTotalBennies } = await swim.check_bennies(token)
 
-        if (resistCritFail) {
-            await swim.spend_benny(targetToken, true);
-            await test(skillId, selectedResult, true);
-            return;
-        }
+            if (resistCritFail) {
+                await swim.spend_benny(targetToken, true);
+                chatContent += game.i18n.format("SWIM.chatMessage-testResult-2-critFail", {targetName: targetToken.name})
+                applyResults()
+                return;
+            }
 
-        if (resistRollWithEdge < rollWithEdge) {
-            await game.succ.addCondition(selectedResult, targetToken);
-            if (rollWithEdge >= 8) {
-                await game.succ.addCondition("shaken", targetToken);
+            const strongWilledEdge = token.actor.items.find(e => e.type === "edge" && e.name.toLowerCase() === game.i18n.localize("SWIM.edge-strongWilled").toLowerCase())
+            if (strongWilledEdge && (attribute === "smarts" || attribute === "spirit") ) {
+                resistRollWithEdge += 2
+                edgeTextTarget += `<br/><i>+ ${game.i18n.localize("SWIM.edge-strongWilled")}</i>.`
+            }
+            const content = game.i18n.format("SWIM.dialogue-supportReroll", { result: rollWithEdge, totalBennies })
+
+            if (resistRollWithEdge >= rollWithEdge) {
+                chatContent += game.i18n.format("SWIM.chatMessage-testResult-2-success", {targetName: targetToken.name, resistRollWithEdge})
+                const retortEdge = token.actor.items.find(e => e.type === "edge" && e.name.toLowerCase() === game.i18n.localize("SWIM.edge-retort").toLowerCase()) + edgeTextTarget
+                if (retortEdge && (
+                        skill.name.toLowerCase() === game.i18n.localize("SWIM.skill-taunt").toLowerCase() ||
+                        skill.name.toLowerCase() === game.i18n.localize("SWIM.skill-intimidation").toLowerCase()
+                    ) &&
+                    resistRollWithEdge - rollWithEdge >= 4
+                    ) {
+                    chatContent += game.i18n.format("SWIM.chatMessage-testResult-3-retort", {targetName: targetToken.name, tokenName: token.name})
+                    await game.succ.addCondition("distracted", token);
+                }
+                chatContent += "</div>"
+                createMessage()
+                return;
+            } if (targetTotalBennies <= 0) {
+                ui.notifications.warn(game.i18n.localize("SWIM.notification-noBenniesLeft"))
+                chatContent += game.i18n.format("SWIM.chatMessage-testResult-2-failure", {targetName: targetToken.name, resistRollWithEdge})
+                chatContent += edgeTextTarget
+                applyResults()
+            }
+
+            new Dialog({
+                title: game.i18n.localize("SWIM.gameTerm-Test"),
+                content,
+                buttons: {
+                    reroll: {
+                        label: game.i18n.localize("SWIM.dialogue-reroll"),
+                        callback: async () => {
+                            const elanEdge = token.actor.items.find(e => e.type === "edge" && e.name.toLowerCase() === game.i18n.localize("SWIM.edge-elan").toLowerCase())
+                            elan = elanEdge ? true : false
+                            rerollCount += 1
+                            await swim.spend_benny(token, true); // Spend a Benny
+                            await resistTest(skillId, true, elan, rerollCount); // Reroll
+                        },
+                    },
+                    apply: {
+                        label: game.i18n.localize("SWIM.dialogue-apply"),
+                        callback: async () => {
+                            chatContent += game.i18n.format("SWIM.chatMessage-testResult-2-failure", {targetName: targetToken.name, resistRollWithEdge})
+                            chatContent += edgeTextTarget
+                            applyResults()
+                        },
+                    },
+                },
+            }).render(true);
+
+            async function applyResults() {
+                await game.succ.addCondition(selectedResult, targetToken);
+                chatContent += game.i18n.format("SWIM.chatMessage-testResult-3", {targetName: targetToken.name, status: game.i18n.localize(`SWIM.gameTerm-${selectedResult}`)})
+                if (rollWithEdge - resistRollWithEdge >= 4) {
+                    await game.succ.addCondition("shaken", targetToken);
+                    chatContent += " " + game.i18n.localize("SWIM.word-and") + " " + game.i18n.localize("SWIM.gameTerm-Shaken")
+
+                    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
+                    if (shakenSFX) {
+                        const volume = game.settings.get('swim', 'defaultVolume')
+                        await swim.play_sfx(shakenSFX, volume, true)
+                    }
+                }
+                chatContent += ".</div>"
+                createMessage()
             }
         }
+    }
+
+    function createMessage() {
+        ChatMessage.create({
+            user: game.user.id,
+            content: chatContent,
+        });
     }
 }
