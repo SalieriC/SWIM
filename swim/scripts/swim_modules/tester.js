@@ -388,10 +388,10 @@ export async function tester_gm(data) {
         chatContent += critFail ? game.i18n.localize("SWIM.chatMessage-supportResult-2-critFail") : game.i18n.format("SWIM.chatMessage-supportResult-2-success", { supportValue: rollWithEdge >= 8 ? 2 : 1 })
         createMessage()
     } else if (action === "test") {
-        chatContent = game.i18n.format("SWIM.chatMessage-testResult-1", { officialClass, tokenName: token.name, rollWithEdge, targetName: targetToken.name }) + edgeTextToken
+        chatContent = "<br/>" + game.i18n.format("SWIM.chatMessage-testResult-1", { officialClass, tokenName: token.name, rollWithEdge, targetName: targetToken.name }) + edgeTextToken
         let edgeTextTarget = ""
         if (critFail) {
-            chatContent += game.i18n.localize("SWIM.chatMessage-testResult-1-critFail")
+            chatContent += "<br/>" + game.i18n.localize("SWIM.chatMessage-testResult-1-critFail")
             createMessage()
         } else { resistTest() }
 
@@ -410,7 +410,7 @@ export async function tester_gm(data) {
 
             if (resistCritFail) {
                 await swim.spend_benny(targetToken, true);
-                chatContent += game.i18n.format("SWIM.chatMessage-testResult-2-critFail", {targetName: targetToken.name})
+                chatContent += "<br/>" + game.i18n.format("SWIM.chatMessage-testResult-2-critFail", {targetName: targetToken.name})
                 applyResults()
                 return;
             }
@@ -423,7 +423,7 @@ export async function tester_gm(data) {
             const content = game.i18n.format("SWIM.dialogue-supportReroll", { result: rollWithEdge, totalBennies })
 
             if (resistRollWithEdge >= rollWithEdge) {
-                chatContent += game.i18n.format("SWIM.chatMessage-testResult-2-success", {targetName: targetToken.name, resistRollWithEdge})
+                chatContent += "<br/>" + game.i18n.format("SWIM.chatMessage-testResult-2-success", {targetName: targetToken.name, resistRollWithEdge})
                 const retortEdge = token.actor.items.find(e => e.type === "edge" && e.name.toLowerCase() === game.i18n.localize("SWIM.edge-retort").toLowerCase()) + edgeTextTarget
                 if (retortEdge && (
                         skill.name.toLowerCase() === game.i18n.localize("SWIM.skill-taunt").toLowerCase() ||
@@ -431,7 +431,7 @@ export async function tester_gm(data) {
                     ) &&
                     resistRollWithEdge - rollWithEdge >= 4
                     ) {
-                    chatContent += game.i18n.format("SWIM.chatMessage-testResult-3-retort", {targetName: targetToken.name, tokenName: token.name})
+                    chatContent += "<br/>" + game.i18n.format("SWIM.chatMessage-testResult-3-retort", {targetName: targetToken.name, tokenName: token.name})
                     await game.succ.addCondition("distracted", token);
                 }
                 chatContent += "</div>"
@@ -439,7 +439,7 @@ export async function tester_gm(data) {
                 return;
             } if (targetTotalBennies <= 0) {
                 ui.notifications.warn(game.i18n.localize("SWIM.notification-noBenniesLeft"))
-                chatContent += game.i18n.format("SWIM.chatMessage-testResult-2-failure", {targetName: targetToken.name, resistRollWithEdge})
+                chatContent += "<br/>" + game.i18n.format("SWIM.chatMessage-testResult-2-failure", {targetName: targetToken.name, resistRollWithEdge})
                 chatContent += edgeTextTarget
                 applyResults()
             }
