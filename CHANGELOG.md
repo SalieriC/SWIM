@@ -6,8 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
+### Added
+- Mighty Summoner now adds +1 damage to all weapons that use the fighting skill if the Fervor edge is found on the summoner.
 ### Fixed
 - Fixed a bug in the unstun macro, that prevented it from finding the Elan edge in other languages.
+- Fixed a bug in the Travel Calculator that caused it to break if no tables for random encounters were present.
 
 ## [2.1.0] - 2023-07-05
 ### Added

@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 1.4.6
+ * v. 1.5.0
  * By SalieriC
  ******************************************************/
 function generate_id(length = 16) {
@@ -411,6 +411,14 @@ export async function summoner_gm(data) {
     if (fervor) {
         commandAeData.name = "Is under exceptional command"
         commandAeData.icon = fervor.img
+        const fightingTraitName = game.settings.get("swade", "parryBaseSkill")
+        for (let weapon of newToken.actor.items.filter(i => i.type === "weapon" && i.system.actions.skill === fightingTraitName)) {
+            commandAeData.changes.push({
+                "key": `@Weapon{${weapon.name}}[system.actions.dmgMod]`,
+                "value": "+1",
+                "mode": 2
+            })
+        }
     } else if (command) {
         commandAeData.name = "Is under command"
         commandAeData.icon = command.img
