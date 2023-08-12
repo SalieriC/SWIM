@@ -1,6 +1,6 @@
 /*******************************************
  * Travel Calculator Macro
- * version v.2.0.3
+ * version v.2.0.4
  * Made and maintained by SalieriC#8263
  * Future plan: Include random encounters as
  * per the core rules pg.144.
@@ -71,7 +71,10 @@ export async function travel_calculator() {
                     const distance = html.find('[name="distance"]').val();
                     const unit = html.find('[name="unit"]:checked').val();
                     const method = html.find('[name="method"]').val();
-                    const generateEncounters = html.find('#generateEncounters')[0].checked;
+                    let generateEncounters = false
+                    if (enemiesTable && obstaclesTable && strangersTable && treasuresTable) {
+                        generateEncounters = html.find('#generateEncounters')[0].checked;
+                    }
                     if (!distance || distance <= 0) {
                         return ui.notifications.error(game.i18n.localize("SWIM.notification-invalidTravelDistance"));
                     }
