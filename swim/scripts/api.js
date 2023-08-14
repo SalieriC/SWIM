@@ -155,6 +155,7 @@ export class api {
   }
   // Check Bennies
   static async _check_bennies(token, notify = true) {
+    console.log(token)
     let tokenBennies = token.actor.system.bennies.value;
     let gmBennies
     let totalBennies
@@ -179,6 +180,9 @@ export class api {
     else {
       totalBennies = tokenBennies
     }
+    console.log("tokenBennies:", tokenBennies)
+    console.log("gmBennies:", gmBennies)
+    console.log("totalBennies:", totalBennies)
     return { tokenBennies, gmBennies, totalBennies }
   }
   // Spend Benny

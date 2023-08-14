@@ -134,7 +134,7 @@ export async function tester_script() {
 
         const data = {
             tokenId: token.id,
-            targetId: targets[0].id,
+            targetId: targetToken.id,
             sceneId: token.scene._id,
             action: "support",
             skillId,
@@ -184,7 +184,6 @@ export async function tester_script() {
                 apply: {
                     label: game.i18n.localize("SWIM.dialogue-apply"),
                     callback: async () => {
-                        console.log("Sending data:", data)
                         warpgate.event.notify("SWIM.tester", data); // Notify GM with data
                     },
                 },
@@ -213,7 +212,7 @@ export async function tester_script() {
 
         const data = {
             tokenId: token.id,
-            targetId: targets[0].id,
+            targetId: targetToken.id,
             sceneId: token.scene._id,
             action: "test",
             skillId,
@@ -271,7 +270,6 @@ export async function tester_script() {
                 apply: {
                     label: game.i18n.localize("SWIM.dialogue-apply"),
                     callback: async () => {
-                        console.log("Sending data:", data);
                         warpgate.event.notify("SWIM.tester", data); // Notify GM with data
                         // Handle applying the result
                         // You can access the total with: roll.total
@@ -406,7 +404,8 @@ export async function tester_gm(data) {
                 targetActor.system.wildcard,
                 resistRoll
             );
-            const { _, __, targetTotalBennies } = await swim.check_bennies(token)
+            const bennyData = await swim.check_bennies(targetToken, true);
+            const targetTotalBennies = bennyData.totalBennies;
 
             if (resistCritFail) {
                 await swim.spend_benny(targetToken, true);
@@ -420,7 +419,6 @@ export async function tester_gm(data) {
                 resistRollWithEdge += 2
                 edgeTextTarget += `<br/><i>+ ${game.i18n.localize("SWIM.edge-strongWilled")}</i>.`
             }
-            const content = game.i18n.format("SWIM.dialogue-supportReroll", { result: rollWithEdge, totalBennies })
 
             if (resistRollWithEdge >= rollWithEdge) {
                 chatContent += "<br/>" + game.i18n.format("SWIM.chatMessage-testResult-2-success", {targetName: targetToken.name, resistRollWithEdge})
@@ -442,7 +440,10 @@ export async function tester_gm(data) {
                 chatContent += "<br/>" + game.i18n.format("SWIM.chatMessage-testResult-2-failure", {targetName: targetToken.name, resistRollWithEdge})
                 chatContent += edgeTextTarget
                 applyResults()
+                return;
             }
+
+            const content = game.i18n.format("SWIM.dialogue-resistReroll", { result: resistRollWithEdge, totalBennies: targetTotalBennies })
 
             new Dialog({
                 title: game.i18n.localize("SWIM.gameTerm-Test"),
@@ -461,7 +462,7 @@ export async function tester_gm(data) {
                     apply: {
                         label: game.i18n.localize("SWIM.dialogue-apply"),
                         callback: async () => {
-                            chatContent += game.i18n.format("SWIM.chatMessage-testResult-2-failure", {targetName: targetToken.name, resistRollWithEdge})
+                            chatContent += "<br/>" + game.i18n.format("SWIM.chatMessage-testResult-2-failure", {targetName: targetToken.name, resistRollWithEdge})
                             chatContent += edgeTextTarget
                             applyResults()
                         },
@@ -471,7 +472,7 @@ export async function tester_gm(data) {
 
             async function applyResults() {
                 await game.succ.addCondition(selectedResult, targetToken);
-                chatContent += game.i18n.format("SWIM.chatMessage-testResult-3", {targetName: targetToken.name, status: game.i18n.localize(`SWIM.gameTerm-${selectedResult}`)})
+                chatContent += "<br/>" + game.i18n.format("SWIM.chatMessage-testResult-3", {targetName: targetToken.name, status: game.i18n.localize(`SWIM.gameTerm-${selectedResult}`)})
                 if (rollWithEdge - resistRollWithEdge >= 4) {
                     await game.succ.addCondition("shaken", targetToken);
                     chatContent += " " + game.i18n.localize("SWIM.word-and") + " " + game.i18n.localize("SWIM.gameTerm-Shaken")
