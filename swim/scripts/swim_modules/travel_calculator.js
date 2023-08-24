@@ -73,7 +73,7 @@ export async function travel_calculator() {
                     const method = html.find('[name="method"]').val();
                     let generateEncounters = false
                     if (enemiesTable && obstaclesTable && strangersTable && treasuresTable) {
-                        generateEncounters = html.find('#generateEncounters')[0].checked;
+                        generateEncounters = html.find('#generateEncounters')[0]?.checked;
                     }
                     if (!distance || distance <= 0) {
                         return ui.notifications.error(game.i18n.localize("SWIM.notification-invalidTravelDistance"));
