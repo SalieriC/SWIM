@@ -702,14 +702,14 @@ export async function br2_ammo_management_script(message, actor, item) {
     if (brswAmmoMgm === 'disabled') { return } //Failsafe as disabled shouldn't lead anyone here in the first place.
 
     //Don't execute the macro on a reroll by checking if the old_rolls is empty:
-    if (message.flags['betterrolls-swade2'].render_data.trait_roll.old_rolls.length >= 1) {
+    if (message.flags['betterrolls-swade2'].br_data.trait_roll.old_rolls.length >= 1) {
         return;
     }
 
     //If the weapon is not compatible, return early
     if (!checkWeapon(item)) return;
 
-    const traitDice = message.flags['betterrolls-swade2'].render_data.trait_roll.dice;
+    const traitDice = message.flags['betterrolls-swade2'].br_data.trait_roll.dice;
     let rate_of_fire = traitDice.length;
     if (actor.system.wildcard === true) {
         rate_of_fire = rate_of_fire - 1;
