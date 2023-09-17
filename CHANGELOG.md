@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug in the unstun macro, that prevented it from finding the Elan edge in other languages.
 - Fixed a bug in the Travel Calculator that caused it to break if no tables for random encounters were present.
 - Fixed Ammo Management non-functional due to BRSW update.
+- Fixed false variable declaration in lang file.
 
 ## [2.1.0] - 2023-07-05
 ### Added
