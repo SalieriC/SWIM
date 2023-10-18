@@ -51,7 +51,9 @@ export async function tester_script() {
   <select id='supported_skill'>${supportSkillOptions}</select>
 </div> </div>`
 
-    const testContent = `<div class='form-group'>
+    const testWarn = game.user.isGM ? game.i18n.localize("SWIM.dialogue-testerGmWarn") : ""
+
+    const testContent = `${testWarn}<div class='form-group'>
   <label for='selected_skill'><p><b>${game.i18n.localize("SWIM.dialogue-selectSkill")}</b></p></label>
   <select id='selected_skill'>${skillOptions}</select>
 </div>
