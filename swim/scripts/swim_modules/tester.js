@@ -399,6 +399,7 @@ export async function tester_gm(data) {
         } else { resistTest() }
 
         async function resistTest(reroll = false, elan = false, rerollCount = 0) {
+            ui.notifications.warn(game.i18n.format("SWIM.notification-testerAlert", {actorName: actor.name, targetName: targetActor.name}))
             const resistRoll = await targetActor.rollAttribute(attribute);
             let resistRollWithEdge = resistRoll.total;
             if (elan) {

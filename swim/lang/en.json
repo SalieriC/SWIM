@@ -635,5 +635,6 @@
   "SWIM.edge-menacing": "Menacing",
   "SWIM.skill-intimidation" : "Intimidation",
   "SWIM.word-and": "and",
-  "SWIM.dialogue-testerGmWarn": "<p><i class='fa-solid fa-triangle-exclamation'></i> <em><b>Caution:</b> The Tester is currently only intended to work for PC vs. NPC. It might cause issues when used against players.</em></p>"
+  "SWIM.dialogue-testerGmWarn": "<p><i class='fa-solid fa-triangle-exclamation'></i> <em><b>Caution:</b> The Tester is currently only intended to work for PC vs. NPC. It might cause issues when used against players.</em></p>",
+  "SWIM.notification-testerAlert": "{actorName} tests {targetName}, please roll to resist."
 }
