@@ -1,13 +1,7 @@
-2023/06/18-15:53:10.274 1140 Recovering log #8
-2023/06/18-15:53:10.327 1140 Delete type=0 #8
-2023/06/18-15:53:10.327 1140 Delete type=3 #7
-2023/06/18-16:03:19.638 3714 Level-0 table #12: started
-2023/06/18-16:03:19.638 3714 Level-0 table #12: 0 bytes OK
-2023/06/18-16:03:19.651 3714 Delete type=0 #10
-2023/06/18-16:03:19.694 3714 Manual compaction at level-0 from '!journal!0GWr4ByJqIhOqERL' @ 72057594037927935 : 1 .. '!journal!xXgmt61L5Xg1z4Fd' @ 0 : 0; will stop at '!journal!xXgmt61L5Xg1z4Fd' @ 54 : 1
-2023/06/18-16:03:19.694 3714 Compacting 1@0 + 0@1 files
-2023/06/18-16:03:19.738 3714 Generated table #13@0: 54 keys, 4511 bytes
-2023/06/18-16:03:19.738 3714 Compacted 1@0 + 0@1 files => 4511 bytes
-2023/06/18-16:03:19.778 3714 compacted to: files[ 0 1 0 0 0 0 0 ]
-2023/06/18-16:03:19.778 3714 Delete type=2 #5
-2023/06/18-16:03:20.018 3714 Manual compaction at level-0 from '!journal!xXgmt61L5Xg1z4Fd' @ 54 : 1 .. '!journal!xXgmt61L5Xg1z4Fd' @ 0 : 0; will stop at (end)
+2023/10/18-15:33:40.726 47dc Log #83: 0 ops saved to Table #86 OK
+2023/10/18-15:33:40.726 47dc Archiving H:\Foundry VTT\Data\modules\swim\packs\swim-chase-cards/000083.log: OK
+2023/10/18-15:33:40.726 47dc Table #85: 270 entries OK
+2023/10/18-15:33:40.765 47dc Archiving H:\Foundry VTT\Data\modules\swim\packs\swim-chase-cards/MANIFEST-000016: OK
+2023/10/18-15:33:40.766 47dc Archiving H:\Foundry VTT\Data\modules\swim\packs\swim-chase-cards/MANIFEST-000055: OK
+2023/10/18-15:33:40.766 47dc Archiving H:\Foundry VTT\Data\modules\swim\packs\swim-chase-cards/MANIFEST-000079: OK
+2023/10/18-15:33:40.810 47dc **** Repaired leveldb H:\Foundry VTT\Data\modules\swim\packs\swim-chase-cards; recovered 1 files; 32744 bytes. Some data may have been lost. ****

@@ -1,13 +1,7 @@
-2023/06/18-15:53:10.280 10c Recovering log #8
-2023/06/18-15:53:10.332 10c Delete type=0 #8
-2023/06/18-15:53:10.332 10c Delete type=3 #7
-2023/06/18-16:03:19.778 3714 Level-0 table #12: started
-2023/06/18-16:03:19.778 3714 Level-0 table #12: 0 bytes OK
-2023/06/18-16:03:20.018 3714 Delete type=0 #10
-2023/06/18-16:03:20.018 3714 Manual compaction at level-0 from '!tables!5rTVd9tOt7aklZcP' @ 72057594037927935 : 1 .. '!tables.results!5rTVd9tOt7aklZcP.ztlt2GUq22lM3gVi' @ 0 : 0; will stop at '!tables.results!5rTVd9tOt7aklZcP.ztlt2GUq22lM3gVi' @ 24 : 1
-2023/06/18-16:03:20.018 3714 Compacting 1@0 + 0@1 files
-2023/06/18-16:03:20.057 3714 Generated table #13@0: 55 keys, 7429 bytes
-2023/06/18-16:03:20.057 3714 Compacted 1@0 + 0@1 files => 7429 bytes
-2023/06/18-16:03:20.098 3714 compacted to: files[ 0 1 0 0 0 0 0 ]
-2023/06/18-16:03:20.099 3714 Delete type=2 #5
-2023/06/18-16:03:20.099 3714 Manual compaction at level-0 from '!tables.results!5rTVd9tOt7aklZcP.ztlt2GUq22lM3gVi' @ 24 : 1 .. '!tables.results!5rTVd9tOt7aklZcP.ztlt2GUq22lM3gVi' @ 0 : 0; will stop at (end)
+2023/10/18-15:33:40.814 1f68 Log #78: 0 ops saved to Table #81 OK
+2023/10/18-15:33:40.814 1f68 Archiving H:\Foundry VTT\Data\modules\swim\packs\swim-roll-tables/000078.log: OK
+2023/10/18-15:33:40.815 1f68 Table #80: 985 entries OK
+2023/10/18-15:33:40.977 1f68 Archiving H:\Foundry VTT\Data\modules\swim\packs\swim-roll-tables/MANIFEST-000016: OK
+2023/10/18-15:33:40.977 1f68 Archiving H:\Foundry VTT\Data\modules\swim\packs\swim-roll-tables/MANIFEST-000052: OK
+2023/10/18-15:33:40.978 1f68 Archiving H:\Foundry VTT\Data\modules\swim\packs\swim-roll-tables/MANIFEST-000074: OK
+2023/10/18-15:33:41.033 1f68 **** Repaired leveldb H:\Foundry VTT\Data\modules\swim\packs\swim-roll-tables; recovered 1 files; 151317 bytes. Some data may have been lost. ****

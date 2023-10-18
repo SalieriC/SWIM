@@ -1,13 +1,7 @@
-2023/06/18-15:53:10.220 1140 Recovering log #8
-2023/06/18-15:53:10.265 1140 Delete type=0 #8
-2023/06/18-15:53:10.266 1140 Delete type=3 #7
-2023/06/18-16:03:19.519 3714 Level-0 table #12: started
-2023/06/18-16:03:19.519 3714 Level-0 table #12: 0 bytes OK
-2023/06/18-16:03:19.536 3714 Delete type=0 #10
-2023/06/18-16:03:19.593 3714 Manual compaction at level-0 from '!scenes!3zIeYCljM6HwVcEw' @ 72057594037927935 : 1 .. '!scenes.tiles!rI9k1RndMWa7F5pj.eophqc7ONKOlLinv' @ 0 : 0; will stop at '!scenes.tiles!rI9k1RndMWa7F5pj.eophqc7ONKOlLinv' @ 11 : 1
-2023/06/18-16:03:19.593 3714 Compacting 1@0 + 0@1 files
-2023/06/18-16:03:19.616 3714 Generated table #13@0: 12 keys, 2349 bytes
-2023/06/18-16:03:19.616 3714 Compacted 1@0 + 0@1 files => 2349 bytes
-2023/06/18-16:03:19.637 3714 compacted to: files[ 0 1 0 0 0 0 0 ]
-2023/06/18-16:03:19.638 3714 Delete type=2 #5
-2023/06/18-16:03:19.694 3714 Manual compaction at level-0 from '!scenes.tiles!rI9k1RndMWa7F5pj.eophqc7ONKOlLinv' @ 11 : 1 .. '!scenes.tiles!rI9k1RndMWa7F5pj.eophqc7ONKOlLinv' @ 0 : 0; will stop at (end)
+2023/10/18-15:33:40.469 2994 Log #79: 0 ops saved to Table #80 OK
+2023/10/18-15:33:40.469 2994 Archiving H:\Foundry VTT\Data\modules\swim\packs\chase-layouts/000079.log: OK
+2023/10/18-15:33:40.469 2994 Table #13: 12 entries OK
+2023/10/18-15:33:40.530 2994 Archiving H:\Foundry VTT\Data\modules\swim\packs\chase-layouts/MANIFEST-000016: OK
+2023/10/18-15:33:40.531 2994 Archiving H:\Foundry VTT\Data\modules\swim\packs\chase-layouts/MANIFEST-000053: OK
+2023/10/18-15:33:40.531 2994 Archiving H:\Foundry VTT\Data\modules\swim\packs\chase-layouts/MANIFEST-000075: OK
+2023/10/18-15:33:40.575 2994 **** Repaired leveldb H:\Foundry VTT\Data\modules\swim\packs\chase-layouts; recovered 1 files; 2349 bytes. Some data may have been lost. ****
