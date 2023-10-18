@@ -410,7 +410,7 @@ export async function tester_gm(data) {
                 targetActor.system.wildcard,
                 resistRoll
             );
-            const bennyData = await swim.check_bennies(targetToken, true);
+            const bennyData = await swim.check_bennies(targetToken, false);
             const targetTotalBennies = bennyData.totalBennies;
 
             if (resistCritFail) {
