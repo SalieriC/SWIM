@@ -6,7 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
+
+## [2.2.0] - 2023-10-18
 ### Added
+- Tester Macro to test and support enemies and allies. Please [read its documentation here](https://github.com/SalieriC/SWADE-Immersive-Macros/wiki/Macros#tester) to learn about its current limitations.
 - Mighty Summoner now adds +1 damage to all weapons that use the fighting skill if the Fervor edge is found on the summoner.
 ### Fixed
 - Fixed a bug in the unstun macro, that prevented it from finding the Elan edge in other languages.
