@@ -67,8 +67,11 @@ export async function tester_script() {
   </label>
 </div></div>`
 
+    const supportYourAllies = supportLink ? `${supportLink}{${game.i18n.localize("SWIM.dialogue-testerIntroPartial2")}}` : `${game.i18n.localize("SWIM.dialogue-testerIntroPartial2")}`
+    const testYourEnemies = testLink ? `${testLink}{${game.i18n.localize("SWIM.dialogue-testerIntroPartial3")}}` : `${game.i18n.localize("SWIM.dialogue-testerIntroPartial3")}`
+
     const content = await TextEditor.enrichHTML(`${officialClass}<form>
-    <p>${game.i18n.localize("SWIM.dialogue-testerIntroPartial1")} ${supportLink}{${game.i18n.localize("SWIM.dialogue-testerIntroPartial2")}} ${game.i18n.localize("SWIM.word-or")} ${testLink}{${game.i18n.localize("SWIM.dialogue-testerIntroPartial3")}}. ${game.i18n.localize("SWIM.dialogue-testerIntroPartial4")}</p>
+    <p>${game.i18n.localize("SWIM.dialogue-testerIntroPartial1")} ${supportYourAllies} ${game.i18n.localize("SWIM.word-or")} ${testYourEnemies}. ${game.i18n.localize("SWIM.dialogue-testerIntroPartial4")}</p>
   <div class='form-group'>
     <label>
       <input type='radio' name='action' value='support' checked> ${game.i18n.localize("SWIM.gameTerm-Support")}
