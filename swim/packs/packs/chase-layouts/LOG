@@ -1,0 +1,17 @@
+2023/10/20-15:15:09.857 2ae8 Recovering log #83
+2023/10/20-15:15:09.857 2ae8 Recovering log #92
+2023/10/20-15:15:10.110 2ae8 Delete type=2 #13
+2023/10/20-15:15:10.110 2ae8 Delete type=0 #15
+2023/10/20-15:15:10.111 2ae8 Delete type=0 #57
+2023/10/20-15:15:10.111 2ae8 Delete type=0 #76
+2023/10/20-15:15:10.111 2ae8 Delete type=0 #83
+2023/10/20-15:15:10.111 2ae8 Delete type=0 #92
+2023/10/20-15:15:10.111 2ae8 Delete type=3 #14
+2023/10/20-15:15:10.111 2ae8 Delete type=3 #16
+2023/10/20-15:15:10.111 2ae8 Delete type=3 #53
+2023/10/20-15:15:10.111 2ae8 Delete type=3 #75
+2023/10/20-15:15:10.111 2ae8 Delete type=3 #81
+2023/10/20-15:34:36.187 4894 Level-0 table #95: started
+2023/10/20-15:34:36.187 4894 Level-0 table #95: 0 bytes OK
+2023/10/20-15:34:36.243 4894 Delete type=0 #93
+2023/10/20-15:34:36.432 4894 Manual compaction at level-0 from '!scenes!3zIeYCljM6HwVcEw' @ 72057594037927935 : 1 .. '!scenes.tiles!rI9k1RndMWa7F5pj.eophqc7ONKOlLinv' @ 0 : 0; will stop at (end)

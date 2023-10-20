@@ -695,26 +695,26 @@ async function play_sfx(isSilenced, sfx_silenced, shots, sfxDelay, sfx_silenced_
  * Please read the documentation!
  ******************************************/
 
-export async function br2_ammo_management_script(message, actor, item) {
+export async function br2_ammo_management_script(br_card, actor, item) {
     const npcAmmo = game.settings.get('swim', 'npcAmmo');
     const brswAmmoMgm = game.settings.get('swim', 'br2ammoMgm')
 
     if (brswAmmoMgm === 'disabled') { return } //Failsafe as disabled shouldn't lead anyone here in the first place.
 
     //Don't execute the macro on a reroll by checking if the old_rolls is empty:
-    if (message.flags['betterrolls-swade2'].br_data.trait_roll.old_rolls.length >= 1) {
+    if (br_card.trait_roll.old_rolls.length >= 1) {
         return;
     }
 
     //If the weapon is not compatible, return early
     if (!checkWeapon(item)) return;
 
-    const traitDice = message.flags['betterrolls-swade2'].br_data.trait_roll.dice;
+    const traitDice = br_card.trait_roll.current_roll.dice;
     let rate_of_fire = traitDice.length;
     if (actor.system.wildcard === true) {
         rate_of_fire = rate_of_fire - 1;
     }
-    let shots = message.flags['betterrolls-swade2'].render_data.used_shots;
+    let shots = br_card.render_data.used_shots;
     //failsafe to guss amount of shots in case BR2 return zero or undefined:
     if (shots === 0 || !shots) {
         if (rate_of_fire === 1) {
@@ -736,7 +736,7 @@ export async function br2_ammo_management_script(message, actor, item) {
             shots = 50;
         }
     }
-    let traitId = message.flags['betterrolls-swade2'].render_data.trait_id
+    let traitId = br_card.render_data.trait_id
     let trait = actor.items.find(i => i.id === traitId)
 
     if (brswAmmoMgm === 'sfx') { //If the user only want the SFX, play them, otherwise go to ammo management:

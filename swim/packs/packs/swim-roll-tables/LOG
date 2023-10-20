@@ -1,0 +1,17 @@
+2023/10/20-15:15:10.325 4038 Recovering log #84
+2023/10/20-15:15:10.326 4038 Recovering log #93
+2023/10/20-15:15:10.666 4038 Delete type=2 #13
+2023/10/20-15:15:10.667 4038 Delete type=0 #15
+2023/10/20-15:15:10.667 4038 Delete type=0 #56
+2023/10/20-15:15:10.667 4038 Delete type=0 #75
+2023/10/20-15:15:10.667 4038 Delete type=0 #84
+2023/10/20-15:15:10.667 4038 Delete type=0 #93
+2023/10/20-15:15:10.667 4038 Delete type=3 #14
+2023/10/20-15:15:10.667 4038 Delete type=3 #16
+2023/10/20-15:15:10.667 4038 Delete type=3 #52
+2023/10/20-15:15:10.667 4038 Delete type=3 #74
+2023/10/20-15:15:10.667 4038 Delete type=3 #82
+2023/10/20-15:34:36.432 4894 Level-0 table #96: started
+2023/10/20-15:34:36.432 4894 Level-0 table #96: 0 bytes OK
+2023/10/20-15:34:36.454 4894 Delete type=0 #94
+2023/10/20-15:34:36.499 4894 Manual compaction at level-0 from '!folders!DlXsMXWvuOZJrU64' @ 72057594037927935 : 1 .. '!tables.results!qwTQa92uv7RnwJLZ.zogKGG24ijsGSv2T' @ 0 : 0; will stop at (end)
