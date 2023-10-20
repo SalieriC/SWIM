@@ -209,6 +209,17 @@ export async function v11_migration() {
                                     }
                                 }
                                 await item.update(flagData)
+                            } else {
+                                const flagData = {
+                                    flags: {
+                                        swim: {
+                                            config: {
+                                                _version: SWIM.CONFIG_VERSION
+                                            }
+                                        }
+                                    }
+                                }
+                                await item.update(flagData)
                             }
                         }
                     }
@@ -366,6 +377,17 @@ export async function update_migration(actor, item, currVersion) {
                         swim: {
                             config: {
                                 ammoActiveEffect: newAmmoAE,
+                                _version: SWIM.CONFIG_VERSION
+                            }
+                        }
+                    }
+                }
+                await item.update(flagData)
+            } else {
+                const flagData = {
+                    flags: {
+                        swim: {
+                            config: {
                                 _version: SWIM.CONFIG_VERSION
                             }
                         }
