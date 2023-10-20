@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
+### Changed
+- [BREAKING] Changed BRSW ammo management integration to using the new br_card instead of message. As a result you'll have to delete the old "SWIM: Ammo usage" macro and import the new one from the SWIM macro compendium in the "BR2 Macros" folder. Or replace your existing macros code with `swim.br2_ammo_management(br_card, actor, item)`.
+### Fixed
+- Repeating migration warnings.
 
 ## [2.2.0] - 2023-10-18
 ### Added
