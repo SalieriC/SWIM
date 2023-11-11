@@ -621,6 +621,7 @@
   "SWIM.chatMessage-supportResult-1": "{officialClass}{tokenName} rolled <span style=\"font-size:150%\"> {rollWithEdge} </span> to support {targetName}.",
   "SWIM.chatMessage-supportResult-2-critFail": "<p>But rolled a <span style=\"font-size:150%\"> Critical Failure! </span> and interferes for <span style=\"font-size:150%\"> -2 </span>.</p></div>",
   "SWIM.chatMessage-supportResult-2-success": "<p>And supports for <span style=\"font-size:150%\"> +{supportValue} </span>.</p></div>",
+  "SWIM.chatMessage-supportResult-2-failure": "<p>And is unable to provide notable support.</p></div>",
   "SWIM.chatMessage-testResult-1": "{officialClass}{tokenName} rolled <span style=\"font-size:150%\"> {rollWithEdge} </span> to test {targetName}.",
   "SWIM.chatMessage-testResult-1-critFail": "<p>But rolled a <span style=\"font-size:150%\"> Critical Failure! </span></div>",
   "SWIM.chatMessage-testResult-2-critFail": "{targetName} tried to resist but rolled a <span style=\"font-size:150%\"> Critical Failure! </span>",

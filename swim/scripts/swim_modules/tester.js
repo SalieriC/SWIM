@@ -385,11 +385,15 @@ export async function tester_gm(data) {
                     },
                 }]);
             }
+            //Chat message:
+            chatContent = game.i18n.format("SWIM.chatMessage-supportResult-1", { officialClass, tokenName: token.name, rollWithEdge, targetName: targetToken.name }) + edgeTextToken
+            chatContent += critFail ? game.i18n.localize("SWIM.chatMessage-supportResult-2-critFail") : game.i18n.format("SWIM.chatMessage-supportResult-2-success", { supportValue: rollWithEdge >= 8 ? 2 : 1 })
+            createMessage()
+        } else {
+            chatContent = game.i18n.format("SWIM.chatMessage-supportResult-1", { officialClass, tokenName: token.name, rollWithEdge, targetName: targetToken.name }) + edgeTextToken
+            chatContent += game.i18n.format("SWIM.chatMessage-supportResult-2-failure", { supportValue: rollWithEdge >= 8 ? 2 : 1 })
+            createMessage()
         }
-        //Chat message:
-        chatContent = game.i18n.format("SWIM.chatMessage-supportResult-1", { officialClass, tokenName: token.name, rollWithEdge, targetName: targetToken.name }) + edgeTextToken
-        chatContent += critFail ? game.i18n.localize("SWIM.chatMessage-supportResult-2-critFail") : game.i18n.format("SWIM.chatMessage-supportResult-2-success", { supportValue: rollWithEdge >= 8 ? 2 : 1 })
-        createMessage()
     } else if (action === "test") {
         chatContent = "<br/>" + game.i18n.format("SWIM.chatMessage-testResult-1", { officialClass, tokenName: token.name, rollWithEdge, targetName: targetToken.name }) + edgeTextToken
         let edgeTextTarget = ""
