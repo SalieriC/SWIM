@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Repeating migration warnings.
 - Low Light vision providing vision even in pitch darkness using the token vision macro.
+- Fixed a bug in the Tester macro where a support roll of less than 4 still showed a +1 support in the chat card.
 
 ## [2.2.0] - 2023-10-18
 ### Added
