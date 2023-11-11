@@ -20,6 +20,92 @@ export const NUM_MORPHS_MAX = 100
 
 export const ITEM_CONFIG_WINDOW_WIDTH = 500;
 export const ITEM_CONFIG_WINDOW_HEIGHT = 400;
+export const TRAVEL_DEFAULTS_ARRAY = [
+    {
+        "id": "foot",
+        "name": "SWIM.travelOption-foot",
+        "speedPerHour": 3,
+        "image": "modules/swim/assets/travel/foot.webp",
+        "sfx": "modules/swim/assets/sfx/travel/footsteps-in-grass-slow-b-www.fesliyanstudios.com-edited.ogg"
+    },
+    {
+        "id": "horse",
+        "name": "SWIM.travelOption-horse",
+        "speedPerHour": 3.75,
+        "image": "modules/swim/assets/travel/horse.webp",
+        "sfx": "modules/swim/assets/sfx/travel/horse-neighing-and-breathing-a-www.fesliyanstudios.com-edited.ogg"
+    },
+    {
+        "id": "earlyCar",
+        "name": "SWIM.travelOption-earlyCar",
+        "speedPerHour": 25,
+        "image": "modules/swim/assets/travel/earlyCar.webp",
+        "sfx": "modules/swim/assets/sfx/travel/car-engine-starting-a1-www.fesliyanstudios.com-edited.ogg"
+    },
+    {
+        "id": "modernCar",
+        "name": "SWIM.travelOption-modernCar",
+        "speedPerHour": 50,
+        "image": "modules/swim/assets/travel/modernCar.webp",
+        "sfx": "modules/swim/assets/sfx/travel/car-engine-starting-a1-www.fesliyanstudios.com-edited.ogg"
+    },
+    {
+        "id": "sailingShip",
+        "name": "SWIM.travelOption-sailingShip",
+        "speedPerHour": 3.75,
+        "image": "modules/swim/assets/travel/sailingShip.webp",
+        "sfx": "modules/swim/assets/sfx/travel/ocean-waves-crashing-sound-effect-www.orangefreesounds.com-edited.ogg"
+    },
+    {
+        "id": "steamShip",
+        "name": "SWIM.travelOption-steamShip",
+        "speedPerHour": 5,
+        "image": "modules/swim/assets/travel/steamShip.webp",
+        "sfx": "modules/swim/assets/sfx/travel/large-ship-air-horn-www.orangefreesounds.com-edited.ogg"
+    },
+    {
+        "id": "modernShip",
+        "name": "SWIM.travelOption-modernShip",
+        "speedPerHour": 25,
+        "image": "modules/swim/assets/travel/modernShip.webp",
+        "sfx": "modules/swim/assets/sfx/travel/large-ship-air-horn-www.orangefreesounds.com-edited.ogg"
+    },
+    {
+        "id": "highSpeedFerry",
+        "name": "SWIM.travelOption-highSpeedFerry",
+        "speedPerHour": 50,
+        "image": "modules/swim/assets/travel/highSpeedFerry.webp",
+        "sfx": "modules/swim/assets/sfx/travel/large-ship-air-horn-www.orangefreesounds.com-edited.ogg"
+    },
+    {
+        "id": "steamTrain",
+        "name": "SWIM.travelOption-steamTrain",
+        "speedPerHour": 7.5,
+        "image": "modules/swim/assets/travel/steamTrain.webp",
+        "sfx": "modules/swim/assets/sfx/travel/steam-train-whistle-www.orangefreesounds.com-edited.ogg"
+    },
+    {
+        "id": "modernPassengerTrain",
+        "name": "SWIM.travelOption-modernPassengerTrain",
+        "speedPerHour": 50,
+        "image": "modules/swim/assets/travel/modernPassengerTrain.webp",
+        "sfx": "modules/swim/assets/sfx/travel/subway-train-leaving-sound-effect-www.orangefreesounds.com-edited.ogg"
+    },
+    {
+        "id": "propPlane",
+        "name": "SWIM.travelOption-propPlane",
+        "speedPerHour": 125,
+        "image": "modules/swim/assets/travel/propPlane.webp",
+        "sfx": "modules/swim/assets/sfx/travel/propeller-plane-flying-www.orangefreesounds.com-edited.ogg"
+    },
+    {
+        "id": "commercialJet",
+        "name": "SWIM.travelOption-commercialJet",
+        "speedPerHour": 500,
+        "image": "modules/swim/assets/travel/commercialJet.webp",
+        "sfx": "modules/swim/assets/sfx/travel/airplane-sound-www.orangefreesounds.com-edited.ogg"
+    }
+]
 export const DECK_OF_CARDS = [
     "Ace of Spades", "2 of Spades", "3 of Spades", "4 of Spades", "5 of Spades",
     "6 of Spades", "7 of Spades", "8 of Spades", "9 of Spades", "10 of Spades",

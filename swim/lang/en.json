@@ -636,5 +636,9 @@
   "SWIM.skill-intimidation" : "Intimidation",
   "SWIM.word-and": "and",
   "SWIM.dialogue-testerGmWarn": "<p><i class='fa-solid fa-triangle-exclamation'></i> <em><b>Caution:</b> The Tester is currently only intended to work for PC vs. NPC. It might cause issues when used against players.</em></p>",
-  "SWIM.notification-testerAlert": "{actorName} tests {targetName}, please roll to resist."
+  "SWIM.notification-testerAlert": "{actorName} tests {targetName}, please roll to resist.",
+  "SWIM.customTravelOptionsName": "Custom Travel Options JSON:",
+  "SWIM.customTravelOptionsHint": "This is primarily for users with knowledge about how to build a JSON. You can find a sample on the SWIM Documentation. It accepts a JSON to create your own travel calculation options and vehicles.",
+  "SWIM.dialogue-stealthmode": "Stealth Mode:",
+  "SWIM.dialogue-stealthmodeHint": "(In stealth mode, no sound will be played and players won't see an image popup.)"
 }

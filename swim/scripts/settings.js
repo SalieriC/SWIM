@@ -60,6 +60,7 @@ export const settingVariables = [
             {value: 'tremor', locaString: 'SWIM.Option-tremorSense'},
             {value: 'full', locaString: 'SWIM.Option-fullBlind'},
         ]},*/
+    {id: 'customTravelOptions', config_type: String, tab: "Macro Options", default: ""},
     {id: 'br2Support', config_type: Boolean, tab: "SFX & VFX Options", default: false},
     {id: 'br2ammoMgm', config_type: String, tab: "SFX & VFX Options", default: "full", 
         options: [
