@@ -6,8 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
+### Added
+- Several new sfx to be used in the Travel Calculator (see below).  
 ### Changed
 - [BREAKING] Changed BRSW ammo management integration to using the new br_card instead of message. As a result you'll have to delete the old "SWIM: Ammo usage" macro and import the new one from the SWIM macro compendium in the "BR2 Macros" folder. Or replace your existing macros (entire!) code with `swim.br2_ammo_management(br_card, actor, item)`.
+- Big Travel calculator refactor to simplify the code a bit and allow for more options and customisation.
+- - Added a setting to input a JSON structure that can define custom created means of travel.
+- - Added SFX support to Travel Calculator.
+- - Added Stealth Mode to Travel Calculator that allows the GM to plan a journey ahead of time without notifying the players or just to silently check the required time (won't play SFX and won't show image).
+- - New Constant containing all the default means of travel.
+- - Documentation on the new changes and an example JSON for adding your own means of travel.
 ### Fixed
 - Repeating migration warnings.
 - Low Light vision providing vision even in pitch darkness using the token vision macro.
