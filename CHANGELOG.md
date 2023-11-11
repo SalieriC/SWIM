@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
+
+## [2.3.0] - 2023-11-11
 ### Added
 - Several new sfx to be used in the Travel Calculator (see below).  
 ### Changed
