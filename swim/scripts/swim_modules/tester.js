@@ -1,6 +1,6 @@
 /*******************************************
  * Test and Support Macro
- * version v.0.1.0
+ * version v.0.2.0
  * Made and maintained by SalieriC#8263
  * Covered Edges:
  * - Elan
@@ -27,7 +27,7 @@ export async function tester_script() {
     const targetToken = targets[0]; // Selecting the first target token
     const actor = token.actor;
 
-    let skillOptions = "";
+    let skillOptions = ``;
     for (let skill of actor.items.filter((i) => i.type === "skill")) {
         skillOptions += `<option value="${skill._id}">${skill.name}</option>`;
     }
@@ -124,8 +124,9 @@ export async function tester_script() {
         id: "tester-dialogue"
     }).render(true);
 
-    async function support(skillId, reroll = false, elan = false, rerollCount = 0) {
-        const roll = await token.actor.rollSkill(skillId);
+    async function support(skillId, reroll = false, elan = false, rerollCount = 0, bestRoll = 0) {
+        const strength = skillId === "strength" ? true : false
+        const roll = strength ? await token.actor.rollAttribute(skillId) : await token.actor.rollSkill(skillId)
         let rollWithEdge = roll.total
         let edgeText = ""
         if (reroll && elan) {
@@ -148,7 +149,8 @@ export async function tester_script() {
             critFail,
             totalBennies,
             edgeText,
-            supportedSkillId
+            supportedSkillId,
+            bestRoll: bestRoll > rollWithEdge ? bestRoll : rollWithEdge
         };
 
         if (critFail) {
@@ -179,11 +181,11 @@ export async function tester_script() {
                         elan = elanEdge ? true : false
                         rerollCount += 1
                         if (rerollCount === 1 && reliableEdge) {
-                            await support(skillId, true, elan, rerollCount) // Free reroll
+                            await support(skillId, true, elan, rerollCount, data.bestRoll) // Free reroll
                             return;
                         }
                         await swim.spend_benny(token, true); // Spend a Benny
-                        await support(skillId, true, elan, rerollCount); // Reroll
+                        await support(skillId, true, elan, rerollCount, data.bestRoll); // Reroll
                     },
                 },
                 apply: {
@@ -196,7 +198,7 @@ export async function tester_script() {
         }).render(true);
     }
 
-    async function test(skillId, selectedResult, reroll = false, elan = false, rerollCount = 0) {
+    async function test(skillId, selectedResult, reroll = false, elan = false, rerollCount = 0, bestRoll = 0) {
         const skill = actor.items.find(s => s.id === skillId && s.type === "skill");
         const roll = await token.actor.rollSkill(skillId);
         let rollWithEdge = roll.total;
@@ -227,7 +229,8 @@ export async function tester_script() {
             totalBennies,
             edgeText,
             selectedResult,
-            supportedSkillId
+            supportedSkillId,
+            bestRoll: bestRoll > rollWithEdge ? bestRoll : rollWithEdge
         };
 
         if (critFail) {
@@ -265,11 +268,11 @@ export async function tester_script() {
                         elan = elanEdge ? true : false;
                         rerollCount += 1;
                         if (rerollCount === 1 && humiliateEdge && usingTaunt) {
-                            await support(skillId, true, elan, rerollCount) // Free reroll
+                            await test(skillId, selectedResult, true, elan, rerollCount, data.bestRoll) // Free reroll
                             return;
                         }
                         await swim.spend_benny(token, true); // Spend a Benny
-                        await test(skillId, selectedResult, true, elan, rerollCount); // Reroll
+                        await test(skillId, selectedResult, true, elan, rerollCount, data.bestRoll); // Reroll
                     },
                 },
                 apply: {
@@ -296,7 +299,7 @@ export async function tester_gm(data) {
     const skillId = data.skillId;
     const supportedSkillId = data.supportedSkillId;
     const roll = data.roll;
-    const rollWithEdge = data.rollWithEdge;
+    const rollWithEdge = data.bestRoll > data.rollWithEdge ? data.bestRoll : data.rollWithEdge;
     const critFail = data.critFail;
     const totalBennies = data.totalBennies;
     const edgeTextToken = data.edgeText;
@@ -402,7 +405,7 @@ export async function tester_gm(data) {
             createMessage()
         } else { resistTest() }
 
-        async function resistTest(reroll = false, elan = false, rerollCount = 0) {
+        async function resistTest(reroll = false, elan = false, rerollCount = 0, bestResistRoll = 0) {
             ui.notifications.warn(game.i18n.format("SWIM.notification-testerAlert", {actorName: actor.name, targetName: targetActor.name}))
             const resistRoll = await targetActor.rollAttribute(attribute);
             let resistRollWithEdge = resistRoll.total;
@@ -453,6 +456,9 @@ export async function tester_gm(data) {
                 return;
             }
 
+            //Save best result:
+            bestResistRoll = bestResistRoll > resistRollWithEdge ? bestResistRoll : resistRollWithEdge
+
             const content = game.i18n.format("SWIM.dialogue-resistReroll", { result: resistRollWithEdge, totalBennies: targetTotalBennies })
 
             new Dialog({
@@ -466,7 +472,7 @@ export async function tester_gm(data) {
                             elan = elanEdge ? true : false
                             rerollCount += 1
                             await swim.spend_benny(token, true); // Spend a Benny
-                            await resistTest(skillId, true, elan, rerollCount); // Reroll
+                            await resistTest(skillId, true, elan, rerollCount, bestResistRoll); // Reroll
                         },
                     },
                     apply: {
@@ -483,7 +489,7 @@ export async function tester_gm(data) {
             async function applyResults() {
                 await game.succ.addCondition(selectedResult, targetToken);
                 chatContent += "<br/>" + game.i18n.format("SWIM.chatMessage-testResult-3", {targetName: targetToken.name, status: game.i18n.localize(`SWIM.gameTerm-${selectedResult}`)})
-                if (rollWithEdge - resistRollWithEdge >= 4) {
+                if (rollWithEdge - bestResistRoll >= 4) {
                     await game.succ.addCondition("shaken", targetToken);
                     chatContent += " " + game.i18n.localize("SWIM.word-and") + " " + game.i18n.localize("SWIM.gameTerm-Shaken")
 
