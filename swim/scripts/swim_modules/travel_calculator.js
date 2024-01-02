@@ -1,6 +1,6 @@
 /*******************************************
  * Travel Calculator Macro
- * version v.3.0.0
+ * version v.3.0.1
  * Made and maintained by SalieriC#8263
  * Future plan: Include random encounters as
  * per the core rules pg.144.
@@ -22,7 +22,7 @@ export async function travel_calculator() {
     const officialClass = await swim.get_official_class()
 
     const defaultOptionsArray = SWIM.TRAVEL_DEFAULTS_ARRAY
-    const customOptionsArray = JSON.parse(game.settings.get('swim', 'customTravelOptions'))
+    const customOptionsArray = game.settings.get('swim', 'customTravelOptions') ? JSON.parse(game.settings.get('swim', 'customTravelOptions')) : []
     const totalOptionsArray = [...defaultOptionsArray, ...customOptionsArray]
 
     let options = ""
