@@ -13,10 +13,10 @@ export async function travel_calculator() {
     const obstaclesTableName = game.settings.get('swim', 'encounterTableObstacles')
     const strangersTableName = game.settings.get('swim', 'encounterTableStrangers')
     const treasuresTableName = game.settings.get('swim', 'encounterTableTreasures')
-    const enemiesTable = game.tables.getName(enemiesTableName)
-    const obstaclesTable = game.tables.getName(obstaclesTableName)
-    const strangersTable = game.tables.getName(strangersTableName)
-    const treasuresTable = game.tables.getName(treasuresTableName)
+    let enemiesTable = game.tables.getName(enemiesTableName)
+    let obstaclesTable = game.tables.getName(obstaclesTableName)
+    let strangersTable = game.tables.getName(strangersTableName)
+    let treasuresTable = game.tables.getName(treasuresTableName)
 
     //Set div class based on enabled official module:
     const officialClass = await swim.get_official_class()
@@ -58,9 +58,13 @@ export async function travel_calculator() {
         <p>${game.i18n.localize("SWIM.dialogue-stealthmodeHint")}</p>
     </div>`
     if (!enemiesTable || !obstaclesTable || !strangersTable || !treasuresTable) {
-        dialogueContent += `${game.i18n.localize("SWIM.dialogue-travelCalculatorWarning")}`
+        dialogueContent += `${game.i18n.localize("SWIM.dialogue-travelCalculatorWarning")}`;
     }
-    dialogueContent += `</div>`
+
+    // Add a clickable button for "SWIM.dialogue-updateEncounterTables"
+    dialogueContent += `<button id="updateEncounterTablesButton">${game.i18n.localize("SWIM.dialogue-updateEncounterTables")}</button>`;
+
+    dialogueContent += `</div>`;
 
     new Dialog({
         title: game.i18n.localize('SWIM.dialogue-travelCalculator'),
@@ -72,15 +76,18 @@ export async function travel_calculator() {
                     const distance = html.find('[name="distance"]').val();
                     const unit = html.find('[name="unit"]:checked').val();
                     const method = html.find('[name="method"]').val();
-                    let generateEncounters = false
+                    let generateEncounters = false;
+
                     if (enemiesTable && obstaclesTable && strangersTable && treasuresTable) {
                         generateEncounters = html.find('#generateEncounters')[0].checked;
                     }
+
                     if (!distance || distance <= 0) {
                         return ui.notifications.error(game.i18n.localize("SWIM.notification-invalidTravelDistance"));
                     }
+
                     let stealthMode = html.find('#stealthMode')[0].checked;
-                    calculate_results(distance, unit, method, generateEncounters, stealthMode, totalOptionsArray)
+                    calculate_results(distance, unit, method, generateEncounters, stealthMode, totalOptionsArray);
                 },
             },
             two: {
@@ -89,12 +96,74 @@ export async function travel_calculator() {
         },
         default: 'one',
         render: (html) => {
-            $("#swim-dialogue").css("height", "auto"); // Adjust the dialogue to its content. Also fixes the error of scroll bar on first dialogue after login/reload.
-            //html.find('[name="distance"]').focus();
+            $("#swim-dialogue").css("height", "auto");
+
+            // Set up onclick function for the button
+            html.find('#updateEncounterTablesButton').click(() => {
+                // Call your function here
+                updateTables();
+            });
         },
     }, {
         id: "swim-dialogue"
     }).render(true);
+
+    function updateTables() {
+        let options = "";
+        let availableTables = game.folders.getName("[SWIM] Encounter Tables") ? swim.get_folder_content("[SWIM] Encounter Tables") : game.tables
+        for (let table of availableTables) {
+            options += `<option value="${table.name}">${table.name}</option>`;
+        }
+
+        let dialogueContent = `
+            <div>
+                <label for="selector1"><b>${game.i18n.localize("SWIM.encounterTableEnemiesName")}</b></label>
+                <select id="selector1" name="selector1">${options.replace(`value="${enemiesTableName}"`, `value="${enemiesTableName}" selected="selected" `)}</select>
+            </div>
+            <div>
+                <label for="selector2"><b>${game.i18n.localize("SWIM.encounterTableObstaclesName")}</b></label>
+                <select id="selector2" name="selector2">${options.replace(`value="${obstaclesTableName}"`, `value="${obstaclesTableName}" selected="selected" `)}</select>
+            </div>
+            <div>
+                <label for="selector3"><b>${game.i18n.localize("SWIM.encounterTableStrangersName")}</b></label>
+                <select id="selector3" name="selector3">${options.replace(`value="${strangersTableName}"`, `value="${strangersTableName}" selected="selected" `)}</select>
+            </div>
+            <div>
+                <label for="selector4"><b>${game.i18n.localize("SWIM.encounterTableTreasuresName")}</b></label>
+                <select id="selector4" name="selector4">${options.replace(`value="${treasuresTableName}"`, `value="${treasuresTableName}" selected="selected" `)}</select>
+            </div>
+        `;
+
+        const dialogueOptions = {
+            width: 600,
+        };
+
+        new Dialog({
+            title: game.i18n.localize("SWIM.dialogue-selectEncounterTables"),
+            content: dialogueContent,
+            buttons: {
+                confirm: {
+                    label: game.i18n.localize('SWIM.button-proceed'),
+                    callback: async (html) => {
+                        const selectedEnemiesTableName = html.find('[name="selector1"]').val();
+                        const selectedObstaclesTableName = html.find('[name="selector2"]').val();
+                        const selectedStrangersTableName = html.find('[name="selector3"]').val();
+                        const selectedTreasuresTableName = html.find('[name="selector4"]').val();
+                        await game.settings.set('swim', 'encounterTableEnemies', selectedEnemiesTableName)
+                        await game.settings.set('swim', 'encounterTableObstacles', selectedObstaclesTableName)
+                        await game.settings.set('swim', 'encounterTableStrangers', selectedStrangersTableName)
+                        await game.settings.set('swim', 'encounterTableTreasures', selectedTreasuresTableName)
+                        enemiesTable = game.tables.getName(enemiesTableName)
+                        obstaclesTable = game.tables.getName(obstaclesTableName)
+                        strangersTable = game.tables.getName(strangersTableName)
+                        treasuresTable = game.tables.getName(treasuresTableName)
+                    },
+                },
+            },
+            default: 'confirm',
+        }, dialogueOptions).render(true);
+
+    }
 }
 
 async function calculate_results(distance, unit, method, generateEncounters, stealthMode, totalOptionsArray) {

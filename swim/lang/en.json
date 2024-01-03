@@ -642,5 +642,6 @@
   "SWIM.customTravelOptionsName": "Custom Travel Options JSON:",
   "SWIM.customTravelOptionsHint": "This is primarily for users with knowledge about how to build a JSON. You can find a sample on the SWIM Documentation. It accepts a JSON to create your own travel calculation options and vehicles.",
   "SWIM.dialogue-stealthmode": "Stealth Mode",
-  "SWIM.dialogue-stealthmodeHint": "(In stealth mode, no sound will be played and players won't see an image popup.)"
+  "SWIM.dialogue-stealthmodeHint": "(In stealth mode, no sound will be played and players won't see an image popup.)",
+  "SWIM.dialogue-selectEncounterTables": "Select Encounter Tables"
 }
