@@ -1,6 +1,6 @@
 /*******************************************
  * Travel Calculator Macro
- * version v.3.0.1
+ * version v.3.1.0
  * Made and maintained by SalieriC#8263
  * Future plan: Include random encounters as
  * per the core rules pg.144.
@@ -137,7 +137,7 @@ export async function travel_calculator() {
         `;
 
         const dialogueOptions = {
-            width: 500,
+            width: 600,
         };
 
         new Dialog({
