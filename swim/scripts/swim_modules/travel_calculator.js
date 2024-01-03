@@ -111,6 +111,8 @@ export async function travel_calculator() {
     function updateTables() {
         let options = "";
         let availableTables = game.folders.getName("[SWIM] Encounter Tables") ? swim.get_folder_content("[SWIM] Encounter Tables") : game.tables
+        // Sort the tables alphabetically by name
+        availableTables.sort((a, b) => a.name.localeCompare(b.name));
         for (let table of availableTables) {
             options += `<option value="${table.name}">${table.name}</option>`;
         }
@@ -135,7 +137,7 @@ export async function travel_calculator() {
         `;
 
         const dialogueOptions = {
-            width: 600,
+            width: 500,
         };
 
         new Dialog({
