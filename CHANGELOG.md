@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Tester macro now remembers the best roll and uses that instead of the last roll.
+- Encounter table setup directly from the travel calculator macro.
 ### Fixed
 - Fixed a critical bug in the Tester macro where on some test rolls the support roll function was called.
 - Fixed a critical bug in the Travel Calculator macro that prevented its function if no custom options json was given.
