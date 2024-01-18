@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 1.5.0
+ * v. 1.5.1
  * By SalieriC
  ******************************************************/
 function generate_id(length = 16) {
@@ -127,6 +127,7 @@ export async function summoner_script() {
                         //Fetching raise:
                         const raise = html.find(`#raise`)[0].checked;
                         const summonersName = token.name
+                        const summonersDisposition = token.document.disposition
                         const scActor = game.actors.get(scID)
                         const scMaxWounds = scActor.system.wounds.max
                         const scName = scActor.prototypeToken.name
@@ -137,12 +138,12 @@ export async function summoner_script() {
                         let updates
                         if (raise === false) {
                             updates = {
-                                token: { name: `${summonersName}'s ${scName}`, actorLink: false }, //don't want to mess with the source actor in case it is linked.
+                                token: { name: `${summonersName}'s ${scName}`, disposition: summonersDisposition, actorLink: false }, //don't want to mess with the source actor in case it is linked.
                                 actor: { name: `${summonersName}'s ${scName}` },
                             }
                         } else if (raise === true) {
                             updates = {
-                                token: { name: `${summonersName}'s ${scName}`, actorLink: false },
+                                token: { name: `${summonersName}'s ${scName}`, disposition: summonersDisposition, actorLink: false },
                                 actor: {
                                     name: `${summonersName}'s ${scName}`,
                                     "system.wounds.max": scMaxWounds + 1
