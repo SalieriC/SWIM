@@ -1,6 +1,6 @@
 /*******************************************
  * Ammo Management (Enhanced Version v2)
- * version 6.0.16
+ * version 6.0.17
  * By SalieriC#8263 & Loofou#7406. (old Dialogue Framework: Kekilla#7036)
  *
  * Makes heavy use of SFX set up on the weapon.
@@ -221,7 +221,7 @@ async function shoot(selectedWeapon, selectedShots, actor, trait = undefined) {
             }
             const newQuantity = currentQuantity - selectedShots;
             const updates = [
-                { _id: selectedWeapon.id, "system.quantity": `${newQuantity}` },
+                { _id: selectedWeapon.id, "system.quantity": newQuantity },
             ];
             // Updating the consumable weapon
             await actor.updateEmbeddedDocuments("Item", updates);
@@ -277,7 +277,7 @@ async function shoot(selectedWeapon, selectedShots, actor, trait = undefined) {
             const newCharges = currentCharges - selectedShots;
             //Setting up the updates
             const updates = [
-                { _id: currentAmmoId, "system.quantity": `${newCharges}` },
+                { _id: currentAmmoId, "system.quantity": newCharges },
             ];
             // Updating the Weapon
             await actor.updateEmbeddedDocuments("Item", updates);
@@ -309,7 +309,7 @@ async function shoot(selectedWeapon, selectedShots, actor, trait = undefined) {
         //Normal ranged weapon
     } else {
         const updates = [
-            { _id: selectedWeapon.id, "system.currentShots": `${newCharges}` },
+            { _id: selectedWeapon.id, "system.currentShots": newCharges },
         ];
         // Updating the Weapon
         await actor.updateEmbeddedDocuments("Item", updates);
@@ -467,12 +467,12 @@ async function reloadButton(html, actor, weapons, ammo) {
             const updates = [
                 {
                     _id: selectedWeapon.id,
-                    "system.currentShots": `${newCharges}`,
+                    "system.currentShots": newCharges,
                     "flags.swim.config.loadedAmmo": `${selectedAmmo.name}`
                 },
-                { _id: selectedAmmo.id, "system.quantity": `${newAmmo}` },
+                { _id: selectedAmmo.id, "system.quantity": newAmmo },
             ];
-            if (oldAmmo) { updates.push({ _id: oldAmmo?.id, "system.quantity": `${oldAmmoRefill}` }) }
+            if (oldAmmo) { updates.push({ _id: oldAmmo?.id, "system.quantity": oldAmmoRefill }) }
 
             await actor.updateEmbeddedDocuments("Item", updates);
             ChatMessage.create({
@@ -498,10 +498,10 @@ async function reloadButton(html, actor, weapons, ammo) {
             const updates = [
                 {
                     _id: selectedWeapon.id,
-                    "system.currentShots": `${newCharges}`,
+                    "system.currentShots": newCharges,
                     "flags.swim.config.loadedAmmo": `${selectedAmmo.name}`
                 },
-                { _id: selectedAmmo.id, "system.quantity": `${newAmmo}` },
+                { _id: selectedAmmo.id, "system.quantity": newAmmo },
             ];
 
             await actor.updateEmbeddedDocuments("Item", updates);
@@ -543,7 +543,7 @@ async function reloadButton(html, actor, weapons, ammo) {
             newCharges = maxCharges;
         }
         const updates = [
-            { _id: selectedWeapon.id, "system.currentShots": `${newCharges}` }
+            { _id: selectedWeapon.id, "system.currentShots": newCharges }
         ];
         await actor.updateEmbeddedDocuments("Item", updates);
 
