@@ -25,6 +25,13 @@ export async function effect_hooks() {
             await swim.wait('100') // Needed to give the whole thing some time to prevent issues with jokers.
             warpgate.event.notify("SWIM.updateCombat-currentTurn", { combatID: combatID, currTurn: currentTurn })
         }
+        // Conviction
+        if (effect.name == "Conviction") {
+            // This prevents conviction expiration dialogue from core since SWADE handles it by itself.
+            let updates = effect.toObject();
+            updates.flags.swade.expiration = null;
+            await effect.update(updates);
+        }
     })
     Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
         const actor = condition.parent
