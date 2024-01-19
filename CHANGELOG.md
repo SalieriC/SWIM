@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Function to prevent the conviction expiration dialogue from the core system that is added by SUCC.
 - Added a failsafe to the ammo management that prevents code failing on a RoF higher than 6.
 - Added SUCC 2.3.0 support for the effect builder which means it now uses the new SUCC api and also properly passes the effect duration.
+- Chase background images that serve as an example and make the scene be visible easier. Users are encouraged to setup their own however.
 ### Fixed
 - Fixed a critical bug in the Tester macro where on some test rolls the support roll function was called.
 - Fixed a critical bug in the Travel Calculator macro that prevented its function if no custom options json was given.
