@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  * 
- * v. 5.0.0
+ * v. 5.1.0
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  * 
  * Powers on hold for now:
@@ -952,7 +952,8 @@ export async function effect_builder_gm(data) {
                 boostData.boost.duration = noPP ? Number(999999999999999) : data.boost.duration
             }
             const targetToken = playerScene.tokens.get(target.targetID)
-            await succ.apply_status(targetToken, 'boost', true, false, boostData)
+            //await succ.apply_status(targetToken, 'boost', true, false, boostData)
+            await game.succ.addCondition('boost', targetToken, {allowDuplicates: true, forceOverlay: false, effectOptions: boostData, duration: boostData.boost.duration})
         }
     } else if (type === "lower") {
         for (let target of data.lower.trait) {
@@ -980,7 +981,8 @@ export async function effect_builder_gm(data) {
                 lowerData.lower.duration = noPP ? Number(999999999999999) : data.lower.duration
             }
             const targetToken = playerScene.tokens.get(target.targetID)
-            await succ.apply_status(targetToken, 'lower', true, false, lowerData)
+            //await succ.apply_status(targetToken, 'lower', true, false, lowerData)
+            await game.succ.addCondition('lower', targetToken, {allowDuplicates: true, forceOverlay: false, effectOptions: lowerData, duration: lowerData.lower.duration})
         }
     } else if (type === "protection") {
         for (let target of data.targetIDs) {
@@ -1008,7 +1010,8 @@ export async function effect_builder_gm(data) {
                 protectionData.protection.duration = noPP ? Number(999999999999999) : data.protection.duration
             }
             const targetToken = playerScene.tokens.get(target)
-            await succ.apply_status(targetToken, 'protection', true, false, protectionData)
+            //await succ.apply_status(targetToken, 'protection', true, false, protectionData)
+            await game.succ.addCondition('protection', targetToken, {allowDuplicates: true, forceOverlay: false, effectOptions: protectionData, duration: protectionData.protection.duration})
         }
     } else if (type === "smite") {
         for (let target of data.smite.weapon) {
@@ -1037,7 +1040,8 @@ export async function effect_builder_gm(data) {
                 smiteData.smite.duration = noPP ? Number(999999999999999) : data.smite.duration
             }
             const targetToken = playerScene.tokens.get(target.targetID)
-            await succ.apply_status(targetToken, 'smite', true, false, smiteData)
+            //await succ.apply_status(targetToken, 'smite', true, false, smiteData)
+            await game.succ.addCondition('smite', targetToken, {allowDuplicates: true, forceOverlay: false, effectOptions: smiteData, duration: smiteData.smite.duration})
         }
     } else if (type === "growth") {
         for (let targetID of data.targetIDs) {

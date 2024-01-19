@@ -12,11 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Mighty Summoner now respects the summoning tokens disposition and uses it for the summoned token.
 - Function to prevent the conviction expiration dialogue from the core system that is added by SUCC.
 - Added a failsafe to the ammo management that prevents code failing on a RoF higher than 6.
+- Added SUCC 2.3.0 support for the effect builder which means it now uses the new SUCC api and also properly passes the effect duration.
 ### Fixed
 - Fixed a critical bug in the Tester macro where on some test rolls the support roll function was called.
 - Fixed a critical bug in the Travel Calculator macro that prevented its function if no custom options json was given.
 - Fixed some errors in translation strings.
 - Fixed a critical error that made the ammo management update an items quantity or shots with a string rather than a number resulting in data loss.
+- Fixed a bug that prevented passing the duration of effects in the effect builder to SUCC resulting in faulty duration.
 
 ## [2.3.0] - 2023-11-11
 ### Added
