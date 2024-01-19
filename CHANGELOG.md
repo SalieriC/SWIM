@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Encounter table setup directly from the travel calculator macro.
 - Mighty Summoner now respects the summoning tokens disposition and uses it for the summoned token.
 - Function to prevent the conviction expiration dialogue from the core system that is added by SUCC.
+- Added a failsafe to the ammo management that prevents code failing on a RoF higher than 6.
 ### Fixed
 - Fixed a critical bug in the Tester macro where on some test rolls the support roll function was called.
 - Fixed a critical bug in the Travel Calculator macro that prevented its function if no custom options json was given.

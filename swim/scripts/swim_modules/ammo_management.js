@@ -1,6 +1,6 @@
 /*******************************************
  * Ammo Management (Enhanced Version v2)
- * version 6.0.17
+ * version 6.0.18
  * By SalieriC#8263 & Loofou#7406. (old Dialogue Framework: Kekilla#7036)
  *
  * Makes heavy use of SFX set up on the weapon.
@@ -732,7 +732,7 @@ export async function br2_ammo_management_script(br_card, actor, item) {
         if (rate_of_fire === 5) {
             shots = 40;
         }
-        if (rate_of_fire === 6) {
+        if (rate_of_fire >= 6) { //RoF higher than 6 is not supported by swade, keeping the >= here as a failsafe.
             shots = 50;
         }
     }
