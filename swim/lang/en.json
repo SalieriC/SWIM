@@ -643,5 +643,8 @@
   "SWIM.customTravelOptionsHint": "This is primarily for users with knowledge about how to build a JSON. You can find a sample on the SWIM Documentation. It accepts a JSON to create your own travel calculation options and vehicles.",
   "SWIM.dialogue-stealthmode": "Stealth Mode",
   "SWIM.dialogue-stealthmodeHint": "(In stealth mode, no sound will be played and players won't see an image popup.)",
-  "SWIM.dialogue-selectEncounterTables": "Select Encounter Tables"
+  "SWIM.dialogue-selectEncounterTables": "Select Encounter Tables",
+  "SWIM.hindrance-oldWaysOath-deadlands": "Old Ways Oath",
+  "SWIM.dialogue-freeRerollText": "<br />You may also make a free reroll.",
+  "SWIM.button-freeReroll": "Free reroll"
 }
