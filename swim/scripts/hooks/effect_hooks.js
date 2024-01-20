@@ -26,11 +26,11 @@ export async function effect_hooks() {
             warpgate.event.notify("SWIM.updateCombat-currentTurn", { combatID: combatID, currTurn: currentTurn })
         }
         // Conviction
-        if (effect.name == "Conviction") {
+        if (condition.name == "Conviction") {
             // This prevents conviction expiration dialogue from core since SWADE handles it by itself.
-            let updates = effect.toObject();
+            let updates = condition.toObject();
             updates.flags.swade.expiration = null;
-            await effect.update(updates);
+            await condition.update(updates);
         }
     })
     Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
