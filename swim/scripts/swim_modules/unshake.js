@@ -1,6 +1,6 @@
 /*******************************************
  * Unshake macro for SWD
- * version 4.2.0
+ * version 4.3.0
  * Original code (an eternity ago) by Shteff, altered by Forien, edited and maintained by SalieriC#8263.
  ******************************************/
 
@@ -15,13 +15,17 @@ export async function unshake_swd_script(effect = false) {
         let actor = effect.parent
         token = actor.isToken ? actor.token : canvas.scene.tokens.find(t => t.actor.id === actor.id)
         const nameKey = game.user.character?.id === actor.id ? `${game.i18n.localize("SWIM.word-you")} ${game.i18n.localize("SWIM.word-are")}` : `${token.name} ${game.i18n.localize("SWIM.word-is")}`
-        ui.notifications.notify(game.i18n.format("SWIM.notification-shakenRoll", {tokenName: nameKey}));
+        ui.notifications.notify(game.i18n.format("SWIM.notification-shakenRoll", { tokenName: nameKey }));
     }
 
     // Checking for System Benny image.
     let bennyImage = await swim.get_benny_image()
     // Setting up SFX paths:
     const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
+    // Set up free rerolls:
+    let freeRerolls = 0
+    const oldWaysOath = token.actor.items.find(e => e.type === "hindrance" && e.name.toLowerCase() === game.i18n.localize("SWIM.hindrance-oldWaysOath-deadlands").toLowerCase())
+    if (oldWaysOath) { freeRerolls = freeRerolls + 1 }
 
     async function rollUnshake() {
 
@@ -85,17 +89,17 @@ export async function unshake_swd_script(effect = false) {
             } //Finally, if the unShakeBonus does not come from an AE apply it generically (as of yet this is just a failsafe but makes the script future proof.)
         } else if (unShakeBonus != 0) {
             rollWithEdge += unShakeBonus;
-            edgeText += game.i18n.format("SWIM.chatMessage-unshakeBonusOtherActor", {unShakeBonus: unShakeBonus});
+            edgeText += game.i18n.format("SWIM.chatMessage-unshakeBonusOtherActor", { unShakeBonus: unShakeBonus });
         }
 
-        let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultRoll", {name : actorAlias, rollWithEdge : rollWithEdge})
+        let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultRoll", { name: actorAlias, rollWithEdge: rollWithEdge })
         // Checking for a Critical Failure.
         let wildCard = true;
         if (token.actor.system.wildcard === false && token.actor.type === "npc") { wildCard = false }
         let critFail = await swim.critFail_check(wildCard, r)
         if (critFail === true) {
             ui.notifications.notify(game.i18n.localize("SWIM.notification-critFail"));
-            let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultCritFail", {name : actorAlias});
+            let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultCritFail", { name: actorAlias });
             ChatMessage.create({ content: chatData });
         }
         else {
@@ -119,28 +123,44 @@ export async function unshake_swd_script(effect = false) {
 
     async function useBenny() {
         let { _, __, totalBennies } = await swim.check_bennies(token)
-        if (totalBennies > 0) {
+        // Prepare the dialogue:
+        let content = game.i18n.format("SWIM.dialogue-spendBennyText", { totalBennies: totalBennies })
+        let buttons = {
+            bennyButton: {
+                label: game.i18n.localize("SWIM.dialogue-yes"),
+                callback: async (_) => {
+                    await swim.spend_benny(token);
+                    //Chat Message to let the everyone knows a benny was spent
+                    ChatMessage.create({
+                        user: game.user.id,
+                        content: game.i18n.format("SWIM.dialogue-spentBennyToUnshake", { bennyImage: bennyImage, player: game.user.name, name: token.name }),
+                    });
+                    await succ.apply_status(token, 'shaken', false)
+                }
+            }
+        }
+        // Add the free reroll button:
+        if (freeRerolls > 0) {
+            content += game.i18n.localize("SWIM.dialogue-freeRerollText")
+            buttons.freeRerollButton = {
+                label: game.i18n.localize("SWIM.button-freeReroll"),
+                callback: (_) => {
+                    freeRerolls = freeRerolls - 1
+                    rollUnshake()
+                },
+            }
+        }
+        // Adding the cancelButton last:
+        buttons.cancelButton = {
+            label: game.i18n.localize("SWIM.dialogue-no"),
+            callback: (_) => { return; },
+        }
+
+        if (totalBennies > 0 || freeRerolls > 0) {
             new Dialog({
                 title: game.i18n.localize("SWIM.dialogue-spendBennyTitle"),
-                content: game.i18n.format("SWIM.dialogue-spendBennyText", {totalBennies : totalBennies}),
-                buttons: {
-                    one: {
-                        label: game.i18n.localize("SWIM.dialogue-yes"),
-                        callback: async (_) => {
-                            await swim.spend_benny(token);
-                            //Chat Message to let the everyone knows a benny was spent
-                            ChatMessage.create({
-                                user: game.user.id,
-                                content: game.i18n.format("SWIM.dialogue-spentBennyToUnshake", {bennyImage : bennyImage, player : game.user.name, name : token.name}),
-                            });
-                            await succ.apply_status(token, 'shaken', false)
-                        }
-                    },
-                    two: {
-                        label: game.i18n.localize("SWIM.dialogue-no"),
-                        callback: (_) => { return; },
-                    }
-                },
+                content: content,
+                buttons: buttons,
                 default: "one"
             }).render(true)
         }
@@ -159,7 +179,7 @@ export async function unshake_swd_script(effect = false) {
 
 /*******************************************
  * Unshake macro for SWADE
- * version 4.2.0
+ * version 4.3.0
  * Original code (an eternity ago) by Shteff, altered by Forien, edited and maintained by SalieriC#8263.
  ******************************************/
 
@@ -174,7 +194,7 @@ export async function unshake_swade_script(effect = false) {
         let actor = effect.parent
         token = actor.isToken ? actor.token : canvas.scene.tokens.find(t => t.actor.id === actor.id)
         const nameKey = game.user.character?.id === actor.id ? `${game.i18n.localize("SWIM.word-you")} ${game.i18n.localize("SWIM.word-are")}` : `${token.name} ${game.i18n.localize("SWIM.word-is")}`
-        ui.notifications.notify(game.i18n.format("SWIM.notification-shakenRoll", {tokenName: nameKey}));
+        ui.notifications.notify(game.i18n.format("SWIM.notification-shakenRoll", { tokenName: nameKey }));
     }
 
     // Checking for system Benny image.
@@ -182,6 +202,11 @@ export async function unshake_swade_script(effect = false) {
 
     // Setting up SFX paths:
     const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
+
+    // Set up free rerolls:
+    let freeRerolls = 0
+    const oldWaysOath = token.actor.items.find(e => e.type === "hindrance" && e.name.toLowerCase() === game.i18n.localize("SWIM.hindrance-oldWaysOath-deadlands").toLowerCase())
+    if (oldWaysOath) { freeRerolls = freeRerolls + 1 }
 
     async function rollUnshake() {
 
@@ -245,17 +270,17 @@ export async function unshake_swade_script(effect = false) {
             } //Finally, if the unShakeBonus does not come from an AE apply it generically (as of yet this is just a failsafe but makes the script future proof.)
         } else if (unShakeBonus != 0) {
             rollWithEdge += unShakeBonus;
-            edgeText += game.i18n.format("SWIM.dialogue-SWIM.chatMessage-unshakeBonusOtherActor", {unShakeBonus : unShakeBonus});
+            edgeText += game.i18n.format("SWIM.dialogue-SWIM.chatMessage-unshakeBonusOtherActor", { unShakeBonus: unShakeBonus });
         }
 
-        let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultRoll", {name : actorAlias, rollWithEdge : rollWithEdge});
+        let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultRoll", { name: actorAlias, rollWithEdge: rollWithEdge });
         // Checking for a Critical Failure.
         let wildCard = true;
         if (token.actor.system.wildcard === false && token.actor.type === "npc") { wildCard = false }
         let critFail = await swim.critFail_check(wildCard, r)
         if (critFail === true) {
             ui.notifications.notify(game.i18n.localize("SWIM.notification-critFail"));
-            let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultCritFail", {name : actorAlias});
+            let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultCritFail", { name: actorAlias });
             ChatMessage.create({ content: chatData });
         }
         else {
@@ -274,28 +299,44 @@ export async function unshake_swade_script(effect = false) {
 
     async function useBenny() {
         let { _, __, totalBennies } = await swim.check_bennies(token)
-        if (totalBennies > 0) {
+        // Prepare the dialogue:
+        let content = game.i18n.format("SWIM.dialogue-spendBennyText", { totalBennies: totalBennies })
+        let buttons = {
+            bennyButton: {
+                label: game.i18n.localize("SWIM.dialogue-yes"),
+                callback: async (_) => {
+                    await swim.spend_benny(token);
+                    //Chat Message to let the everyone knows a benny was spent
+                    ChatMessage.create({
+                        user: game.user.id,
+                        content: game.i18n.format("SWIM.dialogue-spentBennyToUnshake", { bennyImage: bennyImage, player: game.user.name, name: token.name }),
+                    });
+                    await succ.apply_status(token, 'shaken', false)
+                }
+            }
+        }
+        // Add the free reroll button:
+        if (freeRerolls > 0) {
+            content += game.i18n.localize("SWIM.dialogue-freeRerollText")
+            buttons.freeRerollButton = {
+                label: game.i18n.localize("SWIM.button-freeReroll"),
+                callback: (_) => {
+                    freeRerolls = freeRerolls - 1
+                    rollUnshake()
+                },
+            }
+        }
+        // Adding the cancelButton last:
+        buttons.cancelButton = {
+            label: game.i18n.localize("SWIM.dialogue-no"),
+            callback: (_) => { return; },
+        }
+
+        if (totalBennies > 0 || freeRerolls > 0) {
             new Dialog({
                 title: game.i18n.localize("SWIM.dialogue-spendBennyTitle"),
-                content: game.i18n.format("SWIM.dialogue-spendBennyText", {totalBennies : totalBennies}),
-                buttons: {
-                    one: {
-                        label: game.i18n.localize("SWIM.dialogue-yes"),
-                        callback: async (_) => {
-                            await swim.spend_benny(token);
-                            //Chat Message to let the everyone knows a benny was spent
-                            ChatMessage.create({
-                                user: game.user.id,
-                                content: game.i18n.format("SWIM.dialogue-spentBennyToUnshake", {bennyImage : bennyImage, player : game.user.name, name : token.name}),
-                            });
-                            await succ.apply_status(token, 'shaken', false)
-                        }
-                    },
-                    two: {
-                        label: game.i18n.localize("SWIM.dialogue-no"),
-                        callback: (_) => { return; },
-                    }
-                },
+                content: content,
+                buttons: buttons,
                 default: "one"
             }).render(true)
         }
