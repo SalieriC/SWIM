@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.4.0] - 2024-01-20
 ☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Tester macro now remembers the best roll and uses that instead of the last roll.
@@ -14,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a failsafe to the ammo management that prevents code failing on a RoF higher than 6.
 - Added SUCC 2.3.0 support for the effect builder which means it now uses the new SUCC api and also properly passes the effect duration.
 - Chase background images that serve as an example and make the scene be visible easier. Users are encouraged to setup their own however.
+- Added a free reroll on failed (but not crit failed) rolls to recover from being shaken if the Old Ways Oath hindrance (Deadlands) is found on the actor. (This is an odd hindrance that allows a free reroll on spirit for some reason.)
 ### Fixed
 - Fixed a critical bug in the Tester macro where on some test rolls the support roll function was called.
 - Fixed a critical bug in the Travel Calculator macro that prevented its function if no custom options json was given.
