@@ -17,7 +17,7 @@ import { shape_changer_script } from './swim_modules/shape_changer.js'
 import { soak_damage_script } from './swim_modules/soak_damage.js'
 import { token_vision_script } from './swim_modules/token_vision.js'
 import { travel_calculator } from './swim_modules/travel_calculator.js'
-import { unshake_swd_script, unshake_swade_script } from './swim_modules/unshake.js'
+import { unshake_swd_script, unshake_swade_script, unshake_script } from './swim_modules/unshake.js'
 import { unstun_script } from './swim_modules/unstun.js'
 import { update_migration } from './migrations.js'
 import * as SWIM from './constants.js'
@@ -542,8 +542,14 @@ export class api {
       return;
     }
     const version = game.settings.get("swim", "swdUnshake") ? "SWD" : "SWADE"
+    const options = {
+      version: version
+    }
+    /*
     if (version === "SWD") { unshake_swd_script(effect) }
     else if (version === "SWADE") { unshake_swade_script(effect) }
+    */
+    unshake_script(effect, options)
   }
   //Shake a token
   static async _shake(token) {

@@ -5,9 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+☮️ Peace in the world, or the world in pieces. 🕊️
+### Changed
+- Merged both Unshake functions into a single one. This should make it a lot easier to maintain it in the future and (hopefully) not affect the user in any way.
 
 ## [2.4.0] - 2024-01-20
-☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Tester macro now remembers the best roll and uses that instead of the last roll.
 - Encounter table setup directly from the travel calculator macro.
