@@ -1,6 +1,6 @@
 /*******************************************
  * Test and Support Macro
- * version v.0.2.0
+ * version v.0.2.1
  * Made and maintained by SalieriC#8263
  * Covered Edges:
  * - Elan
@@ -366,7 +366,7 @@ export async function tester_gm(data) {
                         "seconds": null,
                         "rounds": 1,
                         "turns": null,
-                        "startRound": game.combats.active ? game.combats.current.round : null,
+                        "startRound": game.combats.active ? game.combats.active.round : null,
                         "startTurn": null,
                         "type": "turns"
                     },

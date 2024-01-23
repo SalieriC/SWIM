@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ☮️ Peace in the world, or the world in pieces. 🕊️
 ### Changed
 - Merged both Unshake functions into a single one. This should make it a lot easier to maintain it in the future and (hopefully) not affect the user in any way.
+### Fixed
+- Tester macro failing to create a support effect if a combat is active.
 
 ## [2.4.0] - 2024-01-20
 ### Added
