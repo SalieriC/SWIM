@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
+### Added
+- New SWIM config for actors allowing the user to set up a custom mirror self token image. If using the Mighty Summoner, this image will be used for the mirrored self. If empty it will use the summoners token instead. This setting *does* accept wild card images.
 ### Changed
 - Merged both Unshake functions into a single one. This should make it a lot easier to maintain it in the future and (hopefully) not affect the user in any way.
 ### Fixed

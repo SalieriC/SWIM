@@ -274,6 +274,22 @@ function swim_config_options() {
             useFilePicker: true,
             filePickerData: "audio"
         },
+        //Magic Stuff:
+        {
+            isSectionTitle: true,
+            showFor: ['character', 'npc'],
+            label: "SWIM.Config_Magic"
+        },
+        {
+            isText: true,
+            showFor: ['character', 'npc'],
+            id: "mirrorSelfImage",
+            label: "SWIM.Config_MirrorSelfImageName",
+            hint: "SWIM.Config_MirrorSelfImageHint",
+            value: "",
+            useFilePicker: true,
+            filePickerData: "image"
+        },
     ]
     return configs
 }
