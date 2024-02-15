@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 1.6.0
+ * v. 1.6.1
  * By SalieriC
  ******************************************************/
 function generate_id(length = 16) {
@@ -312,6 +312,7 @@ export async function summoner_gm(data) {
         if (mirrorImageSrc) {
             scPreset.prototypeToken.texture.src = mirrorImageSrc
             if (mirrorImageSrc.includes('*') || mirrorImageSrc.includes('{')) { scPreset.prototypeToken.randomImg = true }
+            else {scPreset.img = mirrorImageSrc}
         }
         scPreset.flags.swim = data.flags.swim
         

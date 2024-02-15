@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Merged both Unshake functions into a single one. This should make it a lot easier to maintain it in the future and (hopefully) not affect the user in any way.
 ### Fixed
 - Tester macro failing to create a support effect if a combat is active.
+### Known issues
+- The actor created as the mirror will only have the proper image if it is not a wild card image path. If it is, the summoners image will be used.
 
 ## [2.4.0] - 2024-01-20
 ### Added
