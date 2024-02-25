@@ -4,7 +4,7 @@ export async function brsw_actions_setup() {
     const SWIM_ACTIONS = [
         //Deflection:
         {
-            "id": "DEFLECTION-RANGE",
+            "id": "TARGET-HAS-DEFLECTION-MELEE",
             "name": "Deflection (range)",
             "button_name": "has Deflection (ranged)",
             "skillMod": "-2",
@@ -39,10 +39,10 @@ export async function brsw_actions_setup() {
                 }
             ],
             "defaultChecked": "on",
-            "group": "The target"
+            "group": "Target"
         },
         {
-            "id": "DEFLECTION-MELEE",
+            "id": "TARGET-HAS-DEFLECTION-RANGED",
             "name": "Deflection (melee)",
             "button_name": "has Deflection (melee)",
             "skillMod": "-2",
@@ -69,7 +69,7 @@ export async function brsw_actions_setup() {
                 }
             ],
             "defaultChecked": "on",
-            "group": "The target"
+            "group": "Target"
         },
         /*
         {
