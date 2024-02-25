@@ -108,9 +108,10 @@
 			"module": "swim",
 			"type": "Macro",
 			"ownership": {
-        		"PLAYER": "NONE",
-        		"ASSISTANT": "OWNER"
-      		}
+				"PLAYER": "NONE",
+				"ASSISTANT": "OWNER"
+			},
+			"banner": "modules/swim/assets/banner.webp"
 		},
 		{
 			"name": "chase-layouts",
@@ -120,9 +121,10 @@
 			"module": "swim",
 			"type": "Scene",
 			"ownership": {
-        		"PLAYER": "NONE",
-        		"ASSISTANT": "OWNER"
-      		}
+				"PLAYER": "NONE",
+				"ASSISTANT": "OWNER"
+			},
+			"banner": "modules/swim/assets/banner.webp"
 		},
 		{
 			"label": "SWIM Actor Folders",
@@ -132,9 +134,10 @@
 			"module": "swim",
 			"type": "Actor",
 			"ownership": {
-        		"PLAYER": "NONE",
-        		"ASSISTANT": "OWNER"
-      		}
+				"PLAYER": "NONE",
+				"ASSISTANT": "OWNER"
+			},
+			"banner": "modules/swim/assets/banner.webp"
 		},
 		{
 			"label": "SWIM Chase Cards",
@@ -144,9 +147,10 @@
 			"module": "swim",
 			"type": "JournalEntry",
 			"ownership": {
-        		"PLAYER": "NONE",
-        		"ASSISTANT": "OWNER"
-      		}
+				"PLAYER": "NONE",
+				"ASSISTANT": "OWNER"
+			},
+			"banner": "modules/swim/assets/banner.webp"
 		},
 		{
 			"label": "SWIM Roll Tables",
@@ -156,24 +160,26 @@
 			"module": "swim",
 			"type": "RollTable",
 			"ownership": {
-        		"PLAYER": "NONE",
-        		"ASSISTANT": "OWNER"
-      		}
+				"PLAYER": "NONE",
+				"ASSISTANT": "OWNER"
+			},
+			"banner": "modules/swim/assets/banner.webp"
 		}
 	],
 	"packFolders": [
-        {
-            "name": "SWIM",
-            "sorting": "a",
-            "packs": [
-                "swade-immersive-macros",
-                "chase-layouts",
-                "swim-actor-folders",
-                "swim-chase-cards",
-                "swim-roll-tables"
-            ]
-        }
-    ],
+		{
+			"name": "SWIM",
+			"sorting": "a",
+			"color": "#0BA0BA",
+			"packs": [
+				"swade-immersive-macros",
+				"chase-layouts",
+				"swim-actor-folders",
+				"swim-chase-cards",
+				"swim-roll-tables"
+			]
+		}
+	],
 	"url": "https://github.com/SalieriC/SWADE-Immersive-Macros",
 	"manifest": "https://raw.githubusercontent.com/SalieriC/SWADE-Immersive-Macros/main/swim/module.json",
 	"download": "https://github.com/SalieriC/SWADE-Immersive-Macros/blob/main/swim.zip?raw=true"
