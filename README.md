@@ -2,7 +2,7 @@
 <p align="center"> <img src="https://raw.githubusercontent.com/SalieriC/SWADE-Immersive-Macros/main/img/swim-banner.webp" style="width: 900px; height: auto;"> </p>
 A module providing immersion friendly macros and functionalities to enhance the gameplay experience of the SWADE System on Foundry VTT and automate some things in a non-intrusive way.  
 If you want to support me you can do so on my Ko-fi:  
-<p></p><a href="https://ko-fi.com/salieric"><img src="https://www.ko-fi.com/img/githubbutton_sm.svg" alt="Ko-fi"></a></p>
+<p align="center"><a href="https://ko-fi.com/salieric"><img src="https://www.ko-fi.com/img/githubbutton_sm.svg" alt="Ko-fi"></a></p>
 This is one way to show me that my module is actually used and well-received.  
 
 ## Usage instructions
