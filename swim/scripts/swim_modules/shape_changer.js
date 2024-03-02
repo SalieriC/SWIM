@@ -201,7 +201,7 @@ export async function shape_changer_gm(data) {
             await update_pc(ownerActor);
             await replace_token(ownerActor);
             await update_linked_actor(ownerActorID, data.actorID) //Update the linked actor on user if it's not a GM account.
-            await actor.delete();
+            await game.actors.get(actor._id).delete() //For whatever reason actor.delete() doesn't work here.
         } else {
             console.error("Invalid shape change request from player.")
         }
