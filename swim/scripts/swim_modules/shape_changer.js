@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 2.3.0
+ * v. 2.3.1
  * By SalieriC
  ******************************************************/
 
