@@ -123,13 +123,13 @@ export async function fear_table_script() {
             await actor.createEmbeddedDocuments('ActiveEffect', [effData]);
         } else if (total >= 4 && total <= 6) {
             //Distracted
-            await succ.apply_status(actor, "distracted", true)
+            await game.succ.addCondition('distracted', actor);
         } else if (total >= 7 && total <= 9) {
             //Vulnerable
-            await succ.apply_status(actor, "vulnerable", true)
+            await game.succ.addCondition('vulnerable', actor);
         } else if (total >= 10 && total <= 12) {
             //Shaken
-            await succ.apply_status(actor, "shaken", true)
+            await game.succ.addCondition('shaken', actor);
         } else if (total === 13) {
             //Mark of Fear: Stunned + Cosmetic Change
             const hindrance = {
@@ -153,12 +153,12 @@ export async function fear_table_script() {
                 }
             }
             await actor.createEmbeddedDocuments('Item', [hindrance], { renderSheet: true });
-            if (await succ.check_status(actor, 'stunned') === false) {
+            if (await game.succ.hasCondition('stunned', actor) === false) {
                 await swim.stun(token)
             }
         } else if (total >= 14 && total <= 15) {
             //Frightened: Hesitant until end of encounter, panicked if alread is hesitant
-            await succ.apply_status(actor, "frightened", true)
+            await game.succ.addCondition('frightened', actor);
         } else if (total >= 16 && total <= 17) {
             //Panicked: Move full pace + Running die away + Shaken
             const runningDie = `1d${actor.system.stats.speed.runningDie}`
@@ -192,7 +192,7 @@ export async function fear_table_script() {
             const total = roll.total
             let chatData = ""
             if (total >= 4) {
-                if (await succ.check_status(actor, 'stunned') === false) {
+                if (await game.succ.hasCondition('stunned', actor) === false) {
                     await swim.stun(token)
                 }
                 chatData = `${officialClass}<p>${game.i18n.format("SWIM.chatMessage-heartAttackSuccessMessage", { name: token.name })}</p></div>`
@@ -200,7 +200,7 @@ export async function fear_table_script() {
                 const pronoun = swim.get_pronoun(actor)
                 const roundRoll = await new Roll(`2d6`).evaluate({ async: false });
                 const rounds = roundRoll.total
-                const effects = await succ.apply_status(token, "heart-attack", true, true)
+                await game.succ.addCondition('heart-attack', token, {forceOverlay: true});
                 const eff = effects[0] //Only expect a single effect returned.
                 const data = {
                     duration: {

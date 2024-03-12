@@ -23,7 +23,7 @@ export async function combat_setup() {
     // Filter tokens out that are not capable of fighting
     let tokens = []
     for (let token of tokensUnfiltered) {
-        if (token.actor.type === "npc" && await succ.check_status(token, "incapacitated") === false) {
+        if (token.actor.type === "npc" && await game.succ.hasCondition('incapacitated', token) === false) {
             if (token.actor.flags?.healthEstimate?.dead === false || !token.actor.flags?.healthEstimate?.dead) {
                 tokens.push(token)
             }
