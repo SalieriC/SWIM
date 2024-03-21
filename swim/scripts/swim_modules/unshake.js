@@ -105,12 +105,12 @@ export async function unshake_swd_script(effect = false) {
         else {
             if (rollWithEdge > 3 && rollWithEdge <= 7) {
                 chatData += game.i18n.localize("SWIM.chatMessage-unshakeResultNoShakenCannotAct");
-                await succ.apply_status(token, 'shaken', false)
+                await game.succ.removeCondition('shaken', token);
                 if (unshakeSFX) { AudioHelper.play({ src: `${unshakeSFX}` }, true); }
                 useBenny();
             } else if (rollWithEdge >= 8) {
                 chatData += game.i18n.localize("SWIM.chatMessage-unshakeResultNoShakenCanAct");
-                await succ.apply_status(token, 'shaken', false)
+                await game.succ.removeCondition('shaken', token);
                 if (unshakeSFX) { AudioHelper.play({ src: `${unshakeSFX}` }, true); }
             } else {
                 chatData += game.i18n.localize("SWIM.chatMessage-unshakeResultStillShaken");
@@ -135,7 +135,7 @@ export async function unshake_swd_script(effect = false) {
                         user: game.user.id,
                         content: game.i18n.format("SWIM.dialogue-spentBennyToUnshake", { bennyImage: bennyImage, player: game.user.name, name: token.name }),
                     });
-                    await succ.apply_status(token, 'shaken', false)
+                    await game.succ.removeCondition('shaken', token);
                 }
             }
         }
@@ -168,8 +168,8 @@ export async function unshake_swd_script(effect = false) {
             return;
         }
     }
-
-    if (await succ.check_status(token, 'shaken') === true) {
+    
+    if (await game.succ.hasCondition('shaken', token) === true) {
         rollUnshake()
     } else if (token) {
         await swim.shake(token)
@@ -289,7 +289,7 @@ export async function unshake_swade_script(effect = false) {
                 useBenny();
             } else if (rollWithEdge >= 4) {
                 chatData += game.i18n.localize("SWIM.chatMessage-unshakeResultNoShakenCanAct");
-                await succ.apply_status(token, 'shaken', false)
+                await game.succ.removeCondition('shaken', token);
                 if (unshakeSFX) { AudioHelper.play({ src: `${unshakeSFX}` }, true); }
             }
             chatData += ` ${edgeText}`;
@@ -311,7 +311,7 @@ export async function unshake_swade_script(effect = false) {
                         user: game.user.id,
                         content: game.i18n.format("SWIM.dialogue-spentBennyToUnshake", { bennyImage: bennyImage, player: game.user.name, name: token.name }),
                     });
-                    await succ.apply_status(token, 'shaken', false)
+                    await game.succ.removeCondition('shaken', token);
                 }
             }
         }
@@ -345,7 +345,7 @@ export async function unshake_swade_script(effect = false) {
         }
     }
 
-    if (await succ.check_status(token, 'shaken') === true) {
+    if (await game.succ.hasCondition('shaken', token) === true) {
         rollUnshake()
     } else if (token) {
         await swim.shake(token)
@@ -461,12 +461,12 @@ export async function unshake_script(effect, options) {
             if (options.version === "SWD") {
                 if (rollWithEdge > 3 && rollWithEdge <= 7) {
                     chatData += game.i18n.localize("SWIM.chatMessage-unshakeResultNoShakenCannotAct");
-                    await succ.apply_status(token, 'shaken', false)
+                    await game.succ.removeCondition('shaken', token);
                     if (unshakeSFX) { AudioHelper.play({ src: `${unshakeSFX}` }, true); }
                     useBenny();
                 } else if (rollWithEdge >= 8) {
                     chatData += game.i18n.localize("SWIM.chatMessage-unshakeResultNoShakenCanAct");
-                    await succ.apply_status(token, 'shaken', false)
+                    await game.succ.removeCondition('shaken', token);
                     if (unshakeSFX) { AudioHelper.play({ src: `${unshakeSFX}` }, true); }
                 } else {
                     chatData += game.i18n.localize("SWIM.chatMessage-unshakeResultStillShaken");
@@ -478,7 +478,7 @@ export async function unshake_script(effect, options) {
                     useBenny();
                 } else if (rollWithEdge >= 4) {
                     chatData += game.i18n.localize("SWIM.chatMessage-unshakeResultNoShakenCanAct");
-                    await succ.apply_status(token, 'shaken', false)
+                    await game.succ.removeCondition('shaken', token);
                     if (unshakeSFX) { AudioHelper.play({ src: `${unshakeSFX}` }, true); }
                 }
             }
@@ -502,7 +502,7 @@ export async function unshake_script(effect, options) {
                         user: game.user.id,
                         content: game.i18n.format("SWIM.dialogue-spentBennyToUnshake", { bennyImage: bennyImage, player: game.user.name, name: token.name }),
                     });
-                    await succ.apply_status(token, 'shaken', false)
+                    await game.succ.removeCondition('shaken', token);
                 }
             }
         }
@@ -536,7 +536,7 @@ export async function unshake_script(effect, options) {
         }
     }
 
-    if (await succ.check_status(token, 'shaken') === true) {
+    if (await game.succ.hasCondition('shaken', token) === true) {
         rollUnshake()
     } else if (token) {
         await swim.shake(token)

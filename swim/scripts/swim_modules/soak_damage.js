@@ -61,9 +61,9 @@ export async function soak_damage_script(effect = false) {
     let maxWoundsSoaked = 0
     let critFail = false
     let { ___, ____, totalBennies } = await swim.check_bennies(token)
-    const bleedingOut = await succ.check_status(token, 'bleeding-out')
-    const inc = await succ.check_status(token, 'incapacitated')
-    const defeated = await succ.check_status(token, 'defeated')
+    const bleedingOut = await game.succ.hasCondition('bleeding-out', token)
+    const inc = await game.succ.hasCondition('incapacitated', token)
+    const defeated = await game.succ.hasCondition('defeated', token)
 
     // This is the main function that handles the Vigor roll.
     async function rollSoak() {
@@ -187,8 +187,8 @@ export async function soak_damage_script(effect = false) {
                 maxWoundsSoaked = maxWoundsSoaked > lastWoundsSoaked ? maxWoundsSoaked : lastWoundsSoaked
                 chatData += game.i18n.format("SWIM.chatMessage-soakAllWounds", {pronoun: pronoun});
                 if (soakSFX) { AudioHelper.play({ src: `${soakSFX}` }, true); }
-                if (await succ.check_status(token, 'shaken') === true) {
-                    await succ.apply_status(token, 'shaken', false)
+                if (await game.succ.hasCondition('shaken', token) === true) {
+                    await game.succ.removeCondition('shaken', token);
                 }
             }
             chatData += ` ${edgeText}`;
@@ -218,13 +218,13 @@ export async function soak_damage_script(effect = false) {
                         let inc = false
                         if (setWounds <= wm && setWounds > 0) {
                             token.actor.update({ "system.wounds.value": setWounds });
-                            await succ.apply_status(token, 'shaken', true)
+                            await game.succ.addCondition('shaken', token);
                             if (woundedSFX) {
                                 AudioHelper.play({ src: `${woundedSFX}` }, true);
                             }
                         }
                         else if (applWounds === 0) {
-                            await succ.apply_status(token, 'shaken', true)
+                            await game.succ.addCondition('shaken', token);
                         }
                         else {
                             token.actor.update({ "system.wounds.value": wm });
@@ -593,7 +593,7 @@ export async function soak_damage_script(effect = false) {
                     ui.notifications.notify(game.i18n.format("SWIM.notification.critFailHarderToKillFail", { harderToKillName: harderToKill.name }));
                     let chatData = game.i18n.format("SWIM.chat.critFailHarderToKillFail", { actorAlias: actorAlias, harderToKillName: harderToKill.name });
                     ChatMessage.create({ content: chatData });
-                    await succ.apply_status(token, 'defeated', true, true)
+                    await game.succ.addCondition('defeated', token, {forceOverlay: true});
                 } else if (harderToKillRoll.total === 2) {
                     ui.notifications.notify(game.i18n.format("SWIM.notification.critFailHarderToKillSuccess", { harderToKillName: harderToKill.name }));
                     let chatData = game.i18n.format("SWIM.chat.critFailHarderToKillSuccess", { actorAlias: actorAlias, harderToKillName: harderToKill.name });
@@ -604,7 +604,7 @@ export async function soak_damage_script(effect = false) {
                 let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure and perishes! </span>`;
                 if (deathSFX) { swim.play_sfx(deathSFX, volume, true) }
                 ChatMessage.create({ content: chatData });
-                await succ.apply_status(token, 'defeated', true, true)
+                await game.succ.addCondition('defeated', token, {forceOverlay: true});
             } else {
                 let { _, __, totalBennies } = await swim.check_bennies(token)
                 if (bestResult <= rollWithEdge) { bestResult = rollWithEdge }
@@ -626,14 +626,14 @@ export async function soak_damage_script(effect = false) {
                     //Permanent injury and Bleeding Out
                     permanent = true
                     await apply_injury(permanent, combat)
-                    if (await succ.check_status(token, 'incapacitated') === true) {
-                        const incCondition = await succ.get_condition_from(token.actor, 'incapacitated')
+                    if (await game.succ.hasCondition('incapacitated', token) === true) {
+                        const incCondition = await game.succ.getConditionFrom('incapacitated', token.actor)
                         if (incCondition.flags?.core?.overlay === true) {
                             incCondition.setFlag('succ', 'updatedAE', true)
                             await incCondition.update({ "flags.core.overlay": false })
                         }
                     }
-                    await succ.apply_status(token, 'bleeding-out', true, true)
+                    await game.succ.addCondition('bleeding-out', token, {forceOverlay: true});
                     chatData += `<p>${actorAlias} receives a permanent injury and is Bleeding Out.<p>`
                 } else if (rollWithEdge >= 4 && rollWithEdge <= 7) {
                     //Injury until all wounds are healed
@@ -746,7 +746,7 @@ export async function soak_damage_script(effect = false) {
                     let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure, didn't make the ${harderToKill.name} roll and perishes! </span>`;
                     if (deathSFX) { swim.play_sfx(deathSFX, volume, true) }
                     ChatMessage.create({ content: chatData });
-                    await succ.apply_status(token, 'defeated', true, true)
+                    await game.succ.addCondition('defeated', token, {forceOverlay: true});
                 } else if (harderToKillRoll.total === 2) {
                     ui.notifications.notify(`You've rolled a Critical Failure but made your ${harderToKill.name} roll! You will survive <em>somehow</em>...`);
                     let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure, but made the ${harderToKill.name} roll, is Incapacitated but survives, <em>somehow</em>. </span>`;
@@ -757,7 +757,7 @@ export async function soak_damage_script(effect = false) {
                 let chatData = `${actorAlias} rolled a <span style="font-size:150%"> Critical Failure and perishes! </span>`;
                 if (deathSFX) { swim.play_sfx(deathSFX, volume, true) }
                 ChatMessage.create({ content: chatData });
-                await succ.apply_status(token, 'defeated', true, true)
+                await game.succ.addCondition('defeated', token, {forceOverlay: true});
             } else {
                 let { _, __, totalBennies } = await swim.check_bennies(token)
                 if (bestResult <= rollWithEdge) { bestResult = rollWithEdge }
@@ -782,24 +782,24 @@ export async function soak_damage_script(effect = false) {
                         let chatData = `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge}, didn't make the ${harderToKill.name} roll and perishes! </span>`;
                         if (deathSFX) { swim.play_sfx(deathSFX, volume, true) }
                         ChatMessage.create({ content: chatData });
-                        await succ.apply_status(token, 'defeated', true, true)
+                        await game.succ.addCondition('defeated', token, {forceOverlay: true});
                     } else if (harderToKillRoll.total === 2) {
                         ui.notifications.notify(`You've rolled ${rollWithEdge} but made your ${harderToKill.name} roll! You will survive <em>somehow</em>...`);
                         let chatData = `${actorAlias} rolled <span style="font-size:150%"> ${rollWithEdge}, but made the ${harderToKill.name} roll, is Incapacitated but survives, <em>somehow</em>. </span>`;
                         ChatMessage.create({ content: chatData });
-                        await succ.apply_status(token, "bleeding-out", false)
+                        await game.succ.removeCondition('bleeding-out', token);
                         await applyIncOverlay()
                     }
                 } else if (rollWithEdge < 4) {
                     chatData += `<p>${actorAlias} perishes.<p>`
                     if (deathSFX) { swim.play_sfx(deathSFX, volume, true) }
-                    await succ.apply_status(token, "bleeding-out", false)
-                    await succ.apply_status(token, 'defeated', true, true)
+                    await game.succ.removeCondition('bleeding-out', token);
+                    await game.succ.addCondition('defeated', token, {forceOverlay: true});
                 } else if (rollWithEdge >= 4 && rollWithEdge <= 7) {
                     chatData += `<p>${actorAlias} is still bleeding out.</p>`
                 } else if (rollWithEdge >= 8) {
                     chatData += `<p>${actorAlias} stabilises.</p>`
-                    await succ.apply_status(token, "bleeding-out", false)
+                    await game.succ.removeCondition('bleeding-out', token);
                     await applyIncOverlay()
                 }
                 chatData += ` ${edgeText}`;
@@ -808,13 +808,13 @@ export async function soak_damage_script(effect = false) {
         }
 
         async function applyIncOverlay() {
-            if (await succ.check_status(token, 'incapacitated') === true) {
-                const incCondition = await succ.get_condition_from(token.actor, 'incapacitated')
+            if (await game.succ.hasCondition('incapacitated', token) === true) {
+                const incCondition = await game.succ.getConditionFrom('incapacitated', token.actor)
                 if (incCondition.flags?.core?.overlay === false) {
                     incCondition.setFlag('succ', 'updatedAE', true)
                     await incCondition.update({ "flags.core.overlay": true })
                 }
-            } else { await succ.apply_status(token, "incapacitated", true, true) }
+            } else { await game.succ.removeCondition('incapacitated', token, {forceOverlay: true}); }
         }
 
         async function bleedReroll(dialog_content) {

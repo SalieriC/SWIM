@@ -1827,7 +1827,7 @@ export async function effect_builder_gm(data) {
                 aeData.flags.swim.owner = true
                 aeData.duration.rounds = noPP ? Number(999999999999999) : data.fly.duration
             }
-            const effects = await succ.apply_status(target, "flying", true, false)
+            const effects = await game.succ.addCondition('flying', target, {forceOverlay: false});
             const effect = effects[0] //Only expect a single returned AE here.
             await effect.update(aeData)
         }

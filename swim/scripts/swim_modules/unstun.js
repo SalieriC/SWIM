@@ -103,16 +103,16 @@ export async function unstun_script(effect = false) {
         else {
             if (rollWithEdge > 3 && rollWithEdge <= 7) {
                 chatData += ` and is no longer Stunned but remains Vulnerable until end of next turn.`;
-                await succ.apply_status(token, 'vulnerable', true)
-                await succ.apply_status(token, 'stunned', false)
+                await game.succ.addCondition('vulnerable', token);
+                await game.succ.removeCondition('stunned', token);
                 if (unshakeSFX) { AudioHelper.play({ src: `${unshakeSFX}` }, true); }
                 useBenny();
             } else if (rollWithEdge >= 8) {
                 chatData += `, is no longer Stunned and looses Vulnerable after the turn.`;
                 let delay = 100
-                await succ.apply_status(token, 'distracted', false)
+                await game.succ.removeCondition('distracted', token);
                 await swim.wait(delay)
-                await succ.apply_status(token, 'stunned', false)
+                await game.succ.removeCondition('stunned', token);
                 if (unshakeSFX) { AudioHelper.play({ src: `${unshakeSFX}` }, true); }
             } else {
                 chatData += ` and remains Stunned.`;
@@ -153,7 +153,7 @@ export async function unstun_script(effect = false) {
         }
     }
 
-    if (await succ.check_status(token, 'stunned') === true) {
+    if (await game.succ.hasCondition('stunned', token) === true) {
         rollUnstun()
     } else if (token) {
         await swim.stun(token)

@@ -282,9 +282,11 @@ async function changeVision(token, html, condition) {
 
     if (!condition) {
         if (activeLight === false) {
-            let ae = await succ.get_condition_from(tokenD, 'torch')
+            let ae = await game.succ.getConditionFrom('torch', tokenD)
             if (ae) { await ae.setFlag('swim', 'deactivatedFromMacro', true) }//set flags to prevent duplicate message in init.js
+            await game.succ.removeCondition('torch', tokenD);
+        } else {
+            await game.succ.addCondition('torch', tokenD, {forceOverlay: false, effectOptions: {swim: {activatedFromMacro: true}}});//pass additional data to prevent duplicate message in init.js
         }
-        await succ.apply_status(tokenD, 'torch', activeLight, false, { swim: { activatedFromMacro: true } })//pass additional data to prevent duplicate message in init.js
     }
 }

@@ -554,7 +554,7 @@ export class api {
   //Shake a token
   static async _shake(token) {
     const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
-    await succ.apply_status(token, 'shaken', true)
+    await game.succ.addCondition('shaken', token);
     if (shakenSFX) {
       AudioHelper.play({ src: `${shakenSFX}` }, true);
     }
@@ -567,16 +567,16 @@ export class api {
   static async _stun(token) {
     const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
     let conditionsToApply = []
-    if (await succ.check_status(token, 'stunned') === false) {
+    if (await game.succ.hasCondition('stunned', token) === false) {
       conditionsToApply.push('stunned')
     };
 
-    if (await succ.check_status(token, 'prone') === false) {
+    if (await game.succ.hasCondition('prone', token) === false) {
       conditionsToApply.push('prone')
     };
     conditionsToApply.push('distracted')
     conditionsToApply.push('vulnerable')
-    await succ.apply_status(token, conditionsToApply, true)
+    await game.succ.addCondition(conditionsToApply, token)
     if (stunnedSFX) {
       AudioHelper.play({ src: `${stunnedSFX}` }, true);
     }

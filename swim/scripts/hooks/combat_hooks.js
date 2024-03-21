@@ -48,8 +48,8 @@ export async function combat_hooks() {
             for (let combatant of combatants) {
                 const actor = combatant.actor
                 const token = combatant.token
-                if (await succ.check_status(actor, 'conviction') === true) {
-                    const convEffect = await succ.get_condition_from(token, 'conviction')
+                if (await game.succ.hasCondition('conviction', actor) === true) {
+                    const convEffect = await game.succ.getConditionFrom('conviction', token)
                     const initiatorId = convEffect.flags.succ.userId
                     if (game.user.id === initiatorId) { //Only show dialogue to the player who activated conviction.
                         let { tokenBennies, gmBennies, totalBennies } = await swim.check_bennies(token, false)
@@ -68,7 +68,7 @@ export async function combat_hooks() {
                                     two: {
                                         label: `<i class="fas fa-times"></i> ${game.i18n.localize("SWIM.dialogue-no")}`,
                                         callback: async (html) => {
-                                            await succ.apply_status(actor, 'conviction', false)
+                                            await game.succ.removeCondition('conviction', actor);
                                         }
                                     }
                                 },
@@ -76,7 +76,7 @@ export async function combat_hooks() {
                             }).render(true);
                         } else {
                             ui.notifications.warn(game.i18n.localize("SWIM.notification-noBenniesForConviction"))
-                            await succ.apply_status(actor, 'conviction', false)
+                            await game.succ.removeCondition('conviction', actor);
                         }
                     }
                 }
