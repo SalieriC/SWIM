@@ -20,15 +20,17 @@ export async function mark_dead_script() {
     async function main() {
         for (let e of canvas.tokens.controlled) {
             if (e.type === 'npc' || e.type === 'vehicle') {
-                const isInc = await game.succ.hasCondition('defeated', e)
+                const isInc = await succ.check_status(e, 'defeated')
                 const apply = !isInc //invert the result to remove if applied and vice versa.
-                if (apply) { await game.succ.addCondition('defeated', e, {forceOverlay: true}); }
-                else { await game.succ.removeCondition('defeated', e,); }
+                //await succ.toggle_status(e, 'defeated', apply, true)
+                if (apply) { await game.succ.addCondition('defeated', e, {forceOverlay: true}) }
+                else if (!apply) { await game.succ.removeCondition('defeated', e) }
             } else if (e.type === 'character') {
-                const isInc = await game.succ.hasCondition('incapacitated', e)
+                const isInc = await succ.check_status(e, 'incapacitated')
                 const apply = !isInc //invert the result to remove if applied and vice versa.
-                if (apply) { await game.succ.addCondition('incapacitated', e, {forceOverlay: true}); }
-                else { await game.succ.removeCondition('incapacitated', e); }
+                //await succ.toggle_status(e, 'incapacitated', apply, true)
+                if (apply) { await game.succ.addCondition('incapacitated', e, {forceOverlay: true}) }
+                else if (!apply) { await game.succ.removeCondition('incapacitated', e) }
             }
         }
         ui.notifications.info(game.i18n.localize("SWIM.notification.markDeadAlive"));
