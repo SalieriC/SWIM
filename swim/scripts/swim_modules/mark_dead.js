@@ -22,11 +22,15 @@ export async function mark_dead_script() {
             if (e.type === 'npc' || e.type === 'vehicle') {
                 const isInc = await succ.check_status(e, 'defeated')
                 const apply = !isInc //invert the result to remove if applied and vice versa.
-                await succ.toggle_status(e, 'defeated', apply, true)
+                //await succ.toggle_status(e, 'defeated', apply, true)
+                if (apply) { await game.succ.addCondition('defeated', e, true) }
+                else if (!apply) { await game.succ.removeCondition('defeated', e, true) }
             } else if (e.type === 'character') {
                 const isInc = await succ.check_status(e, 'incapacitated')
                 const apply = !isInc //invert the result to remove if applied and vice versa.
-                await succ.toggle_status(e, 'incapacitated', apply, true)
+                //await succ.toggle_status(e, 'incapacitated', apply, true)
+                if (apply) { await game.succ.addCondition('incapacitated', e, true) }
+                else if (!apply) { await game.succ.removeCondition('incapacitated', e, true) }
             }
         }
         ui.notifications.info(game.i18n.localize("SWIM.notification.markDeadAlive"));
