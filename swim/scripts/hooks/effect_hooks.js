@@ -17,6 +17,7 @@ export async function effect_hooks() {
             swim.token_vision(condition)
         }
         // Hold
+        /*
         if (condition.flags?.succ?.conditionId === "holding" && swim.is_first_gm() && game.combat) {
             const tokens = actor.getActiveTokens()
             const combatID = game.combat.id
@@ -25,6 +26,7 @@ export async function effect_hooks() {
             await swim.wait('100') // Needed to give the whole thing some time to prevent issues with jokers.
             warpgate.event.notify("SWIM.updateCombat-currentTurn", { combatID: combatID, currTurn: currentTurn })
         }
+        */
         // Conviction
         if (condition.name === "Conviction") {
             // This prevents conviction expiration dialogue from core since SWADE handles it by itself.
@@ -117,6 +119,7 @@ export async function effect_hooks() {
             swim.token_vision(condition)
         }
         // Hold
+        /*
         if (condition.flags?.succ?.conditionId === "holding" && game.user.id === userID) {
             if (game.combat) {
                 const tokens = actor.getActiveTokens()
@@ -158,6 +161,6 @@ export async function effect_hooks() {
                     default: "one"
                 }).render(true)
             }
-        }
+        }*/
     })
 }
