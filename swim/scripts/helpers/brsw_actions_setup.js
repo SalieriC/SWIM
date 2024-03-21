@@ -29,7 +29,7 @@ export async function brsw_actions_setup() {
                     "or_selector": [
                         {
                             "selector_type": "target_has_effect",
-                            "selector_value": "Deflection (range)"
+                            "selector_value": "Deflection (ranged)"
                         },
                         {
                             "selector_type": "target_has_effect",

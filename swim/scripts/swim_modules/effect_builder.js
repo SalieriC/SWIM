@@ -830,7 +830,7 @@ export async function effect_builder() {
                 } else if (selectedPower === "confusion") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
                 } else if (selectedPower === "deflection") {
-                    const optionsDeflection = `<option value="melee">${game.i18n.localize("SWIM.gameTerm-Melee")}</option><option value="range">${game.i18n.localize("SWIM.gameTerm-Range")}</option><option value="raise">${game.i18n.localize("SWIM.gameTerm-Raise")}</option>`
+                    const optionsDeflection = `<option value="melee">${game.i18n.localize("SWIM.gameTerm-Melee")}</option><option value="range">${game.i18n.localize("SWIM.gameTerm-Ranged")}</option><option value="raise">${game.i18n.localize("SWIM.gameTerm-Raise")}</option>`
                     effectContent.innerHTML = game.i18n.format("SWIM.select-deflectionOptions", {options: optionsDeflection})
                 } else if (selectedPower === "arcaneProtection") {
                     effectContent.innerHTML = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
