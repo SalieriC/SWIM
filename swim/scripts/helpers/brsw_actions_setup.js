@@ -205,7 +205,7 @@ export async function brsw_actions_setup() {
         */
         //Arcane Protection:
         {
-            "id": "ARCANE_PROTECTION",
+            "id": "TARGET-HAS-ARCANE-PROTECTION",
             "name": "Arcane Protection",
             "button_name": "has Arcane Protection",
             "skillMod": "-2",
@@ -353,7 +353,7 @@ export async function brsw_actions_setup() {
         },
         //Invisibility:
         {
-            "id": "INVISIBLE",
+            "id": "TARGET-HAS-INVISIBILITY",
             "name": "Invisible",
             "button_name": "is Invisible",
             "skillMod": "-4",
