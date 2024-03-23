@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Tester macro failing to create a support effect if a combat is active.
 - Added a failsafe to the Effect Builder in the unlikely case of a target not having any skills.
+- Changed IDs of BRSW integration actions to fix them being applied twice in some cases.
 ### Known issues
 - The actor created as the mirror will only have the proper image if it is not a wild card image path. If it is, the summoners image will be used.
 
