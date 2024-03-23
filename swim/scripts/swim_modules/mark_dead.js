@@ -19,18 +19,26 @@ export async function mark_dead_script() {
 
     async function main() {
         for (let e of canvas.tokens.controlled) {
-            if (e.type === 'npc' || e.type === 'vehicle') {
-                const isInc = await game.succ.hasCondition('defeated', e)
+            if (e.actor.type === 'npc' || e.actor.type === 'vehicle') {
+                const isInc = await game.succ.hasCondition('dead', e)
                 const apply = !isInc //invert the result to remove if applied and vice versa.
-                //await succ.toggle_status(e, 'defeated', apply, true)
-                if (apply) { await game.succ.addCondition('defeated', e, {forceOverlay: true}) }
-                else if (!apply) { await game.succ.removeCondition('defeated', e) }
-            } else if (e.type === 'character') {
+                //await succ.toggle_status(e, 'dead', apply, true)
+                if (apply) { await game.succ.addCondition('dead', e, {forceOverlay: true}) }
+                else if (!apply) {
+                    await game.succ.removeCondition('dead', e)
+                    //Remove INC as well if the token has it:
+                    if (await game.succ.hasCondition('incapacitated', e)) { await game.succ.removeCondition('incapacitated', e) }
+                }
+            } else if (e.actor.type === 'character') {
                 const isInc = await game.succ.hasCondition('incapacitated', e)
                 const apply = !isInc //invert the result to remove if applied and vice versa.
                 //await succ.toggle_status(e, 'incapacitated', apply, true)
                 if (apply) { await game.succ.addCondition('incapacitated', e, {forceOverlay: true}) }
-                else if (!apply) { await game.succ.removeCondition('incapacitated', e) }
+                else if (!apply) {
+                    await game.succ.removeCondition('incapacitated', e)
+                    //Remove Defeated as well if the token has it:
+                    if (await game.succ.hasCondition('dead', e)) { await game.succ.removeCondition('dead', e) }
+                }
             }
         }
         ui.notifications.info(game.i18n.localize("SWIM.notification.markDeadAlive"));
