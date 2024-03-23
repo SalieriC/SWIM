@@ -117,6 +117,13 @@ export async function effect_builder() {
                 </div>
             `
             allHTML = allHTML += html
+        } else { //Failsafe for the unlikely case that the target has no skills.
+            allHTML = `
+                <div class='form-group'>
+                    <label for='${target.id}'><p>${game.i18n.localize("SWIM.dialogue-powerEffectBuilderAffectedTraitOf")} (${target.name}):</p></label>
+                    <select id='${target.id}'>${traitOptions}</select>
+                </div>
+            `
         }
     }
     const boostLowerContent = game.i18n.format("SWIM.dialogue-powerEffectBuilderBoostLower", { allHTML: allHTML })

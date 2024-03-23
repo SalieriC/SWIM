@@ -12,11 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Merged both Unshake functions into a single one. This should make it a lot easier to maintain it in the future and (hopefully) not affect the user in any way.
 - Mark dead will now apply defeated to NPCs and incapacitated to PCs.
-- Moved away from the deprecated SUCC API in favour of the new one (thanks @ddbrown30)
+- Moved away from the deprecated SUCC API in favour of the new one (thanks @ddbrown30).
+- [BREAKING] Changed the naming of the deflection active effect created by the Effect Builder from "Deflection (range)" to "Deflection (ranged)". This will mean currently active effects will not be recognised by BRSW rolls anymore and need to be adjusted.
 ### Removed
 - Removed the hold functionality in SWIM (or rather disabled it for the moment) as it is broken in SWADE 3.3.6+ and would need a major rework.
 ### Fixed
 - Tester macro failing to create a support effect if a combat is active.
+- Added a failsafe to the Effect Builder in the unlikely case of a target not having any skills.
 ### Known issues
 - The actor created as the mirror will only have the proper image if it is not a wild card image path. If it is, the summoners image will be used.
 
