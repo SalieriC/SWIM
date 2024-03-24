@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.5.0] - 2024-03-24
 ☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - New SWIM config for actors allowing the user to set up a custom mirror self token image. If using the Mighty Summoner, this image will be used for the mirrored self. If empty it will use the summoners token instead. This setting *does* accept wild card images.
@@ -19,9 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Tester macro failing to create a support effect if a combat is active.
 - Added a failsafe to the Effect Builder in the unlikely case of a target not having any skills.
-- Changed IDs of BRSW integration actions to fix them being applied twice in some cases.
 ### Known issues
 - The actor created as the mirror will only have the proper image if it is not a wild card image path. If it is, the summoners image will be used.
+- Deflection malus is added twice in some cases when using it along with BRSW. This is currently being worked on. Disable the action in BRSW as a fix for now.
 
 ## [2.4.0] - 2024-01-20
 ### Added
