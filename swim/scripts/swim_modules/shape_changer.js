@@ -398,6 +398,7 @@ export async function shape_changer_gm(data) {
             await swim.wait(`100`);
             await newToken.control();
         }
+        Hooks.callAll("swimShapeChanged", newToken);
     }
 
     async function morph_tokens(oldToken, newToken, scCopy) {

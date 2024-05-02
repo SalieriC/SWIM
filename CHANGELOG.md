@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
+### Added
+- Added a hook (`'swimShapeChanged'`) that is called after the shape changer completed the shape changing process. It passes the new token in order to work with that further in code.
 
 ## [2.5.0] - 2024-03-24
 ### Added
