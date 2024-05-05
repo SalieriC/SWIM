@@ -209,7 +209,7 @@
 
         if(isTables) {
             const table = await game.tables.find((t) => t.name === tableName);
-            table.reset();
+            table.resetResults();
         } else {
             await game.cards.getName(deckName).reset({chatNotification: false});
             await game.cards.getName(deckName).shuffle({chatNotification: false});
