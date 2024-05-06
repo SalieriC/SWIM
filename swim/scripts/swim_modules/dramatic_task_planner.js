@@ -50,7 +50,7 @@ export async function dramatic_task_planner_script(img) {
             <td class="tg-0lax">
                 <b>${game.i18n.localize("SWIM.word-Difficulty")}</b>
                 <p>
-                <select id="difficult" name="difficulty">
+                <select id="difficulty" name="difficulty">
                     <option value="challenging" selected="selected">${game.i18n.localize("SWIM.taskDifficulty-Challenging")}</option>
                     <option value="difficult">${game.i18n.localize("SWIM.taskDifficulty-Difficult")}</option>
                     <option value="complex">${game.i18n.localize("SWIM.taskDifficulty-Complex")}</option>
