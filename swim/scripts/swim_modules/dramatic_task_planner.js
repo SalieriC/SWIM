@@ -1,6 +1,6 @@
 /*******************************************
- * Unshake macro for SWD
- * version 1.0.0
+ * Dramatic Task Planner macro
+ * version 1.0.1
  * (c): SalieriC, original idea and code base: brunocalado.
  ******************************************/
 
@@ -20,11 +20,7 @@ export async function dramatic_task_planner_script(img) {
     if (img) {
         chatimage = img
     }
-    let challengeTrackerHTML = '';
     const challengeTrackerInstalled = game.modules.get('challenge-tracker')?.active
-    if (challengeTrackerInstalled) {
-        challengeTrackerHTML = 'checked';
-    }
     let players = 1
     if (targetsArray.length > 0) {
         players = targetsArray.length
@@ -98,7 +94,7 @@ export async function dramatic_task_planner_script(img) {
                 <b>Challenge Tracker (CT)</b>
             </td>
             <td class="tg-xwyw">
-                <input id="challengeTracker" type="checkbox" ${challengeTrackerHTML}>
+                <input id="challengeTracker" type="checkbox" checked>
             </td>    
         </tr>
         <tr>
@@ -106,12 +102,12 @@ export async function dramatic_task_planner_script(img) {
                 <b>CT ${game.i18n.localize("challengeTracker.labels.editForm.trackerOptions.windowed")}</b>
             </td>
             <td class="tg-xwyw">
-                <input id="challengeTrackerWindowed" type="checkbox">
+                <input id="challengeTrackerWindowed" type="checkbox" checked>
             </td>    
         </tr>
         <tr>
             <td class="tg-xwyw">
-                <b>CT ${game.i18n.localize("SWIM.task-ct-showRounds")}</b>
+                <b>CT ${game.i18n.localize("SWIM.task-ct-showTurns")}</b>
             </td>
             <td class="tg-xwyw">
                 <input id="challengeTrackerRounds" type="checkbox">

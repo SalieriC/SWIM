@@ -664,7 +664,7 @@
   "SWIM.task.message.main": "<p>This is <b>{difficultyName}</b> for {playerName}.</p><ul><li>Task Tokens: <b style='color:red;'>{tasksTokens}</b></li><li>Rounds: <b style='color:red;'>{tasksTurns}</b></p></ul>",
   "SWIM.task.message.customTask": "<ul><li>Task Tokens: <b style='color:red;'>{tokens}</b></li><li>Rounds: <b style='color:red;'>{turns}</b></p></ul>",
   "SWIM.dialogue.task-customHint": "Only change below if you want to customize.",
-  "SWIM.task-ct-showRounds": "Show Rounds",
+  "SWIM.task-ct-showTurns": "Show Turns",
   "SWIM.task-taskPerPlayer": "One task per player",
   "SWIM.task-playSFX": "Play SFX",
   "SWIM.word-Player": "Player",
