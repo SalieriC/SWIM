@@ -4,6 +4,7 @@ import { chase_setup_script } from './swim_modules/chase_setup.js'
 import { common_bond_script } from './swim_modules/common_bond.js'
 import { craft_campfire_script } from './swim_modules/craft_campfire.js'
 import { deviation_script } from './swim_modules/deviation.js'
+import { dramatic_task_planner_script } from "./swim_modules/dramatic_task_planner.js";
 import { effect_builder } from './swim_modules/effect_builder.js'
 import { falling_damage_script } from './swim_modules/falling_damage.js'
 import { fear_table_script } from './swim_modules/fear_table.js'
@@ -65,6 +66,7 @@ export class api {
       common_bond: api._common_bond,
       craft_campfire: api._craft_campfire,
       deviation: api._deviation,
+      dramatic_task_planner: api._dramatic_task_planner,
       effect_builder: api._effect_builder,
       falling_damage: api._falling_damage,
       fear_table: api._fear_table,
@@ -438,6 +440,7 @@ export class api {
    * - Common Bond
    * - Craft Campfire
    * - Deviation
+   * - Dramatic Task Planner
    * - Effect Builder
    * - Falling Damage
    * - Fear Table
@@ -481,6 +484,10 @@ export class api {
   // Deviation
   static async _deviation() {
     deviation_script()
+  }
+  // Dramatic Task Planner
+  static async _dramatic_task_planner(img) {
+    dramatic_task_planner_script(img)
   }
   // Effect Builder
   static async _effect_builder(message = false, item = false) {
