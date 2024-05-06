@@ -50,7 +50,7 @@ export const OFFICIAL_MODULES = {
             "disease": "@UUID[Compendium.swade-core-rules.swade-rules.swadecor04theadv.JournalEntryPage.04disease0000000]",
             "disease_categories": "@UUID[Compendium.swade-core-rules.swade-rules.JournalEntry.swadecor04theadv.JournalEntryPage.04disease0000000#disease-categories]",
             "distracted_and_vulnerable": "@UUID[Compendium.swade-core-rules.swade-rules.swadecor03rules0.JournalEntryPage.03distractedan00#distracted-and-vulnerable]",
-            "dramatic_tasks": "@UUID[Compendium.swade-core-rules.swade-rules.swadecor04theadv.JournalEntryPage.04dramatictask00]",
+            "dramatic_tasks": "@UUID[Compendium.swade-core-rules.swade-rules.JournalEntry.swadecor04theadv.JournalEntryPage.04dramatictask00]",
             "drowning": "@UUID[Compendium.swade-core-rules.swade-rules.swadecor04theadv.JournalEntryPage.04drowning000000]",
             "dumb_luck": "@UUID[Compendium.swade-core-rules.swade-rules.swadecor04theadv.JournalEntryPage.04dumbluck000000]",
             "dynamic_backlash": "@UUID[Compendium.swade-core-rules.swade-rules.swadecor04theadv.JournalEntryPage.04dynamicbackl00]",
