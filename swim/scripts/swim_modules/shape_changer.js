@@ -164,6 +164,10 @@ export async function shape_changer_gm(data) {
             const raise = data.raise
             const scID = data.scID
             let scPreset = totalContent.find(a => (a.id === scID)).toObject();
+            //In case the preset is set up with Wild Card image, we need to get a random one to pass, otherwise the only one will be passed instead:
+            const possibleTokenImages = await game.actors.get(scID).getTokenImages() //Get possible token images, will return the only possible one if not set up with wild card images.
+            const randomIndex = Math.floor(Math.random() * possibleTokenImages.length);
+            const tokenImage = possibleTokenImages[randomIndex];
             //Creating a copy of the preset:
             scPreset.folder = mainFolder.id
             let scCopy = await Actor.create(scPreset)
@@ -183,7 +187,7 @@ export async function shape_changer_gm(data) {
             const scSize = scCopy.system.stats.size;
 
             await set_token_size(scCopy, scSize, raise);
-            await set_tokenSettings(scCopy, originalID);
+            await set_tokenSettings(scCopy, originalID, tokenImage);
             await update_preset(scCopy, scSize, raise, originalID);
             // Now, add permission to scCopy by copying permissions of the original actor (that should also ensure the user get the token selected automatically):
             let perms = duplicate(actor.ownership)
@@ -246,7 +250,7 @@ export async function shape_changer_gm(data) {
         await scCopy.update({token: {height: height, width: width, scale: scale}})
     }
 
-    async function set_tokenSettings(scCopy, pcID) {
+    async function set_tokenSettings(scCopy, pcID, tokenImage) {
         let updateData = {
             "prototypeToken.actorLink": actor.prototypeToken.actorLink,
             "prototypeToken.bar1.attribute": actor.prototypeToken.bar1.attribute,
@@ -254,7 +258,9 @@ export async function shape_changer_gm(data) {
             "prototypeToken.disposition": actor.prototypeToken.disposition,
             "prototypeToken.lockRotation": actor.prototypeToken.lockRotation,
             "prototypeToken.name": actor.prototypeToken.name,
-            "prototypeToken.randomImg": actor.prototypeToken.randomImg,
+            //"prototypeToken.randomImg": actor.prototypeToken.randomImg,
+            "prototypeToken.randomImg": false,
+            "prototypeToken.texture.src": tokenImage,
             //"prototypeToken.sight": actor.prototypeToken.sight, //Not sure this is a good idea because it updates sight even for creatures with superior sight. Without it though, it needs to be properly configured beforehand though...
             "prototypeToken.displayBars": actor.prototypeToken.displayBars,
             "prototypeToken.displayName": actor.prototypeToken.displayName,

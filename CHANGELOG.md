@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dramatic Task Planner Macro. Read the Wiki on it, it has a couple features that are explained there.
 ### Fixed
 - Fixed chase deck table not resetting results when resetting a chase scene.
+- Shape Changer now properly handles wild card images for shape change presets. The Shape Changer will get a random token image from all possible token images of the SC preset and use that. This does not prevent the user from setting up the prototype actor without wildcard images.
 
 ## [2.5.0] - 2024-03-24
 ### Added
