@@ -683,5 +683,6 @@
   "SWIM.word-Option": "Option",
   "SWIM.word-options": "options",
   "SWIM.word-option": "option",
-  "SWIM.word-for": "for"
+  "SWIM.word-for": "for",
+  "SWIM.warn-noSCToken": "This token doesn't appear to be shape changed with SWIM (actor flag 'scOwner' is missing)."
 }

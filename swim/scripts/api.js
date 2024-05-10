@@ -77,6 +77,7 @@ export class api {
       radiation_centre: api._radiation_centre,
       scale_calculator: api._scale_calculator,
       shape_changer: api._shape_changer,
+      revert_shape_change: api._revert_shape_change,
       soak_damage: api._soak_damage,
       token_vision: api._token_vision,
       travel_calculator: api._travel_calculator,
@@ -451,6 +452,7 @@ export class api {
    * - Radiation Centre
    * - Scale Calculator
    * - Shape Changer
+   * - Revert Shape Change
    * - Soak Damage
    * - Token Vision
    * - Travel Calculator
@@ -528,6 +530,29 @@ export class api {
   // Shape Changer
   static async _shape_changer() {
     shape_changer_script()
+  }
+  static async _revert_shape_change(token) {
+    const actor = token.actor
+    const ownerActorID = actor.getFlag('swim', 'scOwner')
+    if (!ownerActorID) {
+      console.warn(game.i18n.localize("SWIM.warn-noSCToken"))
+      return
+    }
+    const mainFolder = game.folders.getName("[SWIM] Shape Changing");
+    if (!mainFolder) {
+      ui.notifications.error("Please import and set up the '[SWIM] Shape Change Presets' folder from the compendium first.");
+      return;
+    }
+    let data = {
+      type: "revert",
+      actorID: actor.id,
+      mainFolder: mainFolder,
+      tokenID: token.id,
+      ownerActorID: ownerActorID,
+      userID: game.user.id,
+      sceneID: game.scenes.current._id
+    }
+    warpgate.event.notify("SWIM.shapeChanger", data)
   }
   // Soak Damage
   static async _soak_damage(effect) {
