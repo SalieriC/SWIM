@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a hook (`'swimShapeChanged'`) that is called after the shape changer completed the shape changing process. It passes the new token in order to work with that further in code.
 - Dramatic Task Planner Macro. Read the Wiki on it, it has a couple features that are explained there.
 - Added `swim.revert_shape_change(token)` to revert the passed `token` back to its original form.
+### Changed
+- When removing maintained power, gathering effects is now in a `try` statement so that the function continues if an error occurs (i.e. when the token changed or doesn't exist anymore.)
 ### Fixed
 - Fixed chase deck table not resetting results when resetting a chase scene.
 - Shape Changer now properly handles wild card images for shape change presets. The Shape Changer will get a random token image from all possible token images of the SC preset and use that. This does not prevent the user from setting up the prototype actor without wildcard images.

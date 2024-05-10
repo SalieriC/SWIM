@@ -51,7 +51,12 @@ export async function effect_hooks() {
             for (let targetID of condition.flags.swim.targets) {
                 const playerScene = game.scenes.get(game.users.get(userID).viewedScene)
                 const token = playerScene.tokens.get(targetID)
-                const effect = token.actor.effects.find(ae => ae.flags?.swim?.maintenanceID === condition.flags?.swim?.maintenanceID)
+                let effect
+                try {
+                    effect = token.actor.effects.find(ae => ae.flags?.swim?.maintenanceID === condition.flags?.swim?.maintenanceID)
+                } catch (err) {
+                    console.error(err)
+                }
                 if (effect) {
                     await effect.delete()
                 }
