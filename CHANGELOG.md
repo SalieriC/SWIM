@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Added a hook (`'swimShapeChanged'`) that is called after the shape changer completed the shape changing process. It passes the new token in order to work with that further in code.
-- Dramatic Task Planner Macro. Read the Wiki on it, it has a couple features that are explained there.
+- Dramatic Task Planner Macro. Please [read the Wiki](https://github.com/SalieriC/SWIM/wiki/Macros#dramatic-task-planner) on it, it has a couple features that are explained there.
 - Added `swim.revert_shape_change(token)` to revert the passed `token` back to its original form.
 - Added automatic power backlash execution for the BRSW support.
 - - Currently only automates regular backlash.
