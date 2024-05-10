@@ -53,7 +53,7 @@ export const OFFICIAL_MODULES = {
             "dramatic_tasks": "@UUID[Compendium.swade-core-rules.swade-rules.JournalEntry.swadecor04theadv.JournalEntryPage.04dramatictask00]",
             "drowning": "@UUID[Compendium.swade-core-rules.swade-rules.swadecor04theadv.JournalEntryPage.04drowning000000]",
             "dumb_luck": "@UUID[Compendium.swade-core-rules.swade-rules.swadecor04theadv.JournalEntryPage.04dumbluck000000]",
-            "dynamic_backlash": "@UUID[Compendium.swade-core-rules.swade-rules.swadecor04theadv.JournalEntryPage.04dynamicbackl00]",
+            "dynamic_backlash": "@UUID[Compendium.swade-core-rules.swade-rules.JournalEntry.swadecor04theadv.JournalEntryPage.04dynamicbackl00#dynamic-backlash]",
             "electricity": "@UUID[Compendium.swade-core-rules.swade-rules.swadecor04theadv.JournalEntryPage.04electricity000]",
             "evasion": "@UUID[Compendium.swade-core-rules.swade-rules.JournalEntry.swadecor03rules0.JournalEntryPage.03evasion0000000#evasion]",
             "falling": "@UUID[Compendium.swade-core-rules.swade-rules.swadecor04theadv.JournalEntryPage.04falling0000000]",

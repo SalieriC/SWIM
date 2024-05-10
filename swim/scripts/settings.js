@@ -20,6 +20,7 @@ export const settingVariables = [
     },
     {id: 'injuryTable', config_type: String, tab: "Tables & Playlists", default: 'Injury Table'},
     {id: 'fearTable', config_type: String, tab: "Tables & Playlists", default: 'Fear Table'},
+    {id: 'backlashTable', config_type: String, tab: "Tables & Playlists", default: 'Dynamic Backlash'},
     {id: 'chaseDeck', config_type: String, tab: "Tables & Playlists", default: 'Chase Deck'},
     {id: 'encounterTableEnemies', config_type: String, tab: "Tables & Playlists", default: 'Travel Encounters: Enemies'},
     {id: 'encounterTableObstacles', config_type: String, tab: "Tables & Playlists", default: 'Travel Encounters: Obstacles'},
@@ -103,6 +104,12 @@ export const settingVariables = [
             {value: 'disabled', locaString: 'SWIM.Option-disabled'}
         ]},
     {id: 'deleteEffectsAfterCombat', config_type: Boolean, tab: "Misc",  default: false},
+    {id: 'brswBacklash', config_type: String, tab: "Misc", default: "regular",
+        options: [
+            {value: 'regular', locaString: 'SWIM.Option-regular'},
+            {value: 'dynamic', locaString: 'SWIM.Option-dynamic'},
+            {value: 'disabled', locaString: 'SWIM.Option-disabled'}
+        ]},
 ];
 
 export function register_settings() {

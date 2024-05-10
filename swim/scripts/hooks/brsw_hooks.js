@@ -1,3 +1,5 @@
+import { backlasher } from "../swim_modules/backlasher.js";
+
 export async function brsw_hooks() {
     //BR2 Hooks
     Hooks.on(`BRSW-Unshake`, async (message, actor) => {
@@ -40,6 +42,13 @@ export async function brsw_hooks() {
             }
         }
     });
+    Hooks.on('BRSW-RollItem', (card, _) => {
+        const backlashSetting = game.settings.get('swim', 'brswBacklash')
+        if (backlashSetting === 'disabled') { return }
+        if (card.trait_roll?.current_roll?.is_fumble && card.item.type === 'power' && swim.is_first_gm()) {
+        backlasher(card, backlashSetting)
+        }
+    })
 }
 
 async function update_brsw_injury(effect, type) {

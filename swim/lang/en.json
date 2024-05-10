@@ -684,5 +684,21 @@
   "SWIM.word-options": "options",
   "SWIM.word-option": "option",
   "SWIM.word-for": "for",
-  "SWIM.warn-noSCToken": "This token doesn't appear to be shape changed with SWIM (actor flag 'scOwner' is missing)."
+  "SWIM.warn-noSCToken": "This token doesn't appear to be shape changed with SWIM (actor flag 'scOwner' is missing).",
+  "SWIM.backlashTableName": "Dynamic Backlash Table:",
+  "SWIM.backlashTableHint": "Name of the dynamic backlash table. Needs to be imported in your world.",
+  "SWIM.brswBacklashName": "Automatic Power Backlash:",
+  "SWIM.brswBacklashHint": "This automatically handles backlash for a critical failure when rolling on a BRSW power card. Regular is SWADE default backlash (Fatigue and powers terminate), dynamic backlash is not yet automated and will instead only show the result, make sure to import the table into your world. (This option requires BRSW support turned on.)",
+  "SWIM.Option-regular": "Regular",
+  "SWIM.Option-dynamic": "Dynamic",
+  "SWIM.Backlasher.Backlash": "Backlash",
+  "SWIM.Backlasher.DynamicBacklash": "Dynamic Backlash",
+  "SWIM.Backlasher.Message-1": "{officialClass}<h1>{backlashLink}</h1><p><b>{name}</b> rolled a Critical Failure when trying to invoke a power and ",
+  "SWIM.Backlasher.Message-2": "gained a level of Fatigue!<br />",
+  "SWIM.Backlasher.Message-3": "collapses from exhaustion!<br />",
+  "SWIM.Backlasher.Message-4": "All active powers immediately terminate",
+  "SWIM.Backlasher.Message-5": " (powers set up using SWIM functions have been automatically terminated)",
+  "SWIM.Backlasher.Message-6": ".</p></div>",
+  "SWIM.Backlasher.Message-7": "suffers {backlashLink} (not applied automatically):</p></div>",
+  "SWIM.warn-noBacklashTable": "Dynamic Backlash table not found. Please import it in your world and make sure it has the same name as in the setting."
 }
