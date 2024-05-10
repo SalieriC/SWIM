@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed chase deck table not resetting results when resetting a chase scene.
 - Shape Changer now properly handles wild card images for shape change presets. The Shape Changer will get a random token image from all possible token images of the SC preset and use that. This does not prevent the user from setting up the prototype actor without wildcard images.
+### Known issues
+- The Dramatic Task Planner currently doesn't put journal links in the dialogue and chat message, the reason for this is unknown, help would be highly appreciated.
 
 ## [2.5.0] - 2024-03-24
 ### Added
