@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - - Dynamic Backlash can be set in the SWIM settings but it will only roll on the table (make sure to import it into your world and set the name in the SWIM settings).
 - - This can also be turned off independently of th BRSW support.
 - - The regular backlash is fully automated and will also revert shape change forms, dismiss summoned creatures and terminate all powers if they are set with the Power Effect Builder.
+- - It will also apply Fatigue (or Inc.) as per the base rules.
 ### Changed
 - When removing maintained power, gathering effects is now in a `try` statement so that the function continues if an error occurs (i.e. when the token changed or doesn't exist anymore.)
 ### Fixed
