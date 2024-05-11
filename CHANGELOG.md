@@ -5,9 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+☮️ Peace in the world, or the world in pieces. 🕊️
 
 ## [2.6.0] - 2024-05-11
-☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Added a hook (`'swimShapeChanged'`) that is called after the shape changer completed the shape changing process. It passes the new token in order to work with that further in code.
 - Dramatic Task Planner Macro. Please [read the Wiki](https://github.com/SalieriC/SWIM/wiki/Macros#dramatic-task-planner) on it, it has a couple features that are explained there.
