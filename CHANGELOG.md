@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
+### Fixed
+- #148: An error that occured if the Dramtic Task Planner was executed without the Challenge Tracker module enabled.
 
 ## [2.6.0] - 2024-05-11
 ### Added
