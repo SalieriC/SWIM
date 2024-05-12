@@ -161,10 +161,10 @@ export async function dramatic_task_planner_script(img) {
         const difficulty = html.find("#difficulty")[0].value;
         const customTokens = html.find("#customTokens")[0].value;
         const customTurns = html.find("#customTurns")[0].value;
-        const challengeTracker = html.find("#challengeTracker")[0].checked;
-        const challengeTrackerWindowed = html.find("#challengeTrackerWindowed")[0].checked;
-        const challengeTrackerRounds = html.find("#challengeTrackerRounds")[0].checked;
-        const taskPerPlayer = html.find("#taskPerPlayer")[0].checked;
+        const challengeTracker = challengeTrackerInstalled ? html.find("#challengeTracker")[0].checked : false;
+        const challengeTrackerWindowed = challengeTrackerInstalled ? html.find("#challengeTrackerWindowed")[0].checked : false;
+        const challengeTrackerRounds = challengeTrackerInstalled ? html.find("#challengeTrackerRounds")[0].checked : false;
+        const taskPerPlayer = challengeTrackerInstalled ? html.find("#taskPerPlayer")[0].checked : false;
         const playSfx = html.find("#playSfx")[0].checked;
         let useNames = false
         if (targetsArray.length === players && taskPerPlayer) {
