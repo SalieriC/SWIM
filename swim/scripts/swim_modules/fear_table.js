@@ -1,6 +1,6 @@
 /*******************************************
  * Fear Table Macro.
- * v. 3.0.1 by SalieriC#8263, original creator unknown.
+ * v. 3.0.3 by SalieriC#8263, original creator unknown.
  *******************************************/
 export async function fear_table_script() {
     let { speaker, _, __, token } = await swim.get_macro_variables()
@@ -13,7 +13,7 @@ export async function fear_table_script() {
         return;
     }
 
-    const fearAbility = token.actor.items.find(a => a.name.toLowerCase().includes(game.i18n.localize("SWIM.ability-fear").toLowerCase()) && a.type === "ability") //Failsafe in case other items include the word "Fear".
+    const fearAbility = token.actor.items.find(a => a.system.swid === "fear" && a.type === "ability") //Failsafe in case other items include the word "Fear".
     let fearPenalty = 0
     let fearPenaltyInverse = 0
     if (fearAbility) {
@@ -52,7 +52,7 @@ export async function fear_table_script() {
                         } else {
                             for (let target of targets) {
                                 const roll = new Roll('1d20 + @mod', { mod: modifier });
-                                const results = await fearTable.draw({ displayChat: false }, { roll });
+                                const results = await fearTable.draw({ displayChat: false, roll });
                                 const total = results.roll.total
                                 const chatData = `<div class="table-draw">
                                 <ol class="table-results">
@@ -79,8 +79,7 @@ export async function fear_table_script() {
         },
         render: ([dialogContent]) => {
             dialogContent.querySelector(`input[name="fearModifier"`).focus();
-        },
-        default: "roll"
+        }
     });
     dialog.render(true);
 
