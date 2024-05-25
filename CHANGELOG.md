@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
+### Added
+- Added an illusion actor to be summoned using the Mighty Summoner. This actor serve both, as a template for GMs and as an actual illusion to be summoned when using the Illusion power.
 ### Fixed
 - Various bugs in Fear table function.
 

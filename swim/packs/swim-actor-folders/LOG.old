@@ -1,15 +1,7 @@
-2023/10/20-15:15:10.058 1664 Recovering log #89
-2023/10/20-15:15:10.058 1664 Recovering log #98
-2023/10/20-15:15:10.321 1664 Delete type=2 #13
-2023/10/20-15:15:10.322 1664 Delete type=0 #15
-2023/10/20-15:15:10.322 1664 Delete type=2 #17
-2023/10/20-15:15:10.322 1664 Delete type=0 #59
-2023/10/20-15:15:10.322 1664 Delete type=2 #74
-2023/10/20-15:15:10.322 1664 Delete type=0 #80
-2023/10/20-15:15:10.322 1664 Delete type=0 #89
-2023/10/20-15:15:10.322 1664 Delete type=0 #98
-2023/10/20-15:15:10.322 1664 Delete type=3 #14
-2023/10/20-15:15:10.322 1664 Delete type=3 #16
-2023/10/20-15:15:10.322 1664 Delete type=3 #55
-2023/10/20-15:15:10.322 1664 Delete type=3 #79
-2023/10/20-15:15:10.323 1664 Delete type=3 #87
+2024/05/25-09:49:40.221102 7f8eebf0c0 Recovering log #434
+2024/05/25-09:49:40.334409 7f8eebf0c0 Delete type=0 #434
+2024/05/25-09:49:40.334479 7f8eebf0c0 Delete type=3 #432
+2024/05/25-11:14:09.247117 7f8ccff0c0 Level-0 table #439: started
+2024/05/25-11:14:09.247312 7f8ccff0c0 Level-0 table #439: 0 bytes OK
+2024/05/25-11:14:09.282080 7f8ccff0c0 Delete type=0 #437
+2024/05/25-11:14:09.318732 7f8ccff0c0 Manual compaction at level-0 from '!folders!FYgw6Jz5nHtmETxq' @ 72057594037927935 : 1 .. '!folders!uqU1YvouKOpmPduC' @ 0 : 0; will stop at (end)
