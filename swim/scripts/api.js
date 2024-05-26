@@ -526,12 +526,12 @@ export class api {
     mark_dead_script()
   }
   // Mighty Summoner
-  static async _mighty_summoner() {
-    summoner_script()
+  static async _mighty_summoner(data = false) {
+    summoner_script(data)
   }
   // Personal Health Centre
-  static async _personal_health_centre() {
-    personal_health_centre_script()
+  static async _personal_health_centre(data = false) {
+    personal_health_centre_script(data)
   }
   // Radiation Centre
   static async _radiation_centre() {
@@ -542,8 +542,8 @@ export class api {
     scale_calculator()
   }
   // Shape Changer
-  static async _shape_changer() {
-    shape_changer_script()
+  static async _shape_changer(data = false) {
+    shape_changer_script(data)
   }
   static async _revert_shape_change(token) {
     const actor = token.actor

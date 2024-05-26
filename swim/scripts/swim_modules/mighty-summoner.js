@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 1.6.1
+ * v. 2.0.0
  * By SalieriC
  ******************************************************/
 function generate_id(length = 16) {
@@ -30,8 +30,9 @@ function generate_id(length = 16) {
     return result;
 }
 
-export async function summoner_script() {
-    const { speaker, _, __, token } = await swim.get_macro_variables()
+export async function summoner_script(data) {
+    //const { speaker, _, __, token } = await swim.get_macro_variables()
+    const {speaker, character, _, token, item} = await swim.get_data_variables(data, false)
 
     if (!game.modules.get("warpgate")?.active) {
         ui.notifications.error(game.i18n.localize("SWIM.notification.warpgateRequired"));
@@ -58,7 +59,7 @@ export async function summoner_script() {
     //Set div class based on enabled official module:
     const officialClass = await swim.get_official_class()
 
-    let totalContent = swim.get_folder_content("Summon Creature Presets")
+    let totalContent = swim.get_folder_content("Summon Creature Presets").filter(item => item.permission >= 1);
 
     let duration = 5
     const concentration = actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-concentration").toLowerCase() && i.type === "edge")
