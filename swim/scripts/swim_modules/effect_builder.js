@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  *
- * v. 6.0.0
+ * v. 6.0.1
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  *
  * Powers on hold for now:
@@ -51,10 +51,8 @@ export async function effect_builder(data = false) {
     }
 
     const defaultPower = item && SWIM.SWID_POWER_LIST[item.system.swid] ? SWIM.SWID_POWER_LIST[item.system.swid] : 'boost';
-    const { options, traitOptions, allHTML } = generateOptionsAndHTML(defaultPower, targets);
+    const { options, traitOptions, allHTML, targetIDs } = generateOptionsAndHTML(defaultPower, targets);
     const initialContent = getDialogContent(token, defaultPower, allHTML, targets, noPP)
-    //default select the correct power
-
 
     new Dialog({
         title: game.i18n.localize("SWIM.dialogue-powerEffectBuilderTitle"),
@@ -2572,5 +2570,5 @@ function generateOptionsAndHTML(defaultPower, targets) {
         }
     }
 
-    return { options, traitOptions, allHTML };
+    return { options, traitOptions, allHTML, targetIDs };
 }
