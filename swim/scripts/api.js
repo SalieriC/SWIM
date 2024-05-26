@@ -41,6 +41,7 @@ export class api {
     globalThis['swim'] = {
       // Utility
       get_macro_variables: api._get_macro_variables,
+      get_data_variables: api._get_data_variables,
       critFail_check: api._critFail_check,
       get_benny_image: api._get_benny_image,
       check_bennies: api._check_bennies,
@@ -119,6 +120,19 @@ export class api {
     const actor = game.actors.get(speaker.actor);
     const token = (canvas.ready ? canvas.tokens.get(speaker.token) : null);
     return { speaker, character, actor, token }
+  }
+  // Get data variables
+  static async _get_data_variables(data, useItemActor = false) {
+    if (!data) { //failsafe to revert to get_macro_variables if no data provided, mainly for backwards compatibility.
+      const { speaker, character, actor, token } = await swim.get_macro_variables()
+      return { speaker, character, actor, token, item: undefined }
+    }
+    const speaker = data.speaker
+    const character = data.character
+    const item = data.item
+    const actor = useItemActor && item ? item.actor : data.actor
+    const token = data.token
+    return { speaker, character, actor, token, item }
   }
   // Crit Fail check
   static async _critFail_check(wildCard, r) {
@@ -492,8 +506,8 @@ export class api {
     dramatic_task_planner_script(img)
   }
   // Effect Builder
-  static async _effect_builder(message = false, item = false) {
-    effect_builder()
+  static async _effect_builder(data = false) {
+    effect_builder(data)
   }
   // Falling Damage
   static async _falling_damage() {
