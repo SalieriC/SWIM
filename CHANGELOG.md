@@ -8,8 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ☮️ Peace in the world, or the world in pieces. 🕊️
 ### Added
 - Added an illusion actor to be summoned using the Mighty Summoner. This actor serve both, as a template for GMs and as an actual illusion to be summoned when using the Illusion power.
+- Added macro variable support for Effect Builder (EB), Mighty Summoner (MS), Personal Health Centre (PHC) and Shape Changer (SC).
+- - To use any of these as macro actions on items you can use the macro UUIDs from the compendium (recommended) or from the world (I strongly advise againts that option unless you know what you're doing).
+- - You should also import these macros into your world anew, just in case. But if you use the UUID of the compendium ones this is not strictly necessary.
+- - Set the actor option in the action to `Self`, **this is very important!** This way the macro always knows who the caster is.
+- - The MS, PHC and SC will then use the passed token as the caster, instead of the selected token.
+- - The EB will additionally know which power was used and select this power for you. (This only works with proper default SWIDs on the power items.)
+- - All of the former functionality should be accessible if you keep using what you have and/or not using item actions.
 ### Fixed
 - Various bugs in Fear table function.
+### Changed
+- **[BREAKING]** Mighty Summoner only shows summonable actors for which the user has *at least* `limited` permission.
+- **[BREAKING]** Shape Changer only shows actor presets for which the user has *at least* `limited` permission.
 
 ## [2.6.1] - 2024-05-12
 ### Fixed
