@@ -108,7 +108,7 @@
 			"module": "swim",
 			"type": "Macro",
 			"ownership": {
-				"PLAYER": "NONE",
+				"PLAYER": "LIMITED",
 				"ASSISTANT": "OWNER"
 			},
 			"banner": "modules/swim/assets/banner.webp"
