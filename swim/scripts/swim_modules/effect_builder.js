@@ -73,7 +73,7 @@ export async function effect_builder(data = false) {
                     let durationSeconds
                     let durationRounds = duration
                     const powerName = selectedPower === "other" ? html.find(`#power_choice`)[0].value : game.i18n.localize(`SWIM.power-${selectedPower}`)
-                    const power = token.actor.items.find(p => p.name.toLowerCase().includes(powerName.toLowerCase()) && p.type === "power")
+                    const power = item ? item : token.actor.items.find(p => p.name.toLowerCase().includes(powerName.toLowerCase()) && p.type === "power")
                     const icon = power ? power.img : false
                     const sceneID = game.scenes.current.id
 
@@ -95,6 +95,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             [selectedPower]: {
                                 degree: degree,
                                 trait: traits,
@@ -112,6 +113,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: "protection",
+                            powerID: power._id,
                             protection: {
                                 bonus: bonus,
                                 type: selectedType,
@@ -133,6 +135,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: "smite",
+                            powerID: power._id,
                             smite: {
                                 bonus: bonus,
                                 weapon: weapons,
@@ -149,6 +152,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: "growth",
+                            powerID: power._id,
                             growth: {
                                 change: change,
                                 duration: duration,
@@ -164,6 +168,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: "shrink",
+                            powerID: power._id,
                             shrink: {
                                 change: change,
                                 duration: duration,
@@ -177,6 +182,7 @@ export async function effect_builder(data = false) {
                             targetIDs: targetIDs,
                             casterID: token.id,
                             maintenanceID: maintID,
+                            powerID: power._id,
                             type: "sloth",
                             sloth: {
                                 change: 0.5,
@@ -193,6 +199,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: "speed",
+                            powerID: power._id,
                             speed: {
                                 change: 2,
                                 duration: duration,
@@ -214,6 +221,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: "burden",
+                            powerID: power._id,
                             burden: {
                                 change: change,
                                 duration: duration,
@@ -235,6 +243,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             beastFriend: {
                                 degree: degree,
                                 caster: game.canvas.tokens.controlled[0].name,
@@ -255,6 +264,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             invisibility: {
                                 degree: degree,
                                 duration: duration,
@@ -269,6 +279,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             [selectedPower]: {
                                 icon: usePowerIcons ? icon : false
                             }
@@ -282,6 +293,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             [selectedPower]: {
                                 type: type.charAt(0).toUpperCase() + type.slice(1),
                                 duration: duration,
@@ -301,6 +313,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             [selectedPower]: {
                                 degree: degree,
                                 duration: duration,
@@ -321,6 +334,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             [selectedPower]: {
                                 degree: degree,
                                 duration: duration,
@@ -337,6 +351,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             [selectedPower]: {
                                 damage: damage,
                                 duration: duration,
@@ -357,6 +372,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             [selectedPower]: {
                                 degree: degree,
                                 duration: durationSeconds,
@@ -373,6 +389,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: "concealArcana",
+                            powerID: power._id,
                             concealArcana: {
                                 duration: durationSeconds,
                                 icon: usePowerIcons ? icon : false,
@@ -392,6 +409,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: "detectArcana",
+                            powerID: power._id,
                             detectArcana: {
                                 degree: degree,
                                 duration: duration,
@@ -412,6 +430,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             [selectedPower]: {
                                 degree: degree,
                                 duration: durationSeconds,
@@ -431,6 +450,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             [selectedPower]: {
                                 degree: degree,
                                 duration: duration,
@@ -450,6 +470,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             [selectedPower]: {
                                 degree: degree,
                                 duration: duration,
@@ -465,6 +486,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             [selectedPower]: {
                                 duration: durationSeconds,
                                 icon: usePowerIcons ? icon : false
@@ -483,6 +505,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             [selectedPower]: {
                                 degree: degree,
                                 duration: duration,
@@ -502,6 +525,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             [selectedPower]: {
                                 degree: degree,
                                 duration: duration,
@@ -516,6 +540,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             [selectedPower]: {
                                 duration: duration,
                                 icon: usePowerIcons ? icon : false
@@ -535,6 +560,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             [selectedPower]: {
                                 degree: degree,
                                 duration: durationSeconds,
@@ -554,6 +580,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             [selectedPower]: {
                                 degree: degree,
                                 casterName: token.name,
@@ -575,6 +602,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             relief: {
                                 degree: degree,
                                 caster: game.canvas.tokens.controlled[0].name,
@@ -591,6 +619,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             [selectedPower]: {
                                 duration: durationSeconds,
                                 icon: usePowerIcons ? icon : false
@@ -609,6 +638,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             [selectedPower]: {
                                 degree: degree,
                                 duration: duration,
@@ -629,6 +659,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             [selectedPower]: {
                                 degree: degree,
                                 duration: durationSeconds,
@@ -648,6 +679,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             [selectedPower]: {
                                 degree: degree,
                                 duration: duration,
@@ -667,6 +699,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             [selectedPower]: {
                                 degree: degree,
                                 duration: duration,
@@ -686,6 +719,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             [selectedPower]: {
                                 degree: degree,
                                 //duration: duration,
@@ -712,6 +746,7 @@ export async function effect_builder(data = false) {
                             casterID: token.id,
                             maintenanceID: maintID,
                             type: selectedPower,
+                            powerID: power._id,
                             [selectedPower]: {
                                 degree: degree,
                                 durationRounds: durationRounds,
@@ -801,7 +836,7 @@ export async function effect_builder_gm(data) {
     if (data.targetIDs.find(t => t === casterID)) {
         casterIsTarget = true
     }
-    const power = type === "other" ? caster.actor.items.find(p => p.id === data[type].powerID) : caster.actor.items.find(p => p.name.toLowerCase().includes(game.i18n.localize(`SWIM.power-${type}`).toLowerCase()) && p.type === "power")
+    const power = data.powerID ? caster.actor.items.find(p => p.id === data.powerID) : caster.actor.items.find(p => p.name.toLowerCase().includes(game.i18n.localize(`SWIM.power-${type}`).toLowerCase()) && p.type === "power")
     let additionalChange = false
     if (casterIsTarget && noPP === true && !(type === "blind" || type === "confusion" || type === "sloth")) {
         if (power) {
