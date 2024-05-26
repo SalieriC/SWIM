@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 2.0.0
+ * v. 2.0.1
  * By SalieriC
  ******************************************************/
 function generate_id(length = 16) {
@@ -62,6 +62,7 @@ export async function summoner_script(data) {
     let totalContent = swim.get_folder_content("Summon Creature Presets").filter(item => item.permission >= 1);
 
     let duration = 5
+    if (item?.system?.swid === 'zombie') { duration = 600 }
     const concentration = actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-concentration").toLowerCase() && i.type === "edge")
     const summoner = actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-summoner-fc").toLowerCase() && i.type === "edge")
     const druid = actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-druid-fc").toLowerCase() && i.type === "edge")

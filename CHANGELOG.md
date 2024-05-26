@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - - The MS, PHC and SC will then use the passed token as the caster, instead of the selected token.
 - - The EB will additionally know which power was used and select this power for you. (This only works with proper default SWIDs on the power items.)
 - - All of the former functionality should be accessible if you keep using what you have and/or not using item actions.
+- - This change allowed me to set the duration of the *zombie* power to one hour. It only works if executed from the chat card and the items swid is 'zombie' though.
 ### Fixed
 - Various bugs in Fear table function.
 ### Changed
