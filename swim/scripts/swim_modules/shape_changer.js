@@ -16,14 +16,15 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 2.3.1
+ * v. 2.4.0
  * By SalieriC
  ******************************************************/
 
 import * as SWIM from '../constants.js'
 
-export async function shape_changer_script() {
-    const { speaker, _, __, token } = await swim.get_macro_variables()
+export async function shape_changer_script(data) {
+    //const { speaker, _, __, token } = await swim.get_macro_variables()
+    const {speaker, character, _, token, item} = await swim.get_data_variables(data, false)
     if (!token || canvas.tokens.controlled.length > 1) {
         ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"));
         return;
@@ -45,7 +46,7 @@ export async function shape_changer_script() {
     //Set div class based on enabled official module:
     const officialClass = await swim.get_official_class()
 
-    let totalContent = swim.get_folder_content("Shape Change Presets")
+    let totalContent = swim.get_folder_content("Shape Change Presets").filter(item => item.permission >= 1);
     totalContent.sort(function (a, b) {
         let textA = a.name.toUpperCase()
         let textB = b.name.toUpperCase()
