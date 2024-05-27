@@ -99,6 +99,7 @@
 	"esmodules": [
 		"./scripts/init.js"
 	],
+	"socket": true,
 	"packs": [
 		{
 			"name": "swade-immersive-macros",
