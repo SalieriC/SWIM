@@ -5,6 +5,8 @@
  * By SalieriC
  ******************************************************/
 
+export const MODULE_ID = "swim";
+
 // Update this whenever SWIM actor/item config changes:
 export const CONFIG_VERSION = 2;
 
