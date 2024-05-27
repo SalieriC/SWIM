@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - - The EB will additionally know which power was used and select this power for you. (This only works with proper default SWIDs on the power items.)
 - - All of the former functionality should be accessible if you keep using what you have and/or not using item actions.
 - - This change allowed me to set the duration of the *zombie* power to one hour. It only works if executed from the chat card and the items swid is 'zombie' though.
+- Added an option for the *light* power in the EB. This requires [Active Token Effects](https://github.com/kandashi/Active-Token-Lighting) by Kandashi to function. The module is optional however, without it the AE won't have any effect.
 ### Fixed
 - Various bugs in Fear table function.
 ### Changed

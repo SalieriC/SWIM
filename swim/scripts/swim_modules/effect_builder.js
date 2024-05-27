@@ -6,7 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  *
- * v. 6.0.1
+ * v. 6.1.0
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  *
  * Powers on hold for now:
@@ -541,6 +541,27 @@ export async function effect_builder(data = false) {
                             powerID: power._id,
                             [selectedPower]: {
                                 duration: duration,
+                                icon: usePowerIcons ? icon : false
+                            }
+                        }
+                        warpgate.event.notify("SWIM.effectBuilder", data)
+                    } else if (selectedPower === "light") {
+                        const raise = html.find(`#raise`)[0].checked
+                        let degree = "success"
+                        if (raise === true) {
+                            degree = "raise"
+                        }
+                        durationSeconds = concentration ? Number(20 * 60) : Number(10 * 60)
+                        const data = {
+                            sceneID: sceneID,
+                            targetIDs: targetIDs,
+                            casterID: token.id,
+                            maintenanceID: maintID,
+                            type: selectedPower,
+                            powerID: power._id,
+                            [selectedPower]: {
+                                degree: degree,
+                                duration: durationSeconds,
                                 icon: usePowerIcons ? icon : false
                             }
                         }
@@ -1920,6 +1941,79 @@ export async function effect_builder_gm(data) {
             }
             await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
         }
+    } else if (type === "light") {
+        for (let targetID of data.targetIDs) {
+            const target = playerScene.tokens.get(targetID)
+            let changes = [
+                {
+                    "key": "ATL.light.bright",
+                    "value": data[type].degree === "raise" ? "5" : "3",
+                    "mode": 5,
+                    "priority": null
+                },
+                {
+                    "key": "ATL.light.animation",
+                    "value": "{type: \"sunburst\", speed: 1, intensity: 1}",
+                    "mode": 5,
+                    "priority": null
+                },
+                {
+                    "key": "ATL.light.color",
+                    "value": "#fffa61",
+                    "mode": 5,
+                    "priority": null
+                },
+                {
+                    "key": "ATL.light.alpha",
+                    "value": "0.25",
+                    "mode": 5,
+                    "priority": null
+                },
+                {
+                    "key": "ATL.light.angle",
+                    "value": data[type].degree === "raise" ? "52.5" : "360",
+                    "mode": 5,
+                    "priority": null
+                }
+            ]
+            let aeData = {
+                changes: changes,
+                icon: data[type].icon ? data[type].icon : `modules/swim/assets/icons/effects/m-${type}.svg`,
+                name: data[type].degree === "raise" ? `${game.i18n.localize("SWIM.power-light")} (${game.i18n.localize("SWIM.beam")})` : `${game.i18n.localize("SWIM.power-light")}`,
+                duration: {
+                    seconds: power || noPP ? Number(999999999999999) : data[type].duration,
+                    rounds: power || noPP ? Number(999999999999999) : data[type].duration / 6,
+                    startRound: target.combatant != null ? game.combat.round : 0,
+                },
+                description: power ? power.system.description : "",
+                flags: {
+                    swade: {
+                        expiration: 3
+                    },
+                    succ: {
+                        updatedAE: true
+                    },
+                    swim: {
+                        maintainedPower: true,
+                        maintaining: game.i18n.localize(`SWIM.power-${type}`),
+                        targets: data.targetIDs,
+                        maintenanceID: data.maintenanceID,
+                        owner: false,
+                        powerID: power ? power.id : undefined,
+                        affected: true
+                    }
+                }
+            }
+            if (targetID === casterID) {
+                if (additionalChange) {
+                    aeData.changes = aeData.changes.concat(additionalChange)
+                }
+                aeData.flags.swim.owner = true
+                aeData.duration.seconds = noPP ? Number(999999999999999) : data[type].duration
+                aeData.duration.rounds = noPP ? Number(999999999999999) : data[type].duration / 6
+            }
+            await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        }
     } else if (type === "mindLink") {
         for (let targetID of data.targetIDs) {
             const target = playerScene.tokens.get(targetID)
@@ -2445,6 +2539,8 @@ function getDialogContent(token, selectedPower, allHTML, targets, noPP) {
         content = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
     } else if (selectedPower === "intangibility") {
         content = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
+    } else if (selectedPower === "light") {
+        content = game.i18n.format("SWIM.dialogue-optionLight")
     } else if (selectedPower === "mindLink") {
         content = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
     } else if (selectedPower === "puppet") {
@@ -2510,6 +2606,7 @@ function generateOptionsAndHTML(defaultPower, targets) {
         {value: 'growth', label: ['SWIM.power-growth']},
         {value: 'intangibility', label: ['SWIM.power-intangibility']},
         {value: 'invisibility', label: ['SWIM.power-invisibility']},
+        {value: 'light', label: ['SWIM.power-light']},
         {value: 'lower', label: ['SWIM.power-lowerTrait']},
         {value: 'mindLink', label: ['SWIM.power-mindLink']},
         {value: 'protection', label: ['SWIM.power-protection']},
