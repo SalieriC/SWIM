@@ -45,6 +45,12 @@ Hooks.on('setup', () => {
     api.registerFunctions()
 })
 
+export let socket;
+Hooks.once("socketlib.ready", () => {
+    socket = socketlib.registerModule("swim");
+    socket.register("effectBuilder", effect_builder_gm);
+});
+
 Hooks.on(`ready`, () => {
     // Set round time to 6 as appropriate to the system:
     if (CONFIG.time.roundTime != 6 && swim.is_first_gm()) { CONFIG.time.roundTime = 6 }
@@ -187,7 +193,7 @@ Hooks.on(`ready`, () => {
     warpgate.event.watch("SWIM.summoner", summoner_gm, swim.is_first_gm)
     warpgate.event.watch("SWIM.healOther", heal_other_gm, swim.is_first_gm)
     warpgate.event.watch("SWIM.commonBond", common_bond_gm, swim.is_first_gm)
-    warpgate.event.watch("SWIM.effectBuilder", effect_builder_gm, swim.is_first_gm)
+    //warpgate.event.watch("SWIM.effectBuilder", effect_builder_gm, swim.is_first_gm)
     warpgate.event.watch("SWIM.deleteActor", gm_relay.gmDeleteActor, swim.is_first_gm)
     warpgate.event.watch("SWIM.updateCombat-previousTurn", gm_relay.combat_previousTurn, swim.is_first_gm)
     warpgate.event.watch("SWIM.updateCombat-nextTurn", gm_relay.combat_nextTurn, swim.is_first_gm)

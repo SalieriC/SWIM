@@ -16,6 +16,7 @@
  * - Telekinesis (because of the unwilling targets problem)
  ******************************************************/
 import * as SWIM from '../constants.js'
+import {socket} from "../init";
 
 export async function effect_builder(data = false) {
     if (!game.modules.get("warpgate")?.active) {
@@ -101,7 +102,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "protection") {
                         const bonus = Number(html.find(`#protectionAmount`)[0].value)
                         const selectedType = html.find("input[name=type_choice]:checked").val()
@@ -119,7 +120,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "smite") {
                         const bonus = Number(html.find(`#damageBonus`)[0].value)
                         let weapons = []
@@ -141,7 +142,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false,
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "growth") {
                         const change = Number(html.find(`#sizeAmount`)[0].value)
                         const data = {
@@ -157,7 +158,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "shrink") {
                         const change = Number(html.find(`#sizeAmount`)[0].value)
                         const data = {
@@ -173,7 +174,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "sloth") {
                         const data = {
                             sceneID: sceneID,
@@ -188,7 +189,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "speed") {
                         const quickness = html.find(`#quickness`)[0].checked;
                         const data = {
@@ -205,7 +206,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "burden-tes") {
                         const change = Number(html.find(`#die_steps`)[0].value)
                         if (change === 0) {
@@ -227,7 +228,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "beastFriend") {
                         const raise = html.find(`#raise`)[0].checked
                         let degree = "success"
@@ -249,7 +250,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "invisibility") {
                         const raise = html.find(`#raise`)[0].checked
                         let degree = "success"
@@ -269,7 +270,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "confusion") {
                         const data = {
                             sceneID: sceneID,
@@ -282,7 +283,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "deflection") {
                         const type = html.find(`#deflectionOption`)[0].value
                         const data = {
@@ -298,7 +299,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "arcaneProtection") {
                         const raise = html.find(`#raise`)[0].checked
                         let degree = "success"
@@ -318,7 +319,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "burrow") {
                         const raise = html.find(`#raise`)[0].checked
                         const strong = html.find(`#strong`)[0].checked
@@ -340,7 +341,7 @@ export async function effect_builder(data = false) {
                                 strong: strong
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "damageField") {
                         const damage = html.find(`#damage`)[0].checked
                         const data = {
@@ -356,7 +357,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "darksight") {
                         const raise = html.find(`#raise`)[0].checked
                         let degree = "success"
@@ -377,7 +378,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "conceal") {
                         const strong = html.find(`#strong`)[0].checked
                         durationSeconds = concentration ? Number(120 * 60) : Number(60 * 60)
@@ -394,7 +395,7 @@ export async function effect_builder(data = false) {
                                 strong: strong
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "detect") {
                         const raise = html.find(`#raise`)[0].checked
                         let degree = "success"
@@ -414,7 +415,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "disguise") {
                         const raise = html.find(`#raise`)[0].checked
                         let degree = "success"
@@ -435,7 +436,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "elementalManipulation") {
                         const raise = html.find(`#raise`)[0].checked
                         let degree = "success"
@@ -455,7 +456,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "empathy") {
                         const raise = html.find(`#raise`)[0].checked
                         let degree = "success"
@@ -475,7 +476,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "environmentalProtection") {
                         durationSeconds = concentration ? Number(120 * 60) : Number(60 * 60)
                         const data = {
@@ -490,7 +491,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "farsight") {
                         const raise = html.find(`#raise`)[0].checked
                         let degree = "success"
@@ -510,7 +511,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "fly") {
                         const raise = html.find(`#raise`)[0].checked
                         let degree = "success"
@@ -530,7 +531,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "intangibility") {
                         const data = {
                             sceneID: sceneID,
@@ -544,7 +545,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "light") {
                         const raise = html.find(`#raise`)[0].checked
                         let degree = "success"
@@ -565,7 +566,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "mindLink") {
                         const raise = html.find(`#raise`)[0].checked
                         let degree = "success"
@@ -586,7 +587,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "puppet") {
                         const raise = html.find(`#raise`)[0].checked
                         let degree = "success"
@@ -607,7 +608,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "relief") {
                         const raise = html.find(`#raise`)[0].checked
                         let degree = "success"
@@ -629,7 +630,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "slumber") {
                         durationSeconds = concentration ? Number(120 * 60) : Number(60 * 60)
                         const data = {
@@ -644,7 +645,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "silence") {
                         const raise = html.find(`#raise`)[0].checked
                         let degree = "success"
@@ -664,7 +665,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "speakLanguage") {
                         const raise = html.find(`#raise`)[0].checked
                         let degree = "success"
@@ -685,7 +686,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "wallWalker") {
                         const raise = html.find(`#raise`)[0].checked
                         let degree = "success"
@@ -705,7 +706,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "warriorsGift") {
                         const raise = html.find(`#raise`)[0].checked
                         let degree = "success"
@@ -725,7 +726,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "blind") {
                         const raise = html.find(`#raise`)[0].checked
                         let degree = "success"
@@ -745,7 +746,7 @@ export async function effect_builder(data = false) {
                                 icon: usePowerIcons ? icon : false
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     } else if (selectedPower === "other") {
                         const raise = html.find(`#raise`)[0].checked
                         durationRounds = noPP ? Number(999999999999999) : Number(html.find(`#duration_rounds`)[0].value)
@@ -774,7 +775,7 @@ export async function effect_builder(data = false) {
                                 powerID: power.id
                             }
                         }
-                        warpgate.event.notify("SWIM.effectBuilder", data)
+                        await socket.executeAsGM(effect_builder_gm, data);
                     }
 
                     // If caster is not the target and noPP setting rule active, give the caster a -1 to its spellcasting:
