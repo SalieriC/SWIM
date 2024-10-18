@@ -61,12 +61,12 @@
 				}
 			},
 			{
-				"id": "warpgate",
+				"id": "socketlib",
 				"type": "module",
-				"manifest": "https://github.com/trioderegion/warpgate/releases/download/1.17.2/module.json",
+				"manifest": "https://raw.githubusercontent.com/manuelVo/foundryvtt-socketlib/v1.1.0/module.json",
 				"compatibility": {
-					"minimum": "1.14.0",
-					"verified": "1.17.2"
+					"minimum": "1.1.0",
+					"verified": "1.1.0"
 				}
 			}
 		]
