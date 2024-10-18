@@ -50,9 +50,9 @@ export async function effect_builder(data = false) {
         duration = duration * 2
     }
 
-    const defaultPower = item && SWIM.SWID_POWER_LIST[item.system.swid] ? SWIM.SWID_POWER_LIST[item.system.swid] : 'boost';
+    const defaultPower = item && SWIM.SWID_POWER_LIST[item.system.swid] ? SWIM.SWID_POWER_LIST[item.system.swid] : item ? 'other': 'boost';
     const { options, traitOptions, allHTML, targetIDs } = generateOptionsAndHTML(defaultPower, targets);
-    const initialContent = getDialogContent(token, defaultPower, allHTML, targets, noPP)
+    const initialContent = getDialogContent(token, defaultPower, allHTML, targets, noPP, item)
 
     new Dialog({
         title: game.i18n.localize("SWIM.dialogue-powerEffectBuilderTitle"),
@@ -2460,7 +2460,7 @@ export async function effect_builder_gm(data) {
     }
 }
 
-function getDialogContent(token, selectedPower, allHTML, targets, noPP) {
+function getDialogContent(token, selectedPower, allHTML, targets, noPP, item) {
     let content
     if (selectedPower === "boost" || selectedPower === "lower") {
         content = game.i18n.format("SWIM.dialogue-powerEffectBuilderBoostLower", {allHTML: allHTML})
@@ -2563,7 +2563,7 @@ function getDialogContent(token, selectedPower, allHTML, targets, noPP) {
         let powers = token.actor.items.filter(p => p.type === "power")
         let powerOptions
         for (let power of powers) {
-            powerOptions += `<option value="${power.name}">${power.name}</option>`
+            powerOptions += `<option ${power._id === item?._id ? 'selected' : ''} value="${power.name}">${power.name}</option>`
         }
         content = game.i18n.format("SWIM.dialogue-otherPower", {options: powerOptions})
         if (noPP === false) {
