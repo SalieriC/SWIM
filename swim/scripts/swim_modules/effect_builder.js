@@ -19,9 +19,9 @@ import * as SWIM from '../constants.js'
 import {socket} from "../init.js"
 
 export async function effect_builder(data = false) {
-    if (!game.modules.get("warpgate")?.active) {
-        ui.notifications.error(game.i18n.localize("SWIM.notification.warpgateRequired"));
-        console.error("The SWIM Effect Builder macro requires Warp Gate by honeybadger. It is needed to replace the token. Please install and activate Warp Gate to use the Shape Changer macro: https://foundryvtt.com/packages/warpgate - If you enjoy Warp Gate please consider donating to honeybadger at his KoFi page: https://ko-fi.com/trioderegion")
+    if (!game.modules.get("socketlib")?.active) {
+        ui.notifications.error(game.i18n.localize("SWIM.notification.socketlibRequired"));
+        console.error("The SWIM Effect Builder macro requires Socketlib by Stäbchenfisch. Please install and activate Warp Gate to use this macro: https://foundryvtt.com/packages/socketlib")
         return;
     }
     // Targets:

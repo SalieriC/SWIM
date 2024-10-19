@@ -191,7 +191,7 @@
   "SWIM.dialogue-spentBennyToUnshake":"<p><img style=\"border: none;\" src=\"{bennyImage}\" height=\"25\" /> {player} spent a Benny and {name} may act normally now.</p>",
   "SWIM.dialogue-yes":"Yes.",
   "SWIM.dialogue-no":"No.",
-  "SWIM.notification-warpgateRequired":"Please install and activate Warp Gate to use this macro. See the console for more details.",
+  "SWIM.notification-socketlibRequired":"Please install and activate socketlib to use this macro. See the console for more details.",
   "SWIM.chatMessage-unHolyWarrior":"<br/><em>+ {numberPP}</em> from spent Power Points.",
   "SWIM.chatMessage-soakNoWounds":" and is unable to soak any Wounds.",
   "SWIM.chatMessage-soakSomeWounds":" and soaks {rounded} of {pronoun} Wounds, considering {pronoun} best roll so far.",
