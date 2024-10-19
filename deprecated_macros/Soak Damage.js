@@ -389,7 +389,7 @@ function main() {
             changes: [],
             flags: { swim: { isCombatInjury: true } }
         };
-        injuryData.icon = img;
+        injuryData.img = img;
         let injuryEffects;
         if (text.toLowerCase().includes("unmentionables")) {
             //unmentionables; create dummy AE without actual effect

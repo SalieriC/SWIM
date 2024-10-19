@@ -1,6 +1,6 @@
 /*******************************************
  * Fear Table Macro.
- * v. 3.0.3 by SalieriC#8263, original creator unknown.
+ * v. 3.0.4 by SalieriC#8263, original creator unknown.
  *******************************************/
 export async function fear_table_script() {
     let { speaker, _, __, token } = await swim.get_macro_variables()
@@ -106,7 +106,7 @@ export async function fear_table_script() {
 
             let effData = {
                 changes: changes,
-                icon: "icons/magic/life/heart-cross-strong-flame-purple-orange.webp",
+                img: "icons/magic/life/heart-cross-strong-flame-purple-orange.webp",
                 label: game.i18n.localize("SWIM.fearResult-AdrenalineSurge"),
                 duration: duration,
                 flags: {
@@ -263,7 +263,7 @@ async function gain_phobia(actor, major, total) {
 
     let effData = {
         changes: changes,
-        icon: "icons/magic/death/skull-horned-worn-fire-blue.webp",
+        img: "icons/magic/death/skull-horned-worn-fire-blue.webp",
         label: game.i18n.localize("SWIM.fearResult-Phobia"),
         flags: {
             swade: {

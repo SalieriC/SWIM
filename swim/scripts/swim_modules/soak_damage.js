@@ -1,6 +1,6 @@
 /*******************************************
  * Soak Damage
- * v. 6.0.0
+ * v. 6.0.1
  * Code by SalieriC#8263.
  *******************************************/
 export async function soak_damage_script(effect = false) {
@@ -94,7 +94,7 @@ export async function soak_damage_script(effect = false) {
                         if (change.key === "system.attributes.vigor.soakBonus") {
                             //Building array of effect names and icons that affect the unStunBonus
                             effectName.push(effect.label)
-                            effectIcon.push(effect.icon)
+                            effectIcon.push(effect.img)
                             effectValue.push(change.value)
                             soakBonusFromEffects += change.value
                         }
@@ -385,7 +385,7 @@ export async function soak_damage_script(effect = false) {
                 }
             }
         };
-        injuryData.icon = img;
+        injuryData.img = img;
         if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-unmentionables").toLowerCase())) {
             //unmentionables; create dummy AE without actual effect
             injuryData.label = game.i18n.localize("SWIM.injury-unmentionables");

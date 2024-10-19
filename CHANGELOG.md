@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - **[BREAKING]** Mighty Summoner only shows summonable actors for which the user has *at least* `limited` permission.
 - **[BREAKING]** Shape Changer only shows actor presets for which the user has *at least* `limited` permission.
+- Changed `icon` property to `icon` when creating Active Effects.
 ### Removed
 - Removed Warpgate requirement as it is no longer maintained.
 

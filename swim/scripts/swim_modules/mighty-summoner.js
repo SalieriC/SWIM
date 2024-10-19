@@ -16,7 +16,7 @@
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 2.0.1
+ * v. 2.0.2
  * By SalieriC
  ******************************************************/
 function generate_id(length = 16) {
@@ -163,7 +163,7 @@ export async function summoner_script(data) {
 
                         let aeData = {
                             changes: [],
-                            icon: "modules/swim/assets/icons/effects/0-summoned.svg",
+                            img: "modules/swim/assets/icons/effects/0-summoned.svg",
                             name: actor.id === scID ? `${game.i18n.localize("SWIM.label-summonedEntity")} ${game.i18n.localize("SWIM.word-Mirrored")} ${scName}` : `${game.i18n.localize("SWIM.label-summonedEntity")} ${scName}`,
                             duration: {
                                 rounds: durationRounds,
@@ -365,7 +365,7 @@ export async function summoner_gm(data) {
     // Setting up AE.
     let aeData = {
         changes: [],
-        icon: "modules/swim/assets/icons/effects/0-summoned.svg",
+        img: "modules/swim/assets/icons/effects/0-summoned.svg",
         name: game.i18n.localize("SWIM.label-summoned"),
         duration: {
             rounds: durationRounds,
@@ -411,7 +411,7 @@ export async function summoner_gm(data) {
                 "mode": 2
             }
         ],
-        icon: "",
+        img: "",
         name: "",
     }
     let command = summoner.actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-command").toLowerCase())
@@ -419,7 +419,7 @@ export async function summoner_gm(data) {
     let fervor = summoner.actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-fervor").toLowerCase())
     if (fervor) {
         commandAeData.name = "Is under exceptional command"
-        commandAeData.icon = fervor.img
+        commandAeData.img = fervor.img
         const fightingTraitName = game.settings.get("swade", "parryBaseSkill")
         for (let weapon of newToken.actor.items.filter(i => i.type === "weapon" && i.system.actions.skill === fightingTraitName)) {
             commandAeData.changes.push({
@@ -430,7 +430,7 @@ export async function summoner_gm(data) {
         }
     } else if (command) {
         commandAeData.name = "Is under command"
-        commandAeData.icon = command.img
+        commandAeData.img = command.img
     }
     if (holdLine) {
         commandAeData.changes.push(

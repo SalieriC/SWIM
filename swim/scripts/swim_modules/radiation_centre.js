@@ -1,6 +1,6 @@
 /*******************************************
  * Radiation Centre Macro
- * version 3.1.1
+ * version 3.1.2
  * By SalieriC#8263.
  ******************************************/
 export async function radiation_centre_script() {
@@ -234,7 +234,7 @@ export async function radiation_centre_script() {
                 "startRound": null,
                 "startTurn": null
             },
-            "icon": "modules/succ/assets/icons/0-irradiated.svg",
+            "img": "modules/succ/assets/icons/0-irradiated.svg",
             "origin": null,
             "tint": null,
             "transfer": false,
