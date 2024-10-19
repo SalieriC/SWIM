@@ -817,7 +817,7 @@ export async function effect_builder(data = false) {
                     // If caster is not the target and noPP setting rule active, give the caster a -1 to its spellcasting:
                     if (!casterIsTarget && !(selectedPower === "confusion" || selectedPower === "blind" || selectedPower === "relief" || selectedPower === "sloth")) {
                         if (power) {
-                            const skillName = power.system.actions.skill
+                            const skillName = power.system.actions.trait
                             let aeData = {
                                 changes: [],
                                 icon: power.img,
@@ -896,7 +896,7 @@ export async function effect_builder_gm(data) {
     let additionalChange = false
     if (casterIsTarget && noPP === true && !(type === "blind" || type === "confusion" || type === "sloth")) {
         if (power) {
-            const skillName = power.system.actions.skill
+            const skillName = power.system.actions.trait
             additionalChange = [{
                 key: `@Skill{${skillName}}[system.die.modifier]`,
                 mode: 2,
