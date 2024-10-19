@@ -70,7 +70,7 @@
 				}
 			},
 			{
-				"id": "portal",
+				"id": "portal-lib",
 				"type": "module",
                 "manifest": "https://github.com/theripper93/portal-lib/releases/download/2.2.12/module.json",
                 "compatibility": {
