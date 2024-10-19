@@ -68,6 +68,15 @@
 					"minimum": "1.1.0",
 					"verified": "1.1.0"
 				}
+			},
+			{
+				"id": "portal",
+				"type": "module",
+                "manifest": "https://github.com/theripper93/portal-lib/releases/download/2.2.12/module.json",
+                "compatibility": {
+					"minimum": "2.2.12",
+                    "verified": "2.2.12"
+				}
 			}
 		]
 	},
