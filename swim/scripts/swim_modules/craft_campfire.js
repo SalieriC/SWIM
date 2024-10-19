@@ -1,23 +1,32 @@
 /*******************************************
  * Craft Campfire
- * // v.1.0.1
+ * // v.2.0.0
  * By SalieriC#8263
  ******************************************/
+import {socket} from "../init.js"
+
 export async function craft_campfire_script() {
     //Get asset:
     const campfireTextureLit = game.settings.get('swim', 'campfireImgOn')
     //Collecting data from warpgate:
-    const data = await warpgate.crosshairs.show({
-        size: 1,
+    const portal = await new Portal()
+        .color("#ff0000")
+        .texture(campfireTextureLit)
+        .range(1)
+        .pick()
+
+    const data = {
         icon: campfireTextureLit,
-        label: "Campfire",
-        drawOutline: false,
-        drawIcon: true,
-        //interval: 1, //toggles grid snapping off
-        tileTexture: false,
-        lockSize: true,
-    })
-    warpgate.event.notify("SWIM.craftCampfire", data)
+        position: {
+            x: portal.x,
+            y: portal.y,
+        },
+        scene: {
+            _id: game.scenes.current._id
+        }
+    }
+    //warpgate.event.notify("SWIM.craftCampfire", data)
+    await socket.executeAsGM(craft_campfire_gm, data)
     if (game.modules.get('monks-active-tiles')?.active) {
         ui.notifications.notify(game.i18n.localize("SWIM.notification.campfireCreated"))
     }
@@ -30,8 +39,8 @@ export async function craft_campfire_gm(data) {
 
     //Create Light:
     const lightData = {
-        "x": data.x,
-        "y": data.y,
+        "x": data.position.x,
+        "y": data.position.y,
         "rotation": 0,
         "walls": true,
         "vision": false,
@@ -66,8 +75,8 @@ export async function craft_campfire_gm(data) {
     //Create Light:
     const soundData = {
         "path": "modules/swim/assets/sfx/Campfire-sound-altered-Alexander-www.orangefreesounds.com.ogg.ogg",
-        "x": data.x,
-        "y": data.y,
+        "x": data.position.x,
+        "y": data.position.y,
         "radius": 4.5,
         "easing": true,
         "walls": true,
@@ -161,8 +170,8 @@ export async function craft_campfire_gm(data) {
             "rotation": Math.floor(Math.random() * (360 - 0 + 1) + 0), //random rotation
             "tint": null
         },
-        "x": data.x - (size / 2), //need to subtract half the grid size as the tile placement is measured from the top left instead of center.
-        "y": data.y - (size / 2),
+        "x": data.position.x - (size / 2), //need to subtract half the grid size as the tile placement is measured from the top left instead of center.
+        "y": data.position.y - (size / 2),
         "width": size,
         "height": size,
         "overhead": false,
