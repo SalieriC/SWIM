@@ -3,9 +3,11 @@
  * Transfers a Benny from a selected to a targeted tokens
  * actor.
  * 
- * v. 1.0.1
+ * v. 2.0.0
  * By SalieriC
  ******************************************************/
+import {socket} from "../init.js"
+
 export async function common_bond_script() {
     const { speaker, _, __, token } = await swim.get_macro_variables()
     //Set div class based on enabled official module:
@@ -47,7 +49,7 @@ export async function common_bond_script() {
                         tokenID: token.id,
                         targetID: target.id
                     }
-                    warpgate.event.notify("SWIM.commonBond", data)
+                    await socket.executeAsGM(common_bond_gm, data)
                 }
             },
             two: {
