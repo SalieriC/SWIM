@@ -1,6 +1,6 @@
 /*******************************************
  * Test and Support Macro
- * version v.0.2.1
+ * version v.0.3.0
  * Made and maintained by SalieriC#8263
  * Covered Edges:
  * - Elan
@@ -10,6 +10,8 @@
  * - Retort
  * - Strong Willed
  ******************************************/
+import { socket } from "../init.js"
+
 export async function tester_script() {
     let { speaker, _, __, token } = await swim.get_macro_variables()
     const targets = Array.from(game.user.targets)
@@ -158,11 +160,13 @@ export async function tester_script() {
             ui.notifications.warn(game.i18n.localize("SWIM.notification-critFail"))
             return;
         } if (raise) {
-            warpgate.event.notify("SWIM.tester", data); // Notify GM with data
+            //warpgate.event.notify("SWIM.tester", data); // Notify GM with data
+            await socket.executeAsGM(tester_gm, data)
             return; // Early return after applying the result
         } if (totalBennies === 0) {
             ui.notifications.warn(game.i18n.localize("SWIM.notification-noBenniesLeft"));
-            warpgate.event.notify("SWIM.tester", data); // Notify GM with data
+            //warpgate.event.notify("SWIM.tester", data); // Notify GM with data
+            await socket.executeAsGM(tester_gm, data)
             return; // Early return if out of Bennies
         }
 
@@ -191,7 +195,8 @@ export async function tester_script() {
                 apply: {
                     label: game.i18n.localize("SWIM.dialogue-apply"),
                     callback: async () => {
-                        warpgate.event.notify("SWIM.tester", data); // Notify GM with data
+                        //warpgate.event.notify("SWIM.tester", data); // Notify GM with data
+                        await socket.executeAsGM(tester_gm, data)
                     },
                 },
             },
@@ -234,15 +239,18 @@ export async function tester_script() {
         };
 
         if (critFail) {
-            warpgate.event.notify("SWIM.tester", data); // Notify GM with data
+            //warpgate.event.notify("SWIM.tester", data); // Notify GM with data
+            await socket.executeAsGM(tester_gm, data)
             ui.notifications.warn(game.i18n.localize("SWIM.notification-critFail"))
             return;
         } if (raise) {
-            warpgate.event.notify("SWIM.tester", data); // Notify GM with data
+            //warpgate.event.notify("SWIM.tester", data); // Notify GM with data
+            await socket.executeAsGM(tester_gm, data)
             return; // Early return after applying the result
         } if (totalBennies === 0) {
             ui.notifications.warn(game.i18n.localize("SWIM.notification-noBenniesLeft"));
-            warpgate.event.notify("SWIM.tester", data); // Notify GM with data
+            //warpgate.event.notify("SWIM.tester", data); // Notify GM with data
+            await socket.executeAsGM(tester_gm, data)
             return; // Early return if out of Bennies
         }
 
@@ -278,7 +286,8 @@ export async function tester_script() {
                 apply: {
                     label: game.i18n.localize("SWIM.dialogue-apply"),
                     callback: async () => {
-                        warpgate.event.notify("SWIM.tester", data); // Notify GM with data
+                        //warpgate.event.notify("SWIM.tester", data); // Notify GM with data
+                        await socket.executeAsGM(tester_gm, data)
                         // Handle applying the result
                         // You can access the total with: roll.total
                     },
