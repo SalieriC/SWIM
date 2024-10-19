@@ -36,10 +36,10 @@
 			{
 				"id": "lib-wrapper",
 				"type": "module",
-				"manifest": "https://github.com/ruipin/fvtt-lib-wrapper/releases/download/v1.12.13.0/module.json",
+				"manifest": "https://github.com/ruipin/fvtt-lib-wrapper/releases/download/v1.13.2.0/module.json",
 				"compatibility": {
-					"minimum": "1.12.13.0",
-					"verified": "1.12.13.0"
+					"minimum": "1.13.2.0",
+					"verified": "1.13.2.0"
 				}
 			},
 			{
@@ -47,8 +47,8 @@
 				"type": "module",
 				"manifest": "https://gitlab.com/foundry-azzurite/settings-extender/-/jobs/artifacts/master/raw/dist/settings-extender/module.json?job=build",
 				"compatibility": {
-					"minimum": "1.2.2",
-					"verified": "1.2.2"
+					"minimum": "1.2.3",
+					"verified": "1.2.3"
 				}
 			},
 			{
@@ -56,8 +56,8 @@
 				"type": "module",
 				"manifest": "https://raw.githubusercontent.com/SalieriC/SUCC/main/succ/module.json",
 				"compatibility": {
-					"minimum": "3.0.0",
-					"verified": "3.0.0"
+					"minimum": "4.1.0",
+					"verified": "4.1.0"
 				}
 			},
 			{
