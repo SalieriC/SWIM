@@ -1,8 +1,10 @@
 /*******************************************
  * Personal Health Centre
- * // v.6.4.0
+ * // v.7.0.0
  * By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
  ******************************************/
+import {socket} from "../init.js"
+
 export async function personal_health_centre_script(data) {
     //const { speaker, _, __, token } = await swim.get_macro_variables()
     const {speaker, character, actor, token, item} = await swim.get_data_variables(data, false)
@@ -82,7 +84,7 @@ async function healOther(token, target) {
                         method: method,
                         combatHealing: combatHealing
                     }
-                    warpgate.event.notify("SWIM.healOther", data)
+                    await socket.executeAsGM(heal_other_gm, data)
                 }
             },
             two: {
@@ -103,7 +105,7 @@ async function healOther(token, target) {
                         method: method,
                         combatHealing: combatHealing
                     }
-                    warpgate.event.notify("SWIM.healOther", data)
+                    await socket.executeAsGM(heal_other_gm, data)
                 }
             },
             four: {
@@ -118,7 +120,7 @@ async function healOther(token, target) {
                         method: method,
                         combatHealing: combatHealing
                     }
-                    warpgate.event.notify("SWIM.healOther", data)
+                    await socket.executeAsGM(heal_other_gm, data)
                 }
             }
         }
