@@ -102,9 +102,6 @@
 			"path": "lang/pt_BR.json"
 		}
 	],
-	"systems": [
-		"swade"
-	],
 	"esmodules": [
 		"./scripts/init.js"
 	],

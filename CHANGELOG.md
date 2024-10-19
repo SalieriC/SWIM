@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed `icon` property to `icon` when creating Active Effects.
 ### Removed
 - Removed Warpgate requirement as it is no longer maintained.
+- Removed systems key from the manifest because Foundry was bitching about that for no reason at all.
 
 ## [2.6.1] - 2024-05-12
 ### Fixed
