@@ -19,11 +19,6 @@ import * as SWIM from '../constants.js'
 import {socket} from "../init.js"
 
 export async function effect_builder(data = false) {
-    if (!game.modules.get("socketlib")?.active) {
-        ui.notifications.error(game.i18n.localize("SWIM.notification.socketlibRequired"));
-        console.error("The SWIM Effect Builder macro requires Socketlib by Stäbchenfisch. Please install and activate Warp Gate to use this macro: https://foundryvtt.com/packages/socketlib")
-        return;
-    }
     // Targets:
     const targets = game.user.targets
     //const { speaker, _, __, token } = await swim.get_macro_variables()
