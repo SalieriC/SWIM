@@ -351,7 +351,7 @@ export async function summoner_gm(data) {
         //Set token to new actor
         await newToken.document.update({
                                            actorId: scCopy.id,
-                                           name: scCopy.name,
+                                           name: scPreset.prototypeToken.name,
                                            texture: scCopy.prototypeToken.texture,
                                            randomImg: scCopy.prototypeToken.randomImg
         });
