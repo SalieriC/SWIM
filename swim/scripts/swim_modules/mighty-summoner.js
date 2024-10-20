@@ -7,9 +7,6 @@
  * gitHub if you find any problems with it:
  * https://github.com/SalieriC/SWADE-Immersive-Macros/issues/new
  *
- * This requires Warp Gate by honeybadger:
- * https://foundryvtt.com/packages/warpgate
- *
  * The Macro natively supports Sound Effects and if you
  * are using the Sequencer module by Wasp
  * (https://foundryvtt.com/packages/sequencer), you can
@@ -19,6 +16,8 @@
  * v. 2.0.2
  * By SalieriC
  ******************************************************/
+import {socket} from "../init.js"
+
 function generate_id(length = 16) {
     var result = 'SWIM-';
     var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -33,12 +32,6 @@ function generate_id(length = 16) {
 export async function summoner_script(data) {
     //const { speaker, _, __, token } = await swim.get_macro_variables()
     const {speaker, character, _, token, item} = await swim.get_data_variables(data, false)
-
-    if (!game.modules.get("warpgate")?.active) {
-        ui.notifications.error(game.i18n.localize("SWIM.notification.warpgateRequired"));
-        console.error("The SWIM Mighty Summoner macro requires Warp Gate by honeybadger. It is needed to replace the token. Please install and activate Warp Gate to use the Shape Changer macro: https://foundryvtt.com/packages/warpgate - If you enjoy Warp Gate please consider donating to honeybadger at his KoFi page: https://ko-fi.com/trioderegion")
-        return;
-    }
 
     const mainFolder = game.folders.getName("[SWIM] Summon Creature");
     if (!mainFolder) {
@@ -152,7 +145,17 @@ export async function summoner_script(data) {
                                 },
                             }
                         }
-                        let spawnData = await warpgate.spawn(scActor.name, updates)
+
+                        //Set up the portal:
+                        const portal = new Portal()
+                            .addCreature(scActor, {count: 1})
+                            .color(game.user.color.css)
+                            .texture(scActor.prototypeToken.texture.src)
+                            .origin(token)
+                            .range(token.actor.system.attributes.smarts.die.sides)
+
+                        const spawnData = await portal.spawn(updates)
+                        //let spawnData = await warpgate.spawn(scActor.name, updates)
                         await play_sfx(spawnData)
 
                         //Active Effect:
@@ -192,11 +195,11 @@ export async function summoner_script(data) {
                         const data = {
                             summonerID: token.id,
                             scID: scID,
-                            tokenID: spawnData[0],
+                            tokenID: spawnData[0]._id,
                             maintID: maintID,
                             duration: duration,
-                            mirror: scID === actor.id ? true : false,
-                            mainFolderID: mainFolder.id,
+                            mirror: scID === actor._id ? true : false,
+                            mainFolderID: mainFolder._id,
                             raise: raise,
                             flags: {
                                 swade: {
@@ -211,7 +214,9 @@ export async function summoner_script(data) {
                                 }
                             }
                         }
-                        warpgate.event.notify("SWIM.summoner", data)
+                        
+                        //warpgate.event.notify("SWIM.summoner", data)
+                        await socket.executeAsGM(summoner_gm, data)
                     }
                 }
             },
@@ -232,9 +237,8 @@ export async function summoner_script(data) {
                         const dismissData = [token.id]
                         await play_sfx(dismissData)
                         await swim.wait(`200`) // delay script execution so that the vfx has time to get the tokens position
-                        await warpgate.dismiss(token.id, game.scenes.current.id)
+                        await socket.executeAsGM(summoner_dismiss, {tokenID: token.id, sceneID: game.scenes.current.id})
                         for (let each of game.scenes.current.tokens) {
-                            console.log(each)
                             const maintEffect = each.actor ? each.actor.effects.find(e => e.flags?.swim?.maintenanceID === maintenanceID) : each.actorData.effects.find(e => e.flags?.swim?.maintenanceID === maintenanceID)
                             if (maintEffect) {
                                 await maintEffect.delete()
@@ -263,9 +267,10 @@ export async function summoner_script(data) {
             'swim', 'shapeShiftSFX');
         let spawnVFX = game.settings.get(
             'swim', 'shapeShiftVFX');
+        await swim.wait(`100`); //I don't know why but VFX won't play when summoning if this isn't here. ¯\_(ツ)_/¯
         if (spawnSFX) { swim.play_sfx(spawnSFX) }
         if (game.modules.get("sequencer")?.active && spawnVFX) {
-            let tokenD = canvas.tokens.get(spawnData[0])
+            let tokenD = spawnData[0]
             let sequence = new Sequence()
                 .effect()
                 .file(`${spawnVFX}`) //recommendation: "modules/jb2a_patreon/Library/2nd_Level/Misty_Step/MistyStep_01_Regular_Green_400x400.webm"
@@ -281,18 +286,17 @@ export async function summoner_gm(data) {
     let newTokenID = data.tokenID
     let newToken = canvas.tokens.get(newTokenID)
     const summonerID = data.summonerID
-    const summoner = canvas.tokens.get(summonerID)
+    const summoner = canvas.tokens.get(summonerID).document
 
     //Time for some real bad trickery in case it's a mirrored self:
     if (data.mirror) {
         const summonerActor = summoner.actor
         const scene = newToken.scene
-        const center = newToken.center
         
         const originalType = summonerActor.type
         const mirrorType = game.settings.get('swim', 'mirrorToken')
         const mirrorImageSrc = summonerActor.flags?.swim?.config?.mirrorSelfImage ? summonerActor.flags?.swim?.config?.mirrorSelfImage : null
-        const originalScaleX = summoner.document.texture.scaleX
+        const originalScaleX = summoner.texture.scaleX
         let newScaleX = originalScaleX
         if (mirrorType === 'all' || mirrorType === originalType) { newScaleX = originalScaleX * -1 } //Mirror token if setting chosen.
 
@@ -343,10 +347,13 @@ export async function summoner_gm(data) {
         //And delete the power to the mirror can't reproduce itself:
         const power = scCopy.items.find(p => p.type === 'power' && p.name.toLowerCase() === game.i18n.localize("SWIM.power-summonAlly").toLowerCase())
         if (power) { await power.delete() }
-        let newTokenIDs = await warpgate.spawnAt(center, scCopy.name) //then spawn a token for it
-        newTokenID = newTokenIDs[0]
-        await warpgate.dismiss(newToken.id) //then dismiss the faulty token that carried over
-        newToken = canvas.tokens.get(newTokenID) //then assign that new token for the rest of the function below
+        //let newTokenIDs = await warpgate.spawnAt(center, scCopy.name) //then spawn a token for it
+        console.log(scCopy)
+        const transformPortal = new Portal()
+            .origin(newToken)
+            .addCreature(scCopy)
+        let newTokens = transformPortal.transform()
+        newToken = await scene.tokens.get(newTokens[0].id) //then assign that new token for the rest of the function below
     }
 
     //let duration = data.duration
@@ -444,4 +451,10 @@ export async function summoner_gm(data) {
     if (fervor || command) {
         await newToken.actor.createEmbeddedDocuments('ActiveEffect', [commandAeData]);
     }
+}
+
+export async function summoner_dismiss(data) {
+    const scene = await game.scenes.get(data.sceneID)
+    const token = await scene.tokens.get(data.tokenID)
+    await token.delete()
 }
