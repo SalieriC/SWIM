@@ -348,11 +348,21 @@ export async function summoner_gm(data) {
         const power = scCopy.items.find(p => p.type === 'power' && p.name.toLowerCase() === game.i18n.localize("SWIM.power-summonAlly").toLowerCase())
         if (power) { await power.delete() }
 
+        //Get random image in case this is enabled
+        let textureSrc = scCopy.prototypeToken.texture.src
+        if(scCopy.prototypeToken.randomImg) {
+            let images = await scCopy.getTokenImages();
+            textureSrc = images[Math.floor(Math.random() * images.length)];
+        }
+
         //Set token to new actor
         await newToken.document.update({
                                            actorId: scCopy.id,
                                            name: scCopy.prototypeToken.name,
-                                           texture: scCopy.prototypeToken.texture,
+                                           texture: {
+                                               scaleX: scCopy.prototypeToken.texture.scaleX,
+                                               src: textureSrc
+                                           },
                                            randomImg: scCopy.prototypeToken.randomImg
         });
     }
