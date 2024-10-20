@@ -349,7 +349,12 @@ export async function summoner_gm(data) {
         if (power) { await power.delete() }
 
         //Set token to new actor
-        await newToken.document.update({ actorId: scCopy.id });
+        await newToken.document.update({
+                                           actorId: scCopy.id,
+                                           name: scCopy.name,
+                                           texture: scCopy.prototypeToken.texture,
+                                           randomImg: scCopy.prototypeToken.randomImg
+        });
     }
 
     //let duration = data.duration
