@@ -75,6 +75,9 @@ export async function v10_migration() {
                                 await actor.update(flagData)
                             }
                         } for (let item of allItems) {
+                            if (item.flags?.swim?.config?._version) {
+                                continue
+                            }
                             console.log("SWIM | Starting migration for", item)
                             //Process all items...
                             let isPack = false
@@ -182,17 +185,33 @@ export async function v11_migration() {
                             //Process all actors...
                             console.log("SWIM | Starting migration for", actor)
                             for (let item of actor.items) { allItems.push(item) }
-                            const flagData = {
-                                flags: {
-                                    swim: {
-                                        config: {
-                                            _version: SWIM.CONFIG_VERSION
+                            let flagData
+                            if (actor.flags?.swim?.config) {
+                                flagData = {
+                                    flags: {
+                                        swim: {
+                                            config: actor.flags.swim.config
+                                        }
+                                    }
+                                }
+                                flagData.config._version = SWIM.CONFIG_VERSION
+                            }
+                            else {
+                                flagData = {
+                                    flags: {
+                                        swim: {
+                                            config: {
+                                                _version: SWIM.CONFIG_VERSION
+                                            }
                                         }
                                     }
                                 }
                             }
                             await actor.update(flagData)
                         } for (let item of allItems) {
+                            if (item.flags?.swim?.config?._version >= 2) {
+                                continue
+                            }
                             console.log("SWIM | Starting migration for", item)
                             //Process all items...
                             if (item.flags?.swim?.config?.ammoActiveEffect) {
@@ -201,20 +220,32 @@ export async function v11_migration() {
                                 const flagData = {
                                     flags: {
                                         swim: {
-                                            config: {
-                                                ammoActiveEffect: newAmmoAE,
-                                                _version: SWIM.CONFIG_VERSION
-                                            }
+                                            config: item.flags.swim.config
                                         }
                                     }
                                 }
+                                flagData.flags.swim.config.ammoActiveEffect = newAmmoAE
+                                flagData.flags.swim.config._version = SWIM.CONFIG_VERSION
                                 await item.update(flagData)
                             } else {
-                                const flagData = {
-                                    flags: {
-                                        swim: {
-                                            config: {
-                                                _version: SWIM.CONFIG_VERSION
+                                let flagData
+                                if (actor.flags?.swim?.config) {
+                                    flagData = {
+                                        flags: {
+                                            swim: {
+                                                config: actor.flags.swim.config
+                                            }
+                                        }
+                                    }
+                                    flagData.config._version = SWIM.CONFIG_VERSION
+                                }
+                                else {
+                                    flagData = {
+                                        flags: {
+                                            swim: {
+                                                config: {
+                                                    _version: SWIM.CONFIG_VERSION
+                                                }
                                             }
                                         }
                                     }
@@ -279,6 +310,9 @@ export async function update_migration(actor, item, currVersion) {
                 await actor.update(flagData)
             }
         } for (let item of allItems) {
+            if (item.flags?.swim?.config?._version >= 1) {
+                continue
+            }
             //Process all items...
             let isPack = false
             let loadedAmmo = ""
@@ -356,17 +390,33 @@ export async function update_migration(actor, item, currVersion) {
             //Process actor...
             console.log("SWIM | Starting migration for", actor)
             for (let item of actor.items) { allItems.push(item) }
-            const flagData = {
-                flags: {
-                    swim: {
-                        config: {
-                            _version: SWIM.CONFIG_VERSION
+            let flagData
+            if (actor.flags?.swim?.config) {
+                flagData = {
+                    flags: {
+                        swim: {
+                            config: actor.flags.swim.config
+                        }
+                    }
+                }
+                flagData.flags.swim.config._version = SWIM.CONFIG_VERSION
+            }
+            else {
+                flagData = {
+                    flags: {
+                        swim: {
+                            config: {
+                                _version: SWIM.CONFIG_VERSION
+                            }
                         }
                     }
                 }
             }
             await actor.update(flagData)
         } for (let item of allItems) {
+            if (item.flags?.swim?.config?._version >= 2) {
+                continue
+            }
             console.log("SWIM | Starting migration for", item)
             //Process all items...
             if (item.flags?.swim?.config?.ammoActiveEffect) {
@@ -375,20 +425,32 @@ export async function update_migration(actor, item, currVersion) {
                 const flagData = {
                     flags: {
                         swim: {
-                            config: {
-                                ammoActiveEffect: newAmmoAE,
-                                _version: SWIM.CONFIG_VERSION
-                            }
+                            config: item.flags.swim.config
                         }
                     }
                 }
+                flagData.flags.swim.config.ammoActiveEffect = newAmmoAE
+                flagData.flags.swim.config._version = SWIM.CONFIG_VERSION
                 await item.update(flagData)
             } else {
-                const flagData = {
-                    flags: {
-                        swim: {
-                            config: {
-                                _version: SWIM.CONFIG_VERSION
+                let flagData
+                if (item.flags?.swim?.config) {
+                    flagData = {
+                        flags: {
+                            swim: {
+                                config: item.flags.swim.config
+                            }
+                        }
+                    }
+                    flagData.flags.swim.config._version = SWIM.CONFIG_VERSION
+                }
+                else {
+                    flagData = {
+                        flags: {
+                            swim: {
+                                config: {
+                                    _version: SWIM.CONFIG_VERSION
+                                }
                             }
                         }
                     }

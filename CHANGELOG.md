@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added socketlib and Portal ad requirements.
 ### Fixed
 - Various bugs in Fear table function.
+- Fixed a bug in the migration that overwrote existing data on actors and items.
 ### Changed
 - **[BREAKING]** Mighty Summoner only shows summonable actors for which the user has *at least* `limited` permission.
 - **[BREAKING]** Shape Changer only shows actor presets for which the user has *at least* `limited` permission.
