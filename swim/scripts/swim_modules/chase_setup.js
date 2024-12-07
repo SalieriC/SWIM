@@ -189,7 +189,7 @@
             }
 
             const tileData = {
-                img: theImage,
+                texture: { src: theImage },
                 width: cardWidth,
                 height: cardHeight,
                 x: xPosition,
