@@ -347,13 +347,24 @@ export async function summoner_gm(data) {
         //And delete the power to the mirror can't reproduce itself:
         const power = scCopy.items.find(p => p.type === 'power' && p.name.toLowerCase() === game.i18n.localize("SWIM.power-summonAlly").toLowerCase())
         if (power) { await power.delete() }
-        //let newTokenIDs = await warpgate.spawnAt(center, scCopy.name) //then spawn a token for it
-        console.log(scCopy)
-        const transformPortal = new Portal()
-            .origin(newToken)
-            .addCreature(scCopy)
-        let newTokens = transformPortal.transform()
-        newToken = await scene.tokens.get(newTokens[0].id) //then assign that new token for the rest of the function below
+
+        //Get random image in case this is enabled
+        let textureSrc = scCopy.prototypeToken.texture.src
+        if(scCopy.prototypeToken.randomImg) {
+            let images = await scCopy.getTokenImages();
+            textureSrc = images[Math.floor(Math.random() * images.length)];
+        }
+
+        //Set token to new actor
+        await newToken.document.update({
+                                           actorId: scCopy.id,
+                                           name: scCopy.prototypeToken.name,
+                                           texture: {
+                                               scaleX: scCopy.prototypeToken.texture.scaleX,
+                                               src: textureSrc
+                                           },
+                                           randomImg: scCopy.prototypeToken.randomImg
+        });
     }
 
     //let duration = data.duration
