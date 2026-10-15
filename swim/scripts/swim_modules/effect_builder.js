@@ -983,6 +983,12 @@ export async function effect_builder_gm(data) {
                         ? `${game.i18n.localize("SWIM.power-damageField")} (2d6)`
                         : `${game.i18n.localize("SWIM.power-damageField")} (2d4)`
                 }
+                if (type === "darksight") {
+                    aeData.changes = [
+                        {"key": "ATL.sight.range", "value": "1000", "mode": 2, "priority": null},
+                        {"key": "ATL.sight.visionMode", "value": "darkvision", "mode": 5, "priority": null}
+                    ]
+                }
                 if (type === "puppet") {
                     aeData.name = `${data.casterName}'s ${game.i18n.localize("SWIM.power-puppet")}${data.degree === "raise" ? ` (${game.i18n.localize("SWIM.raise").toLowerCase()})` : ''}`
                 }
