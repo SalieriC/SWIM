@@ -189,7 +189,7 @@ export const SWID_POWER_LIST = {
     "illusion": "illusion",
     "intangibility": "intangibility",
     "invisibility": "invisibility",
-    "light-darkness": "light",
+    "lightdarkness": "light",
     "mind-link": "mindLink",
     "mind-reading": "mindReading",
     "mind-wipe": "mindWipe",
