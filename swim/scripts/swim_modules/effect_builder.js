@@ -992,12 +992,6 @@ export async function effect_builder_gm(data) {
                 if (type === "puppet") {
                     aeData.name = `${data.casterName}'s ${game.i18n.localize("SWIM.power-puppet")}${data.degree === "raise" ? ` (${game.i18n.localize("SWIM.raise").toLowerCase()})` : ''}`
                 }
-                if (type === "other") {
-                    if (isCaster && additionalChange.length > 0) {
-                        aeData.changes.push(additionalChange[0])
-                        if (additionalChange[1]) aeData.changes.push(additionalChange[1])
-                    }
-                }
                 if (type === "light") {
                     const brightness = data.degree === "raise" ? "5" : "3"
                     const angle = data.degree === "raise" ? "52.5" : "360"
