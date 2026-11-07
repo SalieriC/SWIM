@@ -155,7 +155,6 @@ export async function summoner_script(data) {
                             .range(token.actor.system.attributes.smarts.die.sides)
 
                         const spawnData = await portal.spawn(updates)
-                        //let spawnData = await warpgate.spawn(scActor.name, updates)
                         await play_sfx(spawnData)
 
                         //Active Effect:
@@ -215,7 +214,6 @@ export async function summoner_script(data) {
                             }
                         }
                         
-                        //warpgate.event.notify("SWIM.summoner", data)
                         await socket.executeAsGM(summoner_gm, data)
                     }
                 }

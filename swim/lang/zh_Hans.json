@@ -185,7 +185,6 @@
 	"SWIM.dialogue-spentBennyToUnshake": "<p><img style=\"border: none;\" src=\"{bennyImage}\" width=\"25\" height=\"25\" /> {player}使用1助力点，现在 {name} 可以如常行动了。</p>",
 	"SWIM.dialogue-yes": "是",
 	"SWIM.dialogue-no": "否",
-	"SWIM.notification-warpgateRequired": "请安装并启用Warp Gate来使用本宏，更多内容参见控制台。",
 	"SWIM.chatMessage-unHolyWarrior": "<br/><em>从消耗奇术点中+ {numberPP}</em> 。",
 	"SWIM.chatMessage-soakNoWounds": " 并且无法化解任何损伤。",
 	"SWIM.chatMessage-soakSomeWounds": " 并且化解了{rounded}损伤。",

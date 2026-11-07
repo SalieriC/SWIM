@@ -199,21 +199,6 @@ Hooks.on(`ready`, () => {
         }).render(true);
     }
 
-    // Warpgate Watches
-    /*
-    warpgate.event.watch("SWIM.shapeChanger", shape_changer_gm, swim.is_first_gm)
-    warpgate.event.watch("SWIM.summoner", summoner_gm, swim.is_first_gm)
-    warpgate.event.watch("SWIM.healOther", heal_other_gm, swim.is_first_gm)
-    warpgate.event.watch("SWIM.commonBond", common_bond_gm, swim.is_first_gm)
-    warpgate.event.watch("SWIM.effectBuilder", effect_builder_gm, swim.is_first_gm)
-    warpgate.event.watch("SWIM.deleteActor", gm_relay.gmDeleteActor, swim.is_first_gm)
-    warpgate.event.watch("SWIM.updateCombat-previousTurn", gm_relay.combat_previousTurn, swim.is_first_gm)
-    warpgate.event.watch("SWIM.updateCombat-nextTurn", gm_relay.combat_nextTurn, swim.is_first_gm)
-    warpgate.event.watch("SWIM.updateCombat-currentTurn", gm_relay.combat_currentTurn, swim.is_first_gm)
-    warpgate.event.watch("SWIM.craftCampfire", craft_campfire_gm, swim.is_first_gm)
-    warpgate.event.watch("SWIM.tester", tester_gm, swim.is_first_gm)
-    */
-
     //SWIM per-actor/item config header button
     if (game.user.isGM || game.settings.get('swim', 'allowUserConfig')) {
         Hooks.on('getItemSheetHeaderButtons', function (sheet, buttons) {

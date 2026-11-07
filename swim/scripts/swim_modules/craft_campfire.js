@@ -8,7 +8,7 @@ import {socket} from "../init.js"
 export async function craft_campfire_script() {
     //Get asset:
     const campfireTextureLit = game.settings.get('swim', 'campfireImgOn')
-    //Collecting data from warpgate:
+    //Pick the campfire location:
     const portal = await new Portal()
         .color("#ff0000")
         .texture(campfireTextureLit)
@@ -25,7 +25,6 @@ export async function craft_campfire_script() {
             _id: game.scenes.current._id
         }
     }
-    //warpgate.event.notify("SWIM.craftCampfire", data)
     await socket.executeAsGM(craft_campfire_gm, data)
     if (game.modules.get('monks-active-tiles')?.active) {
         ui.notifications.notify(game.i18n.localize("SWIM.notification.campfireCreated"))

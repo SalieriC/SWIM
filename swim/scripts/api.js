@@ -14,7 +14,8 @@ import { summoner_script } from './swim_modules/mighty-summoner.js'
 import { personal_health_centre_script } from './swim_modules/personal_health_centre.js'
 import { radiation_centre_script } from './swim_modules/radiation_centre.js'
 import { scale_calculator } from './swim_modules/scale_calculator.js'
-import { shape_changer_script } from './swim_modules/shape_changer.js'
+import { shape_changer_script, shape_changer_gm } from './swim_modules/shape_changer.js'
+import { socket } from './init.js'
 import { soak_damage_script } from './swim_modules/soak_damage.js'
 import { token_vision_script } from './swim_modules/token_vision.js'
 import { travel_calculator } from './swim_modules/travel_calculator.js'
@@ -560,13 +561,12 @@ export class api {
     let data = {
       type: "revert",
       actorID: actor.id,
-      mainFolder: mainFolder,
       tokenID: token.id,
       ownerActorID: ownerActorID,
       userID: game.user.id,
       sceneID: game.scenes.current._id
     }
-    warpgate.event.notify("SWIM.shapeChanger", data)
+    await socket.executeAsGM(shape_changer_gm, data)
   }
   // Soak Damage
   static async _soak_damage(effect) {

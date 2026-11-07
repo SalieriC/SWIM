@@ -78,7 +78,6 @@ export async function effect_hooks() {
                 const token = actor.token ? actor.token : game.scenes.current.tokens.find(t => t.flags?.swim?.maintenanceID === condition.flags?.swim?.maintenanceID)
                 const dismissData = [token.id]
                 await play_sfx(dismissData)
-                //await warpgate.dismiss(token.id, game.scenes.current.id)
                 token.delete()
                 await delete_mirror(condition.flags?.swim?.maintenanceID)
             } else if (condition.flags.swim.owner === true) {

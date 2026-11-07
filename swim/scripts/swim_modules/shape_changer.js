@@ -21,6 +21,7 @@
  ******************************************************/
 
 import * as SWIM from '../constants.js'
+import { socket } from '../init.js'
 
 export async function shape_changer_script(data) {
     //const { speaker, _, __, token } = await swim.get_macro_variables()
@@ -105,12 +106,11 @@ export async function shape_changer_script(data) {
                             raise: raise,
                             actorID: actor.id,
                             scID: scID,
-                            mainFolder: mainFolder,
                             tokenID: token.id,
                             userID: game.user.id,
                             sceneID: game.scenes.current._id
                         }
-                        warpgate.event.notify("SWIM.shapeChanger", data)
+                        await socket.executeAsGM(shape_changer_gm, data)
                     }
                 },
                 two: {
@@ -120,13 +120,12 @@ export async function shape_changer_script(data) {
                         let data = {
                             type: "revert", //or "change"
                             actorID: actor.id,
-                            mainFolder: mainFolder,
                             tokenID: token.id,
                             ownerActorID: ownerActorID,
                             userID: game.user.id,
                             sceneID: game.scenes.current._id
                         }
-                        warpgate.event.notify("SWIM.shapeChanger", data)
+                        await socket.executeAsGM(shape_changer_gm, data)
                     }
                 }
             },

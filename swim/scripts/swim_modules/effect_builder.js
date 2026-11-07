@@ -23,13 +23,16 @@ import {socket} from "../init.js"
 // PART 1: Dialogue Creation
 // ============================================================================
 
-export async function effect_builder(data = false) {
-    if (!game.modules.get("warpgate")?.active) {
-        ui.notifications.error(game.i18n.localize("SWIM.notification.warpgateRequired"));
-        console.error("The SWIM Effect Builder macro requires Warp Gate by honeybadger. It is needed to replace the token. Please install and activate Warp Gate to use the Shape Changer macro: https://foundryvtt.com/packages/warpgate - If you enjoy Warp Gate please consider donating to honeybadger at his KoFi page: https://ko-fi.com/trioderegion");
-        return;
-    }
+// SWADE system lang keys use the 3-letter form (e.g. SWADE.AttrAgi), not the full attribute name.
+const ATTRIBUTE_LANG_KEYS = {
+    agility: "SWADE.AttrAgi",
+    smarts: "SWADE.AttrSma",
+    spirit: "SWADE.AttrSpr",
+    strength: "SWADE.AttrStr",
+    vigor: "SWADE.AttrVig"
+}
 
+export async function effect_builder(data = false) {
     const targets = game.user.targets
     const {speaker, character, actor, token, item} = await swim.get_data_variables(data, false)
 
@@ -211,7 +214,6 @@ async function processEffectSelection(html, token, targets, targetIDs, maintID, 
     }
 
     data.power = power
-    //warpgate.event.notify("SWIM.effectBuilder", data)
     await socket.executeAsGM(effect_builder_gm, data)
 }
 
@@ -457,7 +459,7 @@ export async function effect_builder_gm(data) {
 
                 if (["agility", "smarts", "spirit", "strength", "vigor"].includes(traitValue)) {
                     keyPath = `system.attributes.${traitValue}.die.sides`
-                    traitName = game.i18n.localize(`SWADE.Attr${traitValue.charAt(0).toUpperCase()}${traitValue.slice(1)}`)
+                    traitName = game.i18n.localize(ATTRIBUTE_LANG_KEYS[traitValue])
                 } else {
                     const skill = targetToken.actor.items.find(s => s.name.toLowerCase() === traitValue.toLowerCase())
                     keyPath = `@Skill{${skill?.name}}[system.die.sides]`
@@ -503,7 +505,7 @@ export async function effect_builder_gm(data) {
 
                 if (["agility", "smarts", "spirit", "strength", "vigor"].includes(traitValue)) {
                     keyPath = `system.attributes.${traitValue}.die.sides`
-                    traitName = game.i18n.localize(`SWADE.Attr${traitValue.charAt(0).toUpperCase()}${traitValue.slice(1)}`)
+                    traitName = game.i18n.localize(ATTRIBUTE_LANG_KEYS[traitValue])
                 } else {
                     const skill = targetToken.actor.items.find(s => s.name.toLowerCase() === traitValue.toLowerCase())
                     keyPath = `@Skill{${skill?.name}}[system.die.sides]`
