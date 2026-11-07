@@ -141,6 +141,10 @@ async function processEffectSelection(html, token, targets, targetIDs, maintID, 
             data.quickness = html.find(`#quickness`)[0].checked
             break
 
+        case "deflection":
+            data.deflectionType = html.find(`#deflectionOption`)[0].value
+            break
+
         case "burden-tes":
             data.change = Number(html.find(`#die_steps`)[0].value)
             if (data.change === 0) {
@@ -181,12 +185,10 @@ async function processEffectSelection(html, token, targets, targetIDs, maintID, 
             if (selectedPower === "burrow") data.strong = html.find(`#strong`)[0].checked
             if (selectedPower === "damageField") data.damage = html.find(`#damage`)[0].checked
             if (selectedPower === "conceal") data.strong = html.find(`#strong`)[0].checked
-            if (selectedPower === "deflection") data.deflectionType = html.find(`#deflectionOption`)[0].value
             break
 
         case "confusion":
         case "damageField":
-        case "deflection":
             break
 
         case "other":
@@ -1113,7 +1115,7 @@ function getDialogContent(token, selectedPower, allHTML, targets, noPP, item) {
     } else if (selectedPower === "confusion") {
         content = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
     } else if (selectedPower === "deflection") {
-        const optionsDeflection = `<option value="melee">${game.i18n.localize("SWIM.gameTerm-Melee")}</option><option value="range">${game.i18n.localize("SWIM.gameTerm-Ranged")}</option><option value="raise">${game.i18n.localize("SWIM.gameTerm-Raise")}</option>`
+        const optionsDeflection = `<option value="Melee">${game.i18n.localize("SWIM.gameTerm-Melee")}</option><option value="Ranged">${game.i18n.localize("SWIM.gameTerm-Ranged")}</option><option value="Raise">${game.i18n.localize("SWIM.gameTerm-Raise")}</option>`
         content = game.i18n.format("SWIM.select-deflectionOptions", {options: optionsDeflection})
     } else if (selectedPower === "arcaneProtection") {
         content = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
