@@ -207,6 +207,7 @@
     "SWIM.notification.noShapeChangePresets": "Dir stehen keine Gestaltwandel-Vorlagen zur Verfügung. Der GM muss sie zuerst einrichten: den Ordner '[SWIM] Shape Change Presets' aus dem Kompendium importieren und den Spielern mindestens Eingeschränkt-Berechtigung auf die Akteure darin geben. Außerdem dürfen die Vorlagen nicht größer sein, als es der Rang erlaubt (außer der GM ignoriert diese Regel in den SWIM-Einstellungen).",
     "SWIM.notification.summonerNeedsTokenCreate": "Der Mächtige Beschwörer benötigt die Berechtigung \"Spielfiguren erstellen\" für Spieler. Bitte den GM, sie in den Spieleinstellungen (Berechtigungen konfigurieren) zu aktivieren, und dann erneut versuchen.",
     "SWIM.notification.noGMConnected": "Es ist kein GM verbunden. Diese Aktion muss von einem GM ausgeführt werden, bitte den GM, online zu sein.",
+    "SWIM.notification.socketRequestRejected": "SWIM hat die Anfrage '{handler}' von {userName} abgelehnt: {reason}",
     "SWIM.combatPlaylistHint": "Bestimmt den Namen der Wiedergabeliste die bei Beginn einer Begegnung gespielt wird. Der Name muss mit korrekter Groß- und Kleinschreibung eingegeben werden.",
     "SWIM.noStopFolderName": "Ordner der Wiedergabelisten die nicht angehalten werden:",
     "SWIM.dialogue-yes": "Ja.",

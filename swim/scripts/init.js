@@ -17,6 +17,7 @@ import { brsw_hooks } from "./hooks/brsw_hooks.js"
 import { brsw_actions_setup } from "./helpers/brsw_actions_setup.js"
 import { raise_calculator } from './helpers/raise-calculator.js'
 import { tester_gm } from './swim_modules/tester.js';
+import { guard, socket_validators as v } from './helpers/socket_guard.js'
 
 /*Hooks.on('getCardsDirectoryEntryContext', function (stuff) {
     console.log(stuff)
@@ -48,15 +49,16 @@ Hooks.on('setup', () => {
 export let socket;
 Hooks.once("socketlib.ready", () => {
     socket = socketlib.registerModule("swim");
-    socket.register("effectBuilder", effect_builder_gm);
-    socket.register("shapeChanger", shape_changer_gm);
-    socket.register("summoner", summoner_gm);
-    socket.register("summonerDismiss", summoner_dismiss);
-    socket.register("healOther", heal_other_gm);
-    socket.register("commonBond", common_bond_gm);
-    socket.register("deleteActor", gm_relay.gmDeleteActor);
-    socket.register("craftCampfire", craft_campfire_gm);
-    socket.register("tester", tester_gm);
+    // Every handler is wrapped by guard(): the payload is validated against the invoking user before the GM handler runs (helpers/socket_guard.js).
+    socket.register("effectBuilder", guard("effectBuilder", effect_builder_gm, v.effectBuilder));
+    socket.register("shapeChanger", guard("shapeChanger", shape_changer_gm, v.shapeChanger));
+    socket.register("summoner", guard("summoner", summoner_gm, v.summoner));
+    socket.register("summonerDismiss", guard("summonerDismiss", summoner_dismiss, v.summonerDismiss));
+    socket.register("healOther", guard("healOther", heal_other_gm, v.healOther));
+    socket.register("commonBond", guard("commonBond", common_bond_gm, v.commonBond));
+    socket.register("deleteActor", guard("deleteActor", gm_relay.gmDeleteActor, v.deleteActor));
+    socket.register("craftCampfire", guard("craftCampfire", craft_campfire_gm, v.craftCampfire));
+    socket.register("tester", guard("tester", tester_gm, v.tester));
 });
 
 Hooks.on(`ready`, () => {
