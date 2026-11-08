@@ -198,8 +198,9 @@ export async function fear_table_script() {
                 const pronoun = swim.get_pronoun(actor)
                 const roundRoll = await new Roll(`2d6`).evaluate({ async: false });
                 const rounds = roundRoll.total
-                await game.succ.addCondition('heart-attack', token, {forceOverlay: true});
-                const eff = effects[0] //Only expect a single effect returned.
+                // SUCC's addCondition returns the created/updated effects.
+                const effects = await game.succ.addCondition('heart-attack', token, {forceOverlay: true});
+                const eff = effects?.[0] //Only expect a single effect returned.
                 const data = {
                     duration: {
                         rounds: rounds,
@@ -216,7 +217,7 @@ export async function fear_table_script() {
                         }
                     }
                 }
-                await eff.update(data)
+                if (eff) { await eff.update(data) }
                 chatData = `${officialClass}<p>${game.i18n.format("SWIM.chatMessage-heartAttackFailureMessage", { name: token.name, rounds: rounds, pronoun: pronoun })}</p></div>`
             }
             ChatMessage.create({ content: chatData });
