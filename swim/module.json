@@ -47,8 +47,8 @@
 				"type": "module",
 				"manifest": "https://gitlab.com/foundry-azzurite/settings-extender/-/jobs/artifacts/master/raw/dist/settings-extender/module.json?job=build",
 				"compatibility": {
-					"minimum": "1.2.3",
-					"verified": "1.2.3"
+					"minimum": "1.2.2",
+					"verified": "1.2.2"
 				}
 			},
 			{
@@ -56,8 +56,8 @@
 				"type": "module",
 				"manifest": "https://raw.githubusercontent.com/SalieriC/SUCC/main/succ/module.json",
 				"compatibility": {
-					"minimum": "4.1.0",
-					"verified": "4.1.0"
+					"minimum": "3.0.0",
+					"verified": "3.0.0"
 				}
 			},
 			{
@@ -65,8 +65,8 @@
 				"type": "module",
 				"manifest": "https://raw.githubusercontent.com/manuelVo/foundryvtt-socketlib/v1.1.0/module.json",
 				"compatibility": {
-					"minimum": "1.1.0",
-					"verified": "1.1.0"
+					"minimum": "1.0.13",
+					"verified": "1.0.13"
 				}
 			},
 			{
@@ -74,8 +74,8 @@
 				"type": "module",
                 "manifest": "https://github.com/theripper93/portal-lib/releases/download/2.2.12/module.json",
                 "compatibility": {
-					"minimum": "2.2.12",
-                    "verified": "2.2.12"
+					"minimum": "1.0.7",
+                    "verified": "1.0.7"
 				}
 			}
 		]
