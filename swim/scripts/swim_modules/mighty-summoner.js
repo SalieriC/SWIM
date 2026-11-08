@@ -130,15 +130,19 @@ export async function summoner_script(data) {
                         const duration = noPP ? Number(-1) : Number(html.find(`#duration`)[0].value)
                         const skillName = noPP ? html.find(`#skillSelection`)[0].value : false
                         
+                        // The summoning user becomes Owner of the summoned token's (synthetic) actor right at creation, so they can control it.
+                        // This is what Warp Gate did (`actorData.ownership`, `delta` in v11); Portal does not do it. Applied while the token is created,
+                        // so no permission to update the actor afterwards is needed.
+                        const summonerOwnership = { ownership: { [game.user.id]: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER } }
                         let updates
                         if (raise === false) {
                             updates = {
-                                token: { name: `${summonersName}'s ${scName}`, disposition: summonersDisposition, actorLink: false }, //don't want to mess with the source actor in case it is linked.
+                                token: { name: `${summonersName}'s ${scName}`, disposition: summonersDisposition, actorLink: false, delta: summonerOwnership }, //don't want to mess with the source actor in case it is linked.
                                 actor: { name: `${summonersName}'s ${scName}` },
                             }
                         } else if (raise === true) {
                             updates = {
-                                token: { name: `${summonersName}'s ${scName}`, disposition: summonersDisposition, actorLink: false },
+                                token: { name: `${summonersName}'s ${scName}`, disposition: summonersDisposition, actorLink: false, delta: summonerOwnership },
                                 actor: {
                                     name: `${summonersName}'s ${scName}`,
                                     "system.wounds.max": scMaxWounds + 1
@@ -148,7 +152,9 @@ export async function summoner_script(data) {
 
                         //Set up the portal:
                         const portal = new Portal()
-                            .addCreature(scActor, {count: 1, updateData: updates}) // Portal only applies updates passed here ({token, actor}), not to spawn().
+                            // Portal only applies updates passed here, not to spawn(). Only the *token* updates are given to Portal:
+                            // players can't update the summoned creature's actor (no ownership), the GM handler applies `updates.actor` instead.
+                            .addCreature(scActor, {count: 1, updateData: { token: updates.token }})
                             .color(game.user.color.css)
                             .texture(scActor.prototypeToken.texture.src)
                             .origin(token)
@@ -201,6 +207,7 @@ export async function summoner_script(data) {
                             summonerID: token.id,
                             scID: scID,
                             tokenID: spawnData[0]._id,
+                            actorUpdates: updates.actor, //applied by the GM in summoner_gm()
                             maintID: maintID,
                             duration: duration,
                             mirror: scID === actor._id ? true : false,
@@ -293,8 +300,22 @@ export async function summoner_script(data) {
 export async function summoner_gm(data) {
     let newTokenID = data.tokenID
     let newToken = canvas.tokens.get(newTokenID)
+    // The token was created by the player's client; give the GM's canvas a moment to draw it.
+    for (let waited = 0; !newToken && waited < 3000; waited += 50) {
+        await new Promise(resolve => setTimeout(resolve, 50))
+        newToken = canvas.tokens.get(newTokenID)
+    }
+    if (!newToken) {
+        ui.notifications.error(game.i18n.localize("SWIM.notification.generalErrorMsg"))
+        throw new Error(`SWIM | Summoner: token ${newTokenID} not found on the GM's canvas (is the GM on the same scene?).`)
+    }
     const summonerID = data.summonerID
     const summoner = canvas.tokens.get(summonerID).document
+
+    //Update the summoned creature's actor (name, raise wound). This needs GM permission, players don't own the summoned creature.
+    if (data.actorUpdates && !data.mirror) {
+        await newToken.document.actor.update(data.actorUpdates)
+    }
 
     //Time for some real bad trickery in case it's a mirrored self:
     if (data.mirror) {
