@@ -3,7 +3,7 @@
  * // v.7.0.0
  * By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
  ******************************************/
-import {socket} from "../init.js"
+import { execute_as_gm } from "../helpers/socket_helper.js"
 
 export async function personal_health_centre_script(data) {
     //const { speaker, _, __, token } = await swim.get_macro_variables()
@@ -84,7 +84,7 @@ async function healOther(token, target) {
                         method: method,
                         combatHealing: combatHealing
                     }
-                    await socket.executeAsGM(heal_other_gm, data)
+                    await execute_as_gm("healOther", data)
                 }
             },
             two: {
@@ -105,7 +105,7 @@ async function healOther(token, target) {
                         method: method,
                         combatHealing: combatHealing
                     }
-                    await socket.executeAsGM(heal_other_gm, data)
+                    await execute_as_gm("healOther", data)
                 }
             },
             four: {
@@ -120,7 +120,7 @@ async function healOther(token, target) {
                         method: method,
                         combatHealing: combatHealing
                     }
-                    await socket.executeAsGM(heal_other_gm, data)
+                    await execute_as_gm("healOther", data)
                 }
             }
         }

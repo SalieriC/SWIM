@@ -204,6 +204,7 @@
     "SWIM.chatMessage-healOtherCritFailAndIncap": "{tokenName} versuchte {targetName} zu heilen, versagte aber elendig und das Ziel ist nun <em>Außer Gefecht</em>.",
     "SWIM.chatMessage-healOtherRelief": "{tokenName} linderte {targetName}s Erschöpfung und entfernte eine <em>Erschöpfungsstufe</em> und/oder <em>Angeschlagen</em>.",
     "SWIM.notification.generalErrorMsg": "Es ist ein Fehler aufgetreten. In der Konsole finden sich weitere Details.",
+    "SWIM.notification.noGMConnected": "Es ist kein GM verbunden. Diese Aktion muss von einem GM ausgeführt werden, bitte den GM, online zu sein.",
     "SWIM.combatPlaylistHint": "Bestimmt den Namen der Wiedergabeliste die bei Beginn einer Begegnung gespielt wird. Der Name muss mit korrekter Groß- und Kleinschreibung eingegeben werden.",
     "SWIM.noStopFolderName": "Ordner der Wiedergabelisten die nicht angehalten werden:",
     "SWIM.dialogue-yes": "Ja.",

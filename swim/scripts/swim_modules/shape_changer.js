@@ -18,7 +18,7 @@
  ******************************************************/
 
 import * as SWIM from '../constants.js'
-import { socket } from '../init.js'
+import { execute_as_gm } from '../helpers/socket_helper.js'
 import { spawn_token, dismiss_token, wait_for_placeable } from '../helpers/token_spawn.js'
 
 export async function shape_changer_script(data) {
@@ -102,7 +102,7 @@ export async function shape_changer_script(data) {
                             userID: game.user.id,
                             sceneID: game.scenes.current._id
                         }
-                        await socket.executeAsGM(shape_changer_gm, data)
+                        await execute_as_gm("shapeChanger", data)
                     }
                 },
                 two: {
@@ -117,7 +117,7 @@ export async function shape_changer_script(data) {
                             userID: game.user.id,
                             sceneID: game.scenes.current._id
                         }
-                        await socket.executeAsGM(shape_changer_gm, data)
+                        await execute_as_gm("shapeChanger", data)
                     }
                 }
             },

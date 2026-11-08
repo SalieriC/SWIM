@@ -3,7 +3,7 @@
  * // v.2.0.0
  * By SalieriC#8263
  ******************************************/
-import {socket} from "../init.js"
+import { execute_as_gm } from "../helpers/socket_helper.js"
 
 export async function craft_campfire_script() {
     //Get asset:
@@ -29,7 +29,7 @@ export async function craft_campfire_script() {
             _id: game.scenes.current._id
         }
     }
-    await socket.executeAsGM(craft_campfire_gm, data)
+    await execute_as_gm("craftCampfire", data)
     if (game.modules.get('monks-active-tiles')?.active) {
         ui.notifications.notify(game.i18n.localize("SWIM.notification.campfireCreated"))
     }

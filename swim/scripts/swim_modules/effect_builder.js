@@ -17,7 +17,7 @@
  * The Light power uses Active Token Effects which is not updated to v14 and might need a replacement.
  ******************************************************/
 import * as SWIM from '../constants.js'
-import {socket} from "../init.js"
+import { execute_as_gm } from "../helpers/socket_helper.js"
 
 // ============================================================================
 // PART 1: Dialogue Creation
@@ -214,7 +214,7 @@ async function processEffectSelection(html, token, targets, targetIDs, maintID, 
     }
 
     data.power = power
-    await socket.executeAsGM(effect_builder_gm, data)
+    await execute_as_gm("effectBuilder", data)
 }
 
 // ============================================================================

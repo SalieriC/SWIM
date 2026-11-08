@@ -6,7 +6,7 @@
  * v. 2.0.0
  * By SalieriC
  ******************************************************/
-import {socket} from "../init.js"
+import { execute_as_gm } from "../helpers/socket_helper.js"
 
 export async function common_bond_script() {
     const { speaker, _, __, token } = await swim.get_macro_variables()
@@ -49,7 +49,7 @@ export async function common_bond_script() {
                         tokenID: token.id,
                         targetID: target.id
                     }
-                    await socket.executeAsGM(common_bond_gm, data)
+                    await execute_as_gm("commonBond", data)
                 }
             },
             two: {

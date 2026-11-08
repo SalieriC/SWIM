@@ -10,7 +10,7 @@
  * - Retort
  * - Strong Willed
  ******************************************/
-import { socket } from "../init.js"
+import { execute_as_gm } from "../helpers/socket_helper.js"
 
 export async function tester_script() {
     let { speaker, _, __, token } = await swim.get_macro_variables()
@@ -156,15 +156,15 @@ export async function tester_script() {
         };
 
         if (critFail) {
-            await socket.executeAsGM(tester_gm, data) // Notify GM with data
+            await execute_as_gm("tester", data) // Notify GM with data
             ui.notifications.warn(game.i18n.localize("SWIM.notification-critFail"))
             return;
         } if (raise) {
-            await socket.executeAsGM(tester_gm, data)
+            await execute_as_gm("tester", data)
             return; // Early return after applying the result
         } if (totalBennies === 0) {
             ui.notifications.warn(game.i18n.localize("SWIM.notification-noBenniesLeft"));
-            await socket.executeAsGM(tester_gm, data)
+            await execute_as_gm("tester", data)
             return; // Early return if out of Bennies
         }
 
@@ -193,7 +193,7 @@ export async function tester_script() {
                 apply: {
                     label: game.i18n.localize("SWIM.dialogue-apply"),
                     callback: async () => {
-                        await socket.executeAsGM(tester_gm, data)
+                        await execute_as_gm("tester", data)
                     },
                 },
             },
@@ -236,15 +236,15 @@ export async function tester_script() {
         };
 
         if (critFail) {
-            await socket.executeAsGM(tester_gm, data)
+            await execute_as_gm("tester", data)
             ui.notifications.warn(game.i18n.localize("SWIM.notification-critFail"))
             return;
         } if (raise) {
-            await socket.executeAsGM(tester_gm, data)
+            await execute_as_gm("tester", data)
             return; // Early return after applying the result
         } if (totalBennies === 0) {
             ui.notifications.warn(game.i18n.localize("SWIM.notification-noBenniesLeft"));
-            await socket.executeAsGM(tester_gm, data)
+            await execute_as_gm("tester", data)
             return; // Early return if out of Bennies
         }
 
@@ -280,7 +280,7 @@ export async function tester_script() {
                 apply: {
                     label: game.i18n.localize("SWIM.dialogue-apply"),
                     callback: async () => {
-                        await socket.executeAsGM(tester_gm, data)
+                        await execute_as_gm("tester", data)
                         // Handle applying the result
                         // You can access the total with: roll.total
                     },
@@ -292,7 +292,6 @@ export async function tester_script() {
 }
 
 export async function tester_gm(data) {
-    console.log(data)
     const tokenId = data.tokenId;
     const targetId = data.targetId;
     const sceneId = data.sceneId;

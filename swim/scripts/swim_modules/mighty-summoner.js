@@ -16,7 +16,7 @@
  * v. 2.0.2
  * By SalieriC
  ******************************************************/
-import {socket} from "../init.js"
+import { execute_as_gm } from "../helpers/socket_helper.js"
 
 function generate_id(length = 16) {
     var result = 'SWIM-';
@@ -216,7 +216,7 @@ export async function summoner_script(data) {
                             }
                         }
                         
-                        await socket.executeAsGM(summoner_gm, data)
+                        await execute_as_gm("summoner", data)
                     }
                 }
             },
@@ -237,7 +237,7 @@ export async function summoner_script(data) {
                         const dismissData = [token.id]
                         await play_sfx(dismissData)
                         await swim.wait(`200`) // delay script execution so that the vfx has time to get the tokens position
-                        await socket.executeAsGM(summoner_dismiss, {tokenID: token.id, sceneID: game.scenes.current.id})
+                        await execute_as_gm("summonerDismiss", {tokenID: token.id, sceneID: game.scenes.current.id})
                         for (let each of game.scenes.current.tokens) {
                             const maintEffect = each.actor ? each.actor.effects.find(e => e.flags?.swim?.maintenanceID === maintenanceID) : each.actorData.effects.find(e => e.flags?.swim?.maintenanceID === maintenanceID)
                             if (maintEffect) {
