@@ -385,7 +385,7 @@ export async function soak_damage_script(effect = false) {
                 }
             }
         };
-        injuryData.img = img;
+        injuryData.icon = img; // ActiveEffect icon field in Foundry v11 (`img` is v12+ and is ignored)
         if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-unmentionables").toLowerCase())) {
             //unmentionables; create dummy AE without actual effect
             injuryData.label = game.i18n.localize("SWIM.injury-unmentionables");

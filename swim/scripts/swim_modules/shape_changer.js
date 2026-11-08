@@ -71,7 +71,7 @@ export async function shape_changer_script(data) {
 
         if (!scOptions) {
             // Nothing to choose from: tell the player what the GM has to set up instead of showing an empty list.
-            ui.notifications.error(game.i18n.localize("SWIM.notification.noShapeChangePresets"))
+            ui.notifications.error(game.i18n.localize("SWIM.notification.noShapeChangePresets"), { permanent: true })
             return
         }
 

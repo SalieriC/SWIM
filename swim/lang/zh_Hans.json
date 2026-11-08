@@ -194,7 +194,7 @@
 	"SWIM.dialogue-rerollText": "<form>你已经化解了 <strong>{rounded} 损伤</strong>；你将会 <strong>遭受 {currWounds} 损伤</strong>。</br>你要重投化解投骰吗（你剩下的助力点数是<strongb>{totalBennies} </strong> ）？</form>",
 	"SWIM.dialogue-incapacitationRollText": "<form><p>你因为伤害而无力化。</p><p>你必须立刻进行一次活力投骰，若是大失败就会死亡。 </p></form>",
 	"SWIM.dialogue-healOther": "治疗他人",
-	"SWIM.dialogue.healOtherSelect": "`${officialClass}<p>结果是多少？你是要治疗还是移除疲乏？</p><p><strong>备注：</strong>如果在治疗或是缓和奇术中出现<em>大失败</em> ，那你不应看到此文本。使用此奇术时只有在选择<em>成功</em> 或 <em>优良</em> 时才会显示这部分。</p><p><strong>重点：</strong> Y你能在战斗中使用<strong>治疗技能</strong> 来稳定伤势（移除<em>无力化</em>以及/或是<em>失血</em>）。这需要一个动作。若要如此，请勾选下方的复选框。</p>",
+	"SWIM.dialogue.healOtherSelect": "{officialClass}<p>结果是多少？你是要治疗还是移除疲乏？</p><p><strong>备注：</strong>如果在治疗或是缓和奇术中出现<em>大失败</em> ，那你不应看到此文本。使用此奇术时只有在选择<em>成功</em> 或 <em>优良</em> 时才会显示这部分。</p><p><strong>重点：</strong> Y你能在战斗中使用<strong>治疗技能</strong> 来稳定伤势（移除<em>无力化</em>以及/或是<em>失血</em>）。这需要一个动作。若要如此，请勾选下方的复选框。</p>",
 	"SWIM.dialogue-healTarget": "治疗目标",
 	"SWIM.dialogue-healSelf": "治疗自身",
 	"SWIM.dialogue.healSelfContent": "{officialClass}<h3>治疗自身。</h3><p>你已经选中了一个指示物，而且可能也将其作为了目标。这只能让你治疗自己的指示物。</p><p>若是打算治疗他人，请选择自身以外的另一指示物作为目标。</p></div>",

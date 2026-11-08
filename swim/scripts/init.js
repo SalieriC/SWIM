@@ -3,7 +3,7 @@ import { register_settings } from './settings.js'
 import { swim_buttons } from './buttons.js'
 import { gm_relay } from './gm_relay.js'
 import { shape_changer_gm } from './swim_modules/shape_changer.js'
-import { summoner_gm, summoner_dismiss, summoner_spawn_gm } from './swim_modules/mighty-summoner.js'
+import { summoner_gm, summoner_dismiss } from './swim_modules/mighty-summoner.js'
 import { heal_other_gm } from './swim_modules/personal_health_centre.js'
 import { common_bond_gm } from './swim_modules/common_bond.js'
 import { effect_builder_gm } from './swim_modules/effect_builder.js'
@@ -50,7 +50,6 @@ Hooks.once("socketlib.ready", () => {
     socket = socketlib.registerModule("swim");
     socket.register("effectBuilder", effect_builder_gm);
     socket.register("shapeChanger", shape_changer_gm);
-    socket.register("summonerSpawn", summoner_spawn_gm);
     socket.register("summoner", summoner_gm);
     socket.register("summonerDismiss", summoner_dismiss);
     socket.register("healOther", heal_other_gm);
