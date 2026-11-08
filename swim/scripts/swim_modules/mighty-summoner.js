@@ -148,13 +148,15 @@ export async function summoner_script(data) {
 
                         //Set up the portal:
                         const portal = new Portal()
-                            .addCreature(scActor, {count: 1})
+                            .addCreature(scActor, {count: 1, updateData: updates}) // Portal only applies updates passed here ({token, actor}), not to spawn().
                             .color(game.user.color.css)
                             .texture(scActor.prototypeToken.texture.src)
                             .origin(token)
                             .range(token.actor.system.attributes.smarts.die.sides)
 
-                        const spawnData = await portal.spawn(updates)
+                        const spawnData = await portal.spawn()
+                        // Portal returns false if the placement was cancelled (right click) or no token could be created.
+                        if (!spawnData?.length) { return }
                         await play_sfx(spawnData)
 
                         //Active Effect:

@@ -9,17 +9,21 @@ export async function craft_campfire_script() {
     //Get asset:
     const campfireTextureLit = game.settings.get('swim', 'campfireImgOn')
     //Pick the campfire location:
-    const portal = await new Portal()
+    // Portal 1.0.7 needs an origin or pick() throws; use the controlled token if there is one.
+    // No range limit (the former `.range(1)` would be 1 *scene distance unit* in Portal, i.e. practically unusable with an origin).
+    const originToken = canvas.tokens.controlled[0]
+    const picked = await new Portal()
         .color("#ff0000")
         .texture(campfireTextureLit)
-        .range(1)
+        .origin(originToken ?? { x: 0, y: 0, elevation: 0 })
         .pick()
+    if (!picked) { return } // placement cancelled (right click)
 
     const data = {
         icon: campfireTextureLit,
         position: {
-            x: portal.x,
-            y: portal.y,
+            x: picked.x,
+            y: picked.y,
         },
         scene: {
             _id: game.scenes.current._id
