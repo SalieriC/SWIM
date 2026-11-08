@@ -89,13 +89,12 @@ export async function fear_table_script() {
         const hesitant = actor.system.initiative.hasHesitant === true ? true : actor.items.find(i => i.name === game.i18n.localize("SWIM.hindrance-hesitant") && i.type === "hindrance")
         if (hesitant && total >= 14 && total <= 15) { total = 16 } //If already hesitant, adjust total to panicked instead.
         if (total <= 3) {
-            //Adrenaline Surge (act as if a joker this turn)
-            let changes = []
-            for (let each of actor.items.filter(e => e.type === "weapon" || e.type === "power")) {
-                changes.push({ key: `@${each.type}{${each.name}}[system.actions.dmgMod]`, mode: 2, priority: undefined, value: 2 })
-            } for (let skill of actor.items.filter(s => s.type === "skill")) {
-                changes.push({ key: `@Skill{${skill.name}}[system.die.modifier]`, mode: 2, priority: undefined, value: 2 })
-            }
+            //Adrenaline Surge (act as if a joker this turn): +2 to all trait rolls and damage rolls.
+            //SWADE global modifiers (system.stats.globalMods.*) apply to every Trait and damage roll, no per-item changes needed.
+            const changes = [
+                { key: 'system.stats.globalMods.trait', mode: 2, priority: undefined, value: 2 },
+                { key: 'system.stats.globalMods.damage', mode: 2, priority: undefined, value: 2 }
+            ]
 
             let duration = {
                 rounds: 0,
@@ -107,7 +106,7 @@ export async function fear_table_script() {
             let effData = {
                 changes: changes,
                 icon: "icons/magic/life/heart-cross-strong-flame-purple-orange.webp",
-                label: game.i18n.localize("SWIM.fearResult-AdrenalineSurge"),
+                name: game.i18n.localize("SWIM.fearResult-AdrenalineSurge"),
                 duration: duration,
                 flags: {
                     swade: {
@@ -264,7 +263,7 @@ async function gain_phobia(actor, major, total) {
     let effData = {
         changes: changes,
         icon: "icons/magic/death/skull-horned-worn-fire-blue.webp",
-        label: game.i18n.localize("SWIM.fearResult-Phobia"),
+        name: game.i18n.localize("SWIM.fearResult-Phobia"),
         flags: {
             swade: {
                 "favorite": true
