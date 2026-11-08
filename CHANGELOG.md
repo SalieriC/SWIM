@@ -28,6 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Removed Warpgate requirement as it is no longer maintained.
 - Removed systems key from the manifest because Foundry was bitching about that for no reason at all.
+### Known Issues
+- Mighty Summoner can place the summoned token on top of another. That happens because the token creation is now relayed to the GM and thus looses the *nudge* token from Portal-Lib.
 
 ## [2.6.1] - 2024-05-12
 ### Fixed

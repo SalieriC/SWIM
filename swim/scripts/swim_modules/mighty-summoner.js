@@ -17,6 +17,7 @@
  * By SalieriC
  ******************************************************/
 import { execute_as_gm } from "../helpers/socket_helper.js"
+import { spawn_token, wait_for_placeable } from "../helpers/token_spawn.js"
 
 function generate_id(length = 16) {
     var result = 'SWIM-';
@@ -146,17 +147,32 @@ export async function summoner_script(data) {
                             }
                         }
 
-                        //Set up the portal:
+                        //Set up the portal. It is only used to pick the location (with preview and range), the token itself
+                        //is created by the GM client, because players usually lack the permission to create tokens.
                         const portal = new Portal()
-                            .addCreature(scActor, {count: 1, updateData: updates}) // Portal only applies updates passed here ({token, actor}), not to spawn().
+                            .addCreature(scActor, {count: 1}) // Needed so the preview has the creature's size.
                             .color(game.user.color.css)
                             .texture(scActor.prototypeToken.texture.src)
                             .origin(token)
                             .range(token.actor.system.attributes.smarts.die.sides)
 
-                        const spawnData = await portal.spawn()
-                        // Portal returns false if the placement was cancelled (right click) or no token could be created.
-                        if (!spawnData?.length) { return }
+                        const picked = await portal.pick()
+                        // Portal returns false if the placement was cancelled (right click).
+                        if (!picked) { return }
+                        const newTokenId = await execute_as_gm("summonerSpawn", {
+                            actorID: scActor.id,
+                            sceneID: token.document.parent.id,
+                            position: { x: picked.x, y: picked.y },
+                            elevation: picked.elevation ?? token.document.elevation ?? 0,
+                            updates: updates
+                        })
+                        const newTokenDoc = token.document.parent.tokens.get(newTokenId)
+                        if (!newTokenDoc) {
+                            ui.notifications.error(game.i18n.localize("SWIM.notification.generalErrorMsg"))
+                            return
+                        }
+                        await wait_for_placeable(newTokenDoc)
+                        const spawnData = [newTokenDoc]
                         await play_sfx(spawnData)
 
                         //Active Effect:
@@ -280,6 +296,29 @@ export async function summoner_script(data) {
             await swim.wait(`800`);
         }
     }
+}
+
+/**
+ * GM-side: creates the summoned creature's token (and applies the actor updates).
+ * The player client only picks the location. Returns the new token id.
+ */
+export async function summoner_spawn_gm(data) {
+    const actor = game.actors.get(data.actorID)
+    const scene = game.scenes.get(data.sceneID)
+    if (!actor || !scene) {
+        ui.notifications.error(game.i18n.localize("SWIM.notification.generalErrorMsg"))
+        throw new Error(`SWIM | Summoner: actor ${data.actorID} or scene ${data.sceneID} not found.`)
+    }
+    const updates = data.updates ?? {}
+    const tokenDoc = await spawn_token(actor, data.position, {
+        scene: scene,
+        updates: { ...(updates.token ?? {}), elevation: data.elevation ?? 0 }
+    })
+    if (!tokenDoc) { throw new Error("SWIM | Summoner: could not create the token.") }
+    if (updates.actor) { await tokenDoc.actor.update(updates.actor) }
+    // Make sure the GM's canvas has drawn the token, summoner_gm() looks it up on the canvas.
+    await wait_for_placeable(tokenDoc)
+    return tokenDoc.id
 }
 
 export async function summoner_gm(data) {
