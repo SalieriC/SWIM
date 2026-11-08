@@ -247,6 +247,7 @@
   "SWIM.chatMessage-healOtherRaise":"{tokenName} healed {targetName} for two Wounds.",
   "SWIM.chatMessage-healOtherRaiseContinued":" And healed {targetName} for one Wound.",
   "SWIM.notification.generalErrorMsg":"An error occured. See the console (F12) for more details.",
+  "SWIM.notification.noShapeChangePresets":"No Shape Change presets are available to you. Your GM has to set them up first: import the '[SWIM] Shape Change Presets' folder from the compendium and give players at least Limited permission on the actors in it. Also, presets must not be larger than your rank allows (unless the GM ignores that rule in the SWIM settings).",
   "SWIM.notification.noGMConnected":"No GM is connected. This action has to be carried out by a GM, please ask your GM to be online.",
   "SWIM.dialogue-noWoundsNorFatigue": "<form><p>You currently neither have any Wounds nor Fatigue. There is nothing for you to do here.</p></form>",
   "SWIM.dialogue-nevermind":"Nevermind...",

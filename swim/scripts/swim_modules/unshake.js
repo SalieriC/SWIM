@@ -270,7 +270,7 @@ export async function unshake_swade_script(effect = false) {
             } //Finally, if the unShakeBonus does not come from an AE apply it generically (as of yet this is just a failsafe but makes the script future proof.)
         } else if (unShakeBonus != 0) {
             rollWithEdge += unShakeBonus;
-            edgeText += game.i18n.format("SWIM.dialogue-SWIM.chatMessage-unshakeBonusOtherActor", { unShakeBonus: unShakeBonus });
+            edgeText += game.i18n.format("SWIM.chatMessage-unshakeBonusOtherActor", { unShakeBonus: unShakeBonus });
         }
 
         let chatData = game.i18n.format("SWIM.chatMessage-unshakeResultRoll", { name: actorAlias, rollWithEdge: rollWithEdge });

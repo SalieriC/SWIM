@@ -20,7 +20,7 @@ export async function personal_health_centre_script(data) {
     if (game.user.targets.size === 1 && (token.id != target.id)) {
         new Dialog({
             title: game.i18n.localize("SWIM.dialogue-healOther"),
-            content: game.i18n.format("SWIM.dialogue.healOtherContent", {officalClass : officialClass}),
+            content: game.i18n.format("SWIM.dialogue.healOtherContent", {officialClass : officialClass}),
             buttons: {
                 one: {
                     label: game.i18n.localize("SWIM.dialogue-healTarget"),
@@ -61,7 +61,7 @@ async function healOther(token, target) {
     const methodOptions = `<option value="heal">Heal Wound(s)</option><option value="relief">Remove Fatigue</option>`
     new Dialog({
         title: game.i18n.localize("SWIM.dialogue-healOther"),
-        content: game.i18n.format("SWIM.dialogue.healOtherSelect", {officalClass : officialClass})+`
+        content: game.i18n.format("SWIM.dialogue.healOtherSelect", {officialClass : officialClass})+`
         <div class="form-group">
                 <label for="method">Method: </label>
                 <select id="method">${methodOptions}</select>
@@ -204,7 +204,7 @@ export async function heal_other_gm(data) {
                         await incCondition.update({"flags.core.overlay": true})
                     }
                 }
-                chatContent = game.i18n.format("SWIM.chatMessage-healOtherCureBleetOut", {tokenName : token.name, targetName : target.name})
+                chatContent = game.i18n.format("SWIM.chatMessage-healOtherCureBleedOut", {tokenName : token.name, targetName : target.name})
             } else if (targetInc) {
                 await game.succ.removeCondition('incapacitated', targetActor);
                 chatContent = game.i18n.format("SWIM.chatMessage-healOtherCureIncap", {tokenName : token.name, targetName : target.name}) //Incapacitation: Healing at least one Wound on an Incapacitated patient removes that state (and restores consciousness if he was knocked out). -> so a Wound is healed in any case(?).
@@ -246,7 +246,7 @@ export async function heal_other_gm(data) {
                 if (targetBleedOut) {
                     await game.succ.removeCondition('bleeding-out', targetActor);
                     amount = amount - 1
-                    chatContent = game.i18n.format("SWIM.chatMessage-healOtherCureBleetOut", {tokenName : token.name, targetName : target.name})
+                    chatContent = game.i18n.format("SWIM.chatMessage-healOtherCureBleedOut", {tokenName : token.name, targetName : target.name})
                 } if (targetInc) {
                     await game.succ.removeCondition('incapacitated', targetActor);
                     //amount = amount - 1 //Incapacitation: Healing at least one Wound on an Incapacitated patient removes that state (and restores consciousness if he was knocked out). -> so a Wound is healed in any case(?).
@@ -267,7 +267,7 @@ export async function heal_other_gm(data) {
             }
         }
     } else {
-        ui.notifications.error(game.i18n.localize("SWIM.notification-generalErrorMsg"));
+        ui.notifications.error(game.i18n.localize("SWIM.notification.generalErrorMsg"));
         console.error("The heal_other_gm() function wasn't passed the proper success rating. Please report this to the SWIM developer on the repository or directly to him on Discord: SalieriC#8263.")
     }
     async function apply() {
