@@ -242,7 +242,7 @@ export async function effect_builder_gm(data) {
     let additionalChange = []
     if (casterIsTarget && noPP && !(["blind","confusion","sloth"].includes(type))) {
         if (power) {
-            const skillName = power.system.actions.skill
+            const skillName = power.system.actions.trait
             additionalChange.push({
                 key: `@Skill{${skillName}}[system.die.modifier]`,
                 mode: 2,
@@ -1019,7 +1019,7 @@ export async function effect_builder_gm(data) {
 
     // CREATE CASTER PENALTY EFFECT (if needed)
     if (data.addCasterPenalty && power) {
-        const skillName = power.system.actions.skill
+        const skillName = power.system.actions.trait
         const durationRounds = data.durationRounds || (data.duration ? data.duration : 5)
         const durationSeconds = data.durationSeconds
 

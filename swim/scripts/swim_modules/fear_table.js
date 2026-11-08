@@ -106,7 +106,7 @@ export async function fear_table_script() {
 
             let effData = {
                 changes: changes,
-                img: "icons/magic/life/heart-cross-strong-flame-purple-orange.webp",
+                icon: "icons/magic/life/heart-cross-strong-flame-purple-orange.webp",
                 label: game.i18n.localize("SWIM.fearResult-AdrenalineSurge"),
                 duration: duration,
                 flags: {
@@ -263,7 +263,7 @@ async function gain_phobia(actor, major, total) {
 
     let effData = {
         changes: changes,
-        img: "icons/magic/death/skull-horned-worn-fire-blue.webp",
+        icon: "icons/magic/death/skull-horned-worn-fire-blue.webp",
         label: game.i18n.localize("SWIM.fearResult-Phobia"),
         flags: {
             swade: {

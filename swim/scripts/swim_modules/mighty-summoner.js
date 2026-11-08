@@ -92,8 +92,8 @@ export async function summoner_script(data) {
         } if (noPP) {
             let skillOptions = ""
             for (let power of actor.items.filter(p => p.type === "power")) {
-                if (!skillOptions.includes(power.system.actions.skill)) {
-                    skillOptions += skillOptions + `<option value="${power.system.actions.skill}">${power.system.actions.skill}</option>`
+                if (!skillOptions.includes(power.system.actions.trait)) {
+                    skillOptions += `<option value="${power.system.actions.trait}">${power.system.actions.trait}</option>`
                 }
             }
             if (!skillOptions) {
@@ -167,7 +167,7 @@ export async function summoner_script(data) {
 
                         let aeData = {
                             changes: [],
-                            img: "modules/swim/assets/icons/effects/0-summoned.svg",
+                            icon: "modules/swim/assets/icons/effects/0-summoned.svg",
                             name: actor.id === scID ? `${game.i18n.localize("SWIM.label-summonedEntity")} ${game.i18n.localize("SWIM.word-Mirrored")} ${scName}` : `${game.i18n.localize("SWIM.label-summonedEntity")} ${scName}`,
                             duration: {
                                 rounds: durationRounds,
@@ -383,7 +383,7 @@ export async function summoner_gm(data) {
     // Setting up AE.
     let aeData = {
         changes: [],
-        img: "modules/swim/assets/icons/effects/0-summoned.svg",
+        icon: "modules/swim/assets/icons/effects/0-summoned.svg",
         name: game.i18n.localize("SWIM.label-summoned"),
         duration: {
             rounds: durationRounds,
@@ -429,7 +429,7 @@ export async function summoner_gm(data) {
                 "mode": 2
             }
         ],
-        img: "",
+        icon: "",
         name: "",
     }
     let command = summoner.actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-command").toLowerCase())
@@ -439,7 +439,7 @@ export async function summoner_gm(data) {
         commandAeData.name = "Is under exceptional command"
         commandAeData.img = fervor.img
         const fightingTraitName = game.settings.get("swade", "parryBaseSkill")
-        for (let weapon of newToken.actor.items.filter(i => i.type === "weapon" && i.system.actions.skill === fightingTraitName)) {
+        for (let weapon of newToken.actor.items.filter(i => i.type === "weapon" && i.system.actions.trait === fightingTraitName)) {
             commandAeData.changes.push({
                 "key": `@Weapon{${weapon.name}}[system.actions.dmgMod]`,
                 "value": "+1",
