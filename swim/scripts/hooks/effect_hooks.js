@@ -1,4 +1,16 @@
 export async function effect_hooks() {
+    // Close the open character sheet(s) of a dismissed summoned creature, on EVERY client (players too).
+    // Only the sheet of the summoned token's own synthetic actor is closed, never the summoner's sheet.
+    Hooks.on(`deleteToken`, (tokenDoc) => {
+        const actor = tokenDoc.actor
+        if (!actor) return
+        // Unlinked tokens own a synthetic actor that disappears with the token (summoned creatures are always unlinked).
+        // Linked tokens share the world actor's sheet (e.g. the summoner's own), which must stay open.
+        if (tokenDoc.actorLink) return
+        for (const app of Object.values(actor.apps ?? {})) {
+            if (app.rendered) app.close()
+        }
+    })
     // Hooks on conditions
     Hooks.on(`createActiveEffect`, async (condition, _, userID) => {
         const actor = condition.parent
@@ -16,17 +28,6 @@ export async function effect_hooks() {
             if (condition.flags?.succ?.effectOptions?.swim?.activatedFromMacro === true) { return } //Prevent second execution if macro was used.
             swim.token_vision(condition)
         }
-        // Hold
-        /*
-        if (condition.flags?.succ?.conditionId === "holding" && swim.is_first_gm() && game.combat) {
-            const tokens = actor.getActiveTokens()
-            const combatID = game.combat.id
-            const currentTurn = game.combat.turn
-            for (let token of tokens) { await token.combatant.update({ "flags.swade.roundHeld": 1 }) }
-            await swim.wait('100') // Needed to give the whole thing some time to prevent issues with jokers.
-            warpgate.event.notify("SWIM.updateCombat-currentTurn", { combatID: combatID, currTurn: currentTurn })
-        }
-        */
         // Conviction
         if (condition.name === "Conviction") {
             // This prevents conviction expiration dialogue from core since SWADE handles it by itself.
@@ -123,49 +124,5 @@ export async function effect_hooks() {
             if (condition.flags?.swim?.deactivatedFromMacro === true) { return } //Prevent second execution if macro was used.
             swim.token_vision(condition)
         }
-        // Hold
-        /*
-        if (condition.flags?.succ?.conditionId === "holding" && game.user.id === userID) {
-            if (game.combat) {
-                const tokens = actor.getActiveTokens()
-                const currentCardValue = game.combat.combatant.flags.swade.cardValue
-                const currentSuitValue = game.combat.combatant.flags.swade.suitValue
-                const combatID = game.combat.id
-                new Dialog({
-                    title: game.i18n.localize("SWIM.dialogue-takingInitiativeTitle"),
-                    content: game.i18n.localize("SWIM.dialogue-takingInitiativeText"),
-                    buttons: {
-                        one: {
-                            label: game.i18n.localize("SWIM.dialogue-takingInitiative-ButtonNow"),
-                            callback: async (_) => {
-                                for (let token of tokens) {
-                                    await token.combatant.unsetFlag("swade", "roundHeld")
-                                    await token.combatant.update({
-                                        "flags.swade.cardValue": currentCardValue,
-                                        "flags.swade.suitValue": currentSuitValue + 0.01
-                                    })
-                                }
-                                await swim.wait('100') // Needed to give the whole thing some time to prevent issues with jokers.
-                                warpgate.event.notify("SWIM.updateCombat-previousTurn", { combatID: combatID })
-                            }
-                        },
-                        two: {
-                            label: game.i18n.localize("SWIM.dialogue-takingInitiative-ButtonAfter"),
-                            callback: async (_) => {
-                                for (let token of tokens) {
-                                    await token.combatant.unsetFlag("swade", "roundHeld")
-                                    await token.combatant.update({
-                                        "flags.swade.cardValue": currentCardValue,
-                                        "flags.swade.suitValue": currentSuitValue - 0.01
-                                    })
-                                }
-                            },
-                        }
-                    },
-                    //close: { callback: await succ.apply_status(actor, "holding", true) },
-                    default: "one"
-                }).render(true)
-            }
-        }*/
     })
 }

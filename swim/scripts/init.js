@@ -55,9 +55,6 @@ Hooks.once("socketlib.ready", () => {
     socket.register("healOther", heal_other_gm);
     socket.register("commonBond", common_bond_gm);
     socket.register("deleteActor", gm_relay.gmDeleteActor);
-    socket.register("updateCombat-previousTurn", gm_relay.combat_previousTurn);
-    socket.register("updateCombat-nextTurn", gm_relay.combat_nextTurn);
-    socket.register("updateCombat-currentTurn", gm_relay.combat_currentTurn);
     socket.register("craftCampfire", craft_campfire_gm);
     socket.register("tester", tester_gm);
 });
