@@ -245,8 +245,7 @@ export async function summoner_script(data) {
                     callback: async (_) => {
                         const tokenMaintEffect = actor.effects.find(e => e.flags?.swim?.isSummonedCreature === true)
                         const maintenanceID = tokenMaintEffect.flags?.swim?.maintenanceID
-                        const dismissData = [token.id]
-                        await play_sfx(dismissData)
+                        await play_sfx({ x: token.center.x, y: token.center.y }) // play_sfx() takes a location (since #12)
                         await swim.wait(`200`) // delay script execution so that the vfx has time to get the tokens position
                         await execute_as_gm("summonerDismiss", {tokenID: token.id, sceneID: game.scenes.current.id})
                         for (let each of game.scenes.current.tokens) {
