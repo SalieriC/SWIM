@@ -39,7 +39,7 @@ export async function shape_changer_script(data) {
     //Set div class based on enabled official module:
     const officialClass = await swim.get_official_class()
 
-    let totalContent = swim.get_folder_content("Shape Change Presets").filter(item => item.permission >= 1);
+    let totalContent = swim.get_folder_content("Shape Change Presets").filter(item => item.testUserPermission(game.user, "LIMITED"));
     totalContent.sort(function (a, b) {
         let textA = a.name.toUpperCase()
         let textB = b.name.toUpperCase()
@@ -53,7 +53,7 @@ export async function shape_changer_script(data) {
 
     async function main() {
         //Pre-selecting shape change actors based on rank:
-        let scOptions;
+        let scOptions = "";
         for (let each of totalContent) {
             let size = each.system.stats.size;
             let maxSize = 0;
@@ -67,6 +67,12 @@ export async function shape_changer_script(data) {
             if (size <= maxSize || game.user.isGM === true) {
                 scOptions = scOptions + `<option value="${each.id}">${each.name} [${game.i18n.localize("SWADE.Size")}: ${each.system.stats.size}]</option>`;
             }
+        }
+
+        if (!scOptions) {
+            // Nothing to choose from: tell the player what the GM has to set up instead of showing an empty list.
+            ui.notifications.error(game.i18n.localize("SWIM.notification.noShapeChangePresets"))
+            return
         }
 
         new Dialog({
