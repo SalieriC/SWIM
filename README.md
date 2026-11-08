@@ -18,6 +18,10 @@ Some macros contain SWADE rulings in a way that the macros execute them and some
 
 The Chase Layouts hold game rules and are licensed under the fan license as well (see above), permission was granted by Shane. The Layouts may *not* be redistributed under any circumstances.
 
+## Disclaimer
+This module was originally written  by real humans like myself. Unfortunately, I lacked the time to keep up with all the changes in the SWADE system, Foundry VTT and all the dependencies. Further, Warpgate was heavily used in this module and enabled around two thirds of the core functionality originally but it was abandoned and left SWIM with a lot of work. I knew that portal-lib and socket-lib could be employed to replace the functionality in Warpgate but between my day job, family and actually playing the game I love I had no time to maintain the module anymore. It might've been different if only one or two of these hurdles occured but with everything at once I was not just overwhelmed but also demoralised.  
+That's a lot of words just to say that I eventually resorted to AI to overhaul the module and give it a full rework. I still do all the testing myself in private and in my running campaigns, using my players as my trusty guinnea pigs. It's not a project completely devoid of anything human but I do make use of AI to maintain it. I don't like it either but without AI this project would very likely be dead now. AI enables me to work on it and get it back into players hands. I would love to do it without but I can't. Do with that information what you will.  
+
 ### Current Assets
 In this repository you can find a number of assets already.  
 - **Icons:** [Game-Icons.net](https://game-icons.net/) (all of them altered by SalieriC#8263).  
