@@ -133,7 +133,12 @@ export async function summoner_script(data) {
                         // The summoning user becomes Owner of the summoned token's (synthetic) actor right at creation, so they can control it.
                         // This is what Warp Gate did (`actorData.ownership`, `delta` in v11); Portal does not do it. Applied while the token is created,
                         // so no permission to update the actor afterwards is needed.
-                        const summonerOwnership = { ownership: { [game.user.id]: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER } }
+                        const OWNER_LEVEL = CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER
+                        // The summoned creature is also owned by everyone who owns the summoner (matters when the GM summons for a player's token). Not 'default'.
+                        const summonerOwnership = { ownership: { [game.user.id]: OWNER_LEVEL } }
+                        for (const [userId, level] of Object.entries(actor.ownership ?? {})) {
+                            if (userId !== "default" && level === OWNER_LEVEL) summonerOwnership.ownership[userId] = OWNER_LEVEL
+                        }
                         let updates
                         if (raise === false) {
                             updates = {
