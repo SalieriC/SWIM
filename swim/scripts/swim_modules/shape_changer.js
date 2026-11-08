@@ -7,21 +7,19 @@
  * gitHub if you find any problems with it:
  * https://github.com/SalieriC/SWADE-Immersive-Macros/issues/new
  * 
- * This macro requires Warp Gate by honeybadger:
- * https://foundryvtt.com/packages/warpgate
- * 
  * The Macro natively supports Sound Effects and if you
  * are using the Sequencer module by Wasp 
  * (https://foundryvtt.com/packages/sequencer), you can
  * also play a visual effect. SFX and VFX are configured
  * in the module settings of SWIM.
  * 
- * v. 2.4.0
+ * v. 2.5.0 (Warp Gate no longer required)
  * By SalieriC
  ******************************************************/
 
 import * as SWIM from '../constants.js'
 import { socket } from '../init.js'
+import { spawn_token, dismiss_token, wait_for_placeable } from '../helpers/token_spawn.js'
 
 export async function shape_changer_script(data) {
     //const { speaker, _, __, token } = await swim.get_macro_variables()
@@ -31,12 +29,6 @@ export async function shape_changer_script(data) {
         return;
     }
     const actor = token.actor;
-
-    if (!game.modules.get("warpgate")?.active) {
-        ui.notifications.error("Please install and activate Warp Gate to use this macro. See the console for more details.");
-        console.error("The SWIM Shape Changer macro requires Warp Gate by honeybadger. It is needed to replace the token. Please install and activate Warp Gate to use the Shape Changer macro: https://foundryvtt.com/packages/warpgate - If you enjoy Warp Gate please consider donating to honeybadger at his KoFi page: https://ko-fi.com/trioderegion")
-        return;
-    }
 
     const mainFolder = game.folders.getName("[SWIM] Shape Changing");
     if (!mainFolder) {
@@ -295,8 +287,8 @@ export async function shape_changer_gm(data) {
             "system.fatigue.max": pc.system.fatigue.max,
             "system.wounds.max": maxWounds,
             "system.attributes.smarts.animal": pc.system.attributes.smarts.animal,
-            "system.powerPoints.value": pc.system.powerPoints.value,
-            "system.powerPoints.max": pc.system.powerPoints.max,
+            "system.powerPoints.general.value": general_pp(pc).value,
+            "system.powerPoints.general.max": general_pp(pc).max,
             "name": `${scCopy.name} (${pc.name})`,
             "type": pc.type
         }
@@ -307,7 +299,7 @@ export async function shape_changer_gm(data) {
             "system.wounds.value": src.system.wounds.value,
             "system.details.conviction.value": src.system.details.conviction.value,
             "system.details.conviction.active": src.system.details.conviction.active,
-            "system.powerPoints.value": src.system.powerPoints.value,
+            "system.powerPoints.general.value": general_pp(src).value,
             "system.details.archetype": `Shape Changed ${src.prototypeToken.name}`,
             "system.wildcard": src.system.wildcard,
         }
@@ -339,9 +331,14 @@ export async function shape_changer_gm(data) {
         for (let power of itemsToCreate.filter(p => (p.type === "power"))) {
             if (power.system.arcane) {
                 let arcaneBackground = power.system.arcane;
+                // SWADE 3.x: power points are a map of pools ("general" + one per Arcane Background).
+                // Only copy an AB pool if the source (or, failing that, the original character) actually has it;
+                // otherwise the power simply uses the general pool.
+                const pool = src.system.powerPoints?.[arcaneBackground] ?? pc.system.powerPoints?.[arcaneBackground]
+                if (!pool) continue
                 let ppUpdates = {
-                    ['system.powerPoints.' + arcaneBackground + '.max']: src.system.powerPoints[arcaneBackground].max,
-                    ['system.powerPoints.' + arcaneBackground + '.value']: src.system.powerPoints[arcaneBackground].value
+                    ['system.powerPoints.' + arcaneBackground + '.max']: pool.max,
+                    ['system.powerPoints.' + arcaneBackground + '.value']: pool.value
                 }
                 updateData = Object.assign(updateData, ppUpdates)
             }
@@ -352,6 +349,11 @@ export async function shape_changer_gm(data) {
 
         //Finally making all the Updates:
         await scCopy.update(updateData)
+    }
+
+    // SWADE 3.x stores power points per pool: system.powerPoints.general / system.powerPoints.<ArcaneBackground>.
+    function general_pp(actorDoc) {
+        return actorDoc.system.powerPoints?.general ?? { value: 0, max: 0 }
     }
 
     function decimal(num, places) {
@@ -378,18 +380,21 @@ export async function shape_changer_gm(data) {
             sequence.play();
             await swim.wait(`100`);
         }
-        // Make new token very opaque.
-        // Spawns the new token using WarpGate
-        let newTokenID = await warpgate.spawnAt(token.center, scCopy.name, {
-            //'alpha': SWIM.ALMOST_INVISIBLE, //- disabled until further investigation.
-            'actorId': scCopy.id,
-            } );
-        let newToken = canvas.tokens.get(newTokenID[0]);
-        // When shifting to the same creature, WarpGate wants to use the old actor ID.
-        // Set it to the newly created actor, otherwise the incorrect actor gets deleted!
-        newToken.document.update({'actorId': scCopy.id});
-        // Adding elevation of the original token to the new token
-        await newToken.document.update( { 'elevation': token.document.elevation } );
+        // Spawn the new token at the position of the old one (core token creation, elevation carried over).
+        const newTokenDoc = await spawn_token(scCopy, token.center, {
+            scene: token.document.parent,
+            updates: { elevation: token.document.elevation }
+        })
+        if (!newTokenDoc) {
+            ui.notifications.error(game.i18n.localize("SWIM.notification.generalErrorMsg"))
+            return
+        }
+        const newToken = await wait_for_placeable(newTokenDoc)
+        if (!newToken) {
+            ui.notifications.error(game.i18n.localize("SWIM.notification.generalErrorMsg"))
+            return
+        }
+        const newTokenID = [newToken.id]
         // Update combatant info if a combat exists
         if (token.combatant != null) {
             let oldCombatData = token.combatant.toObject()
@@ -398,7 +403,7 @@ export async function shape_changer_gm(data) {
         // Morph the tokens from old to new.
         await morph_tokens(token, newToken, scCopy);
         // Remove the old token
-        await warpgate.dismiss(token.id)
+        await dismiss_token(token)
         // For GM, need to manually set the focus; include a short delay to allow the new token to appear.
         if (game.user.isGM === true) {
             await swim.wait(`100`);
@@ -417,7 +422,7 @@ export async function shape_changer_gm(data) {
         // Scale:
         let oldScaleX = oldToken.document.texture.scaleX
         let oldScaleY = oldToken.document.texture.scaleY
-        // When shifting to the same creature, WarpGate wants to use the old actor ID, which has the old scale.
+        // The old token may have a different scale than the new creature's prototype token.
         // Use the scale as calculated for the desired shape change data.
         let newScaleX = scCopy.prototypeToken.texture.scaleX
         let newScaleY = scCopy.prototypeToken.texture.scaleY
@@ -465,7 +470,7 @@ export async function shape_changer_gm(data) {
             "system.wounds.value": npc.system.wounds.value,
             "system.details.conviction.value": npc.system.details.conviction.value,
             "system.details.conviction.active": npc.system.details.conviction.active,
-            "system.powerPoints.value": npc.system.powerPoints.value,
+            "system.powerPoints.general.value": general_pp(npc).value,
         })
     }
 
