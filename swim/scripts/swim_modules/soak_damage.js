@@ -630,7 +630,6 @@ export async function soak_damage_script(effect = false) {
                     if (await swimConditions.has('incapacitated', token) === true) {
                         const incCondition = await swimConditions.get_from('incapacitated', token.actor)
                         if (incCondition.flags?.core?.overlay === true) {
-                            incCondition.setFlag('succ', 'updatedAE', true)
                             await incCondition.update({ "flags.core.overlay": false })
                         }
                     }
@@ -812,7 +811,6 @@ export async function soak_damage_script(effect = false) {
             if (await swimConditions.has('incapacitated', token) === true) {
                 const incCondition = await swimConditions.get_from('incapacitated', token.actor)
                 if (incCondition.flags?.core?.overlay === false) {
-                    incCondition.setFlag('succ', 'updatedAE', true)
                     await incCondition.update({ "flags.core.overlay": true })
                 }
             } else { await swimConditions.remove('incapacitated', token, {forceOverlay: true}); }

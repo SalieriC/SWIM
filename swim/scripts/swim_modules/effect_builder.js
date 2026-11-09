@@ -972,7 +972,6 @@ export async function effect_builder_gm(data) {
                     description: power ? power.system.description : "",
                     flags: {
                         swade: { expiration: EXPIRATION[type] || 3 },
-                        succ: { updatedAE: true },
                         swim: {
                             ...commonFlags,
                             owner: isCaster,

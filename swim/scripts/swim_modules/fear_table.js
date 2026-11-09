@@ -212,9 +212,6 @@ export async function fear_table_script() {
                         swade: {
                             expiration: 3,
                             loseTurnOnHold: true
-                        },
-                        succ: {
-                            updatedAE: true
                         }
                     }
                 }
