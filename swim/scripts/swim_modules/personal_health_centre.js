@@ -920,7 +920,7 @@ async function healSelf(token, speaker) {
                         const updates = [
                             { _id: potion_to_update.id, "system.quantity": potion_to_update.system.quantity - 1 }
                         ];
-                        await token.actor.updateEmbeddedEntity("Item", updates);
+                        await token.actor.updateEmbeddedDocuments("Item", updates);
                         if (potion_to_update.system.quantity < 1) {
                             potion_to_update.delete();
                         }
