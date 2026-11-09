@@ -6,6 +6,26 @@
 import { execute_as_gm } from "../helpers/socket_helper.js"
 import { swimConditions } from '../helpers/conditions.js'
 
+/** Can this item be used as a potion? Regular gear is used up via `quantity`; SWADE consumables as long as charges are left on the stack. */
+function is_usable_potion_item(item) {
+    if (item.type === "gear") { return Number(item.system.quantity) > 0 }
+    if (item.type === "consumable") {
+        const { quantity, charges } = item.system
+        return ((Number(quantity) - 1) * Number(charges.max) + Number(charges.value)) > 0
+    }
+    return false
+}
+
+/** Uses up one potion. Consumables go through SWADE's own `consume()` (uses a charge, handles stacks and deletes the item only if "destroy on empty" is checked), regular gear loses one `quantity` and is deleted at 0. */
+async function use_potion_item(actor, item) {
+    if (item.type === "consumable") {
+        await item.consume(1)
+    } else {
+        await actor.updateEmbeddedDocuments("Item", [{ _id: item.id, "system.quantity": item.system.quantity - 1 }])
+        if (item.system.quantity < 1) { item.delete() }
+    }
+}
+
 export async function personal_health_centre_script(data) {
     //const { speaker, _, __, token } = await swim.get_macro_variables()
     const {speaker, character, actor, token, item} = await swim.get_data_variables(data, false)
@@ -341,12 +361,12 @@ async function healSelf(token, speaker) {
         'swim', 'healthPotionOptions');
     const healthPotionsSplit = healthPotionOptions.split('|');
     const hasHealthPotion = token.actor.items.find(function (item) {
-        return (healthPotionsSplit.includes(item.name) && item.type === "gear" && item.system.quantity > 0)
+        return (healthPotionsSplit.includes(item.name) && is_usable_potion_item(item))
     });
     //Find owned Health potions.
-    const ownedHealthPotions = healthPotionsSplit.filter(potion => token.actor.items.some(item => item.name === potion && item.type === "gear" && item.system.quantity > 0));
+    const ownedHealthPotions = healthPotionsSplit.filter(potion => token.actor.items.some(item => item.name === potion && is_usable_potion_item(item)));
     //Set up a list of Health Potions to choose from.
-    let healthPotionList;
+    let healthPotionList = "";
     for (let healthPotion of ownedHealthPotions) {
         healthPotionList += `<option value="${healthPotion}">${healthPotion}</option>`;
     }
@@ -356,12 +376,12 @@ async function healSelf(token, speaker) {
         'swim', 'fatiguePotionOptions');
     const fatiguePotionsSplit = fatiguePotionOptions.split('|');
     const hasFatiguePotion = token.actor.items.find(function (item) {
-        return (fatiguePotionsSplit.includes(item.name) && item.type === "gear" && item.system.quantity > 0)
+        return (fatiguePotionsSplit.includes(item.name) && is_usable_potion_item(item))
     });
     //Find owned Fatigue potions.
-    const ownedFatiguePotions = fatiguePotionsSplit.filter(potion => token.actor.items.some(item => item.name === potion && item.type === "gear" && item.system.quantity > 0));
+    const ownedFatiguePotions = fatiguePotionsSplit.filter(potion => token.actor.items.some(item => item.name === potion && is_usable_potion_item(item)));
     //Set up a list of Fatigue Potions to choose from.
-    let fatiguePotionList;
+    let fatiguePotionList = "";
     for (let fatiguePotion of ownedFatiguePotions) {
         fatiguePotionList += `<option value="${fatiguePotion}">${fatiguePotion}</option>`;
     }
@@ -863,15 +883,9 @@ async function healSelf(token, speaker) {
                     callback: async (html) => {
                         genericHealWounds = Number(html.find("#numWounds")[0].value);
                         let selectedPotion = String(html.find("[name=potionName]")[0].value);
-                        let potion_to_update = token.actor.items.find(i => i.name === selectedPotion);
+                        let potion_to_update = token.actor.items.find(i => i.name === selectedPotion && is_usable_potion_item(i));
                         let potion_icon = potion_to_update.img;
-                        const updates = [
-                            { _id: potion_to_update.id, "system.quantity": potion_to_update.system.quantity - 1 }
-                        ];
-                        await token.actor.updateEmbeddedDocuments("Item", updates);
-                        if (potion_to_update.system.quantity < 1) {
-                            potion_to_update.delete();
-                        }
+                        await use_potion_item(token.actor, potion_to_update);
                         ChatMessage.create({
                             speaker: {
                                 alias: token.name
@@ -915,15 +929,9 @@ async function healSelf(token, speaker) {
                     callback: async (html) => {
                         genericHealFatigue = Number(html.find("#numFatigue")[0].value);
                         let selectedPotion = String(html.find("[name=potionName]")[0].value);
-                        let potion_to_update = token.actor.items.find(i => i.name === selectedPotion);
+                        let potion_to_update = token.actor.items.find(i => i.name === selectedPotion && is_usable_potion_item(i));
                         let potion_icon = potion_to_update.img;
-                        const updates = [
-                            { _id: potion_to_update.id, "system.quantity": potion_to_update.system.quantity - 1 }
-                        ];
-                        await token.actor.updateEmbeddedDocuments("Item", updates);
-                        if (potion_to_update.system.quantity < 1) {
-                            potion_to_update.delete();
-                        }
+                        await use_potion_item(token.actor, potion_to_update);
                         ChatMessage.create({
                             speaker: {
                                 alias: token.name
