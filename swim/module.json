@@ -6,7 +6,7 @@
 		"minimum": 11,
 		"verified": "11.315"
 	},
-	"version": "2.6.1",
+	"version": "2.7.0",
 	"authors": [
 		{
 			"name": "SalieriC",
@@ -28,20 +28,11 @@
 				"manifest": "https://gitlab.com/api/v4/projects/16269883/packages/generic/swade/latest/system.json",
 				"compatibility": {
 					"minimum": "3.3.8",
-					"verified": "3.3.8"
+					"verified": "3.3.11"
 				}
 			}
 		],
 		"requires": [
-			{
-				"id": "lib-wrapper",
-				"type": "module",
-				"manifest": "https://github.com/ruipin/fvtt-lib-wrapper/releases/download/v1.13.2.0/module.json",
-				"compatibility": {
-					"minimum": "1.13.2.0",
-					"verified": "1.13.2.0"
-				}
-			},
 			{
 				"id": "settings-extender",
 				"type": "module",
@@ -63,7 +54,7 @@
 			{
 				"id": "socketlib",
 				"type": "module",
-				"manifest": "https://raw.githubusercontent.com/manuelVo/foundryvtt-socketlib/v1.1.0/module.json",
+				"manifest": "https://raw.githubusercontent.com/manuelVo/foundryvtt-socketlib/master/module.json",
 				"compatibility": {
 					"minimum": "1.0.13",
 					"verified": "1.0.13"
