@@ -110,7 +110,8 @@ export async function travel_calculator() {
 
     function updateTables() {
         let options = "";
-        let availableTables = game.folders.getName("[SWIM] Encounter Tables") ? swim.get_folder_content("[SWIM] Encounter Tables") : game.tables
+        // `game.tables` is a collection, not an array: copy to an array first (this also keeps the collection itself unsorted).
+        let availableTables = Array.from(game.folders.getName("[SWIM] Encounter Tables") ? swim.get_folder_content("[SWIM] Encounter Tables") : game.tables)
         // Sort the tables alphabetically by name
         availableTables.sort((a, b) => a.name.localeCompare(b.name));
         for (let table of availableTables) {
