@@ -38,8 +38,8 @@
 				"type": "module",
 				"manifest": "https://raw.githubusercontent.com/SalieriC/SUCC/main/succ/module.json",
 				"compatibility": {
-					"minimum": "3.0.0",
-					"verified": "3.0.0"
+					"minimum": "3.3.0",
+					"verified": "3.3.0"
 				}
 			},
 			{
