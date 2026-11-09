@@ -91,14 +91,23 @@ Hooks.on(`ready`, () => {
             game.settings.set("swade", "enableWoundPace", false)
             ui.notifications.notify(game.i18n.localize("SWIM.notification-adjustPaceDisabled"))
         }
-        // Add half pace effect to Shaken:
-        Hooks.once('succReady', (api) => {
-            const status = api.conditions.find(c => c.id === 'shaken')
-            if (status) {
-                status.activeEffect.changes.push({key: "system.stats.speed.value", mode: 1, priority: undefined, value: "0.5"})
-            }
-        })
     }
+    // SWD: Shaken halves Pace. Done idempotently on both places SUCC builds the effect from (its condition map and CONFIG.statusEffects):
+    // first drop any existing copy of this change (it may already be there, e.g. if the condition map was saved with it), then add exactly one if SWD Unshake is on.
+    const swdShaken = version === "SWD"
+    const isSwdPaceChange = (c) => c.key === "system.stats.speed.value" && c.mode === 1 && Number(c.value) === 0.5
+    const withSwdPaceChange = (changes) => {
+        const kept = (changes ?? []).filter(c => !isSwdPaceChange(c))
+        if (swdShaken) kept.push({ key: "system.stats.speed.value", mode: 1, priority: undefined, value: "0.5" })
+        return kept
+    }
+    Hooks.once('succReady', (api) => {
+        const status = api.conditions.find(c => c.id === 'shaken')
+        if (status?.activeEffect) { status.activeEffect.changes = withSwdPaceChange(status.activeEffect.changes) }
+        for (const statusEffect of CONFIG.statusEffects) {
+            if (statusEffect.id === 'shaken' || statusEffect.statuses?.includes?.('shaken')) { statusEffect.changes = withSwdPaceChange(statusEffect.changes) }
+        }
+    })
     const callbackMode = game.settings.get("swim", "callbackMode")
     if (callbackMode === "manual" || callbackMode === "automatic") {
         game.swade.effectCallbacks.set("shaken", swim.unshake)
