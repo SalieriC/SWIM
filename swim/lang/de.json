@@ -33,6 +33,8 @@
     "SWIM.npcAmmoHint": "Wenn diese Option aktiviert ist, benötigen NSCs passende Munition im Inventar, um ihre Waffen zu laden (oder abzufeuern, sollte die Waffe nicht nachgeladen werden müssen). Ist diese Option deaktiviert, haben NSCs einen unendlichen Vorrat an Munition, müssen ihre Waffen aber dennoch nachladen.",
     "SWIM.woundedSFXName": "Soundeffekt (Verwundet):",
     "SWIM.woundedSFXHint": "Wenn eine Figur verwundet wird, wird dieser Soundeffekt abgespielt.",
+    "SWIM.geigerSFXName": "Soundeffekt (Geigerzähler):",
+    "SWIM.geigerSFXHint": "Wird nur für den auslösenden Spieler abgespielt, wenn sich das Strahlungszentrum öffnet. Leer lassen für keinen Ton.",
     "SWIM.fatiguedSFXName": "Soundeffekt (Erschöpft):",
     "SWIM.fatiguedSFXHint": "Wenn eine Figur eine Erschöpfungsstufe erhält, wird dieser Soundeffekt abgespielt.",
     "SWIM.fearSFXName": "Soundeffekt (Furchttabelle):",

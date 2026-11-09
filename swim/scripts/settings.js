@@ -79,6 +79,8 @@ export const settingVariables = [
         default: 'modules/swim/assets/sfx/Body-Thud-altered-www.fesliyanstudios.com.ogg'},
     {id: 'woundedSFX', config_type: String, picker: 'audio', tab: "SFX & VFX Options",
         default: 'modules/swim/assets/sfx/Ripping-Flesh-altered-www.fesliyanstudios.com.ogg'},
+    {id: 'geigerSFX', config_type: String, picker: 'audio', tab: "SFX & VFX Options",
+        default: 'modules/swim/assets/sfx/geiger-counter-radioactive-62113_freesound_community-033842-modified.ogg'},
     {id: 'fatiguedSFX', config_type: String, picker: 'audio', tab: "SFX & VFX Options",
         default: 'modules/swim/assets/sfx/Hard-Breathing-Medium-Pace-altered-www.fesliyanstudios.com.ogg'},
     {id: 'fearSFX', config_type: String, picker: 'audio', tab: "SFX & VFX Options",
