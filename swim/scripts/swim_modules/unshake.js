@@ -39,7 +39,7 @@ export async function unshake_swd_script(effect = false) {
         ];
         // Making all lower case:
         edgeNames = edgeNames.map(name => name.toLowerCase())
-        const undeadAE = token.actor.effects.find(ae => ae.label.toLowerCase() === game.i18n.localize("SWIM.ability-undead").toLowerCase());
+        const undeadAE = token.actor.effects.find(ae => ae.name.toLowerCase() === game.i18n.localize("SWIM.ability-undead").toLowerCase());
         if (undeadAE && undeadAE.disabled === false) {
             edgeNames.push('undead')
         } else if (!undeadAE) {
@@ -69,7 +69,7 @@ export async function unshake_swd_script(effect = false) {
                     for (let change of effect.changes) {
                         if (change.key === "system.attributes.spirit.unShakeBonus") {
                             //Building array of effect names and icons that affect the unShakeBonus
-                            effectName.push(effect.label);
+                            effectName.push(effect.name);
                             effectIcon.push(effect.icon);
                             effectValue.push(change.value);
                         }
@@ -220,7 +220,7 @@ export async function unshake_swade_script(effect = false) {
         ];
         // Making all lower case:
         edgeNames = edgeNames.map(name => name.toLowerCase())
-        const undeadAE = token.actor.effects.find(ae => ae.label.toLowerCase() === game.i18n.localize("SWIM.ability-undead").toLowerCase());
+        const undeadAE = token.actor.effects.find(ae => ae.name.toLowerCase() === game.i18n.localize("SWIM.ability-undead").toLowerCase());
         if (undeadAE && undeadAE.disabled === false) {
             edgeNames.push('undead')
         } else if (!undeadAE) {
@@ -250,7 +250,7 @@ export async function unshake_swade_script(effect = false) {
                     for (let change of effect.changes) {
                         if (change.key === "system.attributes.spirit.unShakeBonus") {
                             //Building array of effect names and icons that affect the unShakeBonus
-                            effectName.push(effect.label);
+                            effectName.push(effect.name);
                             effectIcon.push(effect.icon);
                             effectValue.push(change.value);
                         }
@@ -394,7 +394,7 @@ export async function unshake_script(effect, options) {
         ];
         // Making all lower case:
         edgeNames = edgeNames.map(name => name.toLowerCase())
-        const undeadAE = token.actor.effects.find(ae => ae.label.toLowerCase() === game.i18n.localize("SWIM.ability-undead").toLowerCase());
+        const undeadAE = token.actor.effects.find(ae => ae.name.toLowerCase() === game.i18n.localize("SWIM.ability-undead").toLowerCase());
         if (undeadAE && undeadAE.disabled === false) {
             edgeNames.push('undead')
         } else if (!undeadAE) {
@@ -424,7 +424,7 @@ export async function unshake_script(effect, options) {
                     for (let change of effect.changes) {
                         if (change.key === "system.attributes.spirit.unShakeBonus") {
                             //Building array of effect names and icons that affect the unShakeBonus
-                            effectName.push(effect.label);
+                            effectName.push(effect.name);
                             effectIcon.push(effect.icon);
                             effectValue.push(change.value);
                         }

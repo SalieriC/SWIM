@@ -55,11 +55,11 @@ export async function unstun_script(effect = false) {
         let unStunBonusFromEffects = 0
         if (token.actor.effects.size > 0) {
             for (let effect of token.actor.effects) {
-                if (effect.disabled === false && !edgeNames.includes(effect.label)) { // only apply changes if effect is enabled and not made by a recognised Edge.
+                if (effect.disabled === false && !edgeNames.includes(effect.name)) { // only apply changes if effect is enabled and not made by a recognised Edge.
                     for (let change of effect.changes) {
                         if (change.key === "SWIM.unStunMod" || change.key === "system.attributes.vigor.unStunBonus") {
                             //Building array of effect names and icons that affect the unStunBonus
-                            effectName.push(effect.label)
+                            effectName.push(effect.name)
                             effectIcon.push(effect.icon)
                             effectValue.push(change.value)
                             unStunBonusFromEffects += change.value
