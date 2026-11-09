@@ -201,7 +201,7 @@ export async function radiation_centre_script() {
                 }
             }
             new Dialog({
-                title: game.i18n.localize("SWIM.dialogue-reroll"),
+                title: game.i18n.localize("SWIM.dialogue-reroll").replace(/<[^>]*>/g, "").trim(), // the string contains an icon for the button label
                 content: text,
                 buttons: buttons,
                 default: "one",
