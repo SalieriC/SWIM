@@ -114,7 +114,7 @@
 	"SWIM.chatMessage-healOtherCritFailAndWound": "{tokenName}尝试治疗 ${targetName} ，但一败涂地，还导致了另1个损伤。",
 	"SWIM.chatMessage-healOtherRaiseContinued": " 并且给${targetName}治好了1个损伤。",
 	"SWIM.notification.generalErrorMsg": "出现错误，更多内容见控制台(F12)。",
-	"SWIM.dialogue-fatigueCheck": "<p>你当前<strong>没有</strong> 损伤以及<strong>{currentFatige}/{maxFatigue}</strong>疲乏。</p><p>通常处于休息且疲乏来源消失时，你就能<strong>每小时</strong>移除一级疲乏。 这可能会取决于疲乏的来源而有所变化。因此若是当前不能移除疲乏，请<strong>咨询GM</strong> 。</p>",
+	"SWIM.dialogue-fatigueCheck": "<p>你当前<strong>没有</strong> 损伤以及<strong>{currentFatigue}/{maxFatigue}</strong>疲乏。</p><p>通常处于休息且疲乏来源消失时，你就能<strong>每小时</strong>移除一级疲乏。 这可能会取决于疲乏的来源而有所变化。因此若是当前不能移除疲乏，请<strong>咨询GM</strong> 。</p>",
 	"SWIM.dialogue-hasFatiguePotion": "<p>你还有<strong>平复疲乏药水</strong>，也许能予以使用（但如果疲乏来源不允许如此，请咨询GM。）</p>",
 	"SWIM.dialogue-whatDoYouWantToDo": "<p>你要怎么办？</p>",
 	"SWIM.dialogue-woundCheck": "<p>你当前损伤数是<strong>{currentWounds}/{maxWounds}</strong>，<strong>没有</strong>疲乏，助力点是<strong>{totalBennies}</strong>。</p><p>除非受设定中的特殊环境影响，否则你能<strong>每{natHeal_time}</strong>进行一次自然治疗投骰。</p><p>你也能直接治疗损伤（譬如藉由治疗奇术）。",

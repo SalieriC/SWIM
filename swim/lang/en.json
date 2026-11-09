@@ -256,7 +256,7 @@
   "SWIM.notification.socketRequestRejected":"SWIM rejected the request '{handler}' from {userName}: {reason}",
   "SWIM.dialogue-noWoundsNorFatigue": "<form><p>You currently neither have any Wounds nor Fatigue. There is nothing for you to do here.</p></form>",
   "SWIM.dialogue-nevermind":"Nevermind...",
-  "SWIM.dialogue-fatigueCheck":"<p>You currently have <strong>no</strong> Wounds and <strong>{currentFatige}/{maxFatigue}</strong> Fatigue.</p><p>In general you may remove a level of Fatigue <strong>every hour</strong> when resting and the source of your Fatigue is absent. This can be altered depending on the source of Fatigue, so <strong>ask your GM</strong> if you're allowed to remove your Fatigue now.</p>",
+  "SWIM.dialogue-fatigueCheck":"<p>You currently have <strong>no</strong> Wounds and <strong>{currentFatigue}/{maxFatigue}</strong> Fatigue.</p><p>In general you may remove a level of Fatigue <strong>every hour</strong> when resting and the source of your Fatigue is absent. This can be altered depending on the source of Fatigue, so <strong>ask your GM</strong> if you're allowed to remove your Fatigue now.</p>",
   "SWIM.dialogue-hasFatiguePotion":"<p>You still have a <strong>potion that cures Fatigue</strong>, you might as well use it (but ask your GM, the source of your Fatigue might not allow it).</p>",
   "SWIM.dialogue-hasHealingPotion":"<p>You still have <b>Healing potions</b>, you might as well use one of these.</p>",
   "SWIM.dialogue-whatDoYouWantToDo":"<p>What you you want to do?</p>",
