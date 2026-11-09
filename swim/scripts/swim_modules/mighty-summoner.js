@@ -44,7 +44,7 @@ export async function summoner_script(data) {
         ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleToken"));
         return;
     }
-    const actor = token.actor ? token.actor : token.actorData
+    const actor = token.actor
 
     //Get an ID for this maintenance
     const maintID = generate_id()
@@ -52,7 +52,7 @@ export async function summoner_script(data) {
     //Set div class based on enabled official module:
     const officialClass = await swim.get_official_class()
 
-    let totalContent = swim.get_folder_content("Summon Creature Presets").filter(item => item.permission >= 1);
+    let totalContent = swim.get_folder_content("Summon Creature Presets").filter(item => item.testUserPermission(game.user, "LIMITED"));
 
     let duration = 5
     if (item?.system?.swid === 'zombie') { duration = 600 }
@@ -254,7 +254,7 @@ export async function summoner_script(data) {
                         await swim.wait(`200`) // delay script execution so that the vfx has time to get the tokens position
                         await execute_as_gm("summonerDismiss", {tokenID: token.id, sceneID: game.scenes.current.id})
                         for (let each of game.scenes.current.tokens) {
-                            const maintEffect = each.actor ? each.actor.effects.find(e => e.flags?.swim?.maintenanceID === maintenanceID) : each.actorData.effects.find(e => e.flags?.swim?.maintenanceID === maintenanceID)
+                            const maintEffect = each.actor?.effects.find(e => e.flags?.swim?.maintenanceID === maintenanceID)
                             if (maintEffect) {
                                 await maintEffect.delete()
                             }

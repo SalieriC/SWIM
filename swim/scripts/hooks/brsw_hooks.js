@@ -58,7 +58,7 @@ async function update_brsw_injury(effect, type) {
     let newLabel
     let newChanges = false
     console.log(effect)
-    switch (effect.label) {
+    switch (effect.name) {
         case game.i18n.localize("BRSW.Unmentionables"):
             img = "icons/skills/wounds/blood-drip-droplet-red.webp"
             newLabel = game.i18n.localize("SWIM.injury-unmentionables")
@@ -195,7 +195,7 @@ async function update_brsw_injury(effect, type) {
             break;
         default:
             img = "icons/skills/wounds/injury-stitched-flesh-red.webp"
-            newLabel = effect.label
+            newLabel = effect.name
     }
     if (type === "gritty") {
         newLabel += `${game.i18n.localize("swim.injury-combat")}`
@@ -204,7 +204,7 @@ async function update_brsw_injury(effect, type) {
     }
     let updateData = {
         icon: img,
-        label: newLabel,
+        name: newLabel,
         changes: newChanges ? [newChanges] : effect.changes,
         flags: {
             swim: {

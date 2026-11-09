@@ -45,7 +45,7 @@ export async function soak_damage_script(effect = false) {
     // Declaring variables and constants.
     const wv = token.actor.system.wounds.value;
     const wm = token.actor.system.wounds.max;
-    const ppv = token.actor.system.powerPoints.value;
+    const ppv = token.actor.system.powerPoints.general.value; // SWADE 3.x: pools live under powerPoints.<pool>; 'general' is the one used for Holy/Unholy Warrior
     const holyWarr = token.actor.items.find(function (item) {
         return ((item.name.toLowerCase() === game.i18n.localize("SWIM.edge-holyWarrior").toLowerCase()) || (item.name.toLowerCase() === game.i18n.localize("SWIM.edge-unholyWarrior").toLowerCase())) && item.type === "edge";
     });
@@ -90,11 +90,11 @@ export async function soak_damage_script(effect = false) {
         let soakBonusFromEffects = 0
         if (token.actor.effects.size > 0) {
             for (let effect of token.actor.effects) {
-                if (effect.disabled === false && !edgeNames.includes(effect.label)) { // only apply changes if effect is enabled and not made by a recognised Edge.
+                if (effect.disabled === false && !edgeNames.includes(effect.name)) { // only apply changes if effect is enabled and not made by a recognised Edge.
                     for (let change of effect.changes) {
                         if (change.key === "system.attributes.vigor.soakBonus") {
                             //Building array of effect names and icons that affect the unStunBonus
-                            effectName.push(effect.label)
+                            effectName.push(effect.name)
                             effectIcon.push(effect.img)
                             effectValue.push(change.value)
                             soakBonusFromEffects += change.value
@@ -303,7 +303,7 @@ export async function soak_damage_script(effect = false) {
                                 }
                                 else {
                                     let newPP = ppv - numberPP;
-                                    token.actor.update({ "system.powerPoints.value": newPP });
+                                    token.actor.update({ "system.powerPoints.general.value": newPP });
                                     await swim.spend_benny(token, sendMessage)
                                     rollSoak(numberWounds, numberPP);
                                 }
@@ -389,10 +389,10 @@ export async function soak_damage_script(effect = false) {
         injuryData.icon = img; // ActiveEffect icon field in Foundry v11 (`img` is v12+ and is ignored)
         if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-unmentionables").toLowerCase())) {
             //unmentionables; create dummy AE without actual effect
-            injuryData.label = game.i18n.localize("SWIM.injury-unmentionables");
+            injuryData.name = game.i18n.localize("SWIM.injury-unmentionables");
         } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-arm").toLowerCase())) {
             //arm; create a dummy AE without actual effect
-            injuryData.label = game.i18n.localize("SWIM.injury-armUnusable");
+            injuryData.name = game.i18n.localize("SWIM.injury-armUnusable");
         } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-leg").toLowerCase())) {
             //leg, create AE with appropriate value depending on whether or not the character is slow already
             const slow = token.actor.items.find(function (item) {
@@ -402,7 +402,7 @@ export async function soak_damage_script(effect = false) {
             });
             if (!slow) {
                 //Actor isn't slow, create AE with minor slow effect = system.stats.speed.runningDie -2 && system.stats.speed.value -1
-                injuryData.label = game.i18n.localize("SWIM.injury-legSlow");
+                injuryData.name = game.i18n.localize("SWIM.injury-legSlow");
                 if (token.actor.system.stats.speed.runningDie === 4) {
                     //Running die is a d4 already, alter AE like so: system.stats.speed.runningDie.modifier -1 && system.stats.speed.value -1
                     injuryData.changes.push({
@@ -429,7 +429,7 @@ export async function soak_damage_script(effect = false) {
                 }
             } else if (slow.system.major === false) {
                 //Actor is minor slow, create AE with major slow effect = system.stats.speed.runningDie -2 && system.stats.speed.value -2 && @Skill{Athletics}[system.die.modifier] -2
-                injuryData.label = game.i18n.localize("SWIM.injury-legSlow");
+                injuryData.name = game.i18n.localize("SWIM.injury-legSlow");
                 if (token.actor.system.stats.speed.runningDie === 4) {
                     //Running die is a d4 already, alter AE like so: system.stats.speed.runningDie.modifier -1 && system.stats.speed.value -2
                     injuryData.changes.push({
@@ -467,7 +467,7 @@ export async function soak_damage_script(effect = false) {
             //evaluate all the guts:
             if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-broken").toLowerCase())) {
                 //Guts broken, create AE with system.attributes.agility.die.sides -2
-                injuryData.label = game.i18n.localize("SWIM.injury-gutsBroken");
+                injuryData.name = game.i18n.localize("SWIM.injury-gutsBroken");
                 injuryData.changes.push({
                     key: 'system.attributes.agility.die.sides',
                     mode: 2,
@@ -475,7 +475,7 @@ export async function soak_damage_script(effect = false) {
                 })
             } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-battered").toLowerCase())) {
                 //Guts battered, create AE with system.attributes.vigor.die.sides -2
-                injuryData.label = game.i18n.localize("SWIM.injury-gutsBattered");
+                injuryData.name = game.i18n.localize("SWIM.injury-gutsBattered");
                 injuryData.changes.push({
                     key: 'system.attributes.vigor.die.sides',
                     mode: 2,
@@ -483,7 +483,7 @@ export async function soak_damage_script(effect = false) {
                 })
             } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-busted").toLowerCase())) {
                 //Guts busted, created AE with system.attributes.strength.die.sides -2
-                injuryData.label = game.i18n.localize("SWIM.injury-gutsBusted");
+                injuryData.name = game.i18n.localize("SWIM.injury-gutsBusted");
                 injuryData.changes.push({
                     key: 'system.attributes.strength.die.sides',
                     mode: 2,
@@ -494,7 +494,7 @@ export async function soak_damage_script(effect = false) {
             //evaluate all the head results:
             if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-hideousScar").toLowerCase())) {
                 //hideous scar, create AE with @Skill{Persuasion}[system.die.modifier] -2
-                injuryData.label = game.i18n.localize("SWIM.injury-headScar");
+                injuryData.name = game.i18n.localize("SWIM.injury-headScar");
                 injuryData.changes.push({
                     key: `@Skill{${game.i18n.localize("SWIM.skill-persuasion")}}[system.die.modifier]`,
                     mode: 2,
@@ -502,10 +502,10 @@ export async function soak_damage_script(effect = false) {
                 })
             } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-blinded").toLowerCase())) {
                 //Blinded, create dummy AE without actual effect
-                injuryData.label = game.i18n.localize("SWIM.injury-headBlinded");
+                injuryData.name = game.i18n.localize("SWIM.injury-headBlinded");
             } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-brain").toLowerCase())) {
                 //Brain damage, create AE with system.attributes.smarts.die.sides -2
-                injuryData.label = game.i18n.localize("SWIM.injury-headBrainDamage");
+                injuryData.name = game.i18n.localize("SWIM.injury-headBrainDamage");
                 injuryData.changes.push({
                     key: 'system.attributes.smarts.die.sides',
                     mode: 2,
@@ -514,9 +514,9 @@ export async function soak_damage_script(effect = false) {
             }
         }
         if (permanent === false && combat === true) {
-            injuryData.label += `${game.i18n.localize("swim.injury-combat")}`;
+            injuryData.name += `${game.i18n.localize("swim.injury-combat")}`;
         } else if (permanent === true && combat === false) {
-            injuryData.label += `${game.i18n.localize("swim.injury-permanent")}`;
+            injuryData.name += `${game.i18n.localize("swim.injury-permanent")}`;
         }
         //Create the AE:
         await actor.createEmbeddedDocuments('ActiveEffect', [injuryData]);
