@@ -188,7 +188,7 @@ export async function shape_changer_gm(data) {
             await set_tokenSettings(scCopy, originalID, tokenImage);
             await update_preset(scCopy, scSize, raise, originalID);
             // Now, add permission to scCopy by copying permissions of the original actor (that should also ensure the user get the token selected automatically):
-            let perms = duplicate(actor.ownership)
+            let perms = foundry.utils.duplicate(actor.ownership)
             await scCopy.update({"ownership": perms})
 
             await update_linked_actor(scCopy._id, actor._id) //Update the linked actor on user if it's not a GM account.

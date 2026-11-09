@@ -124,7 +124,7 @@ export async function craft_campfire_gm(data) {
                     "scenerestrict": true,
                     "prevent": false
                 },
-                "id": randomID(16)
+                "id": foundry.utils.randomID(16)
             },
             {
                 "action": "delete",
@@ -135,7 +135,7 @@ export async function craft_campfire_gm(data) {
                     },
                     "collection": "tiles"
                 },
-                "id": randomID(16)
+                "id": foundry.utils.randomID(16)
             },
             {
                 "action": "delete",
@@ -146,7 +146,7 @@ export async function craft_campfire_gm(data) {
                     },
                     "collection": "tiles"
                 },
-                "id": randomID(16)
+                "id": foundry.utils.randomID(16)
             },
             {
                 "action": "delete",
@@ -157,7 +157,7 @@ export async function craft_campfire_gm(data) {
                     },
                     "collection": "tiles"
                 },
-                "id": randomID(16)
+                "id": foundry.utils.randomID(16)
             }
         ],
         "files": []

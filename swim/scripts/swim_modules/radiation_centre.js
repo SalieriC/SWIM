@@ -222,7 +222,7 @@ export async function radiation_centre_script() {
         }
         const effectData = {
             "label": `${game.i18n.localize("SWIM.disease-chronic")}: ${game.i18n.localize("SWIM.disease-radPoisoning")}`,
-            "_id": randomID(16),
+            "_id": foundry.utils.randomID(16),
             "changes": [],
             "disabled": false,
             "duration": {

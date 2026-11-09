@@ -427,13 +427,13 @@ async function createJournalContent(cardsEvaluated, numCurrJourneys, folderId, m
 
     let content = {
         "name": `${game.i18n.localize("SWIM.word-Journey")} #${(numCurrJourneys + 1).toString().padStart(3, '0')}`, //padStart adds leading zeros so that the number is always three digits long (required for proper sorting)
-        "_id": randomID(16),
+        "_id": foundry.utils.randomID(16),
         "pages": [
             {
                 "sort": 100000,
                 "name": "Image",
                 "type": "image",
-                "_id": randomID(16),
+                "_id": foundry.utils.randomID(16),
                 "title": {
                     "show": true,
                     "level": 1
@@ -451,7 +451,7 @@ async function createJournalContent(cardsEvaluated, numCurrJourneys, folderId, m
                 "sort": 200000,
                 "name": game.i18n.localize("SWIM.dialogue-travelCalculatorJourneyOverview"),
                 "type": "text",
-                "_id": randomID(16),
+                "_id": foundry.utils.randomID(16),
                 "title": {
                     "show": true,
                     "level": 1
