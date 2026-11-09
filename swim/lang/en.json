@@ -207,7 +207,7 @@
   "SWIM.dialogue-cannotUseMoreThanFourPP":"You can't use more than 4 Power Points.",
   "SWIM.dialogue-soakWoundsWithUnHolyWarriorContent": "<form><div class='form-group'><form>You can spend a <b>maximum of 4 Power Points</b> to add a bonus to your Soaking Roll equal to the amount of Power Points used.</br>You have <b>{ppv} Power Points</b> left.</form><label for='numPP'>Power Points to spend: </label><input id='numPP' name='num' type='number' min='1' max='4' value='1'></input></div></form>",
   "SWIM.dialogue-reroll":"<i class='fa-solid fa-dice'></i> Reroll",
-  "SWIM.dialogue-rerollText":"<form>You've soaked <strong>{rounded} Wounds</strong>; you will <strong>receive {currWounds} Wounds</strong>.</br>Do you want to reroll your Soaking Roll (you have <strongb>{totalBennies} Bennies</strong> left)? (Unless you roll a Critical Failure, your best result will be kept.)</form>",
+  "SWIM.dialogue-rerollText":"<form>Your last roll soaked <strong>{lastRoll} Wounds</strong>; your best result so far soaks <strong>{rounded} Wounds</strong>, so you will <strong>receive {currWounds} Wounds</strong>.</br>Do you want to reroll your Soaking Roll (you have <strong>{totalBennies} Bennies</strong> left)? (Unless you roll a Critical Failure, your best result will be kept.)</form>",
   "SWIM.dialogue-decisionToApplyWounds":"No, apply Wounds now",
   "SWIM.dialogue-decisionToApplyFatigue": "No, apply Fatigue now",
   "SWIM.dialogue-outOfBenniesApplyWounds":"You have no more Bennies, Wounds will be applied now.",

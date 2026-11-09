@@ -343,7 +343,7 @@ export async function soak_damage_script(effect = false) {
             let currWounds = numberWounds - maxWoundsSoaked;
             new Dialog({
                 title: game.i18n.localize("SWIM.dialogue-reroll").replace(/<[^>]*>/g, "").trim(), // the string contains an icon for the button label
-                content: game.i18n.format("SWIM.dialogue-rerollText", { rounded: rounded, currWounds: currWounds, totalBennies: totalBennies }),
+                content: game.i18n.format("SWIM.dialogue-rerollText", { lastRoll: rounded, rounded: maxWoundsSoaked, currWounds: currWounds, totalBennies: totalBennies }),
                 buttons: {
                     one: {
                         label: game.i18n.localize("SWIM.dialogue-reroll"),

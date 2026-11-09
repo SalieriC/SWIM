@@ -581,7 +581,7 @@ async function applyActiveEffect(actor, selectedWeapon, selectedAmmo, oldAmmo) {
         //Adjust effect to work with items
         delete effectObj._id; //We want a unique ID for this one
         // Effect JSON saved by the user may still use the pre-v11 `label` key:
-        effectObj.name = `${effectObj.name ?? effectObj.label ?? ""}[${selectedWeapon.name}]`;
+        effectObj.name = `${effectObj.name ?? effectObj.label ?? ""} [${selectedWeapon.name}]`;
         delete effectObj.label;
         for (let change of effectObj.changes) {
             const oldKey = change.key;
