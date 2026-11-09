@@ -139,6 +139,8 @@ export async function radiation_centre_script() {
     let radiationLink = await swim.get_official_journal_link("radiation")
     if (radiationLink) { radiationLink += `{${game.i18n.localize("SWIM.hazard-radiation")}}` }
     else {radiationLink = game.i18n.localize("SWIM.hazard-radiation")}
+    const geigerSFX = game.settings.get('swim', 'geigerSFX')
+    if (geigerSFX) { swim.play_sfx(geigerSFX, undefined, false) } // only for the player who opened the dialog
     new Dialog({
         title: 'Radiation Centre',
         content: await TextEditor.enrichHTML(`<form class="swade-core">
