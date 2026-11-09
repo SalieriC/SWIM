@@ -65,11 +65,6 @@ Hooks.on(`ready`, () => {
     // Set round time to 6 as appropriate to the system:
     if (CONFIG.time.roundTime != 6 && swim.is_first_gm()) { CONFIG.time.roundTime = 6 }
     // Check Dependencies
-    if (!game.modules.get('settings-extender')?.active && game.user.isGM) {
-        let key = "install and activate";
-        if (game.modules.get('settings-extender')) key = "activate";
-        ui.notifications.error(`SWIM requires the 'settings-extender' module. Please ${key} it.`)
-    }
     if (!game.modules.get('socketlib')?.active && game.user.isGM) {
         let key = "install and activate";
         if (game.modules.get('socketlib')) key = "activate";

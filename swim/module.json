@@ -34,15 +34,6 @@
 		],
 		"requires": [
 			{
-				"id": "settings-extender",
-				"type": "module",
-				"manifest": "https://gitlab.com/foundry-azzurite/settings-extender/-/jobs/artifacts/master/raw/dist/settings-extender/module.json?job=build",
-				"compatibility": {
-					"minimum": "1.2.2",
-					"verified": "1.2.2"
-				}
-			},
-			{
 				"id": "succ",
 				"type": "module",
 				"manifest": "https://raw.githubusercontent.com/SalieriC/SUCC/main/succ/module.json",
