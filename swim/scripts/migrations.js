@@ -194,7 +194,7 @@ export async function v11_migration() {
                                         }
                                     }
                                 }
-                                flagData.config._version = SWIM.CONFIG_VERSION
+                                flagData.flags.swim.config._version = SWIM.CONFIG_VERSION
                             }
                             else {
                                 flagData = {
@@ -229,15 +229,15 @@ export async function v11_migration() {
                                 await item.update(flagData)
                             } else {
                                 let flagData
-                                if (actor.flags?.swim?.config) {
+                                if (item.flags?.swim?.config) {
                                     flagData = {
                                         flags: {
                                             swim: {
-                                                config: actor.flags.swim.config
+                                                config: item.flags.swim.config
                                             }
                                         }
                                     }
-                                    flagData.config._version = SWIM.CONFIG_VERSION
+                                    flagData.flags.swim.config._version = SWIM.CONFIG_VERSION
                                 }
                                 else {
                                     flagData = {
