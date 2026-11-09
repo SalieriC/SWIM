@@ -1,3 +1,4 @@
+import { swimConditions } from '../helpers/conditions.js'
 /*******************************************
  * Fear Table Macro.
  * v. 3.0.4 by SalieriC#8263, original creator unknown.
@@ -121,13 +122,13 @@ export async function fear_table_script() {
             await actor.createEmbeddedDocuments('ActiveEffect', [effData]);
         } else if (total >= 4 && total <= 6) {
             //Distracted
-            await game.succ.addCondition('distracted', actor);
+            await swimConditions.add('distracted', actor);
         } else if (total >= 7 && total <= 9) {
             //Vulnerable
-            await game.succ.addCondition('vulnerable', actor);
+            await swimConditions.add('vulnerable', actor);
         } else if (total >= 10 && total <= 12) {
             //Shaken
-            await game.succ.addCondition('shaken', actor);
+            await swimConditions.add('shaken', actor);
         } else if (total === 13) {
             //Mark of Fear: Stunned + Cosmetic Change
             const hindrance = {
@@ -151,12 +152,12 @@ export async function fear_table_script() {
                 }
             }
             await actor.createEmbeddedDocuments('Item', [hindrance], { renderSheet: true });
-            if (await game.succ.hasCondition('stunned', actor) === false) {
+            if (await swimConditions.has('stunned', actor) === false) {
                 await swim.stun(token)
             }
         } else if (total >= 14 && total <= 15) {
             //Frightened: Hesitant until end of encounter, panicked if alread is hesitant
-            await game.succ.addCondition('frightened', actor);
+            await swimConditions.add('frightened', actor);
         } else if (total >= 16 && total <= 17) {
             //Panicked: Move full pace + Running die away + Shaken
             const runningDie = `1d${actor.system.stats.speed.runningDie}`
@@ -190,7 +191,7 @@ export async function fear_table_script() {
             const total = roll.total
             let chatData = ""
             if (total >= 4) {
-                if (await game.succ.hasCondition('stunned', actor) === false) {
+                if (await swimConditions.has('stunned', actor) === false) {
                     await swim.stun(token)
                 }
                 chatData = `${officialClass}<p>${game.i18n.format("SWIM.chatMessage-heartAttackSuccessMessage", { name: token.name })}</p></div>`
@@ -199,7 +200,7 @@ export async function fear_table_script() {
                 const roundRoll = await new Roll(`2d6`).evaluate({ async: false });
                 const rounds = roundRoll.total
                 // SUCC's addCondition returns the created/updated effects.
-                const effects = await game.succ.addCondition('heart-attack', token, {forceOverlay: true});
+                const effects = await swimConditions.add('heart-attack', token, {forceOverlay: true});
                 const eff = effects?.[0] //Only expect a single effect returned.
                 const data = {
                     duration: {

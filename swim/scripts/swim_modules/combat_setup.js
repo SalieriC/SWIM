@@ -1,3 +1,4 @@
+import { swimConditions } from '../helpers/conditions.js'
 /*******************************************************
  * Combat Setup
  * Sends all tokens on the current scene to combat and
@@ -23,7 +24,7 @@ export async function combat_setup() {
     // Filter tokens out that are not capable of fighting
     let tokens = []
     for (let token of tokensUnfiltered) {
-        if (token.actor.type === "npc" && await game.succ.hasCondition('incapacitated', token) === false) {
+        if (token.actor.type === "npc" && await swimConditions.has('incapacitated', token) === false) {
             if (token.actor.flags?.healthEstimate?.dead === false || !token.actor.flags?.healthEstimate?.dead) {
                 tokens.push(token)
             }

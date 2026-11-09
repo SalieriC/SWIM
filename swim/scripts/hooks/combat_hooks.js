@@ -1,3 +1,4 @@
+import { swimConditions } from '../helpers/conditions.js'
 export async function combat_hooks() {
     // Combat setup playlist handling
     Hooks.on("preUpdateCombat", async (combat, update, options, userId) => {
@@ -36,7 +37,7 @@ export async function combat_hooks() {
             if (swim.is_first_gm() === false) { return }
             const sceneId = combat.scene.id
             if (sceneId) {
-                game.succ.removeTemporaryEffects(sceneId, false)
+                swimConditions.remove_temporary_effects(sceneId, false)
             }
         }
     })
@@ -48,8 +49,8 @@ export async function combat_hooks() {
             for (let combatant of combatants) {
                 const actor = combatant.actor
                 const token = combatant.token
-                if (await game.succ.hasCondition('conviction', actor) === true) {
-                    const convEffect = await game.succ.getConditionFrom('conviction', token)
+                if (await swimConditions.has('conviction', actor) === true) {
+                    const convEffect = await swimConditions.get_from('conviction', token)
                     const initiatorId = convEffect.flags.succ.userId
                     if (game.user.id === initiatorId) { //Only show dialogue to the player who activated conviction.
                         let { tokenBennies, gmBennies, totalBennies } = await swim.check_bennies(token, false)
@@ -68,7 +69,7 @@ export async function combat_hooks() {
                                     two: {
                                         label: `<i class="fas fa-times"></i> ${game.i18n.localize("SWIM.dialogue-no")}`,
                                         callback: async (html) => {
-                                            await game.succ.removeCondition('conviction', actor);
+                                            await swimConditions.remove('conviction', actor);
                                         }
                                     }
                                 },
@@ -76,7 +77,7 @@ export async function combat_hooks() {
                             }).render(true);
                         } else {
                             ui.notifications.warn(game.i18n.localize("SWIM.notification-noBenniesForConviction"))
-                            await game.succ.removeCondition('conviction', actor);
+                            await swimConditions.remove('conviction', actor);
                         }
                     }
                 }

@@ -26,6 +26,7 @@ import * as SWIM from './constants.js'
 import { OFFICIAL_MODULES } from './official_modules.js'
 import { showWeaponAmmoDialog, br2_ammo_management_script } from "./swim_modules/ammo_management.js"
 import { tester_script } from './swim_modules/tester.js'
+import { swimConditions } from './helpers/conditions.js'
 
 let deck = [...SWIM.DECK_OF_CARDS]
 
@@ -600,7 +601,7 @@ export class api {
   //Shake a token
   static async _shake(token) {
     const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
-    await game.succ.addCondition('shaken', token);
+    await swimConditions.add('shaken', token);
     if (shakenSFX) {
       AudioHelper.play({ src: `${shakenSFX}` }, true);
     }
@@ -613,16 +614,16 @@ export class api {
   static async _stun(token) {
     const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
     let conditionsToApply = []
-    if (await game.succ.hasCondition('stunned', token) === false) {
+    if (await swimConditions.has('stunned', token) === false) {
       conditionsToApply.push('stunned')
     };
 
-    if (await game.succ.hasCondition('prone', token) === false) {
+    if (await swimConditions.has('prone', token) === false) {
       conditionsToApply.push('prone')
     };
     conditionsToApply.push('distracted')
     conditionsToApply.push('vulnerable')
-    await game.succ.addCondition(conditionsToApply, token)
+    await swimConditions.add(conditionsToApply, token)
     if (stunnedSFX) {
       AudioHelper.play({ src: `${stunnedSFX}` }, true);
     }

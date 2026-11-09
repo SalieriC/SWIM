@@ -11,6 +11,7 @@
  * - Strong Willed
  ******************************************/
 import { execute_as_gm } from "../helpers/socket_helper.js"
+import { swimConditions } from '../helpers/conditions.js'
 
 export async function tester_script() {
     let { speaker, _, __, token } = await swim.get_macro_variables()
@@ -443,7 +444,7 @@ export async function tester_gm(data) {
                     resistRollWithEdge - rollWithEdge >= 4
                     ) {
                     chatContent += "<br/>" + game.i18n.format("SWIM.chatMessage-testResult-3-retort", {targetName: targetToken.name, tokenName: token.name})
-                    await game.succ.addCondition("distracted", token);
+                    await swimConditions.add("distracted", token);
                 }
                 chatContent += "</div>"
                 createMessage()
@@ -487,10 +488,10 @@ export async function tester_gm(data) {
             }).render(true);
 
             async function applyResults() {
-                await game.succ.addCondition(selectedResult, targetToken);
+                await swimConditions.add(selectedResult, targetToken);
                 chatContent += "<br/>" + game.i18n.format("SWIM.chatMessage-testResult-3", {targetName: targetToken.name, status: game.i18n.localize(`SWIM.gameTerm-${selectedResult}`)})
                 if (rollWithEdge - bestResistRoll >= 4) {
-                    await game.succ.addCondition("shaken", targetToken);
+                    await swimConditions.add("shaken", targetToken);
                     chatContent += " " + game.i18n.localize("SWIM.word-and") + " " + game.i18n.localize("SWIM.gameTerm-Shaken")
 
                     const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)

@@ -1,3 +1,4 @@
+import { swimConditions } from '../helpers/conditions.js'
 export async function backlasher(card, backlashSetting) {
     if (backlashSetting === 'dynamic') {
         await dynamic_backlash(card)
@@ -46,7 +47,7 @@ export async function backlasher(card, backlashSetting) {
         //message += `gained a level of Fatigue!<br />`
         message += game.i18n.localize("SWIM.Backlasher.Message-2")
     } else if (currFatigue + 1 > maxFatigue) {
-        await game.succ.addCondition('incapacitated', actor, {forceOverlay: true})
+        await swimConditions.add('incapacitated', actor, {forceOverlay: true})
         await swim.play_sfx(deathSFX, volume, true)
         //message += `collapses from exhaustion!<br />`
         message += game.i18n.localize("SWIM.Backlasher.Message-3")

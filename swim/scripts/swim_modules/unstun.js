@@ -1,3 +1,4 @@
+import { swimConditions } from '../helpers/conditions.js'
 /*******************************************
  * Unstun macro for SWADE
  * version v.4.3.2
@@ -103,16 +104,16 @@ export async function unstun_script(effect = false) {
         else {
             if (rollWithEdge > 3 && rollWithEdge <= 7) {
                 chatData += ` and is no longer Stunned but remains Vulnerable until end of next turn.`;
-                await game.succ.addCondition('vulnerable', token);
-                await game.succ.removeCondition('stunned', token);
+                await swimConditions.add('vulnerable', token);
+                await swimConditions.remove('stunned', token);
                 if (unshakeSFX) { AudioHelper.play({ src: `${unshakeSFX}` }, true); }
                 useBenny();
             } else if (rollWithEdge >= 8) {
                 chatData += `, is no longer Stunned and looses Vulnerable after the turn.`;
                 let delay = 100
-                await game.succ.removeCondition('distracted', token);
+                await swimConditions.remove('distracted', token);
                 await swim.wait(delay)
-                await game.succ.removeCondition('stunned', token);
+                await swimConditions.remove('stunned', token);
                 if (unshakeSFX) { AudioHelper.play({ src: `${unshakeSFX}` }, true); }
             } else {
                 chatData += ` and remains Stunned.`;
@@ -153,7 +154,7 @@ export async function unstun_script(effect = false) {
         }
     }
 
-    if (await game.succ.hasCondition('stunned', token) === true) {
+    if (await swimConditions.has('stunned', token) === true) {
         rollUnstun()
     } else if (token) {
         await swim.stun(token)

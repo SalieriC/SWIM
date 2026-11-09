@@ -1,3 +1,4 @@
+import { swimConditions } from '../helpers/conditions.js'
 /*******************************************
  * Token Vision macro for SWADE
  * Created by SalieriC#8263
@@ -282,11 +283,11 @@ async function changeVision(token, html, condition) {
 
     if (!condition) {
         if (activeLight === false) {
-            let ae = await game.succ.getConditionFrom('torch', tokenD)
+            let ae = await swimConditions.get_from('torch', tokenD)
             if (ae) { await ae.setFlag('swim', 'deactivatedFromMacro', true) }//set flags to prevent duplicate message in init.js
-            await game.succ.removeCondition('torch', tokenD);
+            await swimConditions.remove('torch', tokenD);
         } else {
-            await game.succ.addCondition('torch', tokenD, {forceOverlay: false, effectOptions: {swim: {activatedFromMacro: true}}});//pass additional data to prevent duplicate message in init.js
+            await swimConditions.add('torch', tokenD, {forceOverlay: false, effectOptions: {swim: {activatedFromMacro: true}}});//pass additional data to prevent duplicate message in init.js
         }
     }
 }

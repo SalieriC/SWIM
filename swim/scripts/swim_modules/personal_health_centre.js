@@ -4,6 +4,7 @@
  * By SalieriC#8263; fixing bugs supported by FloRad#2142. Potion usage inspired by grendel111111#1603; asynchronous playback of sfx by Freeze#2689.
  ******************************************/
 import { execute_as_gm } from "../helpers/socket_helper.js"
+import { swimConditions } from '../helpers/conditions.js'
 
 export async function personal_health_centre_script(data) {
     //const { speaker, _, __, token } = await swim.get_macro_variables()
@@ -134,9 +135,9 @@ export async function heal_other_gm(data) {
     const targetWounds = targetActor.system.wounds.value
     const targetWoundsMax = targetActor.system.wounds.max
     const targetFatigue = targetActor.system.fatigue.value
-    const targetHeartAttack = await game.succ.hasCondition('heart-attack', targetActor)
-    const targetInc = await game.succ.hasCondition('incapacitated', targetActor)
-    const targetBleedOut = await game.succ.hasCondition('bleeding-out', targetActor)
+    const targetHeartAttack = await swimConditions.has('heart-attack', targetActor)
+    const targetInc = await swimConditions.has('incapacitated', targetActor)
+    const targetBleedOut = await swimConditions.has('bleeding-out', targetActor)
     const tokenID = data.tokenID
     const token = canvas.tokens.get(tokenID)
     const tokenActor = token.actor
@@ -157,9 +158,9 @@ export async function heal_other_gm(data) {
                 //Make INC!
                 if (targetInc) {
                     await swim.play_sfx(deathSFX)
-                    await game.succ.addCondition('bleeding-out', targetActor, {forceOverlay: true});
-                    if (await game.succ.hasCondition('incapacitated', token) === true) {
-                        const incCondition = await game.succ.getConditionFrom('incapacitated', token.actor)
+                    await swimConditions.add('bleeding-out', targetActor, {forceOverlay: true});
+                    if (await swimConditions.has('incapacitated', token) === true) {
+                        const incCondition = await swimConditions.get_from('incapacitated', token.actor)
                         if (incCondition.flags?.core?.overlay === true) {
                             incCondition.setFlag('succ', 'updatedAE', true)
                             await incCondition.update({"flags.core.overlay": false})
@@ -167,7 +168,7 @@ export async function heal_other_gm(data) {
                     }
                     chatContent = game.i18n.format("SWIM.chatMessage-healOtherCritFailAndBleedOut", {tokenName : token.name, targetName : target.name})
                 } else {
-                    await game.succ.addCondition('incapacitated', targetActor, {forceOverlay: true});
+                    await swimConditions.add('incapacitated', targetActor, {forceOverlay: true});
                     await swim.play_sfx(deathSFX)
                     chatContent = game.i18n.format("SWIM.chatMessage-healOtherCritFailAndIncap", {tokenName : token.name, targetName : target.name})
                 }
@@ -186,19 +187,19 @@ export async function heal_other_gm(data) {
             await apply()
             chatContent = game.i18n.format("SWIM.chatMessage-healOtherRelief", {tokenName : token.name, targetName : target.name})
             await createchatMessage()
-            await game.succ.removeCondition('shaken', targetActor);
+            await swimConditions.remove('shaken', targetActor);
         } else if (method === "heal" && targetHeartAttack === true) {
-            await game.succ.removeCondition('heart-attack', targetActor);
-            await game.succ.addCondition('incapacitated', targetActor, {forceOverlay: true});
+            await swimConditions.remove('heart-attack', targetActor);
+            await swimConditions.add('incapacitated', targetActor, {forceOverlay: true});
             await swim.play_sfx(deathSFX)
             chatContent = game.i18n.format("SWIM.chatMessage-healOtherCureHeartAttack", {tokenName : token.name, targetName : target.name})
             await createchatMessage()
         } else if (method === "heal" && (targetInc === true || targetBleedOut === true || (targetInc === true && targetBleedOut === true))) {
             // Remove Bleeding out/Incap before any wounds
             if (targetBleedOut) {
-                await game.succ.removeCondition('bleeding-out', targetActor);
-                if (await game.succ.hasCondition('incapacitated', token) === true) {
-                    const incCondition = await game.succ.getConditionFrom('incapacitated', token.actor)
+                await swimConditions.remove('bleeding-out', targetActor);
+                if (await swimConditions.has('incapacitated', token) === true) {
+                    const incCondition = await swimConditions.get_from('incapacitated', token.actor)
                     if (incCondition.flags?.core?.overlay === false) {
                         incCondition.setFlag('succ', 'updatedAE', true)
                         await incCondition.update({"flags.core.overlay": true})
@@ -206,7 +207,7 @@ export async function heal_other_gm(data) {
                 }
                 chatContent = game.i18n.format("SWIM.chatMessage-healOtherCureBleedOut", {tokenName : token.name, targetName : target.name})
             } else if (targetInc) {
-                await game.succ.removeCondition('incapacitated', targetActor);
+                await swimConditions.remove('incapacitated', targetActor);
                 chatContent = game.i18n.format("SWIM.chatMessage-healOtherCureIncap", {tokenName : token.name, targetName : target.name}) //Incapacitation: Healing at least one Wound on an Incapacitated patient removes that state (and restores consciousness if he was knocked out). -> so a Wound is healed in any case(?).
                 if (combatHealing === false) {
                     amount = 1
@@ -230,12 +231,12 @@ export async function heal_other_gm(data) {
             await apply()
             chatContent = game.i18n.format("SWIM.chatMessage-healOtherRaiseRelief", {tokenName : token.name, targetName : target.name})
             await createchatMessage()
-            await game.succ.removeCondition('shaken', targetActor);
-            await game.succ.removeCondition('stunned', targetActor);
-            await game.succ.removeCondition('vulnerable', targetActor);
+            await swimConditions.remove('shaken', targetActor);
+            await swimConditions.remove('stunned', targetActor);
+            await swimConditions.remove('vulnerable', targetActor);
         } else if (method === "heal" && targetHeartAttack === true) {
-            await game.succ.removeCondition('heart-attack', targetActor);
-            await game.succ.addCondition('incapacitated', targetActor, {forceOverlay: true});
+            await swimConditions.remove('heart-attack', targetActor);
+            await swimConditions.add('incapacitated', targetActor, {forceOverlay: true});
             await swim.play_sfx(deathSFX)
             chatContent = game.i18n.format("SWIM.chatMessage-healOtherCureHeartAttack", {tokenName : token.name, targetName : target.name})
             await createchatMessage()
@@ -244,11 +245,11 @@ export async function heal_other_gm(data) {
             if (targetInc === true || targetBleedOut === true || (targetInc === true && targetBleedOut === true)) {
                 // Remove Bleeding out/Incap before any wounds
                 if (targetBleedOut) {
-                    await game.succ.removeCondition('bleeding-out', targetActor);
+                    await swimConditions.remove('bleeding-out', targetActor);
                     amount = amount - 1
                     chatContent = game.i18n.format("SWIM.chatMessage-healOtherCureBleedOut", {tokenName : token.name, targetName : target.name})
                 } if (targetInc) {
-                    await game.succ.removeCondition('incapacitated', targetActor);
+                    await swimConditions.remove('incapacitated', targetActor);
                     //amount = amount - 1 //Incapacitation: Healing at least one Wound on an Incapacitated patient removes that state (and restores consciousness if he was knocked out). -> so a Wound is healed in any case(?).
                     chatContent += game.i18n.format("SWIM.chatMessage-healOtherCureIncapContinued", {targetName : target.name})
                     if (combatHealing === true) {amount = 0}
@@ -275,7 +276,7 @@ export async function heal_other_gm(data) {
             let setWounds = targetWounds + amount
             if (targetWoundsMax <= setWounds) {
                 setWounds = targetWoundsMax
-                await game.succ.addCondition('incapacitated', targetActor);
+                await swimConditions.add('incapacitated', targetActor);
             }
             targetActor.update({ "system.wounds.value": setWounds })
         } else if (method === "relief") {
@@ -374,8 +375,8 @@ async function healSelf(token, speaker) {
     let buttons_main;
     let md_text
     const sendMessage = true
-    const inc = await game.succ.hasCondition('incapacitated', token)
-    const bleedOut = await game.succ.hasCondition('bleeding-out', token)
+    const inc = await swimConditions.has('incapacitated', token)
+    const bleedOut = await swimConditions.has('bleeding-out', token)
 
     // Adjusting buttons and Main Dialogue text
     if (fv < 1 && wv < 1) {
@@ -759,10 +760,10 @@ async function healSelf(token, speaker) {
         if (genericHealWounds) {
             if (inc === true || bleedOut === true) {
                 if (bleedOut === true && genericHealWounds > 0) {
-                    await game.succ.removeCondition('bleeding-out', token);
+                    await swimConditions.remove('bleeding-out', token);
                     genericHealWounds = genericHealWounds -1
                 } if (inc === true && genericHealWounds > 0) {
-                    await game.succ.removeCondition('incapacitated', token);
+                    await swimConditions.remove('incapacitated', token);
                     genericHealWounds = genericHealWounds -1
                 }
                 ui.notifications.notify(`Bleeding out and Incapacitation will be removed before any Wounds.`);
@@ -780,10 +781,10 @@ async function healSelf(token, speaker) {
             if (inc === true || bleedOut === true) {
                 if (rounded >= 2) { rounded = 2 } //Can't heal more than 2 Wounds
                 if (bleedOut === true && rounded > 0) {
-                    await game.succ.removeCondition('bleeding-out', token);
+                    await swimConditions.remove('bleeding-out', token);
                     rounded = rounded -1
                 } if (inc === true && rounded > 0) {
-                    await game.succ.removeCondition('incapacitated', token);
+                    await swimConditions.remove('incapacitated', token);
                     rounded = rounded -1
                 }
                 ui.notifications.notify(`Bleeding out and Incapacitation will be removed before any Wounds.`);
@@ -1002,7 +1003,7 @@ async function healSelf(token, speaker) {
         }
         else {
             await token.actor.update({ "system.wounds.value": wm });
-            await game.succ.addCondition('incapacitated', token, {forceOverlay: true});
+            await swimConditions.add('incapacitated', token, {forceOverlay: true});
             if (incapSFX) {
                 AudioHelper.play({ src: `${incapSFX}` }, true);
             }

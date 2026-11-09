@@ -1,3 +1,4 @@
+import { swimConditions } from '../helpers/conditions.js'
 /*******************************************
  * Mark Dead
  * This Macro works best with Health Estimate installed.
@@ -20,24 +21,24 @@ export async function mark_dead_script() {
     async function main() {
         for (let e of canvas.tokens.controlled) {
             if (e.actor.type === 'npc' || e.actor.type === 'vehicle') {
-                const isInc = await game.succ.hasCondition('dead', e)
+                const isInc = await swimConditions.has('dead', e)
                 const apply = !isInc //invert the result to remove if applied and vice versa.
                 //await succ.toggle_status(e, 'dead', apply, true)
-                if (apply) { await game.succ.addCondition('dead', e, {forceOverlay: true}) }
+                if (apply) { await swimConditions.add('dead', e, {forceOverlay: true}) }
                 else if (!apply) {
-                    await game.succ.removeCondition('dead', e)
+                    await swimConditions.remove('dead', e)
                     //Remove INC as well if the token has it:
-                    if (await game.succ.hasCondition('incapacitated', e)) { await game.succ.removeCondition('incapacitated', e) }
+                    if (await swimConditions.has('incapacitated', e)) { await swimConditions.remove('incapacitated', e) }
                 }
             } else if (e.actor.type === 'character') {
-                const isInc = await game.succ.hasCondition('incapacitated', e)
+                const isInc = await swimConditions.has('incapacitated', e)
                 const apply = !isInc //invert the result to remove if applied and vice versa.
                 //await succ.toggle_status(e, 'incapacitated', apply, true)
-                if (apply) { await game.succ.addCondition('incapacitated', e, {forceOverlay: true}) }
+                if (apply) { await swimConditions.add('incapacitated', e, {forceOverlay: true}) }
                 else if (!apply) {
-                    await game.succ.removeCondition('incapacitated', e)
+                    await swimConditions.remove('incapacitated', e)
                     //Remove Defeated as well if the token has it:
-                    if (await game.succ.hasCondition('dead', e)) { await game.succ.removeCondition('dead', e) }
+                    if (await swimConditions.has('dead', e)) { await swimConditions.remove('dead', e) }
                 }
             }
         }
