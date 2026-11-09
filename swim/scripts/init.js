@@ -11,7 +11,6 @@ import { craft_campfire_gm } from './swim_modules/craft_campfire.js'
 import { open_swim_actor_config, open_swim_item_config } from "./swim_document_config.js";
 import { v10_migration, v11_migration } from "./migrations.js"
 import { effect_hooks } from "./hooks/effect_hooks.js"
-import { actor_hooks } from "./hooks/actor_hooks.js"
 import { combat_hooks } from "./hooks/combat_hooks.js"
 import { brsw_hooks } from "./hooks/brsw_hooks.js"
 import { brsw_actions_setup } from "./helpers/brsw_actions_setup.js"
@@ -73,7 +72,6 @@ Hooks.on(`ready`, () => {
 
     //Run functions to register hooks:
     effect_hooks()
-    actor_hooks()
     combat_hooks()
     brsw_hooks()
 
