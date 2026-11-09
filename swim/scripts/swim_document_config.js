@@ -360,7 +360,7 @@ class DocumentConfigForm extends FormApplication {
         if (typeof oldVal === 'string' && oldVal.length === 0) {
             defaults = {
                 name: `Ammo Effect (${this.object.name})`,
-                icon: this.object.data.img
+                icon: this.object.img
             }
         } else {
             defaults = JSON.parse(oldVal);
