@@ -69,7 +69,7 @@ export async function shape_changer_script(data) {
             intro: game.i18n.localize("SWIM.shapeChanger.intro"),
             caster: { name: token.name, img: token.document.texture.src, rankIdx: ignoreRank ? 4 : rank_of_actor(actor) },
             entries,
-            enforceRank: true,
+            enforceRank: !game.settings.get("swim", "ignoreShapeChangeSizeRule"), //Respecting the SWIM setting by inverting it.
             isGM: game.user.isGM,
             confirmLabel: game.i18n.localize("SWIM.shapeChanger.confirm"),
             confirmIcon: 'fas fa-paw',
