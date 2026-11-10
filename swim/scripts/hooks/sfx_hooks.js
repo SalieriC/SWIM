@@ -10,6 +10,7 @@ import { play_audio } from "../helpers/audio.js"
  *   Fatigue increases                        -> fatiguedSFX
  *   Shaken or Stunned removed / Wounds heal  -> unshakeSFX
  *   Fatigue decreases                        -> looseFatigueSFX
+ *   Incapacitated / Dead removed             -> soakSFX (revived, e.g. Mark Dead)
  * (actor specific sounds from the SWIM config with the module settings as fallback, see swim.get_actor_sfx)
  *
  * Only the client of the user who made the change plays the sound (for all clients), exactly like the macros did before.
@@ -19,7 +20,7 @@ import { play_audio } from "../helpers/audio.js"
 const WINDOW_MS = 150 //Collect events of one actor for this long.
 const DEDUPE_MS = 400 //Don't repeat a file that was just played by a macro (e.g. Soak plays the same default sound).
 const DOWN_IDS = ["incapacitated", "bleeding-out", "dead"]
-const PRIORITY = { death: 6, stunned: 5, shaken: 4, fatigued: 3, unshake: 2, looseFatigue: 1 }
+const PRIORITY = { death: 6, stunned: 5, shaken: 4, fatigued: 3, unshake: 2, revive: 2, looseFatigue: 1 }
 const pending = new Map()
 
 export function sfx_hooks() {
@@ -54,6 +55,7 @@ export function sfx_hooks() {
         if (userId !== game.user.id || effect.disabled || !(effect.parent instanceof Actor)) { return }
         const ids = condition_ids(effect)
         if (ids.has("shaken") || ids.has("stunned")) { queue(effect.parent, "unshake") }
+        if (ids.has("incapacitated") || ids.has("dead")) { queue(effect.parent, "revive") }
     })
 }
 
@@ -90,7 +92,7 @@ async function flush(key) {
         const sfx = await swim.get_actor_sfx(entry.actor)
         const src = {
             death: sfx.deathSFX, stunned: sfx.stunnedSFX, shaken: sfx.shakenSFX,
-            fatigued: sfx.fatiguedSFX, unshake: sfx.unshakeSFX, looseFatigue: sfx.looseFatigueSFX
+            fatigued: sfx.fatiguedSFX, unshake: sfx.unshakeSFX, looseFatigue: sfx.looseFatigueSFX, revive: sfx.soakSFX
         }[entry.type]
         await play_audio(src, { dedupe: DEDUPE_MS })
     } catch (err) {
