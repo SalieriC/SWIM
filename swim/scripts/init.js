@@ -9,7 +9,6 @@ import { common_bond_gm } from './swim_modules/common_bond.js'
 import { effect_builder_gm } from './swim_modules/effect_builder.js'
 import { craft_campfire_gm } from './swim_modules/craft_campfire.js'
 import { open_swim_actor_config, open_swim_item_config } from "./swim_document_config.js";
-import { v10_migration, v11_migration } from "./migrations.js"
 import { effect_hooks } from "./hooks/effect_hooks.js"
 import { combat_hooks } from "./hooks/combat_hooks.js"
 import { brsw_hooks } from "./hooks/brsw_hooks.js"
@@ -163,10 +162,6 @@ Hooks.on(`ready`, () => {
                 }
             },
         }).render(true);
-    } else if (game.settings.get('swim', 'v1MigrationDone') === false) {
-        v10_migration()
-    } else if (game.settings.get('swim', 'v2MigrationDone') === false) {
-        v11_migration()
     } else if (game.settings.get('swim', 'br2Message') === false && game.modules.get('betterrolls-swade2')?.active && game.user.isGM === true) {
         new Dialog({
             title: 'Better Rolls 2 support for SWIM.',

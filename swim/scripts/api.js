@@ -21,7 +21,7 @@ import { token_vision_script } from './swim_modules/token_vision.js'
 import { travel_calculator } from './swim_modules/travel_calculator.js'
 import { unshake_swd_script, unshake_swade_script, unshake_script } from './swim_modules/unshake.js'
 import { unstun_script } from './swim_modules/unstun.js'
-import { update_migration } from './migrations.js'
+import { update_migration, migrate_world } from './migrations.js'
 import * as SWIM from './constants.js'
 import { OFFICIAL_MODULES } from './official_modules.js'
 import { showWeaponAmmoDialog, br2_ammo_management_script } from "./swim_modules/ammo_management.js"
@@ -58,6 +58,7 @@ export class api {
       play_sfx: api._play_sfx,
       get_folder_content: api._get_folder_content,
       run_migration: api._run_migration,
+      migrate_world: migrate_world,
       get_pronoun: api._get_pronoun,
       generate_id: api._generate_id,
       draw_cards: api._draw_cards,
