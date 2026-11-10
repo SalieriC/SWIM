@@ -888,7 +888,7 @@ async function healSelf(token, speaker) {
                             content: `<img style="border: none;" src="${potion_icon}" alt="" width="25" height="25" /> ${token.name} uses a ${selectedPotion} to heal ${genericHealWounds} wound(s).`
                         })
                         if (potionSFX) {
-                            let audioDuration = X
+                            let audioDuration = (await play_audio(potionSFX))?.duration
                             await wait(audioDuration * 1000);
                         }
                         removeWounds();
@@ -934,7 +934,7 @@ async function healSelf(token, speaker) {
                             content: `<img style="border: none;" src="${potion_icon}" alt="" width="25" height="25" /> ${token.name} uses a ${selectedPotion} to cure ${genericHealFatigue} level(s) of Fatigue.`
                         })
                         if (potionSFX) {
-                            let audioDuration = X
+                            let audioDuration = (await play_audio(potionSFX))?.duration
                             await wait(audioDuration * 1000);
                         }
                         RemoveFatigue();
