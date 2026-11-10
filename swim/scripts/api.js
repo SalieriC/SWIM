@@ -22,6 +22,7 @@ import { travel_calculator } from './swim_modules/travel_calculator.js'
 import { unshake_swd_script, unshake_swade_script, unshake_script } from './swim_modules/unshake.js'
 import { unstun_script } from './swim_modules/unstun.js'
 import { update_migration, migrate_world } from './migrations.js'
+import { play_audio } from './helpers/audio.js'
 import * as SWIM from './constants.js'
 import { OFFICIAL_MODULES } from './official_modules.js'
 import { showWeaponAmmoDialog, br2_ammo_management_script } from "./swim_modules/ammo_management.js"
@@ -343,11 +344,8 @@ export class api {
   }
   // Play SFX
   static async _play_sfx(sfx, volume, playForAll = true) {
-    if (!volume) {
-      volume = game.settings.get(
-        'swim', 'defaultVolume')
-    }
-    AudioHelper.play({ src: `${sfx}`, volume: volume, loop: false }, playForAll);
+    //Fire and forget (callers don't wait for the sound to load). Use play_audio() from helpers/audio.js if you need the Sound itself.
+    play_audio(sfx, { volume, push: playForAll }).catch(err => console.warn("SWIM | Could not play sound", sfx, err))
   }
 
   static _get_folder_content(folderName) {
@@ -604,7 +602,7 @@ export class api {
     const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
     await swimConditions.add('shaken', token);
     if (shakenSFX) {
-      AudioHelper.play({ src: `${shakenSFX}` }, true);
+      swim.play_sfx(shakenSFX);
     }
   }
   // Unstun script
@@ -626,7 +624,7 @@ export class api {
     conditionsToApply.push('vulnerable')
     await swimConditions.add(conditionsToApply, token)
     if (stunnedSFX) {
-      AudioHelper.play({ src: `${stunnedSFX}` }, true);
+      swim.play_sfx(stunnedSFX);
     }
   }
   //Tester
