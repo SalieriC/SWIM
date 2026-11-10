@@ -323,20 +323,28 @@ class DocumentConfigForm extends FormApplication {
         const type = this.object.type;
         let data = [];
 
+        //The form works on the SOURCE data. `this.object.flags` holds the *prepared* data, i.e. including Active Effects that change
+        //flags.swim.config.* (e.g. radiation resistance); writing those back as source would apply the effect again on every save.
+        const sourceConfig = this.object._source?.flags?.swim?.config ?? {}
+        const preparedConfig = this.object.flags?.swim?.config ?? {}
+
         for (const c of configs) {
             //load and merge flags here
             if ('showFor' in c && !c.showFor.includes(type))
                 continue;
 
-            if ('swim' in this.object.flags && 'config' in this.object.flags.swim) {
-                const flagsConfig = this.object.flags.swim.config;
-
-                if (c.id in flagsConfig) {
-                    const val = flagsConfig[c.id];
-                    if (val !== null && val !== undefined) {
-                        c.value = val;
-                    }
+            if (c.id in sourceConfig) {
+                const val = sourceConfig[c.id];
+                if (val !== null && val !== undefined) {
+                    c.value = val;
                 }
+            }
+
+            //Show the effective value if Active Effects change it (informational only, never saved).
+            const effective = preparedConfig[c.id]
+            if (c.id && !c.isAE && effective !== undefined && effective !== null && JSON.stringify(effective) !== JSON.stringify(c.value)) {
+                c.hasEffective = true
+                c.effective = effective
             }
 
             data.push(c);
@@ -386,19 +394,23 @@ class DocumentConfigForm extends FormApplication {
     }
 
     async _updateObject(_, formData) {
+        //Only write what actually differs from the SOURCE data (see getData()). Fields that were never set and still show their default
+        //are not written either, so Active Effects on these flags can never be turned into permanent values by opening/closing this window.
+        const sourceConfig = this.object._source?.flags?.swim?.config ?? {}
+        const defaults = Object.fromEntries(swim_config_options().filter(c => c.id).map(c => [c.id, c.value]))
+        const changes = {}
+        for (const [key, value] of Object.entries(formData)) {
+            const stored = sourceConfig[key]
+            const current = stored !== undefined && stored !== null ? stored : defaults[key]
+            if (JSON.stringify(current) !== JSON.stringify(value)) { changes[key] = value }
+        }
         //Merge in version
-        formData = { ...{ _version: swimConfigVersion }, ...formData };
-
-        const Data = {
-            flags: {
-                swim: {
-                    config: formData
-                }
-            }
-        };
+        if (!(sourceConfig._version >= swimConfigVersion)) { changes._version = swimConfigVersion }
 
         try {
-            this.object.update(Data);
+            if (Object.keys(changes).length > 0) {
+                await this.object.update({ flags: { swim: { config: changes } } });
+            }
             // Fallback that deletes all AEs that are marked as temporary:
             for (let eff of this.object.effects) {
                 if (eff.flags?.swim?.ammoAeTempEff === true) { await eff.delete() }

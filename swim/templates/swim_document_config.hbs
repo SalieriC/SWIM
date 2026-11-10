@@ -33,6 +33,7 @@
                         {{/if}}
                     </div>
                     <p class="notes">{{ localize this.hint }}</p>
+                    {{#if this.hasEffective}}<p class="notes"><i class="fas fa-bolt"></i> {{ localize "SWIM.Config_EffectiveValue" }} <strong>{{ this.effective }}</strong></p>{{/if}}
                 {{/if}}
             </div>
         {{/each}}
