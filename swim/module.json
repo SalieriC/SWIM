@@ -89,6 +89,9 @@
 			"path": "lang/zh_Hans.json"
 		}
 	],
+	"styles": [
+		"styles/actor-picker.css"
+	],
 	"esmodules": [
 		"./scripts/init.js"
 	],

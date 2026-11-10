@@ -17,6 +17,7 @@
  * By SalieriC
  ******************************************************/
 import { execute_as_gm } from "../helpers/socket_helper.js"
+import { ActorPickerApp, picker_entry, rank_of_actor } from "../helpers/actor_picker.js"
 
 function generate_id(length = 16) {
     var result = 'SWIM-';
@@ -65,179 +66,156 @@ export async function summoner_script(data) {
     const noPP = game.settings.get("swim", "noPowerPoints")
     if (noPP === true) { duration = -1 }
 
+    const defaultDuration = duration
+
     async function main() {
-        //Pre-selecting shape change actors based on rank:
-        let scOptions;
-        for (let each of totalContent) {
-            scOptions = scOptions + `<option value="${each.id}">${each.name}</option>`;
-        }
-        scOptions = scOptions + `<option value="mirror">${game.i18n.localize("SWIM.power-mirrorSelf")}</option>`;
-        let content = `${officialClass}
-        <p>Please select a creature you want to summon and confirm.</p>
-        <p>Afterwards please select a position on the canvas by clicking anywhere within your range.</p>
-        <div class="form-group">
-            <label for="selected_sc">Creature: </label>
-            <select id="selected_sc">${scOptions}</select>
-        </div>
-        <div class="form-group">
-            <label for="raise"><p>Cast with a raise: </label>
-            <input id="raise" name="raiseBox" type="checkbox"></input></p>
-        </div>`
+        const casterRank = rank_of_actor(actor)
+        const entries = totalContent.map(each => picker_entry(each))
+        entries.push(picker_entry(actor, { id: 'mirror', name: game.i18n.localize("SWIM.power-mirrorSelf"), group: 'special', badge: '<i class="fas fa-clone"></i>' }))
+
+        const extras = []
         if (!noPP) {
-            content += `<p>Enter a Duration in rounds. (Permanent is -1; an hour is 600.)</p>
-        <div class="form-group">
-            <label for="duration"><p>Duration: </label>
-            <input id="duration" name="duration" type="number", value="${duration}"></p></input>
-        </div>`
-        } if (noPP) {
-            let skillOptions = ""
+            extras.push({ type: 'number', id: 'duration', label: game.i18n.localize("SWIM.summoner.duration"), hint: game.i18n.localize("SWIM.summoner.durationHint"), value: defaultDuration })
+        } else {
+            let skills = []
             for (let power of actor.items.filter(p => p.type === "power")) {
-                if (!skillOptions.includes(power.system.actions.trait)) {
-                    skillOptions += `<option value="${power.system.actions.trait}">${power.system.actions.trait}</option>`
-                }
+                const trait = power.system.actions?.trait
+                if (trait && !skills.includes(trait)) { skills.push(trait) }
             }
-            if (!skillOptions) {
-                for (let skill of actor.items.filter(s => s.type === "skill")) {
-                    skillOptions = skillOptions + `<option value="${skill.name}">${skill.name}</option>`
-                }
-            }
-            content += `
-            <div class='form-group'>
-                <label for='skillSelection'><p>Skill used to cast the power:</label>
-                <select id='skillSelection'>${skillOptions}</select></p>
-            </div>
-            </div>`
+            if (!skills.length) { skills = actor.items.filter(s => s.type === "skill").map(s => s.name) }
+            extras.push({ type: 'select', id: 'skill', label: game.i18n.localize("SWIM.summoner.skill"), options: skills.map(s => ({ value: s, label: s })) })
         }
-        content += `</div>`
+        extras.unshift({ type: 'checkbox', id: 'raise', label: game.i18n.localize("SWIM.summoner.raise") })
 
-        new Dialog({
+        const result = await ActorPickerApp.prompt({
             title: 'Mighty Summoner',
-            content: content,
-            buttons: {
-                one: {
-                    label: `<i class="fas fa-paw"></i> Summon Creature`,
-                    callback: async (html) => {
-                        //Get actor based on provided ID:
-                        const scID = html.find(`#selected_sc`)[0].value === 'mirror' ? actor.id : html.find(`#selected_sc`)[0].value;
-                        //Fetching raise:
-                        const raise = html.find(`#raise`)[0].checked;
-                        const summonersName = token.name
-                        const summonersDisposition = token.document.disposition
-                        const scActor = game.actors.get(scID)
-                        const scMaxWounds = scActor.system.wounds.max
-                        const scName = scActor.prototypeToken.name
-                        //Get Duration:
-                        const duration = noPP ? Number(-1) : Number(html.find(`#duration`)[0].value)
-                        const skillName = noPP ? html.find(`#skillSelection`)[0].value : false
-                        
-                        // The summoning user becomes Owner of the summoned token's (synthetic) actor right at creation, so they can control it.
-                        // This is what Warp Gate did (`actorData.ownership`, `delta` in v11); Portal does not do it. Applied while the token is created,
-                        // so no permission to update the actor afterwards is needed.
-                        const OWNER_LEVEL = CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER
-                        // The summoned creature is also owned by everyone who owns the summoner (matters when the GM summons for a player's token). Not 'default'.
-                        const summonerOwnership = { ownership: { [game.user.id]: OWNER_LEVEL } }
-                        for (const [userId, level] of Object.entries(actor.ownership ?? {})) {
-                            if (userId !== "default" && level === OWNER_LEVEL) summonerOwnership.ownership[userId] = OWNER_LEVEL
-                        }
-                        let updates
-                        if (raise === false) {
-                            updates = {
-                                token: { name: `${summonersName}'s ${scName}`, disposition: summonersDisposition, actorLink: false, delta: summonerOwnership }, //don't want to mess with the source actor in case it is linked.
-                                actor: { name: `${summonersName}'s ${scName}` },
-                            }
-                        } else if (raise === true) {
-                            updates = {
-                                token: { name: `${summonersName}'s ${scName}`, disposition: summonersDisposition, actorLink: false, delta: summonerOwnership },
-                                actor: {
-                                    name: `${summonersName}'s ${scName}`,
-                                    "system.wounds.max": scMaxWounds + 1
-                                },
-                            }
-                        }
+            intro: game.i18n.localize("SWIM.summoner.intro"),
+            caster: { name: token.name, img: token.document.texture.src, rankIdx: casterRank },
+            entries,
+            enforceRank: true,
+            isGM: game.user.isGM,
+            confirmLabel: game.i18n.localize("SWIM.summoner.confirm"),
+            confirmIcon: 'fas fa-paw',
+            extras,
+        })
+        if (!result) { return }
 
-                        //Set up the portal:
-                        const portal = new Portal()
-                            // Portal only applies updates passed here, not to spawn(). Only the *token* updates are given to Portal:
-                            // players can't update the summoned creature's actor (no ownership), the GM handler applies `updates.actor` instead.
-                            .addCreature(scActor, {count: 1, updateData: { token: updates.token }})
-                            .color(game.user.color.css)
-                            .texture(scActor.prototypeToken.texture.src)
-                            .origin(token)
-                            .range(token.actor.system.attributes.smarts.die.sides)
+        //Get actor based on provided ID:
+        const scID = result.id === 'mirror' ? actor.id : result.id
+        //Fetching raise:
+        const raise = result.values.raise === true
+        const summonersName = token.name
+        const summonersDisposition = token.document.disposition
+        const scActor = game.actors.get(scID)
+        const scMaxWounds = scActor.system.wounds.max
+        const scName = scActor.prototypeToken.name
+        //Get Duration:
+        const duration = noPP ? Number(-1) : Number(result.values.duration)
+        const skillName = noPP ? result.values.skill : false
+        
+        // The summoning user becomes Owner of the summoned token's (synthetic) actor right at creation, so they can control it.
+        // This is what Warp Gate did (`actorData.ownership`, `delta` in v11); Portal does not do it. Applied while the token is created,
+        // so no permission to update the actor afterwards is needed.
+        const OWNER_LEVEL = CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER
+        // The summoned creature is also owned by everyone who owns the summoner (matters when the GM summons for a player's token). Not 'default'.
+        const summonerOwnership = { ownership: { [game.user.id]: OWNER_LEVEL } }
+        for (const [userId, level] of Object.entries(actor.ownership ?? {})) {
+            if (userId !== "default" && level === OWNER_LEVEL) summonerOwnership.ownership[userId] = OWNER_LEVEL
+        }
+        let updates
+        if (raise === false) {
+            updates = {
+                token: { name: `${summonersName}'s ${scName}`, disposition: summonersDisposition, actorLink: false, delta: summonerOwnership }, //don't want to mess with the source actor in case it is linked.
+                actor: { name: `${summonersName}'s ${scName}` },
+            }
+        } else if (raise === true) {
+            updates = {
+                token: { name: `${summonersName}'s ${scName}`, disposition: summonersDisposition, actorLink: false, delta: summonerOwnership },
+                actor: {
+                    name: `${summonersName}'s ${scName}`,
+                    "system.wounds.max": scMaxWounds + 1
+                },
+            }
+        }
 
-                        // First pick the location only, so the VFX/SFX can play *before* the token appears.
-                        const picked = await portal.pick()
-                        // Portal returns false if the placement was cancelled (right click).
-                        if (!picked) { return }
-                        await play_sfx(picked)
-                        // spawn() re-uses the location that was just picked (no second prompt).
-                        const spawnData = await portal.spawn()
-                        if (!spawnData?.length) { return }
+        //Set up the portal:
+        const portal = new Portal()
+            // Portal only applies updates passed here, not to spawn(). Only the *token* updates are given to Portal:
+            // players can't update the summoned creature's actor (no ownership), the GM handler applies `updates.actor` instead.
+            .addCreature(scActor, {count: 1, updateData: { token: updates.token }})
+            .color(game.user.color.css)
+            .texture(scActor.prototypeToken.texture.src)
+            .origin(token)
+            .range(token.actor.system.attributes.smarts.die.sides)
 
-                        //Active Effect:
-                        let durationRounds
-                        let durationSeconds
-                        if (duration === -1) { durationRounds = Number(999999999999999); durationSeconds = Number(999999999999999) }
-                        else { durationRounds = duration; durationSeconds = duration * 6 }
+        // First pick the location only, so the VFX/SFX can play *before* the token appears.
+        const picked = await portal.pick()
+        // Portal returns false if the placement was cancelled (right click).
+        if (!picked) { return }
+        await play_sfx(picked)
+        // spawn() re-uses the location that was just picked (no second prompt).
+        const spawnData = await portal.spawn()
+        if (!spawnData?.length) { return }
 
-                        let aeData = {
-                            changes: [],
-                            icon: "modules/swim/assets/icons/effects/0-summoned.svg",
-                            name: actor.id === scID ? `${game.i18n.localize("SWIM.label-summonedEntity")} ${game.i18n.localize("SWIM.word-Mirrored")} ${scName}` : `${game.i18n.localize("SWIM.label-summonedEntity")} ${scName}`,
-                            duration: {
-                                rounds: durationRounds,
-                                seconds: durationSeconds
-                            },
-                            flags: {
-                                swade: {
-                                    expiration: 3
-                                },
-                                swim: {
-                                    maintainedSummon: true,
-                                    maintenanceID: maintID,
-                                    owner: true,
-                                    isSummonedCreature: false
-                                }
-                            }
-                        }
-                        if (noPP) {
-                            aeData.changes.push({ key: `@Skill{${skillName}}[system.die.modifier]`, mode: 2, priority: undefined, value: -1 })
-                        }
-                        if (actor.system.additionalStats?.maintainedPowers) {
-                            aeData.changes.push({ key: `system.additionalStats.maintainedPowers.value`, mode: 2, priority: undefined, value: 1 })
-                        }
-                        await actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        //Active Effect:
+        let durationRounds
+        let durationSeconds
+        if (duration === -1) { durationRounds = Number(999999999999999); durationSeconds = Number(999999999999999) }
+        else { durationRounds = duration; durationSeconds = duration * 6 }
 
-                        const data = {
-                            summonerID: token.id,
-                            scID: scID,
-                            tokenID: spawnData[0]._id,
-                            actorUpdates: updates.actor, //applied by the GM in summoner_gm()
-                            maintID: maintID,
-                            duration: duration,
-                            mirror: scID === actor._id ? true : false,
-                            mainFolderID: mainFolder._id,
-                            raise: raise,
-                            flags: {
-                                swade: {
-                                    expiration: 3
-                                },
-                                swim: {
-                                    maintainedSummon: true,
-                                    maintenanceID: maintID,
-                                    owner: false,
-                                    isSummonedCreature: true,
-                                    userId: game.user.id
-                                }
-                            }
-                        }
-                        
-                        await execute_as_gm("summoner", data)
-                    }
-                }
+        let aeData = {
+            changes: [],
+            icon: "modules/swim/assets/icons/effects/0-summoned.svg",
+            name: actor.id === scID ? `${game.i18n.localize("SWIM.label-summonedEntity")} ${game.i18n.localize("SWIM.word-Mirrored")} ${scName}` : `${game.i18n.localize("SWIM.label-summonedEntity")} ${scName}`,
+            duration: {
+                rounds: durationRounds,
+                seconds: durationSeconds
             },
-            default: "one",
-        }).render(true);
+            flags: {
+                swade: {
+                    expiration: 3
+                },
+                swim: {
+                    maintainedSummon: true,
+                    maintenanceID: maintID,
+                    owner: true,
+                    isSummonedCreature: false
+                }
+            }
+        }
+        if (noPP) {
+            aeData.changes.push({ key: `@Skill{${skillName}}[system.die.modifier]`, mode: 2, priority: undefined, value: -1 })
+        }
+        if (actor.system.additionalStats?.maintainedPowers) {
+            aeData.changes.push({ key: `system.additionalStats.maintainedPowers.value`, mode: 2, priority: undefined, value: 1 })
+        }
+        await actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+
+        const data = {
+            summonerID: token.id,
+            scID: scID,
+            tokenID: spawnData[0]._id,
+            actorUpdates: updates.actor, //applied by the GM in summoner_gm()
+            maintID: maintID,
+            duration: duration,
+            mirror: scID === actor._id ? true : false,
+            mainFolderID: mainFolder._id,
+            raise: raise,
+            flags: {
+                swade: {
+                    expiration: 3
+                },
+                swim: {
+                    maintainedSummon: true,
+                    maintenanceID: maintID,
+                    owner: false,
+                    isSummonedCreature: true,
+                    userId: game.user.id
+                }
+            }
+        }
+        
+        await execute_as_gm("summoner", data)
     }
 
     async function dismiss() {

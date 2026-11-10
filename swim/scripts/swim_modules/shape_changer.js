@@ -19,6 +19,7 @@
 
 import * as SWIM from '../constants.js'
 import { execute_as_gm } from '../helpers/socket_helper.js'
+import { ActorPickerApp, picker_entry, rank_of_actor } from '../helpers/actor_picker.js'
 import { spawn_token, dismiss_token, wait_for_placeable } from '../helpers/token_spawn.js'
 
 export async function shape_changer_script(data) {
@@ -52,83 +53,54 @@ export async function shape_changer_script(data) {
     });
 
     async function main() {
-        //Pre-selecting shape change actors based on rank:
-        let scOptions = "";
-        for (let each of totalContent) {
-            let size = each.system.stats.size;
-            let maxSize = 0;
-            if (actor.system.advances?.value < 4) { maxSize = -1 }
-            else if (actor.system.advances?.value < 8) { maxSize = 0 }
-            else if (actor.system.advances?.value < 12) { maxSize = 2 }
-            else if (actor.system.advances?.value < 16) { maxSize = 4 }
-            else if (actor.system.advances?.value >= 16) { maxSize = 10 }
-            if (game.settings.get("swim", "ignoreShapeChangeSizeRule") === true) { maxSize = 999 }
-            //Selection for all shape change presets:
-            if (size <= maxSize || game.user.isGM === true) {
-                scOptions = scOptions + `<option value="${each.id}">${each.name} [${game.i18n.localize("SWADE.Size")}: ${each.system.stats.size}]</option>`;
-            }
-        }
+        // Rank rule: the size of a form is limited by the rank of the caster (see rank_for_size()). Forms above it are shown greyed out;
+        // the GM can still pick them, and the setting 'ignoreShapeChangeSizeRule' lifts the limit for everybody.
+        const ignoreRank = game.settings.get("swim", "ignoreShapeChangeSizeRule") === true
+        const entries = totalContent.map(each => picker_entry(each))
 
-        if (!scOptions) {
+        if (!entries.length) {
             // Nothing to choose from: tell the player what the GM has to set up instead of showing an empty list.
             ui.notifications.error(game.i18n.localize("SWIM.notification.noShapeChangePresets"), { permanent: true })
             return
         }
 
-        new Dialog({
+        const result = await ActorPickerApp.prompt({
             title: 'Shape Change',
-            content: `${officialClass}
-            <p>Are you shape changing into another creature or are you reverting back to your normal form?</p>
-            <p>If you are shape changing please select a creature to change into:</p>
-            <div class="form-group">
-                <label for="selected_sc">Target form: </label>
-                <select id="selected_sc">${scOptions}</select>
-            </div>
-            <div class="form-group">
-                <label for="raise">Cast with a raise: </label>
-                <input id="raise" name="raiseBox" type="checkbox"></input>
-            </div>
-            </div>`,
-            buttons: {
-                one: {
-                    label: `<i class="fas fa-paw"></i>Shape Change`,
-                    callback: async (html) => {
-                        //Get actor based on provided ID:
-                        const scID = html.find(`#selected_sc`)[0].value;
-                        //Fetching raise:
-                        const raise = html.find(`#raise`)[0].checked;
+            intro: game.i18n.localize("SWIM.shapeChanger.intro"),
+            caster: { name: token.name, img: token.document.texture.src, rankIdx: ignoreRank ? 4 : rank_of_actor(actor) },
+            entries,
+            enforceRank: true,
+            isGM: game.user.isGM,
+            confirmLabel: game.i18n.localize("SWIM.shapeChanger.confirm"),
+            confirmIcon: 'fas fa-paw',
+            revert: { label: game.i18n.localize("SWIM.shapeChanger.revert"), icon: 'fas fa-user-alt' },
+            extras: [{ type: 'checkbox', id: 'raise', label: game.i18n.localize("SWIM.summoner.raise") }],
+        })
+        if (!result) { return }
 
-                        // Can't send documents (like actors) via the event system, so send the IDs instead, getting the documents in the GM code.
-                        let data = {
-                            type: "change", //or "revert"
-                            raise: raise,
-                            actorID: actor.id,
-                            scID: scID,
-                            tokenID: token.id,
-                            userID: game.user.id,
-                            sceneID: game.scenes.current._id
-                        }
-                        await execute_as_gm("shapeChanger", data)
-                    }
-                },
-                two: {
-                    label: `<i class="fas fa-user-alt"></i>Revert form`,
-                    callback: async () => {
-                        const ownerActorID = actor.getFlag('swim', 'scOwner')
-                        let data = {
-                            type: "revert", //or "change"
-                            actorID: actor.id,
-                            tokenID: token.id,
-                            ownerActorID: ownerActorID,
-                            userID: game.user.id,
-                            sceneID: game.scenes.current._id
-                        }
-                        await execute_as_gm("shapeChanger", data)
-                    }
-                }
-            },
-            default: "one",
-        }).render(true);
+        if (result.action === 'revert') {
+            const ownerActorID = actor.getFlag('swim', 'scOwner')
+            await execute_as_gm("shapeChanger", {
+                type: "revert", //or "change"
+                actorID: actor.id,
+                tokenID: token.id,
+                ownerActorID: ownerActorID,
+                userID: game.user.id,
+                sceneID: game.scenes.current._id
+            })
+            return
+        }
+
+        // Can't send documents (like actors) via the event system, so send the IDs instead, getting the documents in the GM code.
+        await execute_as_gm("shapeChanger", {
+            type: "change", //or "revert"
+            raise: result.values.raise === true,
+            actorID: actor.id,
+            scID: result.id,
+            tokenID: token.id,
+            userID: game.user.id,
+            sceneID: game.scenes.current._id
+        })
     }
     main();
 }

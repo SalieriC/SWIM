@@ -692,5 +692,22 @@
   "SWIM.Backlasher.Message-5": " (powers set up using SWIM functions have been automatically terminated)",
   "SWIM.Backlasher.Message-6": ".</p></div>",
   "SWIM.Backlasher.Message-7": "suffers {backlashLink} (not applied automatically):</p></div>",
-  "SWIM.warn-noBacklashTable": "Dynamic Backlash table not found. Please import it in your world and make sure it has the same name as in the setting."
+  "SWIM.warn-noBacklashTable": "Dynamic Backlash table not found. Please import it in your world and make sure it has the same name as in the setting.",
+  "SWIM.picker.filter": "Filter creatures…",
+  "SWIM.picker.cancel": "Cancel",
+  "SWIM.picker.special": "Special",
+  "SWIM.picker.selected": "Selected: {name}",
+  "SWIM.picker.available": "{count} available",
+  "SWIM.picker.noMatch": "No creature matches “{query}”.",
+  "SWIM.picker.requiresRank": "Requires rank {rank} (Size {size})",
+  "SWIM.picker.gmOverride": "{name}'s rank is too low for this creature. You can allow it as GM.",
+  "SWIM.summoner.intro": "Select the creature to summon, then confirm. Afterwards, pick a position on the canvas within your range.",
+  "SWIM.summoner.raise": "Cast with a raise",
+  "SWIM.summoner.duration": "Duration (rounds)",
+  "SWIM.summoner.durationHint": "Permanent is -1, an hour is 600.",
+  "SWIM.summoner.skill": "Skill used to cast the power",
+  "SWIM.summoner.confirm": "Summon Creature",
+  "SWIM.shapeChanger.intro": "Select the creature to change into and confirm, or revert to your normal form.",
+  "SWIM.shapeChanger.confirm": "Shape Change",
+  "SWIM.shapeChanger.revert": "Revert form"
 }

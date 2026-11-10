@@ -1,0 +1,95 @@
+/* Actor picker (scripts/helpers/actor_picker.js): Mighty Summoner, Shape Changer. Look based on the Mimic dialog. */
+.swim-ap-app {
+  --swim-ap-bg: #1b2430;
+  --swim-ap-panel: #243142;
+  --swim-ap-panel-2: #2c3b50;
+  --swim-ap-line: rgba(255, 255, 255, 0.14);
+  --swim-ap-text: #e9e6dd;
+  --swim-ap-dim: #a9b4c2;
+  --swim-ap-gold: #e0b24a;
+}
+.swim-ap-app .window-content { padding: 0; background: var(--swim-ap-bg); color: var(--swim-ap-text); overflow: hidden; }
+.swim-ap { display: flex; flex-direction: column; max-height: 78vh; }
+
+.swim-ap-head { padding: 10px 14px; border-bottom: 1px solid var(--swim-ap-line); background: var(--swim-ap-panel); }
+.swim-ap-who { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 8px; }
+.swim-ap-actor { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.swim-ap-actor b { font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 150px; }
+.swim-ap-token {
+  flex: 0 0 40px; width: 40px; height: 40px; object-fit: cover; border-radius: 50%;
+  background: #0e141b; border: 2px solid rgba(255, 255, 255, 0.28); box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+.swim-ap-token[hidden] { display: none; }
+i.swim-ap-token-empty { display: flex; align-items: center; justify-content: center; color: var(--swim-ap-dim); }
+i.swim-ap-token-empty[hidden] { display: none; }
+.swim-ap-arrow { color: var(--swim-ap-gold); }
+.swim-ap-help { margin: 0 0 8px; font-size: 12.5px; line-height: 1.35; color: var(--swim-ap-dim); }
+.swim-ap-help i { color: var(--swim-ap-gold); margin-right: 4px; }
+.swim-ap-search { display: flex; align-items: center; gap: 8px; color: var(--swim-ap-dim); }
+.swim-ap-search input {
+  flex: 1; height: 26px; background: var(--swim-ap-bg); color: var(--swim-ap-text);
+  border: 1px solid var(--swim-ap-line); border-radius: 5px; padding: 0 8px;
+}
+.swim-ap-search input:focus { outline: none; border-color: var(--swim-ap-gold); box-shadow: 0 0 0 2px rgba(224, 178, 74, 0.25); }
+
+.swim-ap-list { padding: 4px 10px 8px; overflow-y: auto; flex: 1 1 auto; min-height: 90px; max-height: 50vh; }
+.swim-ap-group h4 {
+  margin: 8px 0 5px; font-size: 11.5px; font-weight: normal; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--swim-ap-dim); border: 0;
+}
+.swim-ap-row {
+  display: flex; align-items: center; gap: 10px; margin: 0 0 6px; padding: 6px 10px 6px 8px; cursor: pointer;
+  background: var(--swim-ap-panel); border: 1px solid var(--swim-ap-line); border-left: 3px solid transparent; border-radius: 6px;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+.swim-ap-row:hover { background: var(--swim-ap-panel-2); }
+.swim-ap-row:focus-visible { outline: 2px solid #fff; outline-offset: 1px; }
+.swim-ap-row.is-selected {
+  background: #34506e; border-color: var(--swim-ap-gold); border-left-color: var(--swim-ap-gold);
+  box-shadow: 0 0 0 2px rgba(224, 178, 74, 0.35);
+}
+.swim-ap-icon {
+  flex: 0 0 44px; width: 44px; height: 44px; object-fit: cover; border-radius: 6px;
+  background: #0e141b; border: 1px solid rgba(255, 255, 255, 0.28);
+}
+.swim-ap-row.is-selected .swim-ap-icon { border-color: var(--swim-ap-gold); }
+.swim-ap-name { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.swim-ap-nametext { font-size: 15px; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.swim-ap-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.swim-ap-chip { font-size: 11px; color: var(--swim-ap-dim); background: rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 0 6px; }
+.swim-ap-chip b { color: var(--swim-ap-text); }
+.swim-ap-rank {
+  flex: 0 0 24px; height: 24px; line-height: 24px; text-align: center; border-radius: 50%; font-weight: bold; font-size: 13px;
+  color: var(--swim-ap-gold); border: 1px solid rgba(224, 178, 74, 0.55); background: rgba(224, 178, 74, 0.1);
+}
+/* rank not met: greyed out (the GM can still pick it, players can't) */
+.swim-ap-row.is-locked { opacity: 0.5; filter: grayscale(0.85); }
+.swim-ap-row.is-locked .swim-ap-rank { color: var(--swim-ap-dim); border-color: var(--swim-ap-line); background: transparent; }
+.swim-ap-row.is-blocked { cursor: not-allowed; }
+.swim-ap-row.is-blocked:hover { background: var(--swim-ap-panel); }
+.swim-ap-row.is-locked.is-selected { opacity: 0.8; }
+.swim-ap-empty { margin: 14px 0; text-align: center; color: var(--swim-ap-dim); }
+
+/* extras (checkbox / number / select) */
+.swim-ap-extras { display: flex; flex-direction: column; gap: 6px; padding: 8px 14px; border-top: 1px solid var(--swim-ap-line); background: var(--swim-ap-panel); }
+.swim-ap-field { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 13px; }
+.swim-ap-field > span { display: flex; flex-direction: column; }
+.swim-ap-check { justify-content: flex-start; }
+.swim-ap-check input { margin: 0; flex: 0 0 auto; }
+.swim-ap-hint { color: var(--swim-ap-dim); font-size: 11px; }
+.swim-ap-field input[type="number"], .swim-ap-field select {
+  width: 150px; height: 26px; background: var(--swim-ap-bg); color: var(--swim-ap-text);
+  border: 1px solid var(--swim-ap-line); border-radius: 5px; padding: 0 6px;
+}
+
+.swim-ap-foot { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-top: 1px solid var(--swim-ap-line); background: var(--swim-ap-panel); }
+.swim-ap-status { font-size: 12.5px; color: var(--swim-ap-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.swim-ap-spacer { flex: 1; }
+.swim-ap-foot button {
+  width: auto; line-height: 1.6; padding: 2px 14px; cursor: pointer; border-radius: 5px; flex: 0 0 auto;
+  background: var(--swim-ap-panel-2); color: var(--swim-ap-text); border: 1px solid var(--swim-ap-line);
+}
+.swim-ap-foot button:hover:not(:disabled) { background: #3a4d66; }
+.swim-ap-foot button:disabled { opacity: 0.4; cursor: not-allowed; }
+.swim-ap-foot .swim-ap-apply { background: #2f6f44; border-color: #4a9a63; font-weight: bold; }
+.swim-ap-foot .swim-ap-apply:hover:not(:disabled) { background: #378553; }
