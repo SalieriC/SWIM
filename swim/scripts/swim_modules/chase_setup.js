@@ -174,7 +174,7 @@
             );
         }
 
-        AudioHelper.play({ src: `systems/swade/assets/card-flip.wav` }, true);
+        swim.play_sfx("systems/swade/assets/card-flip.wav");
 
         for (let i = 0; i < cardsToDraw; i++) {
             let row = parseInt( i / CARDS_PER_ROW );
@@ -215,7 +215,7 @@
             await game.cards.getName(deckName).shuffle({chatNotification: false});
         }
 
-        AudioHelper.play({ src: `systems/swade/assets/card-flip.wav` }, true);
+        swim.play_sfx("systems/swade/assets/card-flip.wav");
 
         const delete_ids = canvas.scene.tiles
             .filter(t => !!t.getFlag('swim', 'isChaseCard') === true)

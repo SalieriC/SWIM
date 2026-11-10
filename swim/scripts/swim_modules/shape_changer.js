@@ -370,7 +370,7 @@ export async function shape_changer_gm(data) {
     async function replace_token(scCopy) {
         // Play SFX:
         let shapeShiftSFX = game.settings.get('swim', 'shapeShiftSFX');
-        if (shapeShiftSFX) { AudioHelper.play({ src: `${shapeShiftSFX}` }, true); }
+        if (shapeShiftSFX) { swim.play_sfx(shapeShiftSFX); }
         // Play VFX:
         let shapeShiftVFX = game.settings.get('swim', 'shapeShiftVFX');
         if (shapeShiftVFX && game.modules.get("sequencer")?.active) {

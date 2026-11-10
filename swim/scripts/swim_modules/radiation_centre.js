@@ -58,7 +58,7 @@ export async function radiation_centre_script() {
         rollWithEdge += radRes;
         let radResVal = `${radRes}`;
         if (radRes >= 1) { radResVal = `+${radRes}`; }
-        else if (radRes <= -1) { radResVal = `-${radRes}`; }
+        else if (radRes <= -1) { radResVal = `${radRes}`; } //radRes already carries its minus sign
         if (radRes && radRes != 0) { edgeText = edgeText + `${game.i18n.format("SWIM.chatMessage-includingRadRes", {radResVal: radResVal})}`; }
 
         // Roll Vigor
@@ -107,7 +107,7 @@ export async function radiation_centre_script() {
         if (newFatigue <= fm) {
             token.actor.update({ "system.fatigue.value": newFatigue });
             if (fatiguedSFX) {
-                AudioHelper.play({ src: `${fatiguedSFX}` }, true);
+                swim.play_sfx(fatiguedSFX);
             }
         }
         else {

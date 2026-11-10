@@ -5,6 +5,7 @@
  ******************************************/
 import { execute_as_gm } from "../helpers/socket_helper.js"
 import { swimConditions } from '../helpers/conditions.js'
+import { play_audio } from '../helpers/audio.js'
 
 /** Can this item be used as a potion? Regular gear is used up via `quantity`; SWADE consumables as long as charges are left on the stack. */
 function is_usable_potion_item(item) {
@@ -891,7 +892,7 @@ async function healSelf(token, speaker) {
                             content: `<img style="border: none;" src="${potion_icon}" alt="" width="25" height="25" /> ${token.name} uses a ${selectedPotion} to heal ${genericHealWounds} wound(s).`
                         })
                         if (potionSFX) {
-                            let audioDuration = (await AudioHelper.play({ src: `${potionSFX}` }, true)).duration
+                            let audioDuration = X
                             await wait(audioDuration * 1000);
                         }
                         removeWounds();
@@ -937,7 +938,7 @@ async function healSelf(token, speaker) {
                             content: `<img style="border: none;" src="${potion_icon}" alt="" width="25" height="25" /> ${token.name} uses a ${selectedPotion} to cure ${genericHealFatigue} level(s) of Fatigue.`
                         })
                         if (potionSFX) {
-                            let audioDuration = (await AudioHelper.play({ src: `${potionSFX}` }, true)).duration
+                            let audioDuration = X
                             await wait(audioDuration * 1000);
                         }
                         RemoveFatigue();
@@ -1004,14 +1005,14 @@ async function healSelf(token, speaker) {
         if (setWounds <= wm) {
             await token.actor.update({ "system.wounds.value": setWounds });
             if (woundedSFX) {
-                AudioHelper.play({ src: `${woundedSFX}` }, true);
+                swim.play_sfx(woundedSFX);
             }
         }
         else {
             await token.actor.update({ "system.wounds.value": wm });
             await swimConditions.add('incapacitated', token, {forceOverlay: true});
             if (incapSFX) {
-                AudioHelper.play({ src: `${incapSFX}` }, true);
+                swim.play_sfx(incapSFX);
             }
             if (noVig === true) {return}
             await swim.soak_damage()

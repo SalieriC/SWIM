@@ -176,7 +176,7 @@ export async function soak_damage_script(effect = false) {
                 lastWoundsSoaked = rounded
                 maxWoundsSoaked = maxWoundsSoaked > lastWoundsSoaked ? maxWoundsSoaked : lastWoundsSoaked
                 chatData += game.i18n.format("SWIM.chatMessage-soakSomeWounds", { rounded: maxWoundsSoaked, pronoun: pronoun });
-                if (soakSFX) { AudioHelper.play({ src: `${soakSFX}` }, true); }
+                if (soakSFX) { swim.play_sfx(soakSFX); }
                 if (totalBennies < 1) {
                     applyWounds();
                 }
@@ -187,7 +187,7 @@ export async function soak_damage_script(effect = false) {
                 lastWoundsSoaked = rounded
                 maxWoundsSoaked = maxWoundsSoaked > lastWoundsSoaked ? maxWoundsSoaked : lastWoundsSoaked
                 chatData += game.i18n.format("SWIM.chatMessage-soakAllWounds", {pronoun: pronoun});
-                if (soakSFX) { AudioHelper.play({ src: `${soakSFX}` }, true); }
+                if (soakSFX) { swim.play_sfx(soakSFX); }
                 if (await swimConditions.has('shaken', token) === true) {
                     await swimConditions.remove('shaken', token);
                 }
@@ -221,7 +221,7 @@ export async function soak_damage_script(effect = false) {
                             token.actor.update({ "system.wounds.value": setWounds });
                             await swimConditions.add('shaken', token);
                             if (woundedSFX) {
-                                AudioHelper.play({ src: `${woundedSFX}` }, true);
+                                swim.play_sfx(woundedSFX);
                             }
                         }
                         else if (applWounds === 0) {

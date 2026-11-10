@@ -68,7 +68,7 @@ export async function fear_table_script() {
                                 await add_effects(total, target)
                             }
                             let fearSFX = game.settings.get('swim', 'fearSFX');
-                            if (fearSFX) { AudioHelper.play({ src: `${fearSFX}` }, true); }
+                            if (fearSFX) { swim.play_sfx(fearSFX); }
                         }
                     }
                     else {
