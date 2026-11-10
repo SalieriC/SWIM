@@ -106,7 +106,6 @@ export async function unstun_script(effect = false) {
                 chatData += ` and is no longer Stunned but remains Vulnerable until end of next turn.`;
                 await swimConditions.add('vulnerable', token);
                 await swimConditions.remove('stunned', token);
-                if (unshakeSFX) { swim.play_sfx(unshakeSFX); }
                 useBenny();
             } else if (rollWithEdge >= 8) {
                 chatData += `, is no longer Stunned and looses Vulnerable after the turn.`;
@@ -114,7 +113,6 @@ export async function unstun_script(effect = false) {
                 await swimConditions.remove('distracted', token);
                 await swim.wait(delay)
                 await swimConditions.remove('stunned', token);
-                if (unshakeSFX) { swim.play_sfx(unshakeSFX); }
             } else {
                 chatData += ` and remains Stunned.`;
                 useBenny();

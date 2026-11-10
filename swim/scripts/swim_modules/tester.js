@@ -493,12 +493,6 @@ export async function tester_gm(data) {
                 if (rollWithEdge - bestResistRoll >= 4) {
                     await swimConditions.add("shaken", targetToken);
                     chatContent += " " + game.i18n.localize("SWIM.word-and") + " " + game.i18n.localize("SWIM.gameTerm-Shaken")
-
-                    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
-                    if (shakenSFX) {
-                        const volume = game.settings.get('swim', 'defaultVolume')
-                        await swim.play_sfx(shakenSFX, volume, true)
-                    }
                 }
                 chatContent += ".</div>"
                 createMessage()

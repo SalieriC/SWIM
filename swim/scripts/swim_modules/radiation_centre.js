@@ -106,9 +106,6 @@ export async function radiation_centre_script() {
         newFatigue = fv + 1;
         if (newFatigue <= fm) {
             token.actor.update({ "system.fatigue.value": newFatigue });
-            if (fatiguedSFX) {
-                swim.play_sfx(fatiguedSFX);
-            }
         }
         else {
             token.actor.update({ "system.fatigue.value": fm });

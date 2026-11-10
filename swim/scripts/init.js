@@ -12,6 +12,7 @@ import { open_swim_actor_config, open_swim_item_config } from "./swim_document_c
 import { effect_hooks } from "./hooks/effect_hooks.js"
 import { combat_hooks } from "./hooks/combat_hooks.js"
 import { brsw_hooks } from "./hooks/brsw_hooks.js"
+import { sfx_hooks } from "./hooks/sfx_hooks.js"
 import { brsw_actions_setup } from "./helpers/brsw_actions_setup.js"
 import { raise_calculator } from './helpers/raise-calculator.js'
 import { tester_gm } from './swim_modules/tester.js';
@@ -73,6 +74,7 @@ Hooks.on(`ready`, () => {
     effect_hooks()
     combat_hooks()
     brsw_hooks()
+    sfx_hooks()
 
     //Setup actions for BRSW:
     if (game.modules.get('betterrolls-swade2')?.active && game.settings.get('swim', 'br2Support') === true) {
@@ -222,30 +224,3 @@ Hooks.on(`ready`, () => {
     console.log("  █████████  █████   ███   █████ █████ ██████   ██████\n ███░░░░░███░░███   ░███  ░░███ ░░███ ░░██████ ██████ \n░███    ░░░  ░███   ░███   ░███  ░███  ░███░█████░███ \n░░█████████  ░███   ░███   ░███  ░███  ░███░░███ ░███ \n ░░░░░░░░███ ░░███  █████  ███   ░███  ░███ ░░░  ░███ \n ███    ░███  ░░░█████░█████░    ░███  ░███      ░███ \n░░█████████     ░░███ ░░███      █████ █████     █████\n ░░░░░░░░░       ░░░   ░░░      ░░░░░ ░░░░░     ░░░░░ ")
     console.log('SWIM | SWADE Immersion Module | Ready');
 });
-
-/* This produces duplicate sound effects, leaving it commented until a good solution to exclude them on a condition is found.
-Hooks.on(`createActiveEffect`, async (condition, _, userID) => {
-    if (condition.flags?.succ?.conditionId === "incapacitated" || condition.flags?.succ?.conditionId === "shaken") {
-        const actor = condition.parent
-        const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(actor)
-        const volume = Number(game.settings.get("swim", "defaultVolume"))
-        if (condition.flags?.succ?.conditionId === "incapacitated") {
-            await swim.play_sfx(deathSFX, volume)
-        } else if (condition.flags?.succ?.conditionId === "shaken") {
-            await swim.play_sfx(shakenSFX, volume)
-        }
-    }
-})
-Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
-    if (condition.flags?.succ?.conditionId === "incapacitated" || condition.flags?.succ?.conditionId === "shaken") {
-        const actor = condition.parent
-        const { shakenSFX, deathSFX, unshakeSFX, soakSFX } = await swim.get_actor_sfx(actor)
-        const volume = Number(game.settings.get("swim", "defaultVolume"))
-        if (condition.flags?.succ?.conditionId === "incapacitated") {
-            await swim.play_sfx(soakSFX, volume)
-        } else if (condition.flags?.succ?.conditionId === "shaken") {
-            await swim.play_sfx(unshakeSFX, volume)
-        }
-    }
-})
-*/

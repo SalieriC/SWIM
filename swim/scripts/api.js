@@ -599,11 +599,7 @@ export class api {
   }
   //Shake a token
   static async _shake(token) {
-    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
-    await swimConditions.add('shaken', token);
-    if (shakenSFX) {
-      swim.play_sfx(shakenSFX);
-    }
+    await swimConditions.add('shaken', token); //The sound is played by sfx_hooks.js
   }
   // Unstun script
   static async _unstun(effect) {
@@ -611,7 +607,6 @@ export class api {
   }
   //Stun a token
   static async _stun(token) {
-    const { shakenSFX, deathSFX, unshakeSFX, stunnedSFX, soakSFX, fatiguedSFX, looseFatigueSFX } = await swim.get_actor_sfx(token.actor)
     let conditionsToApply = []
     if (await swimConditions.has('stunned', token) === false) {
       conditionsToApply.push('stunned')
@@ -622,10 +617,7 @@ export class api {
     };
     conditionsToApply.push('distracted')
     conditionsToApply.push('vulnerable')
-    await swimConditions.add(conditionsToApply, token)
-    if (stunnedSFX) {
-      swim.play_sfx(stunnedSFX);
-    }
+    await swimConditions.add(conditionsToApply, token) //The sound is played by sfx_hooks.js
   }
   //Tester
   static async _tester() {

@@ -43,12 +43,10 @@ export async function backlasher(card, backlashSetting) {
     // Making Changes:
     if (currFatigue + 1 <= maxFatigue) {
         await actor.update({"system.fatigue.value": currFatigue + 1})
-        await swim.play_sfx(fatiguedSFX, volume, true)
         //message += `gained a level of Fatigue!<br />`
         message += game.i18n.localize("SWIM.Backlasher.Message-2")
     } else if (currFatigue + 1 > maxFatigue) {
         await swimConditions.add('incapacitated', actor, {forceOverlay: true})
-        await swim.play_sfx(deathSFX, volume, true)
         //message += `collapses from exhaustion!<br />`
         message += game.i18n.localize("SWIM.Backlasher.Message-3")
     }

@@ -18,10 +18,16 @@ function audio_helper() {
  * @param {number} [options.volume]    0-1; defaults to the SWIM setting "Default Volume".
  * @param {boolean} [options.push=true] true = play for all connected clients, false = only for this client.
  * @param {boolean} [options.loop=false]
+ * @param {number} [options.dedupe=0]   >0 = skip the sound if the same file was played (by anything in SWIM) within this many ms.
  * @returns {Promise<Sound|undefined>} The Sound (has `.duration`), or undefined if nothing was played.
  */
-export async function play_audio(src, { volume, push = true, loop = false } = {}) {
+const lastPlayed = new Map()
+
+export async function play_audio(src, { volume, push = true, loop = false, dedupe = 0 } = {}) {
     if (!src) { return undefined }
+    const now = Date.now()
+    if (dedupe > 0 && now - (lastPlayed.get(src) ?? 0) < dedupe) { return undefined }
+    lastPlayed.set(src, now)
     let vol = Number(volume ?? game.settings.get("swim", "defaultVolume"))
     if (!Number.isFinite(vol)) { vol = 1 }
     vol = Math.min(Math.max(vol, 0), 1)

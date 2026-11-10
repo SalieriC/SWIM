@@ -43,6 +43,5 @@ export async function mark_dead_script() {
             }
         }
         ui.notifications.info(game.i18n.localize("SWIM.notification.markDeadAlive"));
-        swim.play_sfx(deathSFX);
     }
 }

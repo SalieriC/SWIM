@@ -107,12 +107,10 @@ export async function unshake_swd_script(effect = false) {
             if (rollWithEdge > 3 && rollWithEdge <= 7) {
                 chatData += game.i18n.localize("SWIM.chatMessage-unshakeResultNoShakenCannotAct");
                 await swimConditions.remove('shaken', token);
-                if (unshakeSFX) { swim.play_sfx(unshakeSFX); }
                 useBenny();
             } else if (rollWithEdge >= 8) {
                 chatData += game.i18n.localize("SWIM.chatMessage-unshakeResultNoShakenCanAct");
                 await swimConditions.remove('shaken', token);
-                if (unshakeSFX) { swim.play_sfx(unshakeSFX); }
             } else {
                 chatData += game.i18n.localize("SWIM.chatMessage-unshakeResultStillShaken");
                 useBenny();
@@ -291,7 +289,6 @@ export async function unshake_swade_script(effect = false) {
             } else if (rollWithEdge >= 4) {
                 chatData += game.i18n.localize("SWIM.chatMessage-unshakeResultNoShakenCanAct");
                 await swimConditions.remove('shaken', token);
-                if (unshakeSFX) { swim.play_sfx(unshakeSFX); }
             }
             chatData += ` ${edgeText}`;
             ChatMessage.create({ content: chatData });
@@ -463,12 +460,10 @@ export async function unshake_script(effect, options) {
                 if (rollWithEdge > 3 && rollWithEdge <= 7) {
                     chatData += game.i18n.localize("SWIM.chatMessage-unshakeResultNoShakenCannotAct");
                     await swimConditions.remove('shaken', token);
-                    if (unshakeSFX) { swim.play_sfx(unshakeSFX); }
                     useBenny();
                 } else if (rollWithEdge >= 8) {
                     chatData += game.i18n.localize("SWIM.chatMessage-unshakeResultNoShakenCanAct");
                     await swimConditions.remove('shaken', token);
-                    if (unshakeSFX) { swim.play_sfx(unshakeSFX); }
                 } else {
                     chatData += game.i18n.localize("SWIM.chatMessage-unshakeResultStillShaken");
                     useBenny();
@@ -480,7 +475,6 @@ export async function unshake_script(effect, options) {
                 } else if (rollWithEdge >= 4) {
                     chatData += game.i18n.localize("SWIM.chatMessage-unshakeResultNoShakenCanAct");
                     await swimConditions.remove('shaken', token);
-                    if (unshakeSFX) { swim.play_sfx(unshakeSFX); }
                 }
             }
             

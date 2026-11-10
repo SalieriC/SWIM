@@ -178,7 +178,6 @@ export async function heal_other_gm(data) {
             if (targetWounds === targetWoundsMax) {
                 //Make INC!
                 if (targetInc) {
-                    await swim.play_sfx(deathSFX)
                     await swimConditions.add('bleeding-out', targetActor, {forceOverlay: true});
                     if (await swimConditions.has('incapacitated', token) === true) {
                         const incCondition = await swimConditions.get_from('incapacitated', token.actor)
@@ -189,7 +188,6 @@ export async function heal_other_gm(data) {
                     chatContent = game.i18n.format("SWIM.chatMessage-healOtherCritFailAndBleedOut", {tokenName : token.name, targetName : target.name})
                 } else {
                     await swimConditions.add('incapacitated', targetActor, {forceOverlay: true});
-                    await swim.play_sfx(deathSFX)
                     chatContent = game.i18n.format("SWIM.chatMessage-healOtherCritFailAndIncap", {tokenName : token.name, targetName : target.name})
                 }
                 await createchatMessage()
@@ -211,7 +209,6 @@ export async function heal_other_gm(data) {
         } else if (method === "heal" && targetHeartAttack === true) {
             await swimConditions.remove('heart-attack', targetActor);
             await swimConditions.add('incapacitated', targetActor, {forceOverlay: true});
-            await swim.play_sfx(deathSFX)
             chatContent = game.i18n.format("SWIM.chatMessage-healOtherCureHeartAttack", {tokenName : token.name, targetName : target.name})
             await createchatMessage()
         } else if (method === "heal" && (targetInc === true || targetBleedOut === true || (targetInc === true && targetBleedOut === true))) {
@@ -256,7 +253,6 @@ export async function heal_other_gm(data) {
         } else if (method === "heal" && targetHeartAttack === true) {
             await swimConditions.remove('heart-attack', targetActor);
             await swimConditions.add('incapacitated', targetActor, {forceOverlay: true});
-            await swim.play_sfx(deathSFX)
             chatContent = game.i18n.format("SWIM.chatMessage-healOtherCureHeartAttack", {tokenName : token.name, targetName : target.name})
             await createchatMessage()
         } else if (method === "heal") {
@@ -1004,16 +1000,10 @@ async function healSelf(token, speaker) {
         setWounds = wv + 1
         if (setWounds <= wm) {
             await token.actor.update({ "system.wounds.value": setWounds });
-            if (woundedSFX) {
-                swim.play_sfx(woundedSFX);
-            }
         }
         else {
             await token.actor.update({ "system.wounds.value": wm });
             await swimConditions.add('incapacitated', token, {forceOverlay: true});
-            if (incapSFX) {
-                swim.play_sfx(incapSFX);
-            }
             if (noVig === true) {return}
             await swim.soak_damage()
         }
@@ -1071,5 +1061,4 @@ async function playHealFX(token, sfx) {
             .scale(scale)
         sequence.play();
     }
-    await swim.play_sfx(sfx)
 }
