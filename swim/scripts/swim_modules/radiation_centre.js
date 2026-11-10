@@ -160,7 +160,7 @@ export async function radiation_centre_script() {
             if (soldier && soldierSwitch === false) {
                 buttons = {
                     one: {
-                        label: `<i class="fas fa-dice"></i>${game.i18n.localize("SWIM.dialogue-reroll")}`,
+                        label: game.i18n.localize("SWIM.dialogue-reroll"), //the string already contains the dice icon
                         callback: async () => {
                             soldierSwitch = true
                             rollVigor();
@@ -183,7 +183,7 @@ export async function radiation_centre_script() {
                         </form>`
                 buttons = {
                     one: {
-                        label: `<i class="fas fa-dice"></i>${game.i18n.localize("SWIM.dialogue-reroll")}`,
+                        label: game.i18n.localize("SWIM.dialogue-reroll"), //the string already contains the dice icon
                         callback: async () => {
                             let message = true
                             await swim.spend_benny(token, message)
