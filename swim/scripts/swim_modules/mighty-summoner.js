@@ -19,6 +19,9 @@
 import { execute_as_gm } from "../helpers/socket_helper.js"
 import { ActorPickerApp, picker_entry, rank_of_actor } from "../helpers/actor_picker.js"
 
+// Rank needed for Mirror Self (0 Novice ... 4 Legendary): the only summon option with a rank requirement.
+const MIRROR_SELF_RANK = 2
+
 function generate_id(length = 16) {
     var result = 'SWIM-';
     var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -53,7 +56,7 @@ export async function summoner_script(data) {
     //Set div class based on enabled official module:
     const officialClass = await swim.get_official_class()
 
-    let totalContent = swim.get_folder_content("Summon Creature Presets").filter(item => item.testUserPermission(game.user, "LIMITED"));
+    let totalContent = swim.get_folder_content("Summon Creature Presets").filter(item => game.user.isGM || item.testUserPermission(game.user, "LIMITED"));
 
     let duration = 5
     if (item?.system?.swid === 'zombie') { duration = 600 }
@@ -70,8 +73,9 @@ export async function summoner_script(data) {
 
     async function main() {
         const casterRank = rank_of_actor(actor)
-        const entries = totalContent.map(each => picker_entry(each))
-        entries.push(picker_entry(actor, { id: 'mirror', name: game.i18n.localize("SWIM.power-mirrorSelf"), group: 'special', badge: '<i class="fas fa-clone"></i>' }))
+        // No Size limit for summons (rank: null). The only rank requirement is Mirror Self (Veteran, rank index 2): greyed out below that, GM can override.
+        const entries = totalContent.map(each => picker_entry(each, { rankIdx: null }))
+        entries.push(picker_entry(actor, { id: 'mirror', name: game.i18n.localize("SWIM.power-mirrorSelf"), group: 'special', rankIdx: MIRROR_SELF_RANK }))
 
         const extras = []
         if (!noPP) {
@@ -90,12 +94,16 @@ export async function summoner_script(data) {
         const result = await ActorPickerApp.prompt({
             title: 'Mighty Summoner',
             intro: game.i18n.localize("SWIM.summoner.intro"),
+            introIcon: 'pentagram',
+            bond: 'link',
+            groupBy: 'folder',
+            showRankBadge: false,
             caster: { name: token.name, img: token.document.texture.src, rankIdx: casterRank },
             entries,
             enforceRank: true,
             isGM: game.user.isGM,
             confirmLabel: game.i18n.localize("SWIM.summoner.confirm"),
-            confirmIcon: 'fas fa-paw',
+            confirmIcon: 'pentagram',
             extras,
         })
         if (!result) { return }

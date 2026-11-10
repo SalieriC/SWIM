@@ -2,20 +2,32 @@
  * The actor picker dialog, used by the Mighty Summoner and the Shape Changer.
  *
  * - Header: the caster and (live) the picked creature, a short explanation and a filter.
- * - Body: the creatures grouped by the rank that is required for their Size
- *   (Novice: Size -4 to -1, Seasoned: Size 0, Veteran: Size 1 to 2, Heroic: Size 3 to 4, Legendary: Size 5+).
- *   Creatures above the caster's rank are greyed out (players can't pick them, the GM can). Click a row (or Tab + Enter / Space)
- *   to select it, double-click to select and confirm.
+ * - Body, two grouping modes (`groupBy`):
+ *   - 'rank' (Shape Changer): grouped by the rank that is required for the creature's Size
+ *     (Novice: Size -4 to -1, Seasoned: Size 0, Veteran: Size 1 to 2, Heroic: Size 3 to 4, Legendary: Size 5+), sorted by Size.
+ *   - 'folder' (Summoner): grouped by the name of the actor's parent folder, folders and creatures sorted by name.
+ *   Entries with a `rankIdx` above the caster's rank are greyed out when `enforceRank` is on (players can't pick them, the GM can).
+ *   Click a row (or Tab + Enter / Space) to select it, double-click to select and confirm.
  * - Optional extras between list and footer (checkbox, number, select) and an optional second action ("Revert form").
  * - Footer: Cancel / [Revert] / Confirm (enabled once a creature is selected).
  *
  * `ActorPickerApp.prompt({...})` resolves with `{ action: 'select' | 'revert', id, values }` or `null` (cancelled / closed).
  * `values` holds the extras by id (checkbox: boolean, number: Number, select: string).
- * Styles: styles/actor-picker.css (registered in module.json). Look is based on the Mimic dialog.
+ * Styles: styles/actor-picker.css (registered in module.json), shared by both dialogs; variants are modifier classes on the
+ * root (`swim-ap--folders`, `swim-ap--no-rank-badge`). Look is based on the Mimic dialog.
  */
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (m) => `&#${m.charCodeAt(0)};`);
 const t = (key, data) => (data ? game.i18n.format(key, data) : game.i18n.localize(key));
+
+/** Pentagram in a circle (Font Awesome has none that is free). Follows the text colour and size. */
+const PENTAGRAM_SVG = `<svg class="swim-ap-glyph" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true" focusable="false">
+  <circle cx="12" cy="12" r="10.6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  <path d="M12 2.4 L17.64 19.77 L2.87 9.03 L21.13 9.03 L6.36 19.77 Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+</svg>`;
+
+/** Icon markup: 'pentagram' = the glyph above, anything else is taken as Font Awesome classes. */
+const icon_html = (icon) => (icon === 'pentagram' ? PENTAGRAM_SVG : `<i class="${esc(icon)}"></i>`);
 
 /** Index 0-4 (Novice ... Legendary) of the rank required for a creature of this Size. */
 export function rank_for_size(size) {
@@ -42,7 +54,7 @@ export function rank_names() {
     return ['Novice', 'Seasoned', 'Veteran', 'Heroic', 'Legendary'].map((r) => t(`SWADE.Ranks.${r}`));
 }
 
-/** Entry for the picker from an actor. `extra` can override id/name/group/badge. */
+/** Entry for the picker from an actor. `extra` can override id/name/group/folder/rankIdx (`rankIdx: null` = no rank requirement). */
 export function picker_entry(actor, extra = {}) {
     const stats = actor.system?.stats ?? {};
     const size = Number(stats.size) || 0;
@@ -56,6 +68,7 @@ export function picker_entry(actor, extra = {}) {
         toughness: stats.toughness?.value,
         armor: stats.toughness?.armor,
         rankIdx: rank_for_size(size),
+        folder: actor.folder?.name ?? '',
         ...extra,
     };
 }
@@ -81,11 +94,15 @@ export class ActorPickerApp extends Application {
      * @param {string} data.title
      * @param {string} data.intro                    plain text shown under the header
      * @param {{name,img,rankIdx}} data.caster
-     * @param {Array} data.entries                   see picker_entry(); `group: 'special'` puts an entry in its own group on top, `badge` (html) replaces the rank letter
-     * @param {boolean} [data.enforceRank=false]     grey out (and for players block) creatures above the caster's rank
+     * @param {Array} data.entries                   see picker_entry(); `group: 'special'` puts an entry in its own group on top
+     * @param {'rank'|'folder'} [data.groupBy='rank']
+     * @param {boolean} [data.showRankBadge=true]    the circle with the rank letter on the right of each row (rank mode only)
+     * @param {'arrow'|'link'} [data.bond='arrow']   what is drawn between the caster and the picked creature in the header
+     * @param {string} [data.introIcon='fas fa-paw'] icon in front of the intro text ('pentagram' or Font Awesome classes)
+     * @param {boolean} [data.enforceRank=false]     grey out (and for players block) entries whose `rankIdx` is above the caster's rank
      * @param {boolean} [data.isGM]
      * @param {string} data.confirmLabel
-     * @param {string} [data.confirmIcon]
+     * @param {string} [data.confirmIcon]          'pentagram' or Font Awesome classes
      * @param {{label:string, icon?:string}} [data.revert]   second action, always enabled
      * @param {Array<{type:'checkbox'|'number'|'select', id, label, hint?, value?, options?:[{value,label}]}>} [data.extras]
      * @returns {Promise<{action:string, id?:string, values:object}|null>}
@@ -108,25 +125,30 @@ export class ActorPickerApp extends Application {
     /* -------------------------------- helpers -------------------------------- */
 
     #rankName = (idx) => String(rank_names()[idx] ?? '?');
-    #locked = (e) => this.#opts.enforceRank === true && e.group !== 'special' && e.rankIdx > (this.#opts.caster.rankIdx ?? 0);
+    #locked = (e) => this.#opts.enforceRank === true && e.rankIdx != null && e.rankIdx > (this.#opts.caster.rankIdx ?? 0);
+    #byRank = () => (this.#opts.groupBy ?? 'rank') === 'rank';
     #blocked = (e) => this.#locked(e) && !this.#opts.isGM;
     #entry = (id) => this.#opts.entries.find((e) => e.id === id);
 
     /* -------------------------------- rendering ------------------------------- */
 
     async _renderInner() {
-        const { caster, intro, confirmLabel, confirmIcon, revert, extras } = this.#opts;
+        const { caster, intro, introIcon, bond, confirmLabel, confirmIcon, revert, extras } = this.#opts;
+        const bondHtml = bond === 'link'
+            ? `<span class="swim-ap-bond" title="${esc(t('SWIM.picker.bound'))}"><i class="fas fa-link"></i></span>`
+            : `<i class="fas fa-arrow-right swim-ap-arrow"></i>`;
+        const modifiers = [this.#byRank() ? '' : 'swim-ap--folders', this.#byRank() && this.#opts.showRankBadge !== false ? '' : 'swim-ap--no-rank-badge'].join(' ').trim();
         const extrasHtml = (extras ?? []).map((x) => this.#extra(x)).join('');
         return $(`
-      <div class="swim-ap">
+      <div class="swim-ap ${modifiers}">
         <header class="swim-ap-head">
           <div class="swim-ap-who">
             <span class="swim-ap-actor"><img class="swim-ap-token" src="${esc(caster.img)}" alt=""><b>${esc(caster.name)}</b></span>
-            <i class="fas fa-arrow-right swim-ap-arrow"></i>
+            ${bondHtml}
             <span class="swim-ap-actor swim-ap-picked"><img class="swim-ap-token" src="" alt="" hidden>
               <i class="fas fa-question swim-ap-token swim-ap-token-empty"></i><b>…</b></span>
           </div>
-          <p class="swim-ap-help"><i class="fas fa-paw"></i> ${esc(intro)}</p>
+          <p class="swim-ap-help">${icon_html(introIcon ?? 'fas fa-paw')} ${esc(intro)}</p>
           <label class="swim-ap-search"><i class="fas fa-search"></i>
             <input type="search" class="swim-ap-filter" placeholder="${esc(t('SWIM.picker.filter'))}" autocomplete="off"></label>
         </header>
@@ -136,8 +158,8 @@ export class ActorPickerApp extends Application {
           <span class="swim-ap-status" role="status" aria-live="polite"></span>
           <span class="swim-ap-spacer"></span>
           <button type="button" class="swim-ap-cancel"><i class="fas fa-times"></i> ${esc(t('SWIM.picker.cancel'))}</button>
-          ${revert ? `<button type="button" class="swim-ap-revert"><i class="${esc(revert.icon ?? 'fas fa-user-alt')}"></i> ${esc(revert.label)}</button>` : ''}
-          <button type="button" class="swim-ap-apply" disabled><i class="${esc(confirmIcon ?? 'fas fa-check')}"></i> <span>${esc(confirmLabel)}</span></button>
+          ${revert ? `<button type="button" class="swim-ap-revert">${icon_html(revert.icon ?? 'fas fa-user-alt')} ${esc(revert.label)}</button>` : ''}
+          <button type="button" class="swim-ap-apply" disabled>${icon_html(confirmIcon ?? 'fas fa-check')} <span>${esc(confirmLabel)}</span></button>
         </footer>
       </div>`);
     }
@@ -225,18 +247,30 @@ export class ActorPickerApp extends Application {
     #renderList(root) {
         const q = root.querySelector('.swim-ap-filter').value.trim().toLowerCase();
         const shown = this.#opts.entries.filter((e) => !q || String(e.name ?? '').toLowerCase().includes(q));
+        const byRank = this.#byRank();
+        const collator = new Intl.Collator(game.i18n.lang, { numeric: true, sensitivity: 'base' });
+        // Group key: 'special' entries on top, then by rank index (rank mode) or by the name of the parent folder (folder mode).
+        const keyOf = (e) => (e.group === 'special' ? 'special' : byRank ? e.rankIdx : `folder:${e.folder ?? ''}`);
         const groups = new Map();
         for (const e of shown) {
-            const key = e.group === 'special' ? 'special' : e.rankIdx;
+            const key = keyOf(e);
             if (!groups.has(key)) groups.set(key, []);
             groups.get(key).push(e);
         }
-        const order = (k) => (k === 'special' ? -1 : k);
+        const compareKeys = (a, b) => {
+            if (a === 'special' || b === 'special') return a === b ? 0 : a === 'special' ? -1 : 1;
+            return byRank ? a - b : collator.compare(a, b);
+        };
         const html = [...groups.entries()]
-            .sort((a, b) => order(a[0]) - order(b[0]))
+            .sort((a, b) => compareKeys(a[0], b[0]))
             .map(([key, entries]) => {
-                const title = key === 'special' ? t('SWIM.picker.special') : this.#rankName(key);
-                const sorted = key === 'special' ? entries : [...entries].sort((a, b) => a.size - b.size || String(a.name).localeCompare(String(b.name)));
+                let title;
+                if (key === 'special') title = t('SWIM.picker.special');
+                else if (byRank) title = this.#rankName(key);
+                else title = key.slice('folder:'.length) || t('SWIM.picker.noFolder');
+                const sorted = key === 'special'
+                    ? entries
+                    : [...entries].sort((a, b) => (byRank ? a.size - b.size : 0) || collator.compare(String(a.name), String(b.name)));
                 return `<section class="swim-ap-group"><h4>${esc(title)}</h4>${sorted.map((e) => this.#row(e)).join('')}</section>`;
             })
             .join('');
@@ -256,15 +290,15 @@ export class ActorPickerApp extends Application {
             chip(t('SWADE.Parry'), e.parry),
             toughness,
         ].join('');
-        const rankName = this.#rankName(e.rankIdx);
-        const badge = e.badge ?? esc(rankName[0] ?? '?');
-        const badgeTitle = e.group === 'special' ? '' : t('SWIM.picker.requiresRank', { rank: rankName, size: e.size });
+        const rankName = e.rankIdx == null ? '' : this.#rankName(e.rankIdx);
+        const badge = esc(rankName[0] ?? '');
+        const badgeTitle = e.rankIdx == null ? '' : e.group === 'special' ? t('SWIM.picker.requiresRankOnly', { rank: rankName }) : t('SWIM.picker.requiresRank', { rank: rankName, size: e.size });
         const classes = ['swim-ap-row', locked ? 'is-locked' : '', locked && !this.#opts.isGM ? 'is-blocked' : ''].join(' ').trim();
         return `<div class="${classes}" data-id="${esc(e.id)}" role="option" tabindex="0" aria-selected="false" ${locked ? 'aria-disabled="' + String(!this.#opts.isGM) + '"' : ''}
         title="${esc(locked ? badgeTitle : e.name)}">
       <img class="swim-ap-icon" src="${esc(e.img)}" alt="" draggable="false">
       <span class="swim-ap-name"><span class="swim-ap-nametext">${esc(e.name)}</span><span class="swim-ap-chips">${chips}</span></span>
-      <span class="swim-ap-rank" title="${esc(badgeTitle)}">${badge}</span>
+      ${this.#byRank() && this.#opts.showRankBadge !== false ? `<span class="swim-ap-rank" title="${esc(badgeTitle)}">${badge}</span>` : ''}
     </div>`;
     }
 

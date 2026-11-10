@@ -1,4 +1,5 @@
-/* Actor picker (scripts/helpers/actor_picker.js): Mighty Summoner, Shape Changer. Look based on the Mimic dialog. */
+/* Actor picker (scripts/helpers/actor_picker.js): Mighty Summoner, Shape Changer. Look based on the Mimic dialog.
+   One stylesheet for both dialogs; differences are modifier classes on .swim-ap (--folders, --no-rank-badge). Split it if the two ever diverge. */
 .swim-ap-app {
   --swim-ap-bg: #1b2430;
   --swim-ap-panel: #243142;
@@ -23,8 +24,13 @@
 i.swim-ap-token-empty { display: flex; align-items: center; justify-content: center; color: var(--swim-ap-dim); }
 i.swim-ap-token-empty[hidden] { display: none; }
 .swim-ap-arrow { color: var(--swim-ap-gold); }
+/* "bound to" marker between summoner and creature: link icon between two dashed lines */
+.swim-ap-bond { display: flex; align-items: center; gap: 6px; color: var(--swim-ap-gold); }
+.swim-ap-bond::before, .swim-ap-bond::after { content: ""; width: 16px; border-top: 2px dashed rgba(224, 178, 74, 0.55); }
+/* pentagram glyph (inline SVG, follows text colour) */
+.swim-ap-glyph { width: 1em; height: 1em; vertical-align: -0.14em; flex: 0 0 auto; }
 .swim-ap-help { margin: 0 0 8px; font-size: 12.5px; line-height: 1.35; color: var(--swim-ap-dim); }
-.swim-ap-help i { color: var(--swim-ap-gold); margin-right: 4px; }
+.swim-ap-help i, .swim-ap-help .swim-ap-glyph { color: var(--swim-ap-gold); margin-right: 4px; }
 .swim-ap-search { display: flex; align-items: center; gap: 8px; color: var(--swim-ap-dim); }
 .swim-ap-search input {
   flex: 1; height: 26px; background: var(--swim-ap-bg); color: var(--swim-ap-text);
