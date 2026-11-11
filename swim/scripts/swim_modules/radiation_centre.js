@@ -237,7 +237,7 @@ class RadiationApp extends Application {
         const canBenny = !free && snap.bennies > 0
         return {
             body: `<div class="swim-hc-result"><div class="swim-hc-big is-bad">${r.total}</div>${r.lines.length ? `<p class="swim-us-lines">${r.lines.join('<br/>')}</p>` : ''}` +
-                `<p>${esc(t('SWIM.radiation.failText', { name: snap.name }))}</p><p>${esc(this.#applyNote(snap))}</p>` +
+                `<p>${esc(t(free ? 'SWIM.radiation.failTextFree' : 'SWIM.radiation.failText', { name: snap.name }))}</p><p>${esc(this.#applyNote(snap))}</p>` +
                 `${free ? `<p>${esc(t('SWIM.radiation.freeRerollLeft'))}</p>` : canBenny && snap.elan ? `<p>${esc(t('SWIM.soak.elanReroll'))}</p>` : ''}</div>`,
             foot: `<small>${esc(t('SWIM.healthCentre.benniesLeft', { count: snap.bennies }))}</small><span class="swim-hc-spacer"></span>` +
                 `${free ? this.#btn('freeReroll', t('SWIM.button-freeReroll')) : ''}${canBenny ? this.#btn('reroll', t('SWIM.healthCentre.reroll', { count: snap.bennies })) : ''}` +

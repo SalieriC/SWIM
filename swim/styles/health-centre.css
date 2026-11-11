@@ -8,10 +8,19 @@
   --swim-hc-dim: #a9b4c2;
   --swim-hc-gold: #e0b24a;
   --swim-hc-sel: #34506e;
+  --swim-hc-link: #ff8a80;
 }
 .swim-hc-app .window-content { padding: 0; background: var(--swim-hc-bg); color: var(--swim-hc-text); overflow: hidden; }
 .swim-hc { display: flex; flex-direction: column; max-height: 82vh; }
 .swim-hc small { color: var(--swim-hc-dim); }
+
+/* Links to other documents (journal pages etc., enriched by Foundry): red underlined text instead of Foundry's grey box with an icon. */
+.swim-hc a.content-link, .swim-hc a.entity-link {
+  display: inline; padding: 0; background: none; border: 0; border-radius: 0; box-shadow: none; white-space: normal;
+  color: var(--swim-hc-link); text-decoration: underline; text-underline-offset: 2px;
+}
+.swim-hc a.content-link:hover, .swim-hc a.entity-link:hover { background: none; color: #ffc2bc; text-shadow: none; }
+.swim-hc a.content-link > i, .swim-hc a.entity-link > i { display: none; }
 
 /* patient switch */
 .swim-hc-who { display: flex; gap: 6px; padding: 8px 10px; background: var(--swim-hc-panel); border-bottom: 1px solid var(--swim-hc-line); }

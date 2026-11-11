@@ -1,4 +1,4 @@
-/* Unshake window (scripts/swim_modules/unshake.js) and Unstun window (unstun.js) and Radiation Centre (radiation_centre.js), same classes `.swim-us*`.
+/* Unshake window (scripts/swim_modules/unshake.js) and Unstun window (unstun.js) and Radiation Centre (radiation_centre.js) and Tester (tester.js), same classes `.swim-us*`.
    Uses the building blocks of styles/health-centre.css (.swim-hc-*: patient card, method cards, preview, result, footer, buttons);
    only what is specific to Unshake is defined here. If the shared parts of HC / Soak / Unshake grow, move them to a common stylesheet. */
 
@@ -6,11 +6,16 @@
 .swim-us .swim-us-static { cursor: default; }
 .swim-us .swim-hc-track.swim-us-static:hover { background: var(--swim-hc-bg); }
 .swim-us .swim-hc-seg.swim-us-static:hover { background: var(--swim-hc-sel); }
+.swim-us .swim-hc-seg.swim-us-static:not(.is-on):hover { background: var(--swim-hc-bg); }
 
 /* bonuses under the roll / in the preview */
 .swim-us-lines { font-size: 12px; line-height: 1.5; }
 .swim-us-lines img { vertical-align: middle; margin-right: 2px; }
 .swim-us .swim-hc-preview .swim-us-lines { margin-top: 4px; }
+
+/* Tester: selects use the whole width, two result options side by side */
+.swim-us .swim-hc-ctl select, .swim-us .swim-hc-ctl select:focus { width: 100%; max-width: 100%; }
+.swim-us .swim-hc-rate.swim-us-two { grid-template-columns: repeat(2, 1fr); }
 
 /* method cards that can't be chosen */
 .swim-us .swim-hc-method.is-off { opacity: 0.45; cursor: not-allowed; }
