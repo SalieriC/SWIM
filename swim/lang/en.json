@@ -870,5 +870,17 @@
   "SWIM.unstun.chatSuccess": ", is no longer Stunned and loses Vulnerable after the turn.",
   "SWIM.unstun.chatMid": " and is no longer Stunned but remains Vulnerable until the end of the next turn.",
   "SWIM.unstun.chatFail": " and remains Stunned.",
-  "SWIM.unstun.chatNoBetter": ", which is not better than the best result so far. Nothing changes."
+  "SWIM.unstun.chatNoBetter": ", which is not better than the best result so far. Nothing changes.",
+  "SWIM.radiation.title": "Radiation Centre",
+  "SWIM.radiation.radRes": "Rad Resistance",
+  "SWIM.radiation.radResShort": "Rad Res.",
+  "SWIM.radiation.intro": "{hazard} requires you to roll Vigor or you take 1 Level of Fatigue.",
+  "SWIM.radiation.rollHint": "Roll Vigor. On a 4 or more you take no Fatigue.",
+  "SWIM.radiation.applyHint": "Take the Level of Fatigue without a roll.",
+  "SWIM.radiation.previewApply": "Fatigue goes from {from} to {to}.",
+  "SWIM.radiation.previewApplyOver": "The maximum Fatigue is exceeded: {name} is taken out and catches Radiation Poisoning.",
+  "SWIM.radiation.rollBtn": "Roll Vigor",
+  "SWIM.radiation.failText": "Failed: {name} takes a Level of Fatigue unless you reroll.",
+  "SWIM.radiation.freeRerollLeft": "Soldier: you have a free reroll.",
+  "SWIM.radiation.takeFatigue": "Take the Fatigue"
 }
