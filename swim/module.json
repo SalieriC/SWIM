@@ -92,7 +92,8 @@
 	"styles": [
 		"styles/actor-picker.css",
 		"styles/health-centre.css",
-		"styles/soak-damage.css"
+		"styles/soak-damage.css",
+		"styles/unshake.css"
 	],
 	"esmodules": [
 		"./scripts/init.js"

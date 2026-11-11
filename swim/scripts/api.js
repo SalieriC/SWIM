@@ -19,7 +19,7 @@ import { execute_as_gm } from './helpers/socket_helper.js'
 import { soak_damage_script } from './swim_modules/soak_damage.js'
 import { token_vision_script } from './swim_modules/token_vision.js'
 import { travel_calculator } from './swim_modules/travel_calculator.js'
-import { unshake_swd_script, unshake_swade_script, unshake_script } from './swim_modules/unshake.js'
+import { unshake_script } from './swim_modules/unshake.js'
 import { unstun_script } from './swim_modules/unstun.js'
 import { update_migration, migrate_world } from './migrations.js'
 import { play_audio } from './helpers/audio.js'
@@ -587,10 +587,6 @@ export class api {
     const options = {
       version: version
     }
-    /*
-    if (version === "SWD") { unshake_swd_script(effect) }
-    else if (version === "SWADE") { unshake_swade_script(effect) }
-    */
     unshake_script(effect, options)
   }
   //Shake a token
