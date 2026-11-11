@@ -4,7 +4,7 @@ import { swim_buttons } from './buttons.js'
 import { gm_relay } from './gm_relay.js'
 import { shape_changer_gm } from './swim_modules/shape_changer.js'
 import { summoner_gm, summoner_dismiss } from './swim_modules/mighty-summoner.js'
-import { heal_other_gm } from './swim_modules/personal_health_centre.js'
+import { heal_other_gm, heal_potion_gm } from './swim_modules/personal_health_centre.js'
 import { common_bond_gm } from './swim_modules/common_bond.js'
 import { effect_builder_gm } from './swim_modules/effect_builder.js'
 import { craft_campfire_gm } from './swim_modules/craft_campfire.js'
@@ -54,6 +54,7 @@ Hooks.once("socketlib.ready", () => {
     socket.register("summoner", guard("summoner", summoner_gm, v.summoner));
     socket.register("summonerDismiss", guard("summonerDismiss", summoner_dismiss, v.summonerDismiss));
     socket.register("healOther", guard("healOther", heal_other_gm, v.healOther));
+    socket.register("healPotion", guard("healPotion", heal_potion_gm, v.healPotion));
     socket.register("commonBond", guard("commonBond", common_bond_gm, v.commonBond));
     socket.register("deleteActor", guard("deleteActor", gm_relay.gmDeleteActor, v.deleteActor));
     socket.register("craftCampfire", guard("craftCampfire", craft_campfire_gm, v.craftCampfire));

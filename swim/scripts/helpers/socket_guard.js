@@ -183,6 +183,24 @@ export const socket_validators = {
         if (data.combatHealing !== undefined) require_boolean(data.combatHealing, "combatHealing")
     },
 
+    healPotion(user, data) {
+        require_object(data)
+        const scene = get_scene()
+        const healer = get_token(scene, data.tokenID, "tokenID")
+        require_owned_token(user, healer, "the healer")
+        const target = get_token(scene, data.targetID, "targetID")
+        require_enum(data.track, ["wounds", "fatigue"], "track")
+        require_enum(data.owner, ["healer", "target"], "owner")
+        if (!Number.isInteger(data.amount) || data.amount < 1 || data.amount > 20) fail("amount is not an integer from 1 to 20")
+        // The potion belongs to the healer (owned, see above) or to the target (the user has to be allowed to look into that inventory).
+        const potionActor = data.owner === "healer" ? healer.actor : target.actor
+        if (data.owner === "target" && !user.isGM && !potionActor.testUserPermission(user, "OBSERVER")) fail(`${user.name} may not use potions of ${target.name}`)
+        const item = potionActor.items.get(require_id(data.itemID, "itemID"))
+        if (!item) fail("potion item not found")
+        const names = String(game.settings.get("swim", data.track === "wounds" ? "healthPotionOptions" : "fatiguePotionOptions")).split("|")
+        if (!names.includes(item.name)) fail(`'${item.name}' is not a configured potion`)
+    },
+
     commonBond(user, data) {
         require_object(data)
         const scene = get_scene()

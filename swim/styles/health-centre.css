@@ -1,0 +1,102 @@
+/* Personal Health Centre (scripts/swim_modules/personal_health_centre.js). Same palette as the actor picker, own layout. */
+.swim-hc-app {
+  --swim-hc-bg: #1b2430;
+  --swim-hc-panel: #243142;
+  --swim-hc-panel-2: #2c3b50;
+  --swim-hc-line: rgba(255, 255, 255, 0.14);
+  --swim-hc-text: #e9e6dd;
+  --swim-hc-dim: #a9b4c2;
+  --swim-hc-gold: #e0b24a;
+  --swim-hc-sel: #34506e;
+}
+.swim-hc-app .window-content { padding: 0; background: var(--swim-hc-bg); color: var(--swim-hc-text); overflow: hidden; }
+.swim-hc { display: flex; flex-direction: column; max-height: 82vh; }
+.swim-hc small { color: var(--swim-hc-dim); }
+
+/* patient switch */
+.swim-hc-who { display: flex; gap: 6px; padding: 8px 10px; background: var(--swim-hc-panel); border-bottom: 1px solid var(--swim-hc-line); }
+.swim-hc-seg {
+  flex: 1; display: flex; align-items: center; gap: 8px; min-width: 0; padding: 5px 8px; cursor: pointer;
+  background: var(--swim-hc-bg); border: 1px solid var(--swim-hc-line); border-radius: 6px;
+}
+.swim-hc-seg:hover { background: var(--swim-hc-panel-2); }
+.swim-hc-seg.is-on { background: var(--swim-hc-sel); border-color: var(--swim-hc-gold); box-shadow: 0 0 0 2px rgba(224, 178, 74, 0.25); }
+.swim-hc-seg img { flex: 0 0 34px; width: 34px; height: 34px; object-fit: cover; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.28); background: #0e141b; }
+.swim-hc-seg span { min-width: 0; display: flex; flex-direction: column; }
+.swim-hc-seg small { font-size: 11px; }
+.swim-hc-seg b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* patient: chips and Wounds / Fatigue blocks (tabs) */
+.swim-hc-patient { padding: 10px 12px; background: var(--swim-hc-panel); border-bottom: 1px solid var(--swim-hc-line); }
+.swim-hc-chips { display: flex; flex-wrap: wrap; gap: 5px; min-height: 20px; margin-bottom: 8px; }
+.swim-hc-chip { font-size: 11px; padding: 0 7px; border-radius: 8px; background: rgba(255, 255, 255, 0.08); color: var(--swim-hc-dim); }
+.swim-hc-chip.is-bad { background: rgba(201, 87, 79, 0.2); color: #ffb3ad; border: 1px solid rgba(201, 87, 79, 0.5); }
+.swim-hc-tracks { display: flex; gap: 8px; }
+.swim-hc-track { flex: 1; padding: 6px 10px; background: var(--swim-hc-bg); border: 1px solid var(--swim-hc-line); border-radius: 6px; cursor: pointer; }
+.swim-hc-track:hover:not(.is-off) { background: var(--swim-hc-panel-2); }
+.swim-hc-track.is-on { background: var(--swim-hc-sel); border-color: var(--swim-hc-gold); box-shadow: 0 0 0 2px rgba(224, 178, 74, 0.25); }
+.swim-hc-track.is-off { opacity: 0.45; cursor: not-allowed; }
+.swim-hc-track h5 { display: flex; justify-content: space-between; margin: 0 0 3px; font-size: 11px; font-weight: normal; letter-spacing: 0.06em; text-transform: uppercase; color: var(--swim-hc-dim); border: 0; }
+.swim-hc-pips { display: flex; flex-wrap: wrap; gap: 4px; }
+.swim-hc-pip { width: 14px; height: 14px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.35); }
+.swim-hc-pips.w .swim-hc-pip.is-full { background: #c9574f; border-color: #e57f77; }
+.swim-hc-pips.f .swim-hc-pip.is-full { background: #d9a441; border-color: #f0c56b; }
+.swim-hc-num { font-weight: bold; font-size: 15px; }
+
+/* body */
+.swim-hc-body { padding: 10px 12px; overflow-y: auto; flex: 1 1 auto; }
+.swim-hc-lab { margin: 2px 0 6px; font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--swim-hc-dim); }
+.swim-hc-lab2 { margin-top: 10px; }
+.swim-hc-method {
+  display: flex; gap: 10px; align-items: flex-start; margin-bottom: 6px; padding: 7px 10px; cursor: pointer;
+  background: var(--swim-hc-panel); border: 1px solid var(--swim-hc-line); border-radius: 6px;
+}
+.swim-hc-method:hover { background: var(--swim-hc-panel-2); }
+.swim-hc-method.is-on { background: var(--swim-hc-sel); border-color: var(--swim-hc-gold); box-shadow: 0 0 0 2px rgba(224, 178, 74, 0.25); }
+.swim-hc-ico {
+  flex: 0 0 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 13px;
+  color: var(--swim-hc-gold); border: 1px solid rgba(224, 178, 74, 0.55); background: rgba(224, 178, 74, 0.1);
+}
+.swim-hc-mbody { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.swim-hc-mbody small { font-size: 11.5px; }
+.swim-hc-ctl { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.swim-hc-ctl select, .swim-hc-ctl select:focus {
+  height: 24px; max-width: 220px; padding: 0 6px; background: var(--swim-hc-bg); color: var(--swim-hc-text); border: 1px solid var(--swim-hc-line); border-radius: 5px;
+}
+.swim-hc-step { display: inline-flex; align-items: stretch; border: 1px solid var(--swim-hc-line); border-radius: 5px; overflow: hidden; }
+.swim-hc-step button { width: 26px; margin: 0; padding: 0; line-height: 22px; border: 0; border-radius: 0; background: var(--swim-hc-panel-2); color: var(--swim-hc-text); cursor: pointer; }
+.swim-hc-step button:hover:not(:disabled) { background: #3a4d66; }
+.swim-hc-step button:disabled { opacity: 0.35; cursor: not-allowed; }
+.swim-hc-step .n { min-width: 34px; text-align: center; font-weight: bold; line-height: 22px; background: var(--swim-hc-bg); }
+
+/* Healing roll result (someone else) */
+.swim-hc-rate { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 4px 0 8px; }
+.swim-hc-rate-opt { padding: 6px 2px; text-align: center; cursor: pointer; background: var(--swim-hc-panel); border: 1px solid var(--swim-hc-line); border-radius: 6px; font-size: 13px; }
+.swim-hc-rate-opt:hover { background: var(--swim-hc-panel-2); }
+.swim-hc-rate-opt.is-on { background: var(--swim-hc-sel); border-color: var(--swim-hc-gold); }
+.swim-hc-rate-opt.cf.is-on { background: #7a2f2a; }
+.swim-hc-rate-opt.ra.is-on { background: #2f6f44; }
+.swim-hc-check { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.swim-hc-check input { margin: 0; }
+
+.swim-hc-preview { margin: 8px 0 0; padding: 7px 10px; font-size: 12.5px; line-height: 1.4; color: var(--swim-hc-dim); background: #0e141b; border: 1px dashed var(--swim-hc-line); border-radius: 6px; }
+.swim-hc-empty { padding: 18px 8px; text-align: center; color: var(--swim-hc-dim); }
+
+/* Natural Healing result */
+.swim-hc-result { padding: 8px 6px 4px; text-align: center; }
+.swim-hc-big { font-size: 34px; line-height: 1.1; font-weight: bold; color: var(--swim-hc-gold); }
+.swim-hc-big.is-bad { font-size: 24px; color: #ff8d84; }
+.swim-hc-result p { margin: 6px 0; color: var(--swim-hc-dim); }
+
+/* footer */
+.swim-hc-foot { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--swim-hc-panel); border-top: 1px solid var(--swim-hc-line); }
+.swim-hc-spacer { flex: 1; }
+.swim-hc-btn {
+  width: auto; flex: 0 0 auto; line-height: 1.6; padding: 2px 14px; cursor: pointer; border-radius: 5px;
+  background: var(--swim-hc-panel-2); color: var(--swim-hc-text); border: 1px solid var(--swim-hc-line);
+}
+.swim-hc-btn:hover:not(:disabled) { background: #3a4d66; }
+.swim-hc-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.swim-hc-btn.is-go { background: #2f6f44; border-color: #4a9a63; font-weight: bold; }
+.swim-hc-btn.is-go:hover:not(:disabled) { background: #378553; }
+.swim-hc [data-action]:focus-visible { outline: 2px solid #fff; outline-offset: 1px; }

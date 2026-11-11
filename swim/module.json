@@ -90,7 +90,8 @@
 		}
 	],
 	"styles": [
-		"styles/actor-picker.css"
+		"styles/actor-picker.css",
+		"styles/health-centre.css"
 	],
 	"esmodules": [
 		"./scripts/init.js"
