@@ -1,0 +1,25 @@
+/* Soak Damage window (scripts/swim_modules/soak_damage.js).
+   Uses the building blocks of styles/health-centre.css (.swim-hc-*: patient card, method cards, steppers, preview, result, footer, buttons);
+   only what is specific to Soak is defined here. If the shared parts grow, move them to a common stylesheet. */
+
+/* the header blocks are display only */
+.swim-sd .swim-sd-static { cursor: default; }
+.swim-sd .swim-hc-track.swim-sd-static:hover { background: var(--swim-hc-bg); }
+.swim-sd .swim-hc-seg.swim-sd-static:hover { background: var(--swim-hc-sel); }
+
+/* Wounds that are about to be applied (ghost pips) */
+.swim-sd .swim-hc-pip.is-incoming {
+  border-color: #e57f77;
+  background: repeating-linear-gradient(45deg, rgba(201, 87, 79, 0.55) 0 3px, transparent 3px 6px);
+}
+
+/* label + stepper in one line */
+.swim-sd-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 2px 0 8px; padding: 4px 10px; background: var(--swim-hc-panel); border: 1px solid var(--swim-hc-line); border-radius: 6px; }
+
+/* bonuses under the roll */
+.swim-sd-lines { font-size: 12px; line-height: 1.5; }
+.swim-sd-lines img { vertical-align: middle; margin-right: 2px; }
+
+/* method cards that can't be chosen */
+.swim-hc-method.is-off { opacity: 0.45; cursor: not-allowed; }
+.swim-hc-method.is-off:hover { background: var(--swim-hc-panel); }
