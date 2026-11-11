@@ -857,5 +857,18 @@
   "SWIM.unshake.remainTextSwd": "You remain Shaken: only half pace and free actions.",
   "SWIM.unshake.midText": "You are no longer Shaken, but you can't act this turn.",
   "SWIM.unshake.critText": "You remain Shaken.",
-  "SWIM.unshake.freeRerollLeft": "Old Ways Oath: you have a free reroll."
+  "SWIM.unshake.freeRerollLeft": "Old Ways Oath: you have a free reroll.",
+  "SWIM.unstun.title": "Unstun",
+  "SWIM.unstun.vigor": "Vigor",
+  "SWIM.unstun.rollName": "Vigor roll",
+  "SWIM.unstun.promptText": "Roll Vigor. 4–7: no longer Stunned, but Vulnerable until the end of your next turn. 8 or more: no longer Stunned and Distracted ends; Vulnerable ends after the turn. A Benny allows a reroll, the best result is kept.",
+  "SWIM.unstun.rollBtn": "Roll Vigor",
+  "SWIM.unstun.remainText": "You remain Stunned.",
+  "SWIM.unstun.midText": "You are no longer Stunned but remain Vulnerable until the end of your next turn. A reroll may get you further.",
+  "SWIM.unstun.critText": "You remain Stunned.",
+  "SWIM.unstun.bestKept": "Last roll: {last}. Your best result so far ({best}) is kept.",
+  "SWIM.unstun.chatSuccess": ", is no longer Stunned and loses Vulnerable after the turn.",
+  "SWIM.unstun.chatMid": " and is no longer Stunned but remains Vulnerable until the end of the next turn.",
+  "SWIM.unstun.chatFail": " and remains Stunned.",
+  "SWIM.unstun.chatNoBetter": ", which is not better than the best result so far. Nothing changes."
 }

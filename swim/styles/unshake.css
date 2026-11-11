@@ -1,4 +1,4 @@
-/* Unshake window (scripts/swim_modules/unshake.js).
+/* Unshake window (scripts/swim_modules/unshake.js) and Unstun window (unstun.js, same classes `.swim-us*`).
    Uses the building blocks of styles/health-centre.css (.swim-hc-*: patient card, method cards, preview, result, footer, buttons);
    only what is specific to Unshake is defined here. If the shared parts of HC / Soak / Unshake grow, move them to a common stylesheet. */
 
