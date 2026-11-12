@@ -2,121 +2,128 @@
  * Falling Damage Macro.
  * This macro automatically calculates falling damage for all selected tokens.
  * It is capable of factoring in water and snow/soft surfaces as per the core rules.
+ * v. 3.0.0 – window (FallingDamageApp) instead of a Dialog
  * v. 2.2.1 by SalieriC#8263, CSS of the dialogue by Kyane von Schnitzel#8654
  * (Do not remove credits, even if editing.)
  *******************************************/
+import { SwimWindow, t, esc, btn, token_img } from "../helpers/swim_window.js"
+
+const WOUNDS_LINK = "@Compendium[swim.swade-immersive-macros.AWEIhBfGUmhQlww5]"
+
+/** Damage formula for a fall: (1d6x+1) per 2" of depth, capped at 10 (10d6+10). */
+export function fall_formula(fallingDepth) {
+    const halvedDepth = Math.ceil(fallingDepth / 2) //damage per 2"
+    return halvedDepth >= 10 ? `(1d6x+1)*10` : `(1d6x+1)*${halvedDepth}`
+}
+
+/** Soft ground (snow) reduces the damage by its depth, water halves it on a success and negates it on a raise. Never below 0. */
+export function apply_surface(damage, snowDepth, waterSuccess) {
+    let dived = false
+    if (snowDepth > 0) {
+        damage = damage - snowDepth
+    } else if (waterSuccess === "success") {
+        damage = Math.ceil(damage / 2)
+    } else if (waterSuccess === "raise") {
+        dived = true
+        damage = 0
+    }
+    return { damage: Math.max(0, damage), dived }
+}
+
+/** What the damage does to the target (the rules text for the chat). `isHardy`: has the Hardy ability. Returns an HTML snippet. */
+export function fall_outcome(toughness, damage, isShaken, isHardy) {
+    const raises = Math.floor((damage - toughness) / 4)
+    const noHarm = `<p>=> ${t("SWIM.fallingDamageCalculator-resultNoHarm")}</p>`
+    const wounds = (n, word) => `<p>=> ${n} ${WOUNDS_LINK}{${t(word)}}.</p>`
+    if (toughness > damage) { return noHarm }
+    if (isShaken === false && raises <= 0) { return `<p>=> ${t("SWIM.gameTerm-Shaken")}</p>` }
+    if (isShaken === false && raises >= 1) { return `<p>=> ${t("SWIM.fallingDamageCalculator-resultShakenAnd", { raises })} ${WOUNDS_LINK}{${t("SWIM.gameTerm-Wound-plural")}}.</p>` }
+    if (isShaken === true && raises <= 1) {
+        if (!isHardy || raises === 1) { return wounds(1, "SWIM.gameTerm-Wound-singular") }
+        return noHarm
+    }
+    return wounds(raises - 1, "SWIM.gameTerm-Wound-plural")
+}
 
 export async function falling_damage_script() {
     //use deduplication to get rid of those which are both, selected and targeted:
-    let tokens = [...new Set([...canvas.tokens.controlled, ...game.user.targets])];
+    const tokens = [...new Set([...canvas.tokens.controlled, ...game.user.targets])];
     if (tokens.length === 0) {
-        return ui.notifications.error(game.i18n.localize("SWIM.notification-selectOrTargetOneOrMoreTokens"));
+        return ui.notifications.error(t("SWIM.notification-selectOrTargetOneOrMoreTokens"));
     }
+    await SwimWindow.show(new FallingDamageApp(tokens))
+}
+
+/** Rolls the falls of all entries and returns the chat HTML. entries: [{token, fallingDepth, snowDepth, water}] */
+async function resolve_falls(entries) {
     const officialClass = await swim.get_official_class()
     const icon = "modules/swim/assets/icons/macros/falling_sbed_game-icons.net.png"
-    let messageContent = `${officialClass}<h2><img style="border: 0;" src=${icon} width="35" height="35" /> ${game.i18n.localize("SWIM.fallingDamageCalculator-damageFromFalling")}</h2>`;
+    let content = `${officialClass}<h2><img style="border: 0;" src=${icon} width="35" height="35" /> ${t("SWIM.fallingDamageCalculator-damageFromFalling")}</h2>`
+    for (const { token, fallingDepth, snowDepth, water } of entries) {
+        content += `<h3><img style="border: 0;" src=${token_img(token)} width="35" height="35" /> ${esc(token.name)}</h3>`
+        const roll = await new Roll(fall_formula(fallingDepth)).evaluate()
+        const { damage, dived } = apply_surface(roll.total, snowDepth, water)
+        content += dived
+            ? t("SWIM.fallingDamageCalculator-fallsButDives", { tokenName: esc(token.name), fallingDepth })
+            : t("SWIM.fallingDamageCalculator-fallsAndTakesDamage", { tokenName: esc(token.name), fallingDepth, damage })
+        const actor = token.actor
+        const isHardy = actor.items.find((item) => item.name.toLowerCase() === t("SWIM.ability-hardy").toLowerCase() && item.type === "ability")
+        content += fall_outcome(actor.system.stats.toughness.value, damage, actor.system.status.isShaken, isHardy)
+    }
+    return content + `</div>`
+}
 
-    const options = `<option value="na">${game.i18n.localize("SWIM.word-na")}</option>
-    <option value="success">${game.i18n.localize("SWIM.raiseCalculator-success")}</option>
-    <option value="raise">${game.i18n.localize("SWIM.gameTerm-Raise")}</option>`;
+class FallingDamageApp extends SwimWindow {
+    #tokens
 
-    main();
-
-    //rol the damage the character takes based on the distance:
-    async function roll_damage(token, fallingDepth, snowDepth, waterSuccess) {
-        let halvedDepth = Math.ceil(fallingDepth / 2); //damage per 2"
-        let damageFormula = halvedDepth >= 10 ? `(1d6x+1)*10` : `(1d6x+1)*${halvedDepth}`; //cap falling damage at 10d6+10
-        let rollDamage = await new Roll(`${damageFormula}`).evaluate({ async: false });
-        let damage = rollDamage.total;
-        let waterRaise = false;
-        if (snowDepth > 0) {
-            damage = damage - snowDepth;
-        } else if (waterSuccess != "na") {
-            if (waterSuccess === "success") { damage = Math.ceil(damage / 2) }
-            else if (waterSuccess === "raise") { waterRaise = true; damage = 0; }
-        }
-        if (waterRaise === false) {
-            messageContent += `${game.i18n.format("SWIM.fallingDamageCalculator-fallsAndTakesDamage", {tokenName: token.name, fallingDepth: fallingDepth, damage: damage})}`
-        } else if (waterRaise === true) {
-            messageContent += `${game.i18n.format("SWIM.fallingDamageCalculator-fallsButDives", {tokenName: token.name, fallingDepth: fallingDepth})}`
-        }
-        await calculate_damage(token, damage);
+    static get defaultOptions() {
+        return foundry.utils.mergeObject(super.defaultOptions, { id: 'swim-falling-damage', width: 470 })
     }
 
-    async function calculate_damage(token, damage) {
-        const toughness = token.actor.system.stats.toughness.value;
-        const isShaken = token.actor.system.status.isShaken;
-        const raises = Math.floor((damage - toughness) / 4);
-        const isHardy = token.actor.items.find(function (item) {
-            return ((item.name.toLowerCase() === game.i18n.localize("SWIM.ability-hardy").toLowerCase()) && item.type === "ability");
-        });
-        if (toughness > damage) {
-            messageContent += `<p>=> ${game.i18n.localize("SWIM.fallingDamageCalculator-resultNoHarm")}</p>`
-        } else if (toughness <= damage) {
-            if (isShaken === false && raises <= 0) {
-                //swim.start_macro(`[Script] Unshake (SWD)`); //Can't use it for there are potentially multiple tokens selected. Need to find a way to pass the proper actor or something.
-                messageContent += `<p>=> ${game.i18n.localize("SWIM.gameTerm-Shaken")}</p>`
-            } else if (isShaken === false && raises >= 1) {
-                messageContent += `<p>=> ${game.i18n.format("SWIM.fallingDamageCalculator-resultShakenAnd", {raises})} @Compendium[swim.swade-immersive-macros.AWEIhBfGUmhQlww5]{${game.i18n.localize("SWIM.gameTerm-Wound-plural")}}.</p>`
-            } else if (isShaken === true && raises <= 1) {
-                if (!isHardy || raises === 1) {
-                    messageContent += `<p>=> 1 @Compendium[swim.swade-immersive-macros.AWEIhBfGUmhQlww5]{${game.i18n.localize("SWIM.gameTerm-Wound-singular")}}.</p>`
-                } else if (isHardy) {
-                    messageContent += `<p>=> ${game.i18n.localize("SWIM.fallingDamageCalculator-resultNoHarm")}</p>`
-                }
-            } else if (isShaken === true && raises >= 1) {
-                let wounds = raises - 1;
-                messageContent += `<p>=> ${wounds} @Compendium[swim.swade-immersive-macros.AWEIhBfGUmhQlww5]{${game.i18n.localize("SWIM.gameTerm-Wound-plural")}}.</p>`
-            }
+    get title() { return t('SWIM.fallingDamageCalculator') }
+
+    constructor(tokens) {
+        super()
+        this.#tokens = tokens
+        for (const tk of tokens) {
+            this.state[`depth:${tk.id}`] = '0'
+            this.state[`snow:${tk.id}`] = '0'
+            this.state[`water:${tk.id}`] = 'na'
         }
     }
 
-    async function main() {
-        const officialClass = await swim.get_official_class()
-        let content = game.i18n.format("SWIM.fallingDamageCalculator-dialogue", {officialClass})
-        for (let token of tokens) {
-            content += `
-        <p>
-          <img style="border: 0; text-align: left;" src="${token.document.texture.src}" width="25" height="25" /> 
-          <span style="vertical-align: super; text-align: left;">${token.name}</span>
-        </p>
-        <input style="text-align: center;" id="fallingDepth-${token.id}" style="flex: 1;" type="number" value="0" />
-        <input style="text-align: center;" id="snowDepth-${token.id}" style="flex: 1;" type="number" value="0" />
-        <select style="text-align: center;" id="water-${token.id}">${options}</select>
-    `;
+    async view() {
+        const waters = [['na', t('SWIM.word-na')], ['success', t('SWIM.raiseCalculator-success')], ['raise', t('SWIM.gameTerm-Raise')]]
+        let body = `<div class="swim-hc-result"><p>${t('SWIM.falling.introDepth')}</p><p>${t('SWIM.falling.introSnow')}</p><p>${t('SWIM.falling.introWater')}</p></div>`
+        for (const tk of this.#tokens) {
+            const num = (kind, label) => `<label><small>${label}</small><input type="number" min="0" data-field="${kind}:${tk.id}" value="${esc(this.state[`${kind}:${tk.id}`])}"></label>`
+            const sel = this.state[`water:${tk.id}`]
+            body += `<div class="swim-fd-token"><div class="swim-hc-seg is-on swim-us-static"><img src="${esc(token_img(tk))}" alt=""><span><b>${esc(tk.name)}</b></span></div>
+                <div class="swim-fd-fields">${num('depth', t('SWIM.falling.depth'))}${num('snow', t('SWIM.falling.snow'))}
+                <label><small>${t("SWIM.falling.water")}</small><select data-field="water:${tk.id}">${waters.map(([v, l]) => `<option value="${v}" ${v === sel ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></label></div></div>`
         }
-        content += `
-        </div>
-    </div>`;
-        new Dialog({
-            title: game.i18n.localize("SWIM.fallingDamageCalculator"),
-            content: content,
-            buttons: {
-                roll: {
-                    label: game.i18n.localize("SWIM.dialogue-roll"),
-                    callback: async (html) => {
-                        for (let token of tokens) {
-                            //Getting results from checkboxes and making the rolls.
-                            let fallingDepth = Number(html.find(`#fallingDepth-${token.id}`)[0].value);
-                            let snowDepth = Number(html.find(`#snowDepth-${token.id}`)[0].value);
-                            let waterSuccess = html.find(`#water-${token.id}`)[0].value;
-                            //console.log(fallingDepth, snowDepth, waterSuccess)
-                            if (waterSuccess != "na" && snowDepth != 0) {
-                                return ui.notifications.error(game.i18n.localize("SWIM.fallingDamageCalculator-cantCombineWaterAndSnow"))
-                            }
-                            messageContent += `<h3><img style="border: 0;" src=${token.document.texture.src} width="35" height="35" /> ${token.name}</h3>`;
-                            await roll_damage(token, fallingDepth, snowDepth, waterSuccess);
-                        }
-                        messageContent += `</div>`;
-                        ChatMessage.create({
-                            content: messageContent
-                        });
-                    }
-                },
-                cancel: {
-                    label: game.i18n.localize("SWIM.dialogue-cancel")
-                }
-            }
-        }).render(true)
+        return { body, foot: `<span class="swim-hc-spacer"></span>${btn('cancel', t('SWIM.picker.cancel'))}${btn('roll', t('SWIM.falling.roll'), { go: true })}` }
+    }
+
+    async onAction(action) {
+        if (action === 'cancel') { return this.close() }
+        if (action !== 'roll') { return }
+        const entries = this.#tokens.map((token) => ({
+            token,
+            fallingDepth: Math.max(0, Number(this.state[`depth:${token.id}`]) || 0),
+            snowDepth: Math.max(0, Number(this.state[`snow:${token.id}`]) || 0),
+            water: this.state[`water:${token.id}`],
+        }))
+        // Validate everything first, so nothing is rolled if one token has both water and snow.
+        if (entries.some((e) => e.water !== "na" && e.snowDepth !== 0)) {
+            return ui.notifications.error(t("SWIM.fallingDamageCalculator-cantCombineWaterAndSnow"))
+        }
+        this.busy = true
+        try {
+            await ChatMessage.create({ content: await resolve_falls(entries) })
+        } finally {
+            this.busy = false
+        }
+        return this.close()
     }
 }
