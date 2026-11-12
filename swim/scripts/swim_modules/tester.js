@@ -1,6 +1,6 @@
 /*******************************************
  * Test and Support Macro
- * v. 1.0.0 – one window for the player (TesterApp) and one for the resist roll on the GM side (ResistApp)
+ * v. 1.0.1 – one window for the player (TesterApp) and one for the resist roll on the GM side (ResistApp)
  * instead of the chain of dialogs.
  * Made and maintained by SalieriC#8263
  * Covered Edges:
@@ -201,7 +201,7 @@ class TesterApp extends Application {
         const notes = [
             r.total < st.best.total ? t('SWIM.testerWin.bestKept', { last: r.total, best: st.best.total }) : '',
             free ? t('SWIM.testerWin.freeReroll') : (canBenny && snap.elan ? t('SWIM.soak.elanReroll') : ''),
-            st.action === 'test' && (free || canBenny) ? t('SWIM.testerWin.testNote', { pronoun: swim.get_pronoun(this.#target) }) : '',
+            st.action === 'test' ? t(free || canBenny ? 'SWIM.testerWin.testNote' : 'SWIM.testerWin.testNoteFinal', { pronoun: swim.get_pronoun(this.#target) }) : '',
         ].filter(Boolean).map((n) => `<p>${esc(n)}</p>`).join('')
         return {
             body: `<div class="swim-hc-result"><div class="swim-hc-big">${r.total}</div>${r.lines.length ? `<p class="swim-us-lines">${r.lines.join('<br/>')}</p>` : ''}${notes}</div>`,
@@ -324,11 +324,15 @@ class TesterApp extends Application {
 
             const { totalBennies } = await swim.check_bennies(token, false)
             const canReroll = (st.rerolls === 0 && snap.free) || totalBennies > 0
-            if (total >= 8) { sendBest = true; break } // a raise: nothing to improve
-            if (!canReroll) {
-                ui.notifications.warn(t("SWIM.notification-noBenniesLeft"))
-                sendBest = true
-                break
+            // Support is capped by a raise (nothing to improve) and ends when no reroll is left. A Test is opposed by the target, so the
+            // player decides when the roll is high enough: the result view stays open (Apply is always there).
+            if (st.action === 'support') {
+                if (total >= 8) { sendBest = true; break }
+                if (!canReroll) {
+                    ui.notifications.warn(t("SWIM.notification-noBenniesLeft"))
+                    sendBest = true
+                    break
+                }
             }
             st.phase = 'result'
           } while (false)
