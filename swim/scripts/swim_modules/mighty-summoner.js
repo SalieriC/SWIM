@@ -18,6 +18,7 @@
  ******************************************************/
 import { execute_as_gm } from "../helpers/socket_helper.js"
 import { ActorPickerApp, picker_entry, rank_of_actor } from "../helpers/actor_picker.js"
+import { confirm_window } from "../helpers/swim_window.js"
 
 // Rank needed for Mirror Self (0 Novice ... 4 Legendary): the only summon option with a rank requirement.
 const MIRROR_SELF_RANK = 2
@@ -227,33 +228,29 @@ export async function summoner_script(data) {
     }
 
     async function dismiss() {
-        new Dialog({
-            title: 'Mighty Summoner: Dismiss',
-            content: game.i18n.format("SWIM.dialogue-dismiss", { officialClass: officialClass, name: token.name }),
-            buttons: {
-                one: {
-                    label: `<i class="fas fa-paw"></i> Dismiss Creature`,
-                    callback: async (_) => {
-                        const tokenMaintEffect = actor.effects.find(e => e.flags?.swim?.isSummonedCreature === true)
-                        const maintenanceID = tokenMaintEffect.flags?.swim?.maintenanceID
-                        await play_sfx({ x: token.center.x, y: token.center.y }) // play_sfx() takes a location (since #12)
-                        await swim.wait(`200`) // delay script execution so that the vfx has time to get the tokens position
-                        await execute_as_gm("summonerDismiss", {tokenID: token.id, sceneID: game.scenes.current.id})
-                        for (let each of game.scenes.current.tokens) {
-                            const maintEffect = each.actor?.effects.find(e => e.flags?.swim?.maintenanceID === maintenanceID)
-                            if (maintEffect) {
-                                await maintEffect.delete()
-                            }
-                        }
-                        const mirrorActor = game.actors.find(a => a.flags?.swim?.maintenanceID === maintenanceID)
-                        if (mirrorActor) {
-                            await mirrorActor.delete()
-                        }
-                    }
-                }
-            },
-            default: "one",
-        }).render(true);
+        const confirmed = await confirm_window({
+            id: 'swim-summoner-dismiss',
+            title: game.i18n.localize("SWIM.summoner.dismissTitle"),
+            text: game.i18n.format("SWIM.summoner.dismissText", { name: token.name.replace(/[&<>"']/g, (m) => `&#${m.charCodeAt(0)};`) }),
+            confirm: game.i18n.localize("SWIM.summoner.dismissConfirm"),
+        })
+        if (!confirmed) { return }
+        const tokenMaintEffect = actor.effects.find(e => e.flags?.swim?.isSummonedCreature === true)
+        const maintenanceID = tokenMaintEffect?.flags?.swim?.maintenanceID
+        await play_sfx({ x: token.center.x, y: token.center.y }) // play_sfx() takes a location (since #12)
+        await swim.wait(`200`) // delay script execution so that the vfx has time to get the tokens position
+        await execute_as_gm("summonerDismiss", {tokenID: token.id, sceneID: game.scenes.current.id})
+        if (!maintenanceID) { return }
+        for (let each of game.scenes.current.tokens) {
+            const maintEffect = each.actor?.effects.find(e => e.flags?.swim?.maintenanceID === maintenanceID)
+            if (maintEffect) {
+                await maintEffect.delete()
+            }
+        }
+        const mirrorActor = game.actors.find(a => a.flags?.swim?.maintenanceID === maintenanceID)
+        if (mirrorActor) {
+            await mirrorActor.delete()
+        }
     }
 
     if ((token.document.flags?.swim?.isSummonedCreature === true) && (game.user.isGM || game.user.id === token.document.flags?.swim?.userId)) {

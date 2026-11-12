@@ -45,3 +45,11 @@
 .swim-lm-row span { flex: 1; }
 .swim-lm-row img { border: 0; }
 .swim-lm-row input[type="number"] { width: 70px; height: 24px; padding: 0 6px; text-align: center; background: var(--swim-hc-bg); color: var(--swim-hc-text); border: 1px solid var(--swim-hc-line); border-radius: 5px; }
+
+/* Raise Calculator + Fear Table */
+.swim-rc-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+.swim-rc-row img { border: 0; }
+.swim-rc-row b { flex: 1; }
+.swim-rc-row input[type="number"] { width: 90px; height: 24px; padding: 0 6px; text-align: center; background: var(--swim-hc-bg); color: var(--swim-hc-text); border: 1px solid var(--swim-hc-line); border-radius: 5px; }
+.swim-rc-result { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--swim-hc-line); }
+.swim-fear-targets { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }

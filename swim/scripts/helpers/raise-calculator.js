@@ -1,62 +1,70 @@
+/*******************************************
+ * Raise Calculator – window (RaiseApp) instead of a Dialog. The result updates while typing.
+ ******************************************/
+import { SwimWindow, t, esc, btn } from "./swim_window.js"
+
+const ICON = "modules/swim/assets/icons/misc/"
+
+/** Result of a roll against a target number. Pure. Returns { level: 'failure'|'success'|'raises', raises }. */
+export function raise_result(target, roll) {
+    const raises = Math.floor((roll - target) / 4)
+    if (target > roll) { return { level: 'failure', raises: 0 } }
+    if (raises < 1) { return { level: 'success', raises: 0 } }
+    return { level: 'raises', raises }
+}
+
+/** Image and text for the result. `null` while a number is missing. */
+export function raise_display(targetText, rollText) {
+    if (targetText === '' || rollText === '' || targetText == null || rollText == null) { return null }
+    const target = parseInt(targetText), roll = parseInt(rollText)
+    if (Number.isNaN(target) || Number.isNaN(roll)) { return null }
+    const r = raise_result(target, roll)
+    if (r.level === 'failure') { return { img: `${ICON}raise_red.svg`, text: t("SWIM.raiseCalculator-failure") } }
+    if (r.level === 'success') { return { img: `${ICON}raise_yellow.svg`, text: t("SWIM.raiseCalculator-success") } }
+    return { img: `${ICON}raise_green.svg`, text: t(r.raises < 2 ? "SWIM.raiseCalculator-raises-singular" : "SWIM.raiseCalculator-raises-plural", { raises: r.raises }) }
+}
+
 export async function raise_calculator() {
-    new Dialog({
-        title: game.i18n.localize("SWIM.raiseCalculator-label"),
-        content: `
-            <form>
-                <div class="form-group">
-					<div style="display: flex; align-items: center;">
-						<img style="margin-right: 10px; border: 0;" src="modules/swim/assets/icons/misc/bullseye.svg" alt="" width="25" height="25" />
-						<label><b>${game.i18n.localize("SWIM.raiseCalculator-targetNumber")}:</b></label>
-					</div>
-                    <input name="target" placeholder="0" type="number" />
-                </div>
-                <div class="form-group">
-					<div style="display: flex; align-items: center;">
-						<img style="margin-right: 10px; border: 0;" src="modules/swim/assets/icons/misc/rolling-dices.svg" alt="" border="0" width="25" height="25" />
-						<label><b>${game.i18n.localize("SWIM.raiseCalculator-roll")}:</b></label>
-					</div>
-                    <input name="result" placeholder="0" type="number" />
-                </div>
-                <div style="display: flex; align-items: center;">
-					<img style="margin-right: 10px; border: 0;" name="calculation" src="modules/swim/assets/icons/misc/raise_black.svg" alt="" width="25" height="25" />
-					<p name="calculation"><b>${game.i18n.localize("SWIM.raiseCalculator-result")}</b></p>
-				</div>
-            </form>`,
-        buttons: {},
-        render: ([dialogContent]) => {
-            dialogContent.querySelector(`input[name="target"]`).focus();
-            ["target", "result"].forEach((input) => {
-                ["input", "change"].forEach((evt) => {
-                    dialogContent.querySelector(`input[name="${input}"]`).addEventListener(evt, (event) => {
-                        const textInput = event.target;
-                        const form = textInput.closest("form");
-                        const calcImage = form.querySelector(`img[name="calculation"]`);
-                        const calcResult = form.querySelector(`p[name="calculation"]`);
-                        const target = form.querySelector('input[name="target"]').value;
-                        const result = form.querySelector('input[name="result"]').value;
-                        if (target === "" || result === "") return;
-                        const raises = Math.floor((parseInt(result) - parseInt(target)) / 4);
-                        if (parseInt(target) > parseInt(result)) {
-                            calcImage.src = "modules/swim/assets/icons/misc/raise_red.svg";
-                            calcResult.innerHTML = `<b>${game.i18n.localize("SWIM.raiseCalculator-failure")}</b>`;
-                        } else if (parseInt(target) <= parseInt(result) && raises < 1) {
-                            calcImage.src = "modules/swim/assets/icons/misc/raise_yellow.svg";
-                            calcResult.innerHTML = `<b>${game.i18n.localize("SWIM.raiseCalculator-success")}</b>`;
-                        } else {
-                            calcImage.src = "modules/swim/assets/icons/misc/raise_green.svg";
-                            if (raises < 2) {
-                                calcResult.innerHTML = `<b>${game.i18n.format("SWIM.raiseCalculator-raises-singular", {
-                                    raises,
-                                })}</b>`;
-                            } else {
-                                calcResult.innerHTML = `<b>${game.i18n.format("SWIM.raiseCalculator-raises-plural", {
-                                    raises,
-                                })}</b>`;
-                            }
-                        }
-                    });
-                });
-            });
-        },
-    }).render(true);
+    await SwimWindow.show(new RaiseApp())
+}
+
+class RaiseApp extends SwimWindow {
+    static get defaultOptions() {
+        return foundry.utils.mergeObject(super.defaultOptions, { id: 'swim-raise-calculator', width: 340 })
+    }
+
+    get title() { return t('SWIM.raiseCalculator-label') }
+
+    constructor() {
+        super()
+        this.state = { target: '', roll: '' }
+    }
+
+    async view() {
+        const st = this.state
+        const row = (field, icon, label) => `<div class="swim-rc-row"><img src="${ICON}${icon}" alt="" width="25" height="25"><b>${esc(label)}:</b>
+            <input type="number" placeholder="0" data-field="${field}" value="${esc(st[field])}"></div>`
+        const res = raise_display(st.target, st.roll) ?? { img: `${ICON}raise_black.svg`, text: t("SWIM.raiseCalculator-result") }
+        return {
+            body: `${row('target', 'bullseye.svg', t('SWIM.raiseCalculator-targetNumber'))}${row('roll', 'rolling-dices.svg', t('SWIM.raiseCalculator-roll'))}
+                <div class="swim-rc-row swim-rc-result"><img data-rc="img" src="${res.img}" alt="" width="25" height="25"><b data-rc="text">${esc(res.text)}</b></div>`,
+            foot: `<span class="swim-hc-spacer"></span>${btn('close', t('SWIM.travel.close'))}`,
+        }
+    }
+
+    activateListeners(html) {
+        super.activateListeners(html)
+        // Update only the result line while typing (a re-render would take the focus away from the input).
+        html.on('input change', 'input[data-field]', () => {
+            const res = raise_display(this.state.target, this.state.roll)
+            if (!res) { return }
+            html.find('[data-rc="img"]').attr('src', res.img)
+            html.find('[data-rc="text"]').text(res.text)
+        })
+        html.find('input[data-field="target"]').trigger('focus')
+    }
+
+    async onAction(action) {
+        if (action === 'close') { return this.close() }
+    }
 }

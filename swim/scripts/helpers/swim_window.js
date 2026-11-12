@@ -92,3 +92,52 @@ export class SwimWindow extends Application {
         return super.close(options)
     }
 }
+
+class ConfirmApp extends SwimWindow {
+    #cfg
+    #decided = false
+    resolve = () => {}
+
+    constructor(cfg) {
+        super({ id: cfg.id, title: cfg.title, width: cfg.width ?? 420 })
+        this.#cfg = cfg
+    }
+
+    async view() {
+        const { head = '', text, confirm, cancel } = this.#cfg
+        return {
+            head,
+            body: `<div class="swim-hc-result"><p>${text}</p></div>`,
+            foot: `<span class="swim-hc-spacer"></span>${btn('cancel', cancel ?? t('SWIM.picker.cancel'))}${btn('confirm', confirm, { go: true })}`,
+        }
+    }
+
+    async onAction(action) {
+        if (action === 'confirm') { return this.#decide(true) }
+        if (action === 'cancel') { return this.#decide(false) }
+    }
+
+    async #decide(value) {
+        if (this.#decided) { return }
+        this.#decided = true
+        this.resolve(value)
+        return this.close()
+    }
+
+    async close(options) {
+        if (!this.#decided) { this.#decided = true; this.resolve(false) } // closed with the X / replaced by another window
+        return super.close(options)
+    }
+}
+
+/**
+ * A confirmation window. Resolves `true` on the confirm button, `false` on cancel / close.
+ * `text` and `head` are HTML (escape names yourself); `confirm` is the plain-text label of the confirm button.
+ */
+export function confirm_window({ id, title, text, confirm, cancel, head = '', width }) {
+    return new Promise((resolve) => {
+        const app = new ConfirmApp({ id, title, text, confirm, cancel, head, width })
+        app.resolve = resolve
+        SwimWindow.show(app)
+    })
+}

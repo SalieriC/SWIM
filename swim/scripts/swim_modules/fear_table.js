@@ -1,6 +1,8 @@
 import { swimConditions } from '../helpers/conditions.js'
+import { SwimWindow, t, esc, btn, token_img, tokens_header } from '../helpers/swim_window.js'
 /*******************************************
  * Fear Table Macro.
+ * v. 4.0.0 – window (FearApp) instead of a Dialog
  * v. 3.0.4 by SalieriC#8263, original creator unknown.
  *******************************************/
 export async function fear_table_script() {
@@ -30,59 +32,40 @@ export async function fear_table_script() {
         }
     }
 
-    const dialog = new Dialog({
-        title: game.i18n.localize("SWIM.fear"),
-        content: game.i18n.format("SWIM.dialogue-fearContent", { officialClass: officialClass, mod: fearPenalty, modPositive: fearPenaltyInverse }),
-        default: 'roll',
-        buttons: {
-            roll: {
-                label: game.i18n.localize("SWIM.dialogue-roll"),
-                callback: async (html) => {
-                    let modifier = html.find('.fearTable input[name="fearModifier"]')[0].value;
-
-                    if (modifier === '') {
-                        modifier = 0;
-                    }
-                    let fearTableName = game.settings.get('swim', 'fearTable');
-                    modifier = parseInt(modifier);
-                    if (fearTableName) {
-                        let fearTable = game.tables.getName(`${fearTableName}`)
-                        if (!fearTable) {
-                            ui.notifications.error(game.i18n.format("SWIM.notification.tableNotFound", { tableName: fearTableName }))
-                            return
-                        } else {
-                            for (let target of targets) {
-                                const roll = new Roll('1d20 + @mod', { mod: modifier });
-                                const results = await fearTable.draw({ displayChat: false, roll });
-                                const total = results.roll.total
-                                const chatData = `<div class="table-draw">
-                                <ol class="table-results">
-                                        <li class="table-result flexrow" data-result-id="${results.results[0]._id}">
-                                            <img class="result-image" src="${results.results[0].img}" />
-                                            <div class="result-text"><strong style="text-align:center">${target.name}</strong><br />${results.results[0].text}</div>
-                                        </li>
-                                    </ol>
-                                </div>`
-                                await ChatMessage.create({ content: chatData });
-                                await swim.wait(100) //Fights the race condition so that effect chat messages are created before the next targets result.
-                                await add_effects(total, target)
-                            }
-                            let fearSFX = game.settings.get('swim', 'fearSFX');
-                            if (fearSFX) { swim.play_sfx(fearSFX); }
-                        }
-                    }
-                    else {
-                        ui.notifications.error(game.i18n.localize("SWIM.notification.tableNameMissing", { type: game.i18n.localize("SWIM.fear") }));
-                        return;
-                    }
-                }
-            }
-        },
-        render: ([dialogContent]) => {
-            dialogContent.querySelector(`input[name="fearModifier"`).focus();
+    // Rolls on the fear table for every target and applies the effects.
+    async function roll_fear(modifier) {
+        const fearTableName = game.settings.get('swim', 'fearTable');
+        if (!fearTableName) {
+            ui.notifications.error(game.i18n.format("SWIM.notification.tableNameMissing", { type: game.i18n.localize("SWIM.fear") }));
+            return false
         }
-    });
-    dialog.render(true);
+        const fearTable = game.tables.getName(`${fearTableName}`)
+        if (!fearTable) {
+            ui.notifications.error(game.i18n.format("SWIM.notification.tableNotFound", { tableName: fearTableName }))
+            return false
+        }
+        for (let target of targets) {
+            const roll = new Roll('1d20 + @mod', { mod: modifier });
+            const results = await fearTable.draw({ displayChat: false, roll });
+            const total = results.roll.total
+            const chatData = `<div class="table-draw">
+            <ol class="table-results">
+                    <li class="table-result flexrow" data-result-id="${results.results[0]._id}">
+                        <img class="result-image" src="${results.results[0].img}" />
+                        <div class="result-text"><strong style="text-align:center">${target.name}</strong><br />${results.results[0].text}</div>
+                    </li>
+                </ol>
+            </div>`
+            await ChatMessage.create({ content: chatData });
+            await swim.wait(100) //Fights the race condition so that effect chat messages are created before the next targets result.
+            await add_effects(total, target)
+        }
+        let fearSFX = game.settings.get('swim', 'fearSFX');
+        if (fearSFX) { swim.play_sfx(fearSFX); }
+        return true
+    }
+
+    await SwimWindow.show(new FearApp({ token, targets, fearPenalty, fearPenaltyInverse, roll: roll_fear }))
 
     async function add_effects(total, target) {
         const token = target
@@ -295,4 +278,51 @@ async function gain_phobia(actor, major, total) {
         }
     }
     await actor.createEmbeddedDocuments('Item', [hindrance], { renderSheet: true });
+}
+
+class FearApp extends SwimWindow {
+    #ctx
+
+    static get defaultOptions() {
+        return foundry.utils.mergeObject(super.defaultOptions, { id: 'swim-fear-table', width: 460 })
+    }
+
+    get title() { return t('SWIM.fear') }
+
+    constructor(ctx) {
+        super()
+        this.#ctx = ctx
+        this.state = { fearModifier: String(ctx.fearPenaltyInverse) }
+    }
+
+    async view() {
+        const { token, targets, fearPenalty } = this.#ctx
+        const chips = targets.map((tg) => `<span class="swim-hc-chip"><img src="${esc(token_img(tg))}" alt="" width="18" height="18"> ${esc(tg.name)}</span>`).join(' ')
+        return {
+            head: tokens_header([{ token, small: t('SWIM.fearWin.source') }]),
+            body: `<div class="swim-hc-result"><p>${t('SWIM.fearWin.intro')}</p><p>${t('SWIM.fearWin.detected', { mod: fearPenalty })}</p></div>
+                <div class="swim-hc-lab">${esc(t('SWIM.fearWin.modifier'))}</div>
+                <div class="swim-hc-ctl"><input type="number" data-field="fearModifier" value="${esc(this.state.fearModifier)}"></div>
+                <div class="swim-hc-lab swim-hc-lab2">${esc(t('SWIM.fearWin.targets'))}</div><div class="swim-fear-targets">${chips}</div>`,
+            foot: `<span class="swim-hc-spacer"></span>${btn('cancel', t('SWIM.picker.cancel'))}${btn('roll', t('SWIM.fearWin.roll'), { go: true })}`,
+        }
+    }
+
+    activateListeners(html) {
+        super.activateListeners(html)
+        html.find('input[data-field="fearModifier"]').trigger('focus').trigger('select')
+        html.on('keydown', 'input[data-field="fearModifier"]', (ev) => {
+            if (ev.key === 'Enter') { ev.preventDefault(); this.state.fearModifier = ev.currentTarget.value; this.onAction('roll') }
+        })
+    }
+
+    async onAction(action) {
+        if (action === 'cancel') { return this.close() }
+        if (action !== 'roll') { return }
+        const modifier = parseInt(this.state.fearModifier) || 0
+        this.busy = true
+        let ok = false
+        try { ok = await this.#ctx.roll(modifier) } finally { this.busy = false }
+        if (ok) { return this.close() }
+    }
 }
