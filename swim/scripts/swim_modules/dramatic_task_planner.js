@@ -1,276 +1,147 @@
 /*******************************************
  * Dramatic Task Planner macro
- * version 1.0.1
+ * version 2.0.0 – window (DramaticTaskApp) instead of a Dialog
  * (c): SalieriC, original idea and code base: brunocalado.
  ******************************************/
+import { SwimWindow, t, esc, btn, rate_opt, checkbox } from "../helpers/swim_window.js"
+
+const SFX = 'modules/swim/assets/sfx/Dramatic-drum-hit-orangefreesounds.com.ogg'
+// players * tokens per player, turns
+const DIFFICULTIES = {
+    challenging: { perPlayer: 4, turns: 3 },
+    difficult: { perPlayer: 6, turns: 4 },
+    complex: { perPlayer: 8, turns: 5 },
+}
+
+/** Tokens and turns of a standard Dramatic Task. Pure. */
+export function task_numbers(players, difficulty) {
+    const d = DIFFICULTIES[difficulty] ?? DIFFICULTIES.challenging
+    return { tasksTokens: players * d.perPlayer, tasksTurns: d.turns }
+}
 
 export async function dramatic_task_planner_script(img) {
-    let chatimage = 'icons/commodities/tech/detonator-timer.webp';
-    const targetsArray = Array.from(game.user.targets)
-    const sfx = 'modules/swim/assets/sfx/Dramatic-drum-hit-orangefreesounds.com.ogg'
-    const volume = game.settings.get("swim", "defaultVolume")
-    let dramaticTaskLink = await swim.get_official_journal_link("dramatic_tasks")
-    if (dramaticTaskLink) {
-        dramaticTaskLink += `{${game.i18n.localize("SWIM.dramaticTask")}}`
-    } else {
-        dramaticTaskLink = game.i18n.localize("SWIM.dramaticTask")
-    }
+    const targets = Array.from(game.user.targets)
+    let link = await swim.get_official_journal_link("dramatic_tasks")
+    link = link ? `${link}{${t("SWIM.dramaticTask")}}` : t("SWIM.dramaticTask")
     const officialClass = await swim.get_official_class()
+    await SwimWindow.show(new DramaticTaskApp({
+        chatimage: img || 'icons/commodities/tech/detonator-timer.webp',
+        targets, link, officialClass,
+        challengeTrackerInstalled: !!game.modules.get('challenge-tracker')?.active,
+    }))
+}
 
-    if (img) {
-        chatimage = img
-    }
-    const challengeTrackerInstalled = game.modules.get('challenge-tracker')?.active
-    let players = 1
-    if (targetsArray.length > 0) {
-        players = targetsArray.length
-    }
-    let template = `
-    <style type="text/css">
-    .tg  {border-collapse:collapse;border-spacing:0;}
-    .tg td{border-color:black;border-style:solid;border-width:0px;font-family:Arial, sans-serif;font-size:14px;
-        overflow:hidden;padding:10px 5px;word-break:normal;}
-    .tg th{border-color:black;border-style:solid;border-width:0px;font-family:Arial, sans-serif;font-size:14px;
-        font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
-    .tg .tg-xwyw{border-color:#000000;text-align:center;vertical-align:middle}
-    .tg .tg-0lax{border-color:#000000;text-align:center;vertical-align:middle}
-    </style>
+class DramaticTaskApp extends SwimWindow {
+    #ctx
 
-    ${officialClass}
-    <table class="tg">
-    <h1>${dramaticTaskLink}</h1>
-    <tbody>
-        <tr>
-            <td class="tg-xwyw">
-                    <b>${game.i18n.localize("SWIM.word-Player")}</b>
-                    <p>
-                    <input id="playersAmount" type="number" min="1" max="100" value="${players}">  
-                    </p>
-            </td>
-            <td class="tg-0lax">
-                <b>${game.i18n.localize("SWIM.word-Difficulty")}</b>
-                <p>
-                <select id="difficulty" name="difficulty">
-                    <option value="challenging" selected="selected">${game.i18n.localize("SWIM.taskDifficulty-Challenging")}</option>
-                    <option value="difficult">${game.i18n.localize("SWIM.taskDifficulty-Difficult")}</option>
-                    <option value="complex">${game.i18n.localize("SWIM.taskDifficulty-Complex")}</option>
-                </select>  
-                </p>
-            </td>
-        </tr>
-
-        <tr>
-            <td class="tg-xwyw" colspan="2">
-                <h3>${game.i18n.localize("SWIM.task-custom")}</h3>
-                <p>${game.i18n.localize("SWIM.dialogue.task-customHint")}</p>
-            </td>
-        </tr>
-
-        <tr>
-            <td class="tg-xwyw">
-                    <b>${game.i18n.localize("SWIM.word-Tokens")}</b>
-                    <p>
-                        <input id="customTokens" type="number" min="1" max="100" value="0">    
-                    </p>
-            </td>
-            <td class="tg-0lax">
-                <b>${game.i18n.localize("SWIM.word-Turns")}</b>
-                <p>
-                    <input id="customTurns" type="number" min="1" max="100" value="0">    
-                </p>
-            </td>
-        </tr>
-
-        <tr>
-            <td class="tg-xwyw" colspan="2">
-                <h3><b>${game.i18n.localize("SWIM.word-Options")}</b></h3>
-            </td>
-        </tr>
-    `
-    if (challengeTrackerInstalled) {
-        template += `
-        <tr>
-            <td class="tg-xwyw">
-                <b>Challenge Tracker (CT)</b>
-            </td>
-            <td class="tg-xwyw">
-                <input id="challengeTracker" type="checkbox" checked>
-            </td>    
-        </tr>
-        <tr>
-            <td class="tg-xwyw">
-                <b>CT ${game.i18n.localize("challengeTracker.labels.editForm.trackerOptions.windowed")}</b>
-            </td>
-            <td class="tg-xwyw">
-                <input id="challengeTrackerWindowed" type="checkbox" checked>
-            </td>    
-        </tr>
-        <tr>
-            <td class="tg-xwyw">
-                <b>CT ${game.i18n.localize("SWIM.task-ct-showTurns")}</b>
-            </td>
-            <td class="tg-xwyw">
-                <input id="challengeTrackerRounds" type="checkbox">
-            </td>    
-        </tr>
-        <tr>
-        `
+    static get defaultOptions() {
+        return foundry.utils.mergeObject(super.defaultOptions, { id: 'swim-dramatic-task', width: 440 })
     }
 
-    template += `
-            <td class="tg-xwyw">
-                <b>${game.i18n.localize("SWIM.task-taskPerPlayer")}</b>
-            </td>
-            <td class="tg-xwyw">
-                <input id="taskPerPlayer" type="checkbox">
-            </td>    
-        </tr>
-        <tr>
-            <td class="tg-xwyw">
-                <b>${game.i18n.localize("SWIM.task-playSFX")}</b>
-            </td>
-            <td class="tg-xwyw">
-                <input id="playSfx" type="checkbox", checked>
-            </td>    
-        </tr>
-        
-    </tbody>
-    </div>
-    </table>
-    `
+    get title() { return t('SWIM.dramaticTask') }
 
-    new Dialog({
-        title: game.i18n.localize("SWIM.dramaticTask"),
-        content: await TextEditor.enrichHTML(template),
-        buttons: {
-            ok: {
-                label: game.i18n.localize("SWIM.dialogue-accept"),
-                callback: async (html) => {
-                    dramaticTask(html);
-                },
-            },
-            cancel: {
-                label: game.i18n.localize("SWIM.dialogue-cancel"),
-            }
-        },
-        default: "ok"
-    }, {}).render(true);
-
-    async function dramaticTask(html) {
-        const players = Number(html.find("#playersAmount")[0].value);
-        const difficulty = html.find("#difficulty")[0].value;
-        const customTokens = html.find("#customTokens")[0].value;
-        const customTurns = html.find("#customTurns")[0].value;
-        const challengeTracker = challengeTrackerInstalled ? html.find("#challengeTracker")[0].checked : false;
-        const challengeTrackerWindowed = challengeTrackerInstalled ? html.find("#challengeTrackerWindowed")[0].checked : false;
-        const challengeTrackerRounds = challengeTrackerInstalled ? html.find("#challengeTrackerRounds")[0].checked : false;
-        const taskPerPlayer = challengeTrackerInstalled ? html.find("#taskPerPlayer")[0].checked : false;
-        const playSfx = html.find("#playSfx")[0].checked;
-        let useNames = false
-        if (targetsArray.length === players && taskPerPlayer) {
-            useNames = true
+    constructor(ctx) {
+        super()
+        this.#ctx = ctx
+        this.state = {
+            players: String(Math.max(ctx.targets.length, 1)), difficulty: 'challenging', customTokens: '0', customTurns: '0',
+            challengeTracker: true, challengeTrackerWindowed: true, challengeTrackerRounds: false, taskPerPlayer: false, playSfx: true,
         }
+    }
 
-        let message = ``;
-        message = `<h2><img style="vertical-align:middle" src=${chatimage} width="28" height="28"> ${dramaticTaskLink}</h2>`;
+    async view() {
+        const st = this.state
+        const { challengeTrackerInstalled, link } = this.#ctx
+        const intro = await TextEditor.enrichHTML(`<p>${link}</p>`, { async: true })
+        const diff = (id, label) => rate_opt('difficulty', 'value', id, label, st.difficulty === id)
+        const num = (field, value) => `<input type="number" min="0" max="100" data-field="${field}" value="${esc(value)}">`
+        let checks = ''
+        if (challengeTrackerInstalled) {
+            checks += checkbox('challengeTracker', 'Challenge Tracker (CT)', st.challengeTracker)
+            checks += checkbox('challengeTrackerWindowed', `CT ${t("challengeTracker.labels.editForm.trackerOptions.windowed")}`, st.challengeTrackerWindowed)
+            checks += checkbox('challengeTrackerRounds', `CT ${t("SWIM.task-ct-showTurns")}`, st.challengeTrackerRounds)
+        }
+        checks += checkbox('taskPerPlayer', t("SWIM.task-taskPerPlayer"), st.taskPerPlayer)
+        checks += checkbox('playSfx', t("SWIM.task-playSFX"), st.playSfx)
+        return {
+            body: `<div class="swim-hc-result">${intro}</div>
+                <div class="swim-hc-lab">${esc(t('SWIM.word-Player'))}</div>
+                <div class="swim-hc-ctl"><input type="number" min="1" max="100" data-field="players" value="${esc(st.players)}"></div>
+                <div class="swim-hc-lab swim-hc-lab2">${esc(t('SWIM.word-Difficulty'))}</div>
+                <div class="swim-hc-rate swim-us-three">${diff('challenging', t('SWIM.taskDifficulty-Challenging'))}${diff('difficult', t('SWIM.taskDifficulty-Difficult'))}${diff('complex', t('SWIM.taskDifficulty-Complex'))}</div>
+                <div class="swim-hc-lab swim-hc-lab2">${esc(t('SWIM.task-custom'))}</div>
+                <div class="swim-hc-preview">${esc(t('SWIM.dialogue.task-customHint'))}
+                  <div class="swim-us-row"><label>${esc(t('SWIM.word-Tokens'))} ${num('customTokens', st.customTokens)}</label><label>${esc(t('SWIM.word-Turns'))} ${num('customTurns', st.customTurns)}</label></div></div>
+                <div class="swim-hc-lab swim-hc-lab2">${esc(t('SWIM.word-Options'))}</div>
+                <div class="swim-us-checks">${checks}</div>`,
+            foot: `<span class="swim-hc-spacer"></span>${btn('cancel', t('SWIM.picker.cancel'))}${btn('plan', t('SWIM.taskWin.plan'), { go: true })}`,
+        }
+    }
 
+    async onAction(action, el) {
+        switch (action) {
+            case 'difficulty':
+                if (this.state.difficulty === el.dataset.value) { return }
+                this.state.difficulty = el.dataset.value
+                return this.render(false)
+            case 'cancel': return this.close()
+            case 'plan':
+                this.busy = true
+                try { await this.#plan() } finally { this.busy = false }
+                return this.close()
+        }
+    }
+
+    /** Builds the GM whisper (and opens the Challenge Tracker(s)). */
+    async #plan() {
+        const st = this.state
+        const { chatimage, targets, link, officialClass, challengeTrackerInstalled } = this.#ctx
+        const players = Math.max(1, Math.floor(Number(st.players)) || 1)
+        const customTokens = Number(st.customTokens) || 0
+        const customTurns = Number(st.customTurns) || 0
+        const ct = challengeTrackerInstalled ? { on: !!st.challengeTracker, windowed: !!st.challengeTrackerWindowed, rounds: !!st.challengeTrackerRounds } : { on: false }
+        const taskPerPlayer = !!st.taskPerPlayer
+        const useNames = targets.length === players && taskPerPlayer
+        const custom = customTokens !== 0 && customTurns !== 0
+
+        let message = `<h2><img style="vertical-align:middle" src=${chatimage} width="28" height="28"> ${link}</h2>`
         if (taskPerPlayer) {
             for (let i = 0; i < players; i++) {
-                let nameOfPlayer = false
-                if (targetsArray.length > 0) {
-                    nameOfPlayer = targetsArray[i].name
-                }
-                if (customTokens != 0 && customTurns != 0) {
-                    message += customDramaticTask(customTokens, customTurns, challengeTracker, challengeTrackerWindowed, challengeTrackerRounds, useNames, nameOfPlayer);
-                } else {
-                    message += calculateTaskTokens(1, difficulty, challengeTracker, challengeTrackerWindowed, challengeTrackerRounds, useNames, nameOfPlayer);
-                }
+                const name = targets.length > 0 ? targets[i]?.name ?? false : false
+                message += custom ? this.#custom(customTokens, customTurns, ct, useNames, name) : this.#standard(1, st.difficulty, ct, useNames, name)
             }
         } else {
-            if (customTokens != 0 && customTurns != 0) {
-                message += customDramaticTask(customTokens, customTurns, challengeTracker, challengeTrackerWindowed, challengeTrackerRounds, useNames);
-            } else {
-                message += calculateTaskTokens(players, difficulty, challengeTracker, challengeTrackerWindowed, challengeTrackerRounds, useNames);
-            }
+            message += custom ? this.#custom(customTokens, customTurns, ct, useNames) : this.#standard(players, st.difficulty, ct, useNames)
         }
 
-        // send message
-        let chatData = {
+        await ChatMessage.create({
             content: await TextEditor.enrichHTML(officialClass + message + '</div>'),
-            whisper: ChatMessage.getWhisperRecipients("GM")
-        };
-        ChatMessage.create(chatData, {});
-        if (playSfx) {
-            swim.play_sfx(sfx, volume, true)
-        }
+            whisper: ChatMessage.getWhisperRecipients("GM"),
+        })
+        if (st.playSfx) { swim.play_sfx(SFX, game.settings.get("swim", "defaultVolume"), true) }
     }
 
-    function calculateTaskTokens(players, difficulty, challengeTracker = false, challengeTrackerWindowed = false, challengeTrackerRounds = false, useNames = false, nameOfPlayer = false) {
-        let tasksTokens = 0;
-        let tasksTurns = 0;
-        let difficultyName = '';
-        let message = ``;
-        if (difficulty == 'challenging') {
-            tasksTokens = players * 4;
-            tasksTurns = 3;
-            difficultyName = game.i18n.localize("SWIM.taskDifficulty-challenging")
-        } else if (difficulty == 'difficult') {
-            tasksTokens = players * 6;
-            tasksTurns = 4;
-            difficultyName = game.i18n.localize("SWIM.taskDifficulty-difficult")
-        } else if (difficulty == 'complex') {
-            tasksTokens = players * 8;
-            tasksTurns = 5;
-            difficultyName = game.i18n.localize("SWIM.taskDifficulty-complex")
-        }
-        let playersCountWord = game.i18n.localize("SWIM.word-players")
-        if (players === 1) {
-            playersCountWord = game.i18n.localize("SWIM.word-player")
-        }
-        let playerName = `<b>${players}</b> ${playersCountWord}`
-        if (useNames) {
-            playerName = `<b>${nameOfPlayer}</b>`
-        }
-        //message += `<p>This is <b>${difficultyName}</b> for ${playerName}.</p><ul><li>Task Tokens: <b style="color:red;">${tasksTokens}</b></li><li>Rounds: <b style="color:red;">${tasksTurns}</b></p></ul>`
-        message += game.i18n.format("SWIM.task.message.main", {difficultyName, playerName, tasksTokens, tasksTurns})
-
-        if (challengeTracker) {
-            let title = game.i18n.localize("SWIM.dramaticTask")
-            if (useNames) {
-                title += ` ${game.i18n.localize("SWIM.word-for")} ${nameOfPlayer}`
-            }
-            ChallengeTracker.open({
-                outerTotal: tasksTokens,
-                innerTotal: challengeTrackerRounds ? tasksTurns : 0,
-                title: title,
-                windowed: challengeTrackerWindowed
-            })
-        }
-
-        return message;
+    #openTracker(ct, tokens, turns, useNames, name) {
+        if (!ct.on) { return }
+        let title = t("SWIM.dramaticTask")
+        if (useNames) { title += ` ${t("SWIM.word-for")} ${name}` }
+        ChallengeTracker.open({ outerTotal: tokens, innerTotal: ct.rounds ? turns : 0, title, windowed: ct.windowed })
     }
 
-    function customDramaticTask(tokens, turns, challengeTracker = false, challengeTrackerWindowed = false, challengeTrackerRounds = false, useNames = false, nameOfPlayer = false) {
-        let message = ``
-        if (useNames) {
-            message = `${game.i18n.localize("SWIM.dramaticTask")} ${game.i18n.localize("SWIM.word-for")} <b>${nameOfPlayer}</b>:`
-        }
-        //message += `<ul><li>Task Tokens: <b style="color:red;">${tokens}</b></li><li>Rounds: <b style="color:red;">${turns}</b></p></ul>`
-        message += game.i18n.format("SWIM.task.message.customTask", {tokens, turns})
+    #standard(players, difficulty, ct, useNames, name = false) {
+        const { tasksTokens, tasksTurns } = task_numbers(players, difficulty)
+        const difficultyName = t(`SWIM.taskDifficulty-${DIFFICULTIES[difficulty] ? difficulty : 'challenging'}`)
+        const playersCountWord = t(players === 1 ? "SWIM.word-player" : "SWIM.word-players")
+        const playerName = useNames ? `<b>${esc(name)}</b>` : `<b>${players}</b> ${playersCountWord}`
+        const message = game.i18n.format("SWIM.task.message.main", { difficultyName, playerName, tasksTokens, tasksTurns })
+        this.#openTracker(ct, tasksTokens, tasksTurns, useNames, name)
+        return message
+    }
 
-        if (challengeTracker) {
-            let title = game.i18n.localize("SWIM.dramaticTask")
-            if (useNames) {
-                title += ` ${game.i18n.localize("SWIM.word-for")} ${nameOfPlayer}`
-            }
-            ChallengeTracker.open({
-                outerTotal: tokens,
-                innerTotal: challengeTrackerRounds ? turns : 0,
-                title: title,
-                windowed: challengeTrackerWindowed
-            })
-        }
-
-        return message;
+    #custom(tokens, turns, ct, useNames, name = false) {
+        let message = useNames ? `${t("SWIM.dramaticTask")} ${t("SWIM.word-for")} <b>${esc(name)}</b>:` : ''
+        message += game.i18n.format("SWIM.task.message.customTask", { tokens, turns })
+        this.#openTracker(ct, tokens, turns, useNames, name)
+        return message
     }
 }

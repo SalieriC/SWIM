@@ -1,4 +1,4 @@
-/* Unshake window (scripts/swim_modules/unshake.js) and Unstun window (unstun.js) and Radiation Centre (radiation_centre.js) and Tester (tester.js) and Travel Calculator (travel_calculator.js), same classes `.swim-us*`.
+/* Unshake window (scripts/swim_modules/unshake.js) and Unstun window (unstun.js) and Radiation Centre (radiation_centre.js) and Tester (tester.js), Travel Calculator (travel_calculator.js), Common Bond, Deviation and Dramatic Task Planner (helpers/swim_window.js), same classes `.swim-us*`.
    Uses the building blocks of styles/health-centre.css (.swim-hc-*: patient card, method cards, preview, result, footer, buttons);
    only what is specific to Unshake is defined here. If the shared parts of HC / Soak / Unshake grow, move them to a common stylesheet. */
 
@@ -26,3 +26,12 @@
   height: 24px; width: 120px; padding: 0 6px; background: var(--swim-hc-bg); color: var(--swim-hc-text); border: 1px solid var(--swim-hc-line); border-radius: 5px;
 }
 .swim-tc .swim-hc-ctl.wide select { max-width: none; width: 100%; }
+
+/* simple windows (helpers/swim_window.js) */
+.swim-us .swim-hc-rate.swim-us-three { grid-template-columns: repeat(3, 1fr); }
+.swim-us .swim-us-arrow { align-self: center; color: var(--swim-hc-gold); }
+.swim-us-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px; }
+.swim-us-row label { display: flex; align-items: center; gap: 8px; }
+.swim-us-row input[type="number"] { width: 64px; height: 24px; padding: 0 6px; background: var(--swim-hc-bg); color: var(--swim-hc-text); border: 1px solid var(--swim-hc-line); border-radius: 5px; }
+.swim-us-checks { display: flex; flex-direction: column; gap: 6px; }
+.swim-hc-ctl input[type="number"] { height: 24px; width: 80px; padding: 0 6px; background: var(--swim-hc-bg); color: var(--swim-hc-text); border: 1px solid var(--swim-hc-line); border-radius: 5px; }
