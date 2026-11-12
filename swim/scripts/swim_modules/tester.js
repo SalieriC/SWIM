@@ -1,6 +1,6 @@
 /*******************************************
  * Test and Support Macro
- * v. 1.0.1 – one window for the player (TesterApp) and one for the resist roll on the GM side (ResistApp)
+ * v. 1.0.2 – one window for the player (TesterApp) and one for the resist roll on the GM side (ResistApp)
  * instead of the chain of dialogs.
  * Made and maintained by SalieriC#8263
  * Covered Edges:
@@ -28,6 +28,9 @@ const ATTRIBUTES = { agility: 'SWADE.AttrAgi', smarts: 'SWADE.AttrSma', spirit: 
 /* ------------------------------------------------------------------------------------------------ */
 /* Helpers                                                                                          */
 /* ------------------------------------------------------------------------------------------------ */
+
+/** Sorts `[value, label]` pairs alphabetically by label (locale aware). */
+const by_label = (a, b) => a[1].localeCompare(b[1], game.i18n.lang, { sensitivity: 'base' })
 
 /** The Edge with the (localized) name of the lang key, if the actor has it. */
 function find_edge(actor, langKey) {
@@ -168,7 +171,7 @@ class TesterApp extends Application {
     async #chooseView(snap) {
         const st = this.#state
         const actor = this.#token.actor
-        const skills = actor.items.filter((i) => i.type === "skill").map((i) => [i.id, i.name])
+        const skills = actor.items.filter((i) => i.type === "skill").map((i) => [i.id, i.name]).sort(by_label)
         const intro = await TextEditor.enrichHTML(`<p>${this.#links}</p>`, { async: true })
         const cards = card('support', 'fas fa-handshake', t('SWIM.gameTerm-Support'), t('SWIM.testerWin.supportHint'), st.action === 'support') +
             card('test', 'fas fa-comments', t('SWIM.gameTerm-Test'), t('SWIM.testerWin.testHint'), st.action === 'test')
@@ -177,8 +180,9 @@ class TesterApp extends Application {
         if (st.action === 'support') {
             const attrLabel = t("ENHANCED_CONDITIONS.Dialog.Attribute")
             const skillLabel = t("ENHANCED_CONDITIONS.Dialog.Skill")
-            const attrs = Object.entries(ATTRIBUTES).map(([id, key]) => [id, `${attrLabel} ${t(key)}`])
-            const theirs = this.#target.actor.items.filter((i) => i.type === "skill").map((i) => [i.id, `${skillLabel} ${i.name}`])
+            // Attributes A-Z, then Skills A-Z (sorted by the trait name, not by the prefix).
+            const attrs = Object.entries(ATTRIBUTES).map(([id, key]) => [id, t(key)]).sort(by_label).map(([id, name]) => [id, `${attrLabel} ${name}`])
+            const theirs = this.#target.actor.items.filter((i) => i.type === "skill").map((i) => [i.id, i.name]).sort(by_label).map(([id, name]) => [id, `${skillLabel} ${name}`])
             fields += `<div class="swim-hc-lab swim-hc-lab2">${esc(t('SWIM.dialogue-selectSupportSkill'))}</div><div class="swim-hc-ctl"><select data-field="supportedId">${this.#options([...attrs, ...theirs], st.supportedId)}</select></div>`
             preview = esc(t('SWIM.testerWin.previewSupport', { name: this.#target.name }))
         } else {
