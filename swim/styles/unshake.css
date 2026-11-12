@@ -1,4 +1,4 @@
-/* Unshake window (scripts/swim_modules/unshake.js) and Unstun window (unstun.js) and Radiation Centre (radiation_centre.js) and Tester (tester.js), same classes `.swim-us*`.
+/* Unshake window (scripts/swim_modules/unshake.js) and Unstun window (unstun.js) and Radiation Centre (radiation_centre.js) and Tester (tester.js) and Travel Calculator (travel_calculator.js), same classes `.swim-us*`.
    Uses the building blocks of styles/health-centre.css (.swim-hc-*: patient card, method cards, preview, result, footer, buttons);
    only what is specific to Unshake is defined here. If the shared parts of HC / Soak / Unshake grow, move them to a common stylesheet. */
 
@@ -20,3 +20,9 @@
 /* method cards that can't be chosen */
 .swim-us .swim-hc-method.is-off { opacity: 0.45; cursor: not-allowed; }
 .swim-us .swim-hc-method.is-off:hover { background: var(--swim-hc-panel); }
+
+/* Travel Calculator: text input like the selects, wide selects for the table names */
+.swim-hc-ctl input[type="text"], .swim-hc-ctl input[type="text"]:focus {
+  height: 24px; width: 120px; padding: 0 6px; background: var(--swim-hc-bg); color: var(--swim-hc-text); border: 1px solid var(--swim-hc-line); border-radius: 5px;
+}
+.swim-tc .swim-hc-ctl.wide select { max-width: none; width: 100%; }

@@ -1,291 +1,288 @@
 /*******************************************
  * Travel Calculator Macro
- * version v.3.1.0
+ * version v.4.0.0 – one window (TravelApp) instead of three dialogs: the form, the encounter table selection and
+ * (without encounters) the result are views of the same window.
  * Made and maintained by SalieriC#8263
  * Future plan: Include random encounters as
  * per the core rules pg.144.
+ * Look: styles/unshake.css (shared `.swim-us*` classes) on top of styles/health-centre.css.
  ******************************************/
 import * as SWIM from '../constants.js'
 
-export async function travel_calculator() {
-    //Get Tables:
-    const enemiesTableName = game.settings.get('swim', 'encounterTableEnemies')
-    const obstaclesTableName = game.settings.get('swim', 'encounterTableObstacles')
-    const strangersTableName = game.settings.get('swim', 'encounterTableStrangers')
-    const treasuresTableName = game.settings.get('swim', 'encounterTableTreasures')
-    let enemiesTable = game.tables.getName(enemiesTableName)
-    let obstaclesTable = game.tables.getName(obstaclesTableName)
-    let strangersTable = game.tables.getName(strangersTableName)
-    let treasuresTable = game.tables.getName(treasuresTableName)
+const t = (key, data) => (data ? game.i18n.format(key, data) : game.i18n.localize(key))
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (m) => `&#${m.charCodeAt(0)};`)
+const TABLE_SETTINGS = [
+    ['encounterTableEnemies', 'SWIM.encounterTableEnemiesName'],
+    ['encounterTableObstacles', 'SWIM.encounterTableObstaclesName'],
+    ['encounterTableStrangers', 'SWIM.encounterTableStrangersName'],
+    ['encounterTableTreasures', 'SWIM.encounterTableTreasuresName'],
+]
 
-    //Set div class based on enabled official module:
-    const officialClass = await swim.get_official_class()
-
-    const defaultOptionsArray = SWIM.TRAVEL_DEFAULTS_ARRAY
-    const customOptionsArray = game.settings.get('swim', 'customTravelOptions') ? JSON.parse(game.settings.get('swim', 'customTravelOptions')) : []
-    const totalOptionsArray = [...defaultOptionsArray, ...customOptionsArray]
-
-    let options = ""
-    for (let each of totalOptionsArray) {
-        options += `<option value=${each.id}>${game.i18n.localize(each.name)}</option>`
-    }
-
-    let dialogueContent = `${officialClass}
-    <div>
-      <label for="distance"><b>${game.i18n.localize('SWIM.word-distance')}:</b></label>
-      <input type="text" id="distance" name="distance" required pattern="[0-9]+" autofocus />
-    </div>
-    <div>
-      <label for="unit"><b>${game.i18n.localize('SWIM.word-unit')}:</b></label>
-      <input type="radio" id="km" name="unit" value="km" checked>
-      <label for="km">${game.i18n.localize('SWIM.word-kilometres')}</label>
-      <input type="radio" id="miles" name="unit" value="miles">
-      <label for="miles">${game.i18n.localize('SWIM.word-miles')}</label>
-    </div>`
-    if (enemiesTable && obstaclesTable && strangersTable && treasuresTable) {
-        dialogueContent += `<div>
-        <label for="generateEncounters"><b>${game.i18n.localize("SWIM.dialogue-generateRandomEncounters")}:</b></label>
-        <input type="checkbox" id="generateEncounters" name="generateEncounters" checked= "true">
-        </div>`
-    }
-    dialogueContent += `<div>
-      <label for="method"><b>${game.i18n.localize('SWIM.dialogue-methodOfTravel')}:</b></label>
-      <select id="method" name="method">${options}</select>
-    </div>
-    <div>
-        <label for="stealthMode"><b>${game.i18n.localize("SWIM.dialogue-stealthmode")}:</b></label>
-        <input type="checkbox" id="stealthMode" name="stealthMode">
-        <p>${game.i18n.localize("SWIM.dialogue-stealthmodeHint")}</p>
-    </div>`
-    if (!enemiesTable || !obstaclesTable || !strangersTable || !treasuresTable) {
-        dialogueContent += `${game.i18n.localize("SWIM.dialogue-travelCalculatorWarning")}`;
-    }
-
-    // Add a clickable button for "SWIM.dialogue-updateEncounterTables"
-    dialogueContent += `<button id="updateEncounterTablesButton">${game.i18n.localize("SWIM.dialogue-updateEncounterTables")}</button>`;
-
-    dialogueContent += `</div>`;
-
-    new Dialog({
-        title: game.i18n.localize('SWIM.dialogue-travelCalculator'),
-        content: dialogueContent,
-        buttons: {
-            one: {
-                label: game.i18n.localize('SWIM.dialogue-accept'),
-                callback: (html) => {
-                    const distance = html.find('[name="distance"]').val();
-                    const unit = html.find('[name="unit"]:checked').val();
-                    const method = html.find('[name="method"]').val();
-                    let generateEncounters = false;
-
-                    if (enemiesTable && obstaclesTable && strangersTable && treasuresTable) {
-                        generateEncounters = html.find('#generateEncounters')[0].checked;
-                    }
-
-                    if (!distance || distance <= 0) {
-                        return ui.notifications.error(game.i18n.localize("SWIM.notification-invalidTravelDistance"));
-                    }
-
-                    let stealthMode = html.find('#stealthMode')[0].checked;
-                    calculate_results(distance, unit, method, generateEncounters, stealthMode, totalOptionsArray);
-                },
-            },
-            two: {
-                label: game.i18n.localize('SWIM.dialogue-cancel'),
-            },
-        },
-        default: 'one',
-        render: (html) => {
-            $("#swim-dialogue").css("height", "auto");
-
-            // Set up onclick function for the button
-            html.find('#updateEncounterTablesButton').click(() => {
-                // Call your function here
-                updateTables();
-            });
-        },
-    }, {
-        id: "swim-dialogue"
-    }).render(true);
-
-    function updateTables() {
-        let options = "";
-        // `game.tables` is a collection, not an array: copy to an array first (this also keeps the collection itself unsorted).
-        let availableTables = Array.from(game.folders.getName("[SWIM] Encounter Tables") ? swim.get_folder_content("[SWIM] Encounter Tables") : game.tables)
-        // Sort the tables alphabetically by name
-        availableTables.sort((a, b) => a.name.localeCompare(b.name));
-        for (let table of availableTables) {
-            options += `<option value="${table.name}">${table.name}</option>`;
-        }
-
-        let dialogueContent = `
-            <div>
-                <label for="selector1"><b>${game.i18n.localize("SWIM.encounterTableEnemiesName")}</b></label>
-                <select id="selector1" name="selector1">${options.replace(`value="${enemiesTableName}"`, `value="${enemiesTableName}" selected="selected" `)}</select>
-            </div>
-            <div>
-                <label for="selector2"><b>${game.i18n.localize("SWIM.encounterTableObstaclesName")}</b></label>
-                <select id="selector2" name="selector2">${options.replace(`value="${obstaclesTableName}"`, `value="${obstaclesTableName}" selected="selected" `)}</select>
-            </div>
-            <div>
-                <label for="selector3"><b>${game.i18n.localize("SWIM.encounterTableStrangersName")}</b></label>
-                <select id="selector3" name="selector3">${options.replace(`value="${strangersTableName}"`, `value="${strangersTableName}" selected="selected" `)}</select>
-            </div>
-            <div>
-                <label for="selector4"><b>${game.i18n.localize("SWIM.encounterTableTreasuresName")}</b></label>
-                <select id="selector4" name="selector4">${options.replace(`value="${treasuresTableName}"`, `value="${treasuresTableName}" selected="selected" `)}</select>
-            </div>
-        `;
-
-        const dialogueOptions = {
-            width: 600,
-        };
-
-        new Dialog({
-            title: game.i18n.localize("SWIM.dialogue-selectEncounterTables"),
-            content: dialogueContent,
-            buttons: {
-                confirm: {
-                    label: game.i18n.localize('SWIM.button-proceed'),
-                    callback: async (html) => {
-                        const selectedEnemiesTableName = html.find('[name="selector1"]').val();
-                        const selectedObstaclesTableName = html.find('[name="selector2"]').val();
-                        const selectedStrangersTableName = html.find('[name="selector3"]').val();
-                        const selectedTreasuresTableName = html.find('[name="selector4"]').val();
-                        await game.settings.set('swim', 'encounterTableEnemies', selectedEnemiesTableName)
-                        await game.settings.set('swim', 'encounterTableObstacles', selectedObstaclesTableName)
-                        await game.settings.set('swim', 'encounterTableStrangers', selectedStrangersTableName)
-                        await game.settings.set('swim', 'encounterTableTreasures', selectedTreasuresTableName)
-                        enemiesTable = game.tables.getName(enemiesTableName)
-                        obstaclesTable = game.tables.getName(obstaclesTableName)
-                        strangersTable = game.tables.getName(strangersTableName)
-                        treasuresTable = game.tables.getName(treasuresTableName)
-                    },
-                },
-            },
-            default: 'confirm',
-        }, dialogueOptions).render(true);
-
-    }
+/** Are all four encounter tables set up (read fresh from the settings)? */
+function tables_ready() {
+    return TABLE_SETTINGS.every(([setting]) => !!game.tables.getName(game.settings.get('swim', setting)))
 }
 
-async function calculate_results(distance, unit, method, generateEncounters, stealthMode, totalOptionsArray) {
-    //Have to calculate in retarded units unfortunately:
-    const originalDistance = distance
-    if (unit === 'km') {
-        distance = distance * 0.621371192237334;
-    }
-
-    let speedPerHour = totalOptionsArray.find(o => o.id === method).speedPerHour
-
-    // Calculate the result based on distance and speedPerHour
+/** Journey time for a distance (in the chosen unit) at a speed (miles per hour). Pure. */
+export function travel_times(distance, unit, speedPerHour) {
+    //Have to calculate in imperial units unfortunately:
+    const miles = unit === 'km' ? distance * 0.621371192237334 : distance
     const speedPerDay = speedPerHour * 8
-    let result = distance / speedPerDay;
-    let resultRaw = distance / speedPerHour
-    //Convert result to days and hours:
-    let days = Math.floor(result);
-    const travelDays = days
-    let hours = Math.floor((result - days) * 8);
-    let resultText = days + ` ${game.i18n.localize("SWIM.word-days")}` + ", " + hours + ` ${game.i18n.localize("SWIM.word-hours")}`
-
-    // Convert resultRaw to days and hours
-    days = Math.floor(resultRaw / 24);
-    hours = Math.floor(resultRaw % 24);
-
-    let resultTextRaw = days + ` ${game.i18n.localize("SWIM.word-days")}` + ", " + hours + ` ${game.i18n.localize("SWIM.word-hours")}`;
-
-    show_results(originalDistance, unit, method, resultText, resultTextRaw, generateEncounters, travelDays, stealthMode, totalOptionsArray)
+    const result = miles / speedPerDay
+    const resultRaw = miles / speedPerHour
+    const days = Math.floor(result)
+    const hours = Math.floor((result - days) * 8)
+    const rawDays = Math.floor(resultRaw / 24)
+    const rawHours = Math.floor(resultRaw % 24)
+    const dayWord = t("SWIM.word-days")
+    const hourWord = t("SWIM.word-hours")
+    return {
+        travelDays: days,
+        resultText: `${days} ${dayWord}, ${hours} ${hourWord}`,
+        resultTextRaw: `${rawDays} ${dayWord}, ${rawHours} ${hourWord}`,
+    }
 }
 
-async function show_results(distance, unit, method, resultText, resultTextRaw, generateEncounters, travelDays, stealthMode, totalOptionsArray) {
-    const officialClass = await swim.get_official_class()
-    if (generateEncounters) {
-        //Draw cards, evaluate them and roll for encounters here.
-        //Then create a journal entry with the journey and its encounters which also has an image page and then show this image to all players.
+export async function travel_calculator() {
+    await TravelApp.open()
+}
 
-        //First shuffle the deck and draw cards:
-        swim.shuffle_deck(false, false)
-        let cardsToDraw = travelDays
-        if (cardsToDraw >= 54) { cardsToDraw = 54 }
-        else if (cardsToDraw === 0) { cardsToDraw = 1 } //Draw at least one card if encounters are requested.
-        const cards = swim.draw_cards(cardsToDraw, stealthMode)
+function btn(action, label, { go = false, disabled = false } = {}) {
+    return `<button type="button" class="swim-hc-btn ${go ? 'is-go' : ''}" data-action="${action}" ${disabled ? 'disabled' : ''}>${esc(label)}</button>`
+}
 
-        //Now evaluate which cards are face cards:
-        const cardsEvaluated = evaluateCards(cards)
+class TravelApp extends Application {
+    #state
+    #options
+    static #current = null
 
-        //Now create the jorunal entry, first the prerequisites:
-        let folderId = game.folders.getName(`[SWIM] ${game.i18n.localize("SWIM.word-Journeys")}`)?.id
-        if (!folderId) {
-            //Create folder if non-existent:
-            const newFolder = await Folder.create({
-                "name": "[SWIM] Journeys",
-                "sorting": "a",
-                "folder": null,
-                "type": "JournalEntry",
-                "sort": 0,
-                "color": null,
-                "flags": {
-                    "swim": {
-                        "isJourneyFolder": true
-                    }
-                }
-            })
-            folderId = newFolder.id
-        }
-        let numCurrJourneys = game.folders.get(folderId).contents.length
-        const journalContent = await createJournalContent(cardsEvaluated, numCurrJourneys, folderId, method, officialClass, distance, unit, resultText, resultTextRaw, totalOptionsArray)
-        const journalEntry = await JournalEntry.create(journalContent)
-
-        // Show image to all and - for the GM - the Journal:
-        const ip = new ImagePopout(totalOptionsArray.find(o => o.id === method).image).render(true);
-        ip.options.title = game.i18n.localize(totalOptionsArray.find(o => o.id === method).name)
-        if (stealthMode === false) {
-            ip.shareImage();
-            const sfx = totalOptionsArray.find(o => o.id === method).sfx
-            const volume = game.settings.get('swim', 'defaultVolume')
-            if (sfx) {
-                swim.play_sfx(sfx, volume, true)
-            }
-        }
-        await swim.wait('250')
-        console.log(journalEntry.pages.find(j => j.type === "text"))
-        const pageID = journalEntry.pages.find(j => j.type === "text")?.id
-        console.log(pageID)
-        journalEntry.sheet.render(true, { pageId: pageID, sheetMode: JournalSheet.VIEW_MODES.SINGLE });
-        //journalEntry.sheet.render(true)
-    } else {
-        const ip = new ImagePopout(totalOptionsArray.find(o => o.id === method).image).render(true);
-        ip.options.title = game.i18n.localize(totalOptionsArray.find(o => o.id === method).name)
-        if (!stealthMode) {
-            ip.shareImage();
-            const sfx = totalOptionsArray.find(o => o.id === method).sfx
-            const volume = game.settings.get('swim', 'defaultVolume')
-            if (sfx) {
-                swim.play_sfx(sfx, volume, true)
-            }
-        }
-
-        //Give a little bit of time to show the dialogue above the image for the GM:
-        await swim.wait('250')
-
-        new Dialog({
-            title: game.i18n.localize('SWIM.dialogue-travelCalculator'),
-            content: `${game.i18n.format('SWIM.dialogue-travelCalculatorResults', {
-                officialClass,
-                distance,
-                unit,
-                resultText,
-                resultTextRaw,
-                method: game.i18n.localize(totalOptionsArray.find(o => o.id === method).name)
-            })} </div>`,
-            buttons: {
-                one: {
-                    label: game.i18n.localize("SWIM.dialogue-accept"),
-                }
-            },
-            default: "one",
-        }).render(true);
+    static get defaultOptions() {
+        return foundry.utils.mergeObject(super.defaultOptions, {
+            id: 'swim-travel',
+            classes: ['swim-hc-app', 'swim-us-app'],
+            width: 470,
+            height: 'auto',
+            resizable: false,
+        })
     }
+
+    get title() { return t('SWIM.dialogue-travelCalculator') }
+
+    static async open() {
+        await TravelApp.#current?.close()
+        const app = new TravelApp()
+        TravelApp.#current = app
+        app.render(true)
+    }
+
+    constructor() {
+        super()
+        const custom = game.settings.get('swim', 'customTravelOptions') ? JSON.parse(game.settings.get('swim', 'customTravelOptions')) : []
+        this.#options = [...SWIM.TRAVEL_DEFAULTS_ARRAY, ...custom]
+        this.#state = {
+            view: 'form', distance: '', unit: 'km', method: this.#options[0]?.id, encounters: true, stealth: false,
+            tables: {}, result: null, busy: false,
+        }
+    }
+
+    /* ------------------------------- rendering ------------------------------ */
+
+    #selectHtml(field, items, selected) {
+        return `<select data-field="${field}">${items.map(([v, l]) => `<option value="${esc(v)}" ${v === selected ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select>`
+    }
+
+    #formView() {
+        const st = this.#state
+        const ready = tables_ready()
+        const methods = this.#options.map((o) => [o.id, t(o.name)])
+        const unit = (id, label) => `<div class="swim-hc-rate-opt ${st.unit === id ? 'is-on' : ''}" data-action="unit" data-unit="${id}" tabindex="0" role="radio" aria-checked="${st.unit === id}">${esc(label)}</div>`
+        let body = `<div class="swim-hc-lab">${esc(t('SWIM.word-distance'))}</div>
+            <div class="swim-hc-ctl"><input type="text" inputmode="decimal" data-field="distance" value="${esc(st.distance)}" autocomplete="off"></div>
+            <div class="swim-hc-lab swim-hc-lab2">${esc(t('SWIM.word-unit'))}</div>
+            <div class="swim-hc-rate swim-us-two">${unit('km', t('SWIM.word-kilometres'))}${unit('miles', t('SWIM.word-miles'))}</div>
+            <div class="swim-hc-lab swim-hc-lab2">${esc(t('SWIM.dialogue-methodOfTravel'))}</div>
+            <div class="swim-hc-ctl">${this.#selectHtml('method', methods, st.method)}</div>
+            <div class="swim-hc-ctl">`
+        if (ready) {
+            body += `<label class="swim-hc-check"><input type="checkbox" data-field="encounters" ${st.encounters ? 'checked' : ''}> <span>${esc(t('SWIM.dialogue-generateRandomEncounters'))}</span></label>`
+        }
+        body += `<label class="swim-hc-check"><input type="checkbox" data-field="stealth" ${st.stealth ? 'checked' : ''}> <span>${esc(t('SWIM.dialogue-stealthmode'))}</span></label></div>
+            <div class="swim-hc-preview">${esc(t('SWIM.dialogue-stealthmodeHint'))}${ready ? '' : `<div>${t('SWIM.dialogue-travelCalculatorWarning')}</div>`}</div>`
+        const foot = `${btn('tables', t('SWIM.travel.tables'))}<span class="swim-hc-spacer"></span>${btn('cancel', t('SWIM.picker.cancel'))}${btn('calculate', t('SWIM.travel.calculate'), { go: true, disabled: st.busy })}`
+        return { body, foot }
+    }
+
+    #tablesView() {
+        const st = this.#state
+        // `game.tables` is a collection, not an array: copy to an array first (this also keeps the collection itself unsorted).
+        const available = Array.from(game.folders.getName("[SWIM] Encounter Tables") ? swim.get_folder_content("[SWIM] Encounter Tables") : game.tables)
+            .sort((a, b) => a.name.localeCompare(b.name))
+        const names = available.map((tb) => [tb.name, tb.name])
+        let body = `<div class="swim-hc-result"><p>${esc(t('SWIM.travel.tablesHint'))}</p></div>`
+        for (const [setting, label] of TABLE_SETTINGS) {
+            const current = st.tables[setting] ?? game.settings.get('swim', setting)
+            const items = names.some(([n]) => n === current) ? names : [[current, current], ...names]
+            body += `<div class="swim-hc-lab swim-hc-lab2">${esc(t(label).replace(/:\s*$/, ''))}</div><div class="swim-hc-ctl wide">${this.#selectHtml(`table:${setting}`, items, current)}</div>`
+        }
+        return { body, foot: `<span class="swim-hc-spacer"></span>${btn('back', t('SWIM.travel.back'))}${btn('saveTables', t('SWIM.travel.saveTables'), { go: true })}` }
+    }
+
+    #resultView() {
+        const r = this.#state.result
+        const line = (label, value) => `<p><b>${esc(label)}:</b> ${esc(value)}</p>`
+        const body = `<div class="swim-hc-result">${line(t('SWIM.travel.resDistance'), `${r.distance} ${r.unit}`)}${line(t('SWIM.travel.resMethod'), r.method)}` +
+            `${line(t('SWIM.travel.resDays'), r.resultText)}${line(t('SWIM.travel.resNonStop'), r.resultTextRaw)}</div>` +
+            `<div class="swim-hc-preview">${esc(t('SWIM.travel.resNote'))}</div>`
+        return { body, foot: `<span class="swim-hc-spacer"></span>${btn('close', t('SWIM.travel.close'), { go: true })}` }
+    }
+
+    async _renderInner() {
+        const st = this.#state
+        const view = st.view === 'tables' ? this.#tablesView() : st.view === 'result' ? this.#resultView() : this.#formView()
+        return $(`<div class="swim-hc swim-us swim-tc"><div class="swim-hc-body">${view.body}</div><footer class="swim-hc-foot">${view.foot}</footer></div>`)
+    }
+
+    /* ------------------------------- interaction ----------------------------- */
+
+    activateListeners(html) {
+        super.activateListeners(html)
+        html.on('click', '[data-action]', (ev) => {
+            if (ev.target.closest('select, option, input, label')) { return }
+            this.#onAction(ev)
+        })
+        html.on('keydown', '[data-action]', (ev) => {
+            if ((ev.key === 'Enter' || ev.key === ' ') && ev.currentTarget.tagName !== 'BUTTON' && ev.target === ev.currentTarget) {
+                ev.preventDefault()
+                this.#onAction(ev)
+            }
+        })
+        html.on('keydown', 'input[data-field="distance"]', (ev) => {
+            if (ev.key === 'Enter') { ev.preventDefault(); this.#state.distance = ev.currentTarget.value; this.#calculate() }
+        })
+        // Values are kept in the state without re-rendering (that would close an opened dropdown).
+        html.on('change input', '[data-field]', (ev) => {
+            const el = ev.currentTarget
+            const field = el.dataset.field
+            const value = el.type === 'checkbox' ? el.checked : el.value
+            if (field.startsWith('table:')) { this.#state.tables[field.slice(6)] = value } else { this.#state[field] = value }
+        })
+        html.find('input[data-field="distance"]').trigger('focus')
+    }
+
+    async #onAction(ev) {
+        const el = ev.currentTarget
+        const st = this.#state
+        if (st.busy || el.disabled) { return }
+        switch (el.dataset.action) {
+            case 'unit': if (st.unit === el.dataset.unit) { return } st.unit = el.dataset.unit; break
+            case 'tables': st.view = 'tables'; break
+            case 'back': st.view = 'form'; st.tables = {}; break
+            case 'saveTables':
+                for (const [setting] of TABLE_SETTINGS) {
+                    if (st.tables[setting] !== undefined) { await game.settings.set('swim', setting, st.tables[setting]) }
+                }
+                st.tables = {}
+                st.view = 'form'
+                break
+            case 'calculate': return this.#calculate()
+            case 'cancel': case 'close': return this.close()
+            default: return
+        }
+        this.render(false)
+    }
+
+    async #calculate() {
+        const st = this.#state
+        const distance = parseFloat(String(st.distance).replace(',', '.'))
+        if (!Number.isFinite(distance) || distance <= 0) {
+            return ui.notifications.error(t("SWIM.notification-invalidTravelDistance"))
+        }
+        const option = this.#options.find((o) => o.id === st.method)
+        if (!option) { return ui.notifications.error(t("SWIM.notification.generalErrorMsg")) }
+        const times = travel_times(distance, st.unit, option.speedPerHour)
+        const encounters = st.encounters && tables_ready()
+        st.busy = true
+        try {
+            if (encounters) {
+                await create_journey(distance, st.unit, option, times, st.stealth, this.#options)
+                return this.close()
+            }
+            show_travel_image(option, st.stealth)
+            //Give a little bit of time to show the window above the image for the GM:
+            await swim.wait('250')
+            st.result = { distance, unit: st.unit, method: t(option.name), resultText: times.resultText, resultTextRaw: times.resultTextRaw }
+            st.view = 'result'
+            st.busy = false
+            await this.render(false)
+            this.bringToTop()
+        } finally {
+            st.busy = false
+        }
+    }
+
+    async close(options) {
+        if (TravelApp.#current === this) { TravelApp.#current = null }
+        return super.close(options)
+    }
+}
+
+/** Shows the image of the travel method (to everybody unless in stealth mode, then with the sound). */
+function show_travel_image(option, stealthMode) {
+    const ip = new ImagePopout(option.image).render(true)
+    ip.options.title = t(option.name)
+    if (!stealthMode) {
+        ip.shareImage()
+        const volume = game.settings.get('swim', 'defaultVolume')
+        if (option.sfx) { swim.play_sfx(option.sfx, volume, true) }
+    }
+}
+
+/** Draws the cards, evaluates the encounters, creates the journey journal entry and opens it. */
+async function create_journey(distance, unit, option, times, stealthMode, totalOptionsArray) {
+    const { travelDays, resultText, resultTextRaw } = times
+    const method = option.id
+    const officialClass = await swim.get_official_class()
+    //Draw cards, evaluate them and roll for encounters here.
+    //Then create a journal entry with the journey and its encounters which also has an image page and then show this image to all players.
+
+    //First shuffle the deck and draw cards:
+    swim.shuffle_deck(false, false)
+    let cardsToDraw = travelDays
+    if (cardsToDraw >= 54) { cardsToDraw = 54 }
+    else if (cardsToDraw === 0) { cardsToDraw = 1 } //Draw at least one card if encounters are requested.
+    const cards = swim.draw_cards(cardsToDraw, stealthMode)
+
+    //Now evaluate which cards are face cards:
+    const cardsEvaluated = evaluateCards(cards)
+
+    //Now create the jorunal entry, first the prerequisites:
+    let folderId = game.folders.getName(`[SWIM] ${game.i18n.localize("SWIM.word-Journeys")}`)?.id
+    if (!folderId) {
+        //Create folder if non-existent:
+        const newFolder = await Folder.create({
+            "name": "[SWIM] Journeys",
+            "sorting": "a",
+            "folder": null,
+            "type": "JournalEntry",
+            "sort": 0,
+            "color": null,
+            "flags": {
+                "swim": {
+                    "isJourneyFolder": true
+                }
+            }
+        })
+        folderId = newFolder.id
+    }
+    let numCurrJourneys = game.folders.get(folderId).contents.length
+    const journalContent = await createJournalContent(cardsEvaluated, numCurrJourneys, folderId, method, officialClass, distance, unit, resultText, resultTextRaw, totalOptionsArray)
+    const journalEntry = await JournalEntry.create(journalContent)
+
+    // Show image to all and - for the GM - the Journal:
+    show_travel_image(option, stealthMode)
+    await swim.wait('250')
+    const pageID = journalEntry.pages.find(j => j.type === "text")?.id
+    journalEntry.sheet.render(true, { pageId: pageID, sheetMode: JournalSheet.VIEW_MODES.SINGLE });
 }
 
 function evaluateCards(cards, replaceJokers = false, useAllCards = false) {
