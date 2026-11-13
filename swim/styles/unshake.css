@@ -79,3 +79,30 @@
 .swim-ch-pair label { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 6px; }
 .swim-ch-pair input[type="number"] { width: 70px; height: 24px; padding: 0 6px; text-align: center; background: var(--swim-hc-bg); color: var(--swim-hc-text); border: 1px solid var(--swim-hc-line); border-radius: 5px; }
 .swim-us .swim-hc-body { min-height: 0; }
+
+/* Token Vision (scripts/swim_modules/token_vision.js) */
+.swim-tv-opt { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; line-height: 1.15; min-height: 46px; }
+.swim-tv-opt i { color: var(--swim-hc-gold); font-size: 14px; }
+.swim-tv-opt.is-on i { color: #fff; }
+.swim-tv-opt.is-off { opacity: 0.45; cursor: not-allowed; }
+.swim-hc-rate.swim-tv-five { grid-template-columns: repeat(5, 1fr); }
+.swim-tv-multi { flex: 1; min-width: 0; }
+.swim-tv-note, .swim-tv-warn { margin: 0 0 8px; }
+.swim-tv-warn { color: #ffb3ad; border-color: rgba(201, 87, 79, 0.5); }
+.swim-tv-line { font-size: 12px; line-height: 1.6; }
+.swim-tv-line img { vertical-align: middle; border: 0; }
+.swim-tv-hint { margin: 4px 0; font-size: 12px; color: var(--swim-hc-dim); font-style: italic; }
+.swim-tv-swatches { display: inline-flex; gap: 6px; }
+.swim-tv-swatch { width: 22px; height: 22px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.35); cursor: pointer; }
+.swim-tv-swatch:hover { border-color: #fff; }
+.swim-tv-swatch.is-on { border-color: var(--swim-hc-gold); box-shadow: 0 0 0 2px rgba(224, 178, 74, 0.25); }
+.swim-hc-ctl input[type="color"] { width: 38px; height: 24px; padding: 0; background: var(--swim-hc-bg); border: 1px solid var(--swim-hc-line); border-radius: 5px; }
+.swim-tv-adv { margin-top: 8px; padding: 6px 8px; background: var(--swim-hc-panel); border: 1px solid var(--swim-hc-line); border-radius: 6px; }
+.swim-tv-adv summary { cursor: pointer; font-weight: 600; }
+.swim-tv-adv h5 { margin: 8px 0 4px; color: var(--swim-hc-dim); font-weight: 600; border: 0; }
+.swim-tv-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; margin-top: 6px; }
+.swim-tv-grid2 label { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.swim-tv-grid2 select, .swim-tv-grid2 select:focus { max-width: 150px; height: 24px; background: var(--swim-hc-bg); color: var(--swim-hc-text); border: 1px solid var(--swim-hc-line); border-radius: 5px; }
+.swim-tv-grid2 input[type="number"], .swim-tv-dm input[type="number"] { width: 70px; height: 24px; padding: 0 6px; text-align: center; background: var(--swim-hc-bg); color: var(--swim-hc-text); border: 1px solid var(--swim-hc-line); border-radius: 5px; }
+.swim-tv-dm { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 4px; }
+.swim-tv-adv input:disabled, .swim-tv-adv select:disabled { opacity: 0.45; }

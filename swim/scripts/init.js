@@ -13,6 +13,7 @@ import { effect_hooks } from "./hooks/effect_hooks.js"
 import { combat_hooks } from "./hooks/combat_hooks.js"
 import { brsw_hooks } from "./hooks/brsw_hooks.js"
 import { sfx_hooks } from "./hooks/sfx_hooks.js"
+import { vision_hooks } from "./hooks/vision_hooks.js"
 import { brsw_actions_setup } from "./helpers/brsw_actions_setup.js"
 import { raise_calculator } from './helpers/raise-calculator.js'
 import { tester_gm } from './swim_modules/tester.js';
@@ -76,6 +77,7 @@ Hooks.on(`ready`, () => {
     combat_hooks()
     brsw_hooks()
     sfx_hooks()
+    vision_hooks()
 
     //Setup actions for BRSW:
     if (game.modules.get('betterrolls-swade2')?.active && game.settings.get('swim', 'br2Support') === true) {
