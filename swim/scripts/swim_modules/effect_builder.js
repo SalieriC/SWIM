@@ -6,6 +6,7 @@
  * the standard rules and increased duration from the
  * concentration edge.
  *
+ * v. 9.0.0 – window (EffectBuilderApp) with a searchable power list instead of a Dialog.
  * v. 8.0.0
  * By SalieriC#8263; dialogue resizing by Freeze#2689.
  *
@@ -18,18 +19,75 @@
  ******************************************************/
 import * as SWIM from '../constants.js'
 import { execute_as_gm } from "../helpers/socket_helper.js"
+import { SwimWindow, t, esc, btn, token_img, tokens_header, rate_opt, checkbox } from "../helpers/swim_window.js"
 
 // ============================================================================
-// PART 1: Dialogue Creation
+// PART 1: The window (EffectBuilderApp)
+// v. 9.0.0 – window instead of a Dialog: searchable power list, state driven options.
 // ============================================================================
 
 // SWADE system lang keys use the 3-letter form (e.g. SWADE.AttrAgi), not the full attribute name.
-const ATTRIBUTE_LANG_KEYS = {
-    agility: "SWADE.AttrAgi",
-    smarts: "SWADE.AttrSma",
-    spirit: "SWADE.AttrSpr",
-    strength: "SWADE.AttrStr",
-    vigor: "SWADE.AttrVig"
+const ATTRIBUTES = [
+    ['agility', "SWADE.AttrAgi"],
+    ['smarts', "SWADE.AttrSma"],
+    ['spirit', "SWADE.AttrSpr"],
+    ['strength', "SWADE.AttrStr"],
+    ['vigor', "SWADE.AttrVig"],
+]
+
+const ATTRIBUTE_KEYS = Object.fromEntries(ATTRIBUTES)
+
+/** The powers the Effect Builder can handle: [value, lang key of the label]. */
+export const POWERS = [
+    ['boost', 'SWIM.power-boostTrait'], ['lower', 'SWIM.power-lowerTrait'],
+    ['arcaneProtection', 'SWIM.power-arcaneProtection'], ['beastFriend', 'SWIM.power-beastFriend'], ['blind', 'SWIM.power-blind'],
+    ['burrow', 'SWIM.power-burrow'], ['conceal', 'SWIM.power-concealArcana'], ['confusion', 'SWIM.power-confusion'],
+    ['damageField', 'SWIM.power-damageField'], ['darksight', 'SWIM.power-darksight'], ['deflection', 'SWIM.power-deflection'],
+    ['disguise', 'SWIM.power-disguise'], ['detect', 'SWIM.power-detectArcana'], ['burden-tes', 'SWIM.power-easeBurden-tes'],
+    ['elementalManipulation', 'SWIM.power-elementalManipulation'], ['empathy', 'SWIM.power-empathy'],
+    ['environmentalProtection', 'SWIM.power-environmentalProtection'], ['farsight', 'SWIM.power-farsight'], ['fly', 'SWIM.power-fly'],
+    ['growth', 'SWIM.power-growth'], ['shrink', 'SWIM.power-shrink'], ['intangibility', 'SWIM.power-intangibility'],
+    ['invisibility', 'SWIM.power-invisibility'], ['light', 'SWIM.power-light'], ['mindLink', 'SWIM.power-mindLink'],
+    ['protection', 'SWIM.power-protection'], ['puppet', 'SWIM.power-puppet'], ['relief', 'SWIM.power-relief'],
+    ['silence', 'SWIM.power-silence'], ['sloth', 'SWIM.power-sloth'], ['slumber', 'SWIM.power-slumber'], ['smite', 'SWIM.power-smite'],
+    ['speakLanguage', 'SWIM.power-speakLanguage'], ['speed', 'SWIM.power-speed'], ['wallWalker', 'SWIM.power-wallWalker'],
+    ['warriorsGift', 'SWIM.power-warriorsGift'], ['other', 'SWIM.power-other'],
+]
+const SUPPORTED = new Set(POWERS.map(([v]) => v))
+// A power item of the system covers several builder powers (one SWID, two effects):
+const GROUPS = { boost: ['boost', 'lower'], growth: ['growth', 'shrink'], speed: ['speed', 'sloth'], detect: ['detect', 'conceal'], silence: ['silence'] }
+// The SWID list maps the combined Sound/Silence power to 'sound', the builder offers 'silence':
+const ALIASES = { sound: 'silence' }
+// Options per power (what the old dialog showed):
+const RAISE = new Set(['boost', 'lower', 'beastFriend', 'invisibility', 'arcaneProtection', 'burrow', 'darksight', 'detect', 'disguise', 'elementalManipulation',
+    'empathy', 'farsight', 'fly', 'light', 'mindLink', 'puppet', 'relief', 'silence', 'speakLanguage', 'wallWalker', 'warriorsGift', 'blind', 'other'])
+const NOTHING = new Set(['sloth', 'confusion', 'environmentalProtection', 'intangibility', 'slumber'])
+
+/** The power that is preselected: the item's SWID if the builder supports that power, 'other' for any other power item, 'boost' without item. Pure. */
+export function resolve_default_power(item) {
+    if (!item) { return 'boost' }
+    const mapped = SWIM.SWID_POWER_LIST[item.system?.swid]
+    const power = ALIASES[mapped] ?? mapped
+    return power && SUPPORTED.has(power) ? power : 'other'
+}
+
+/** Is the (item's) power the selected one, or the same SWADE power with another effect (Boost/Lower, Growth/Shrink, ...)? Pure. */
+export function item_matches_power(item, selected) {
+    const base = resolve_default_power(item)
+    if (base === 'other') { return false }
+    return base === selected || (GROUPS[base] ?? []).includes(selected)
+}
+
+const normalize = (s) => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim()
+
+/** Filters `[value, label]` entries by a search text (all words must be contained in the label or the value; accents/case ignored). Pure. */
+export function filter_powers(entries, query) {
+    const words = normalize(query).split(/\s+/).filter(Boolean)
+    if (!words.length) { return entries }
+    return entries.filter(([value, label]) => {
+        const hay = `${normalize(label)} ${normalize(value)}`
+        return words.every((w) => hay.includes(w))
+    })
 }
 
 export async function effect_builder(data = false) {
@@ -40,181 +98,313 @@ export async function effect_builder(data = false) {
         ui.notifications.error(game.i18n.localize("SWIM.notification-selectSingleTargetMultiToken"))
         return
     }
-
-    const maintID = swim.generate_id()
-    const targetsArray = Array.from(game.user.targets)
-    const casterIsTarget = targetsArray.find(t => t.id === token.id)
-    const noPP = game.settings.get("swim", "noPowerPoints")
-    const officialClass = await swim.get_official_class()
-
-    let duration = 5
-    const concentration = token.actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-concentration") && i.type === "edge")
-    if (concentration) duration = duration * 2
-
-    const defaultPower = item && SWIM.SWID_POWER_LIST[item.system.swid] ? SWIM.SWID_POWER_LIST[item.system.swid] : (item ? 'other' : 'boost')
-    const { options, traitOptions, allHTML, targetIDs } = generateOptionsAndHTML(defaultPower, targets)
-    const initialContent = getDialogContent(token, defaultPower, allHTML, targets, noPP, item)
-
-    new Dialog({
-        title: game.i18n.localize("SWIM.dialogue-powerEffectBuilderTitle"),
-        content: game.i18n.format("SWIM.dialogue-powerEffectBuilderContent", {
-            class: officialClass, options, text: initialContent, caster: token.name
-        }),
-        buttons: {
-            one: {
-                label: `<i class="fas fa-magic"></i> ${game.i18n.localize("SWIM.button-proceed")}`,
-                callback: async (html) => {
-                    await processEffectSelection(html, token, targets, targetIDs, maintID, casterIsTarget, noPP, concentration, item)
-                }
-            }
-        },
-        render: ([dialogContent]) => {
-            $("#power-effect-dialogue").css("height", "auto")
-            const select = dialogContent.querySelector(`select[id="selected_power"]`)
-            select.focus()
-            select.addEventListener("input", (event) => {
-                const form = event.target.closest("form")
-                form.querySelector(".effectContent").innerHTML = getDialogContent(token, event.target.value, allHTML, targets, noPP)
-            })
-        },
-        default: "one",
-    }, { id: "power-effect-dialogue" }).render(true)
+    await SwimWindow.show(new EffectBuilderApp(token, Array.from(targets), item))
 }
 
-// ============================================================================
-// Helper: Process effect selection from dialog
-// ============================================================================
+class EffectBuilderApp extends SwimWindow {
+    #token
+    #targets
+    #item
+    #noPP
+    #concentration
+    #maintID
+    #focusSearch = true
 
-async function processEffectSelection(html, token, targets, targetIDs, maintID, casterIsTarget, noPP, concentration, item) {
-    const selectedPower = html.find(`#selected_power`)[0].value
-    const usePowerIcons = game.settings.get("swim", "effectBuilder-usePowerIcons")
-    let durationSeconds, durationRounds = 5
-    const powerName = selectedPower === "other" ? html.find(`#power_choice`)[0].value : game.i18n.localize(`SWIM.power-${selectedPower}`)
-    const power = item ? item : token.actor.items.find(p => p.name.toLowerCase().includes(powerName.toLowerCase()) && p.type === "power")
-    const icon = power ? power.img : false
-    const sceneID = game.scenes.current.id
-
-    const data = {
-        sceneID, targetIDs, casterID: token.id, maintenanceID: maintID,
-        type: selectedPower, powerID: power?._id,
-        icon: usePowerIcons ? icon : false,
-        duration: 5, durationRounds, durationSeconds, noPP, concentration
+    static get defaultOptions() {
+        return foundry.utils.mergeObject(super.defaultOptions, { id: 'swim-effect-builder', width: 520 })
     }
 
-    // Collect power-specific data from dialog
-    switch (selectedPower) {
-        case "boost":
-        case "lower":
-            const traits = []
-            for (const target of targets) {
-                const targetTraitName = html.find(`#${target.id}`)[0].value
-                traits.push({targetID: target.id, traitName: targetTraitName})
-            }
-            data.degree = html.find(`#raise`)[0].checked ? "raise" : "success"
-            data.traits = traits
-            break
+    get title() { return t('SWIM.dialogue-powerEffectBuilderTitle') }
 
-        case "protection":
-            data.bonus = Number(html.find(`#protectionAmount`)[0].value)
-            data.protectionType = html.find("input[name=type_choice]:checked").val()
-            break
-
-        case "smite":
-            data.bonus = Number(html.find(`#damageBonus`)[0].value)
-            const weapons = []
-            for (const target of targets) {
-                const targetWeaponName = html.find(`#${target.id}`)[0].value
-                weapons.push({targetID: target.id, weaponName: targetWeaponName})
-            }
-            data.weapons = weapons
-            break
-
-        case "growth":
-        case "shrink":
-            data.change = Number(html.find(`#sizeAmount`)[0].value)
-            break
-
-        case "sloth":
-            data.change = 0.5
-            data.duration = 1
-            break
-
-        case "speed":
-            data.change = 2
-            data.quickness = html.find(`#quickness`)[0].checked
-            break
-
-        case "deflection":
-            data.deflectionType = html.find(`#deflectionOption`)[0].value
-            break
-
-        case "burden-tes":
-            data.change = Number(html.find(`#die_steps`)[0].value)
-            if (data.change === 0) {
-                ui.notifications.warn(game.i18n.localize("SWIM.notififaction.enterNumberUnequalZero"))
-                return
-            }
-            data.durationNoCombat = concentration ? 20 * 60 : 10 * 60
-            break
-
-        case "beastFriend":
-        case "invisibility":
-        case "arcaneProtection":
-        case "burrow":
-        case "darksight":
-        case "conceal":
-        case "detect":
-        case "disguise":
-        case "elementalManipulation":
-        case "empathy":
-        case "environmentalProtection":
-        case "farsight":
-        case "fly":
-        case "intangibility":
-        case "light":
-        case "mindLink":
-        case "puppet":
-        case "relief":
-        case "slumber":
-        case "silence":
-        case "speakLanguage":
-        case "wallWalker":
-        case "warriorsGift":
-        case "blind":
-            data.degree = html.find(`#raise`)[0].checked ? "raise" : "success"
-            if (["beastFriend", "invisibility", "relief"].includes(selectedPower)) {
-                data.caster = game.canvas.tokens.controlled[0].name
-            }
-            if (selectedPower === "burrow") data.strong = html.find(`#strong`)[0].checked
-            if (selectedPower === "damageField") data.damage = html.find(`#damage`)[0].checked
-            if (selectedPower === "conceal") data.strong = html.find(`#strong`)[0].checked
-            break
-
-        case "confusion":
-        case "damageField":
-            break
-
-        case "other":
-            data.degree = html.find(`#raise`)[0].checked ? "raise" : "success"
-            data.durationRounds = noPP ? Number(999999999999999) : Number(html.find(`#duration_rounds`)[0].value)
-            data.durationSeconds = noPP ? Number(999999999999999) : (Number(html.find(`#duration_minutes`)[0].value) / 60)
-            if (data.durationRounds === 0 && data.durationSeconds > 0) {
-                data.durationRounds = data.durationSeconds * 6
-            } else if (data.durationSeconds === 0 && data.durationRounds > 0) {
-                data.durationSeconds = undefined
-            } else if (data.durationRounds === 0 && data.durationSeconds === 0) {
-                data.durationRounds = concentration ? 10 : 5
-            }
-            break
+    constructor(token, targets, item) {
+        super()
+        this.#token = token
+        this.#targets = targets
+        this.#item = item
+        this.#noPP = game.settings.get("swim", "noPowerPoints")
+        this.#concentration = token.actor.items.find(i => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-concentration") && i.type === "edge")
+        this.#maintID = swim.generate_id()
+        this.state = {
+            power: resolve_default_power(item), search: '',
+            raise: false, strong: false, damage: false, quickness: false,
+            protectionAmount: '2', protectionType: 'armor', damageBonus: '2', sizeAmount: '1', dieSteps: '1', deflection: 'Melee',
+            otherPower: item?.name ?? '', durRounds: '0', durMinutes: '0',
+        }
+        if (this.state.power === 'shrink') { this.state.sizeAmount = '-1' }
     }
 
-    // Flag for caster penalty effect
-    if (!casterIsTarget && !(["confusion", "blind", "relief", "sloth"].includes(selectedPower))) {
-        data.addCasterPenalty = true
+    /* ------------------------------- rendering ------------------------------ */
+
+    #powerEntries() {
+        const entries = POWERS.map(([value, key]) => [value, t(key)])
+        const other = entries.pop()
+        entries.sort((a, b) => a[1].localeCompare(b[1], game.i18n.lang, { sensitivity: 'base' }))
+        return [...entries, other] // 'Other' stays last
     }
 
-    data.power = power
-    await execute_as_gm("effectBuilder", data)
+    #select(field, items, selected) {
+        return `<select data-field="${field}">${items.map(([v, l]) => `<option value="${esc(v)}" ${v === selected ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select>`
+    }
+
+    #row(label, control) {
+        return `<div class="swim-hc-lab swim-hc-lab2">${esc(label)}</div><div class="swim-hc-ctl">${control}</div>`
+    }
+
+    #number(field, attrs = '') {
+        return `<input type="number" data-field="${field}" value="${esc(this.state[field])}" ${attrs}>`
+    }
+
+    /** Per target: attributes A-Z, then the target's skills A-Z. */
+    #traitSelects() {
+        const attrs = ATTRIBUTES.map(([id, key]) => [id, `${t('SWIM.effectWin.attribute')} ${t(key)}`])
+            .sort((a, b) => a[1].localeCompare(b[1], game.i18n.lang, { sensitivity: 'base' }))
+        return this.#targets.map((tg) => {
+            const skills = tg.actor.items.filter((s) => s.type === "skill").map((s) => s.name)
+                .sort((a, b) => a.localeCompare(b, game.i18n.lang, { sensitivity: 'base' }))
+                .map((n) => [n, `${t('SWIM.effectWin.skill')} ${n}`])
+            const field = `trait:${tg.id}`
+            if (this.state[field] === undefined) { this.state[field] = 'agility' }
+            return this.#row(`${t('SWIM.dialogue-powerEffectBuilderAffectedTraitOf')} (${tg.name})`, this.#select(field, [...attrs, ...skills], this.state[field]))
+        }).join('')
+    }
+
+    #weaponSelects() {
+        return this.#targets.map((tg) => {
+            const weapons = tg.actor.items.filter((w) => w.type === "weapon" && w.system.quantity >= 1).map((w) => [w.name, w.name])
+            if (!weapons.length) { return '' }
+            const field = `weapon:${tg.id}`
+            if (!weapons.some(([n]) => n === this.state[field])) { this.state[field] = weapons[0][0] }
+            return this.#row(`${t('SWIM.dialogue-powerEffectBuilderSmiteWeaponOf')} ${tg.name}`, this.#select(field, weapons, this.state[field]))
+        }).join('')
+    }
+
+    #optionsHtml() {
+        const st = this.state
+        const p = st.power
+        let html = ''
+        const text = (s) => `<div class="swim-hc-preview">${s}</div>`
+        if (p === 'boost' || p === 'lower') { html += this.#traitSelects() }
+        if (p === 'protection') {
+            html += this.#row(t('SWIM.effectWin.amount'), this.#number('protectionAmount', 'min="1"'))
+            html += `<div class="swim-hc-rate swim-us-two" style="margin-top:6px">${rate_opt('protectionType', 'value', 'armor', t('SWIM.effectWin.armour'), st.protectionType === 'armor')}${rate_opt('protectionType', 'value', 'toughness', t('SWIM.effectWin.toughness'), st.protectionType === 'toughness')}</div>`
+        }
+        if (p === 'smite') {
+            html += this.#weaponSelects()
+            html += this.#row(t('SWIM.effectWin.amount'), this.#number('damageBonus', 'min="1"'))
+        }
+        if (p === 'growth') { html += this.#row(t('SWIM.effectWin.growthAmount'), this.#number('sizeAmount', 'min="1"')) }
+        if (p === 'shrink') { html += this.#row(t('SWIM.effectWin.shrinkAmount'), this.#number('sizeAmount', 'max="-1"')) }
+        if (p === 'burden-tes') { html += text(t('SWIM.effectWin.burdenHint')) + this.#row(t('SWIM.effectWin.dieSteps'), this.#number('dieSteps')) }
+        if (p === 'deflection') {
+            html += this.#row(t('SWIM.effectWin.attackType'), this.#select('deflection', [['Melee', t('SWIM.gameTerm-Melee')], ['Ranged', t('SWIM.gameTerm-Ranged')], ['Raise', t('SWIM.gameTerm-Raise')]], st.deflection))
+        }
+        if (p === 'light') { html += text(t('SWIM.effectWin.lightHint')) }
+        if (p === 'other') {
+            const powers = this.#token.actor.items.filter((i) => i.type === "power").map((i) => i.name)
+            if (powers.length) {
+                if (!powers.includes(st.otherPower)) { st.otherPower = powers[0] }
+                html += this.#row(t('SWIM.effectWin.power'), this.#select('otherPower', powers.map((n) => [n, n]), st.otherPower))
+            } else {
+                html += text(t('SWIM.effectWin.noPowers'))
+            }
+            if (!this.#noPP) {
+                html += this.#row(t('SWIM.effectWin.durationRounds'), this.#number('durRounds', 'min="0"'))
+                html += this.#row(t('SWIM.effectWin.durationMinutes'), this.#number('durMinutes', 'min="0"'))
+            }
+        }
+        let checks = ''
+        if (p === 'speed') { checks += checkbox('quickness', t('SWIM.effectWin.quickness'), st.quickness) }
+        if (p === 'burrow' || p === 'conceal') { checks += checkbox('strong', t('SWIM.effectWin.strong'), st.strong) }
+        if (p === 'damageField') { checks += checkbox('damage', t('SWIM.effectWin.damageMod'), st.damage) }
+        if (RAISE.has(p)) { checks += checkbox('raise', t(p === 'light' ? 'SWIM.effectWin.beam' : 'SWIM.effectWin.raise'), st.raise) }
+        if (checks) { html += `<div class="swim-hc-ctl" style="margin-top:8px">${checks}</div>` }
+        if (!html || NOTHING.has(p)) { html = text(t('SWIM.effectWin.nothing')) }
+        return html
+    }
+
+    async view() {
+        const st = this.state
+        const entries = this.#powerEntries()
+        const visible = new Set(filter_powers(entries, st.search).map(([v]) => v))
+        const items = entries.map(([v, l]) => `<div class="swim-eb-item ${v === st.power ? 'is-on' : ''}" data-action="power" data-value="${esc(v)}" tabindex="0" role="option" aria-selected="${v === st.power}" ${visible.has(v) ? '' : 'hidden'}>${esc(l)}</div>`).join('')
+        const chips = this.#targets.map((tg) => `<span class="swim-hc-chip"><img src="${esc(token_img(tg))}" alt="" width="18" height="18"> ${esc(tg.name)}</span>`).join(' ')
+        const selectedLabel = entries.find(([v]) => v === st.power)?.[1] ?? ''
+        return {
+            head: tokens_header([{ token: this.#token, small: t('SWIM.effectWin.caster') }]),
+            body: `<div class="swim-hc-result"><p>${t('SWIM.effectWin.hint', { caster: esc(this.#token.name) })}</p></div>
+                <div class="swim-hc-lab">${esc(t('SWIM.effectWin.targets'))}</div><div class="swim-fear-targets">${chips}</div>
+                <div class="swim-hc-lab swim-hc-lab2">${esc(t('SWIM.effectWin.power'))}</div>
+                <div class="swim-hc-ctl"><input type="text" class="swim-eb-search" placeholder="${esc(t('SWIM.effectWin.search'))}" value="${esc(st.search)}" autocomplete="off"></div>
+                <div class="swim-eb-list" role="listbox">${items}<div class="swim-eb-none" ${visible.size ? 'hidden' : ''}>${esc(t('SWIM.effectWin.noMatch'))}</div></div>
+                <div class="swim-hc-lab swim-hc-lab2">${esc(selectedLabel)}</div>
+                <div class="swim-eb-options">${this.#optionsHtml()}</div>`,
+            foot: `<span class="swim-hc-spacer"></span>${btn('cancel', t('SWIM.picker.cancel'))}${btn('apply', t('SWIM.effectWin.apply'), { go: true, disabled: this.busy })}`,
+        }
+    }
+
+    /* ------------------------------- interaction ----------------------------- */
+
+    activateListeners(html) {
+        super.activateListeners(html)
+        const list = html.find('.swim-eb-list')
+        const items = () => list.find('.swim-eb-item:not([hidden])').toArray()
+        // Filter while typing: only toggles the items (a re-render would take the focus away from the search field).
+        html.on('input', '.swim-eb-search', (ev) => {
+            this.state.search = ev.currentTarget.value
+            const visible = new Set(filter_powers(this.#powerEntries(), this.state.search).map(([v]) => v))
+            list.find('.swim-eb-item').each((_, el) => { el.hidden = !visible.has(el.dataset.value) })
+            list.find('.swim-eb-none')[0].hidden = visible.size > 0
+        })
+        html.on('keydown', '.swim-eb-search', (ev) => {
+            if (ev.key === 'Enter') {
+                ev.preventDefault()
+                const first = items()[0]
+                if (first) { this.onAction('power', first) }
+            } else if (ev.key === 'ArrowDown') {
+                ev.preventDefault()
+                items()[0]?.focus()
+            } else if (ev.key === 'Escape' && this.state.search) {
+                ev.stopPropagation()
+                ev.currentTarget.value = ''
+                ev.currentTarget.dispatchEvent(new Event('input', { bubbles: true }))
+            }
+        })
+        html.on('keydown', '.swim-eb-item', (ev) => {
+            if (ev.key !== 'ArrowDown' && ev.key !== 'ArrowUp') { return }
+            ev.preventDefault()
+            const all = items()
+            const i = all.indexOf(ev.currentTarget)
+            if (ev.key === 'ArrowUp' && i <= 0) { return html.find('.swim-eb-search').trigger('focus') }
+            all[Math.min(Math.max(i + (ev.key === 'ArrowDown' ? 1 : -1), 0), all.length - 1)]?.focus()
+        })
+        list.find('.is-on')[0]?.scrollIntoView({ block: 'nearest' })
+        if (this.#focusSearch) {
+            this.#focusSearch = false
+            html.find('.swim-eb-search').trigger('focus')
+        }
+    }
+
+    async onAction(action, el) {
+        const st = this.state
+        switch (action) {
+            case 'power':
+                if (st.power === el.dataset.value) { return }
+                st.power = el.dataset.value
+                if (st.power === 'growth') { st.sizeAmount = '1' } else if (st.power === 'shrink') { st.sizeAmount = '-1' }
+                st.raise = false
+                return this.render(false)
+            case 'protectionType':
+                if (st.protectionType === el.dataset.value) { return }
+                st.protectionType = el.dataset.value
+                return this.render(false)
+            case 'cancel': return this.close()
+            case 'apply': {
+                this.busy = true
+                let done = false
+                try { done = await this.#submit() } finally { this.busy = false }
+                if (done) { return this.close() }
+            }
+        }
+    }
+
+    /** The caster's power item for the chosen power: the passed item (if it is that power), the chosen one for 'Other', else found by name. */
+    #findPower(selected, powerName) {
+        if (selected === 'other') { return this.#token.actor.items.find((p) => p.type === "power" && p.name === powerName) }
+        if (this.#item && item_matches_power(this.#item, selected)) { return this.#item }
+        return this.#token.actor.items.find((p) => p.name.toLowerCase().includes(powerName.toLowerCase()) && p.type === "power")
+    }
+
+    /** Collects the data (same payload as before) and hands it to the GM. Returns false if the input is invalid. */
+    async #submit() {
+        const st = this.state
+        const selected = st.power
+        const token = this.#token
+        const noPP = this.#noPP
+        const concentration = this.#concentration
+        const targetIDs = this.#targets.map((tg) => tg.id)
+        const casterIsTarget = targetIDs.includes(token.id)
+        const usePowerIcons = game.settings.get("swim", "effectBuilder-usePowerIcons")
+        const powerName = selected === "other" ? st.otherPower : game.i18n.localize(`SWIM.power-${selected}`)
+        const power = this.#findPower(selected, powerName)
+
+        const data = {
+            sceneID: game.scenes.current.id, targetIDs, casterID: token.id, maintenanceID: this.#maintID,
+            type: selected, powerID: power?._id,
+            icon: usePowerIcons && power ? power.img : false,
+            duration: 5, durationRounds: 5, durationSeconds: undefined, noPP, concentration,
+        }
+        const degree = () => (RAISE.has(selected) && st.raise ? "raise" : "success")
+
+        switch (selected) {
+            case "boost":
+            case "lower":
+                data.degree = degree()
+                data.traits = this.#targets.map((tg) => ({ targetID: tg.id, traitName: st[`trait:${tg.id}`] }))
+                break
+            case "protection":
+                data.bonus = Number(st.protectionAmount)
+                data.protectionType = st.protectionType
+                break
+            case "smite":
+                data.bonus = Number(st.damageBonus)
+                // Only targets that have a weapon to choose from.
+                data.weapons = this.#targets.filter((tg) => st[`weapon:${tg.id}`]).map((tg) => ({ targetID: tg.id, weaponName: st[`weapon:${tg.id}`] }))
+                break
+            case "growth":
+            case "shrink":
+                data.change = Number(st.sizeAmount)
+                break
+            case "sloth":
+                data.change = 0.5
+                data.duration = 1
+                break
+            case "speed":
+                data.change = 2
+                data.quickness = !!st.quickness
+                break
+            case "deflection":
+                data.deflectionType = st.deflection
+                break
+            case "burden-tes":
+                data.change = Number(st.dieSteps)
+                if (!data.change) {
+                    ui.notifications.warn(game.i18n.localize("SWIM.notififaction.enterNumberUnequalZero"))
+                    return false
+                }
+                data.durationNoCombat = concentration ? 20 * 60 : 10 * 60
+                break
+            case "confusion":
+                break
+            case "damageField":
+                data.damage = !!st.damage
+                break
+            case "other":
+                data.degree = degree()
+                data.durationRounds = noPP ? Number(999999999999999) : Number(st.durRounds)
+                data.durationSeconds = noPP ? Number(999999999999999) : (Number(st.durMinutes) / 60)
+                if (data.durationRounds === 0 && data.durationSeconds > 0) {
+                    data.durationRounds = data.durationSeconds * 6
+                } else if (data.durationSeconds === 0 && data.durationRounds > 0) {
+                    data.durationSeconds = undefined
+                } else if (data.durationRounds === 0 && data.durationSeconds === 0) {
+                    data.durationRounds = concentration ? 10 : 5
+                }
+                break
+            default: // all other powers: Raise (if offered) and the Strong modifier
+                data.degree = degree()
+                if (["beastFriend", "invisibility", "relief"].includes(selected)) { data.caster = token.name }
+                if (selected === "burrow" || selected === "conceal") { data.strong = !!st.strong }
+        }
+
+        // Flag for caster penalty effect
+        if (!casterIsTarget && !(["confusion", "blind", "relief", "sloth"].includes(selected))) {
+            data.addCasterPenalty = true
+        }
+
+        data.power = power
+        await execute_as_gm("effectBuilder", data)
+        return true
+    }
 }
 
 // ============================================================================
@@ -459,7 +649,7 @@ export async function effect_builder_gm(data) {
 
                 if (["agility", "smarts", "spirit", "strength", "vigor"].includes(traitValue)) {
                     keyPath = `system.attributes.${traitValue}.die.sides`
-                    traitName = game.i18n.localize(ATTRIBUTE_LANG_KEYS[traitValue])
+                    traitName = game.i18n.localize(ATTRIBUTE_KEYS[traitValue])
                 } else {
                     const skill = targetToken.actor.items.find(s => s.name.toLowerCase() === traitValue.toLowerCase())
                     keyPath = `@Skill{${skill?.name}}[system.die.sides]`
@@ -505,7 +695,7 @@ export async function effect_builder_gm(data) {
 
                 if (["agility", "smarts", "spirit", "strength", "vigor"].includes(traitValue)) {
                     keyPath = `system.attributes.${traitValue}.die.sides`
-                    traitName = game.i18n.localize(ATTRIBUTE_LANG_KEYS[traitValue])
+                    traitName = game.i18n.localize(ATTRIBUTE_KEYS[traitValue])
                 } else {
                     const skill = targetToken.actor.items.find(s => s.name.toLowerCase() === traitValue.toLowerCase())
                     keyPath = `@Skill{${skill?.name}}[system.die.sides]`
@@ -1064,218 +1254,4 @@ export async function effect_builder_gm(data) {
 
         await caster.actor.createEmbeddedDocuments('ActiveEffect', [aeData])
     }
-}
-
-// ============================================================================
-// PART 3: Helper Functions
-// ============================================================================
-
-function getDialogContent(token, selectedPower, allHTML, targets, noPP, item) {
-    let content
-
-    if (selectedPower === "boost" || selectedPower === "lower") {
-        content = game.i18n.format("SWIM.dialogue-powerEffectBuilderBoostLower", {allHTML: allHTML})
-    } else if (selectedPower === "protection") {
-        content = game.i18n.format("SWIM.dialogue-powerEffectBuilderProtection", {amountText: game.i18n.localize("SUCC.dialogue.amount_to_increase")})
-    } else if (selectedPower === "smite") {
-        let smiteHTML = []
-        for (let target of targets) {
-            const targetWeapons = target.actor.items.filter(w => w.type === "weapon" && w.system.quantity >= 1)
-            if (targetWeapons.length >= 1) {
-                let weaponOptions = ''
-                for (let weapon of targetWeapons) {
-                    weaponOptions += `<option value="${weapon.name}">${weapon.name}</option>`
-                }
-                let html = `
-                                <div class='form-group'>
-                                    <label for='${target.id}'><p>${game.i18n.localize("SWIM.dialogue-powerEffectBuilderSmiteWeaponOf")} ${target.name}:</p></label>
-                                    <select id='${target.id}'>${weaponOptions}</select>
-                                </div>
-                            `
-                smiteHTML += html
-            }
-        }
-        content = game.i18n.format("SWIM.dialogue-powerEffectBuilderSmite", {
-            allHTML: smiteHTML,
-            increaseText: game.i18n.localize('SUCC.dialogue.amount_to_increase')
-        })
-    } else if (selectedPower === "growth") {
-        content = game.i18n.format("SWIM.dialogue-powerEffectBuilderGrowth")
-    } else if (selectedPower === "shrink") {
-        content = game.i18n.format("SWIM.dialogue-powerEffectBuilderShrink")
-    } else if (selectedPower === "sloth") {
-        content = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
-    } else if (selectedPower === "speed") {
-        content = game.i18n.format("SWIM.dialogue-powerEffectBuilderSpeed")
-    } else if (selectedPower === "burden-tes") {
-        content = game.i18n.format("SWIM.dialogue-powerEffectBuilderBurden")
-    } else if (selectedPower === "beastFriend") {
-        content = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-    } else if (selectedPower === "invisibility") {
-        content = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-    } else if (selectedPower === "confusion") {
-        content = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
-    } else if (selectedPower === "deflection") {
-        const optionsDeflection = `<option value="Melee">${game.i18n.localize("SWIM.gameTerm-Melee")}</option><option value="Ranged">${game.i18n.localize("SWIM.gameTerm-Ranged")}</option><option value="Raise">${game.i18n.localize("SWIM.gameTerm-Raise")}</option>`
-        content = game.i18n.format("SWIM.select-deflectionOptions", {options: optionsDeflection})
-    } else if (selectedPower === "arcaneProtection") {
-        content = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-    } else if (selectedPower === "burrow") {
-        content = game.i18n.format("SWIM.dialogue-optionCastWithRaise") + game.i18n.format("SWIM.dialogue-optionStrongModifier")
-    } else if (selectedPower === "damageField") {
-        content = game.i18n.format("SWIM.dialogue-optionDamageModifier")
-    } else if (selectedPower === "darksight") {
-        content = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-    } else if (selectedPower === "conceal") {
-        content = game.i18n.format("SWIM.dialogue-optionStrongModifier")
-    } else if (selectedPower === "detect") {
-        content = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-    } else if (selectedPower === "disguise") {
-        content = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-    } else if (selectedPower === "elementalManipulation") {
-        content = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-    } else if (selectedPower === "empathy") {
-        content = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-    } else if (selectedPower === "environmentalProtection") {
-        content = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
-    } else if (selectedPower === "farsight") {
-        content = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-    } else if (selectedPower === "fly") {
-        content = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-    } else if (selectedPower === "intangibility") {
-        content = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
-    } else if (selectedPower === "light") {
-        content = game.i18n.format("SWIM.dialogue-optionLight")
-    } else if (selectedPower === "mindLink") {
-        content = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-    } else if (selectedPower === "puppet") {
-        content = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-    } else if (selectedPower === "relief") {
-        content = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-    } else if (selectedPower === "slumber") {
-        content = game.i18n.format("SWIM.dialogue-powerEffectBuilderNothingElse")
-    } else if (selectedPower === "silence") {
-        content = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-    } else if (selectedPower === "speakLanguage") {
-        content = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-    } else if (selectedPower === "wallWalker") {
-        content = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-    } else if (selectedPower === "warriorsGift") {
-        content = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-    } else if (selectedPower === "blind") {
-        content = game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-    } else if (selectedPower === "other") {
-        let powers = token.actor.items.filter(p => p.type === "power")
-        let powerOptions = ''
-        for (let power of powers) {
-            powerOptions += `<option ${power._id === item?._id ? 'selected' : ''} value="${power.name}">${power.name}</option>`
-        }
-        content = game.i18n.format("SWIM.dialogue-otherPower", {options: powerOptions})
-        if (noPP === false) {
-            content += game.i18n.localize("SWIM.dialogue-duration")
-        }
-        content += game.i18n.format("SWIM.dialogue-optionCastWithRaise")
-    }
-
-    return content
-}
-
-function generateOptionsAndHTML(defaultPower, targets) {
-    function createOptions(optionsList, defaultValue) {
-        return optionsList.map(option => {
-            const selected = option.value === defaultValue ? 'selected="selected"' : ''
-            const localizedLabel = option.label.map(label => game.i18n.localize(label)).join(' ')
-            return `<option value="${option.value}" ${selected}>${localizedLabel}</option>`
-        }).join('')
-    }
-
-    const optionsList = [
-        {value: 'boost', label: ['SWIM.power-boostTrait']},
-        {value: 'arcaneProtection', label: ['SWIM.power-arcaneProtection']},
-        {value: 'beastFriend', label: ['SWIM.power-beastFriend']},
-        {value: 'blind', label: ['SWIM.power-blind']},
-        {value: 'burrow', label: ['SWIM.power-burrow']},
-        {value: 'conceal', label: ['SWIM.power-concealArcana']},
-        {value: 'confusion', label: ['SWIM.power-confusion']},
-        {value: 'damageField', label: ['SWIM.power-damageField']},
-        {value: 'darksight', label: ['SWIM.power-darksight']},
-        {value: 'deflection', label: ['SWIM.power-deflection']},
-        {value: 'disguise', label: ['SWIM.power-disguise']},
-        {value: 'detect', label: ['SWIM.power-detectArcana']},
-        {value: 'burden-tes', label: ['SWIM.power-easeBurden-tes']},
-        {value: 'elementalManipulation', label: ['SWIM.power-elementalManipulation']},
-        {value: 'empathy', label: ['SWIM.power-empathy']},
-        {value: 'environmentalProtection', label: ['SWIM.power-environmentalProtection']},
-        {value: 'farsight', label: ['SWIM.power-farsight']},
-        {value: 'fly', label: ['SWIM.power-fly']},
-        {value: 'growth', label: ['SWIM.power-growth']},
-        {value: 'intangibility', label: ['SWIM.power-intangibility']},
-        {value: 'invisibility', label: ['SWIM.power-invisibility']},
-        {value: 'light', label: ['SWIM.power-light']},
-        {value: 'lower', label: ['SWIM.power-lowerTrait']},
-        {value: 'mindLink', label: ['SWIM.power-mindLink']},
-        {value: 'protection', label: ['SWIM.power-protection']},
-        {value: 'puppet', label: ['SWIM.power-puppet']},
-        {value: 'relief', label: ['SWIM.power-relief']},
-        {value: 'shrink', label: ['SWIM.power-shrink']},
-        {value: 'silence', label: ['SWIM.power-silence']},
-        {value: 'sloth', label: ['SWIM.power-sloth']},
-        {value: 'slumber', label: ['SWIM.power-slumber']},
-        {value: 'smite', label: ['SWIM.power-smite']},
-        {value: 'speakLanguage', label: ['SWIM.power-speakLanguage']},
-        {value: 'speed', label: ['SWIM.power-speed']},
-        {value: 'wallWalker', label: ['SWIM.power-wallWalker']},
-        {value: 'warriorsGift', label: ['SWIM.power-warriorsGift']},
-        {value: 'other', label: ['SWIM.power-other']}
-    ]
-
-    const traitOptionsList = [
-        {value: 'agility', label: ['SUCC.dialogue.attribute', 'SWADE.AttrAgi']},
-        {value: 'smarts', label: ['SUCC.dialogue.attribute', 'SWADE.AttrSma']},
-        {value: 'spirit', label: ['SUCC.dialogue.attribute', 'SWADE.AttrSpr']},
-        {value: 'strength', label: ['SUCC.dialogue.attribute', 'SWADE.AttrStr']},
-        {value: 'vigor', label: ['SUCC.dialogue.attribute', 'SWADE.AttrVig']}
-    ]
-
-    const options = createOptions(optionsList, defaultPower)
-    const traitOptions = createOptions(traitOptionsList, defaultPower)
-
-    let targetIDs = []
-    let allHTML = ''
-
-    for (const target of targets) {
-        targetIDs.push(target.id)
-        let targetSkills = target.actor.items.filter(s => s.type === "skill")
-
-        if (targetSkills.length >= 1) {
-            targetSkills.sort((a, b) => {
-                const textA = a.name.toUpperCase()
-                const textB = b.name.toUpperCase()
-                return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
-            })
-
-            const skillOptions = targetSkills.map(skill =>
-                `<option value="${skill.name}">${game.i18n.localize("SUCC.dialogue.skill")} ${skill.name}</option>`
-            ).join('')
-
-            const targetOptions = traitOptions + skillOptions
-            const html = `
-            <div class='form-group'>
-                <label for='${target.id}'><p>${game.i18n.localize("SWIM.dialogue-powerEffectBuilderAffectedTraitOf")} (${target.name}):</p></label>
-                <select id='${target.id}'>${targetOptions}</select>
-            </div>
-        `
-            allHTML += html
-        } else {
-            const html = `
-            <div class='form-group'>
-                <label for='${target.id}'><p>${game.i18n.localize("SWIM.dialogue-powerEffectBuilderAffectedTraitOf")} (${target.name}):</p></label>
-                <select id='${target.id}'>${traitOptions}</select>
-            </div>
-        `
-            allHTML += html
-        }
-    }
-
-    return { options, traitOptions, allHTML, targetIDs }
 }
