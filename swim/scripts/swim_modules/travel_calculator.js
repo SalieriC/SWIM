@@ -314,8 +314,9 @@ function evaluateCards(cards, replaceJokers = false, useAllCards = false) {
                     newCards = swim.draw_cards(1, false);
                 }
                 let newCard = newCards[0]
-                if (useAllCards || (card.includes("Ace") || card.includes("Jack") || card.includes("Queen") || card.includes("King"))) {
-                    newCard.split(" ")[2].toLowerCase()
+                // Same rule as above: face cards (or any card with "use all cards") count with their suit, everything else as 0.
+                if (!newCard.includes("Joker") && (useAllCards || (newCard.includes("Ace") || newCard.includes("Jack") || newCard.includes("Queen") || newCard.includes("King")))) {
+                    newCard = newCard.split(" ")[2].toLowerCase()
                 } else { newCard = 0 }
                 cardsEvaluated[i] = newCard;
             }

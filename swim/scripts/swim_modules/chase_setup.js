@@ -70,7 +70,10 @@ class ChaseApp extends SwimWindow {
 
     activateListeners(html) {
         super.activateListeners(html)
-        html.find('details').on('toggle', (ev) => { this.state.layoutOpen = ev.currentTarget.open })
+        html.find('details').on('toggle', (ev) => {
+            this.state.layoutOpen = ev.currentTarget.open
+            this.setPosition({ height: 'auto' }) // the window has to grow / shrink with the folded options
+        })
     }
 
     async view() {

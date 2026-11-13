@@ -78,3 +78,4 @@
 .swim-ch-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .swim-ch-pair label { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 6px; }
 .swim-ch-pair input[type="number"] { width: 70px; height: 24px; padding: 0 6px; text-align: center; background: var(--swim-hc-bg); color: var(--swim-hc-text); border: 1px solid var(--swim-hc-line); border-radius: 5px; }
+.swim-us .swim-hc-body { min-height: 0; }
