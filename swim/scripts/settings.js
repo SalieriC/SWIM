@@ -2,9 +2,11 @@
 
 import * as SWIM from './constants.js'
 import { swim_buttons } from './buttons.js'
+import { SwimConfigApp } from './helpers/swim_config.js'
+import { SwimWindow } from './helpers/swim_window.js'
 
 export const settingVariables = [
-    {id: 'swdUnshake', config_type: Boolean, tab: "Setting Rules", default: false},
+    {id: 'swdUnshake', config_type: Boolean, tab: "Setting Rules", default: false, reload: true},
     {id: 'grittyDamage', config_type: Boolean, tab: "Setting Rules", default: false},
     {id: 'grittyDamageNPC', config_type: Boolean, tab: "Setting Rules", default: false},
     {id: 'natHeal_Time', config_type: String, tab: "Setting Rules", default: 'five days'},
@@ -62,8 +64,9 @@ export const settingVariables = [
             {value: 'full', locaString: 'SWIM.Option-fullBlind'},
         ]},*/
     {id: 'customTravelOptions', config_type: String, tab: "Macro Options", default: ""},
-    {id: 'br2Support', config_type: Boolean, tab: "SFX & VFX Options", default: false},
-    {id: 'br2ammoMgm', config_type: String, tab: "SFX & VFX Options", default: "full", 
+    {id: 'br2Support', config_type: Boolean, tab: "SFX & VFX Options", default: false, reload: true},
+    {id: 'br2ammoMgm', config_type: String, tab: "SFX & VFX Options", default: "full", reload: true,
+       
         options: [
             {value: 'full', locaString: 'SWIM.Option-full'},
             {value: 'sfx', locaString: 'SWIM.Option-sfxOnly'},
@@ -99,13 +102,15 @@ export const settingVariables = [
         default: ''},
     {id:  'lightSFX', config_type: String, picker: 'audio', tab: "SFX & VFX Options",
         default: 'modules/swim/assets/sfx/Fireball-Super-Quick-Whoosh-www.fesliyanstudios.com.ogg'},
-    {id: 'callbackMode', config_type: String, tab: 'Misc', default: 'manual', 
+    {id: 'callbackMode', config_type: String, tab: 'Misc', default: 'manual', reload: true,
+       
         options: [
             {value: 'manual', locaString: 'SWIM.Option-manual'},
             //{value: 'automatic', locaString: 'SWIM.Option-automatic'},
             {value: 'disabled', locaString: 'SWIM.Option-disabled'}
         ]},
     {id: 'deleteEffectsAfterCombat', config_type: Boolean, tab: "Misc",  default: false},
+    {id: 'automaticVision', config_type: Boolean, tab: "Misc",  default: true},
     {id: 'brswBacklash', config_type: String, tab: "Misc", default: "regular",
         options: [
             {value: 'regular', locaString: 'SWIM.Option-regular'},
@@ -158,7 +163,7 @@ export function register_settings() {
         label: game.i18n.localize("SWIM.ConfigMenuLabel"),
         icon: 'fas fa-swimmer',
         hint: game.i18n.localize("SWIM.ConfigMenuHint"),
-        type: CustomConfigForm
+        type: SwimConfigMenu
     });
     for (let setting of settingVariables) {
         //Check if a setting has an options property and if this option is a function. If both are true, sustitute the function for its result with a param of setting.type. That way we dealy when it is called.
@@ -179,63 +184,10 @@ export function register_settings() {
     }
 }
 
-class CustomConfigForm extends FormApplication {
-    static get defaultOptions() {
-        let options = super.defaultOptions;
-        options.id = 'swim-custom-config';
-        options.template = "/modules/swim/templates/customConfig.hbs";
-        options.width = SWIM.CONFIG_WINDOW_WIDTH;
-        options.height = SWIM.CONFIG_WINDOW_HEIGHT;
-        return options;
-    }
-
-    activateListeners(html) {
-        html.find('.swim-tab-header').on('click', this.change_tab);
-        return super.activateListeners(html);
-    }
-
-    change_tab(event) {
-        const tab_name = event.currentTarget.dataset.tab;
-        $('.swim-tab').each((_, tab) => {
-            if (tab.dataset.tab === tab_name) {
-                $(tab).addClass('active');
-            } else {
-                $(tab).removeClass('active');
-            }
-        });
-    }
-
-    getData() {
-        let tabs = {};
-        for (let setting of settingVariables) {
-            if (! tabs.hasOwnProperty(setting.tab)) {
-                tabs[setting.tab] = [];
-            }
-            tabs[setting.tab].push(
-                {id: setting.id,
-                 is_boolean: setting.config_type === Boolean,
-                 is_numeric: setting.config_type === Number,
-                 options: setting.options ? setting.options : "",
-                 min: setting.min,
-                 max: setting.max,
-                 step: setting.step,
-                 use_audio_picker: setting.picker === 'audio',
-                 use_video_picker: setting.picker === 'video',
-                 value: game.settings.get('swim', setting.id),
-                 name: game.i18n.localize(`SWIM.${setting.id}Name`),
-                 hint: game.i18n.localize(`SWIM.${setting.id}Hint`)});
-        }
-        return {tabs: tabs};
-    }
-
-    async _updateObject(_, formData) {
-        for (let id in formData) {
-            if (formData[id]) {
-                await game.settings.set('swim', id, formData[id]);
-            } else {
-                await game.settings.set('swim', id, '');
-            }
-        }
-        window.location.reload();
+/** The settings menu has to be a FormApplication for Foundry; it only opens the SWIM window (SwimConfigApp). */
+class SwimConfigMenu extends FormApplication {
+    render() {
+        SwimWindow.show(new SwimConfigApp(settingVariables))
+        return this
     }
 }

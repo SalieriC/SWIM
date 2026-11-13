@@ -91,8 +91,12 @@ export function auto_vision_update(td, level, caps = vision_caps()) {
     return same ? null : upd
 }
 
-/** Sets Automatic vision on the tokens of a scene (vision-disabled tokens and tokens without actor are skipped). Returns the number updated. */
-export async function auto_vision_scene(scene, tokenDocs = scene.tokens) {
+/**
+ * Sets Automatic vision on the tokens of a scene (vision-disabled tokens and tokens without actor are skipped). Returns the number updated.
+ * Without `manual` (the scene/placement hooks) nothing happens if the setting "Automatic vision adjustments" is off.
+ */
+export async function auto_vision_scene(scene, tokenDocs = scene.tokens, { manual = false } = {}) {
+    if (!manual && !game.settings.get('swim', 'automaticVision')) { return 0 }
     const level = scene_level(scene)
     const updates = []
     for (const td of tokenDocs) {
@@ -279,7 +283,9 @@ class TokenVisionApp extends SwimWindow {
             if (s.vision === 'custom') { return { token, type: 'custom', cfg: this.#custom_vision() } }
             const found = s.vision === 'auto' ? find_vision_swid(token.actor) : null
             const type = s.vision === 'auto' ? (found ?? 'basic') : s.vision
-            return { token, type, found, cfg: vision_preset(type, this.#level(), this.caps) }
+            // Automatic never touches a token whose vision is disabled (an explicit choice does and enables it)
+            const skip = s.vision === 'auto' && token.document.sight?.enabled === false
+            return { token, type, found, skip, cfg: vision_preset(type, this.#level(), this.caps) }
         })
     }
 
@@ -317,6 +323,7 @@ class TokenVisionApp extends SwimWindow {
         const line = (p) => {
             const name = p.type === 'custom' ? t('SWIM.tokenVisionWin.custom') : t(TYPE_LANG[p.type] ?? TYPE_LANG.basic)
             const nobenefit = p.type !== 'custom' && p.type !== 'basic' && !p.cfg.special ? ` <small>(${esc(t('SWIM.tokenVisionWin.noBenefit', { type: t(TYPE_LANG[p.type]) }))})</small>` : ''
+            if (p.skip) { return `<small>${esc(t('SWIM.tokenVisionWin.visionOff'))}</small>` }
             return `<b>${esc(p.type === 'custom' || p.cfg.special || p.type === 'basic' ? name : t(TYPE_LANG.basic))}</b>${nobenefit} · ${esc(t('SWIM.tokenVisionWin.range', { range: this.#range_text(p.cfg.range) }))} · ${esc(p.cfg.angle)}° · ${esc(mode_label(p.cfg.mode))}`
         }
         const plan = this.#plan()
@@ -482,7 +489,7 @@ class TokenVisionApp extends SwimWindow {
             let nvdOff = false
             const updates = []
             for (const p of this.#plan()) {
-                if (p.type === 'keep') { continue }
+                if (p.type === 'keep' || p.skip) { continue }
                 const td = p.token.document
                 const cur = td.sight.visionMode
                 if (p.cfg.mode === 'lightAmplification' && cur !== 'lightAmplification') { nvdOn = true }

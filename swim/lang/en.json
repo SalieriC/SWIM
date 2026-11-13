@@ -389,6 +389,8 @@
   "SWIM.callbackModeHint": "Determines if and how the SWIM functions to remove certain conditions (i.e. Shaken) should execute when the characters turn starts. Manual: A dialogue will ask for a roll. | Disabled: The system default rolls will be initiated (can be disabled in SUCC).",
   "SWIM.deleteEffectsAfterCombatName": "Delete Active Effects after combat:",
   "SWIM.deleteEffectsAfterCombatHint": "This will prompt you with a dialogue after combat ends which allows you to delete all active effects with a duration on end of combat. This allows you to remove conditions like Shaken and from powers but not permanent AEs such as Incapacitated. Be mindful that this will also delete effects that are maintained with no power points setting rule enabled. If you don't want to remove those, do not use this setting.",
+  "SWIM.automaticVisionName": "Automatic vision adjustments:",
+  "SWIM.automaticVisionHint": "When the Scene Illumination of a scene changes, and when a token is placed on a scene that has an illumination level, the vision of tokens that have vision enabled is set up automatically from their abilities (Darkvision, Infravision, Low Light Vision) and the illumination. Light sources are not touched. Tokens with vision disabled are never changed. The Token Vision macro's Automatic option still works when this is off.",
   "SWIM.fearResult-AdrenalineSurge": "Adrenaline Surge",
   "SWIM.fearResult-MarkOfFear": "Mark of Fear",
   "SWIM.fearResult-MarkOfFearDesc": "You have faced something truly terrifying and from now on wear the mark of fear. A white strak in your hair or constantly twitching eyes or anything else you can think of. Change this description here in consultation of your Game Master and adjust the change you've gone through.",
@@ -981,5 +983,18 @@
   "SWIM.tokenVisionWin.apply": "Apply",
   "SWIM.tokenVisionWin.applyMany": "Apply to {count} tokens",
   "SWIM.tokenVisionWin.noBenefit": "{type} gives no benefit under this illumination",
-  "SWIM.tokenVisionWin.noToken": "Please select at least one token first."
+  "SWIM.tokenVisionWin.visionOff": "Vision is disabled on this token, Automatic leaves it alone. Choose a vision type to set it up and enable vision.",
+  "SWIM.tokenVisionWin.noToken": "Please select at least one token first.",
+  "SWIM.configWin.search": "Search all settings…",
+  "SWIM.configWin.reset": "Reset to default",
+  "SWIM.configWin.needsReload": "Reload needed",
+  "SWIM.configWin.needsReloadTip": "This setting is only read when the world loads. You will be asked to reload after saving.",
+  "SWIM.configWin.changes": "{count} unsaved changes",
+  "SWIM.configWin.noChanges": "No changes",
+  "SWIM.configWin.browse": "Browse files",
+  "SWIM.configWin.play": "Play sound",
+  "SWIM.configWin.noResults": "No setting matches your search.",
+  "SWIM.configWin.donate": "Like SWIM? Please consider donating, it would mean the world to me. =)",
+  "SWIM.configWin.reloadTitle": "Reload Application?",
+  "SWIM.configWin.reloadBody": "Some of the changed settings only take effect after a reload. Reload now?"
 }

@@ -106,3 +106,32 @@
 .swim-tv-grid2 input[type="number"], .swim-tv-dm input[type="number"] { width: 70px; height: 24px; padding: 0 6px; text-align: center; background: var(--swim-hc-bg); color: var(--swim-hc-text); border: 1px solid var(--swim-hc-line); border-radius: 5px; }
 .swim-tv-dm { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 4px; }
 .swim-tv-adv input:disabled, .swim-tv-adv select:disabled { opacity: 0.45; }
+
+/* SWIM Configuration (scripts/helpers/swim_config.js) */
+.swim-cfg-app .swim-hc-body { height: min(540px, 60vh); }
+.swim-cfg-top { padding: 10px 12px 0; }
+.swim-cfg-search { width: 100%; height: 28px; padding: 0 10px; background: var(--swim-hc-bg); color: var(--swim-hc-text); border: 1px solid var(--swim-hc-line); border-radius: 6px; }
+.swim-cfg-tabs { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 12px 0; }
+.swim-cfg-tabs .swim-hc-rate-opt { padding: 5px 12px; }
+.swim-cfg-app.is-search .swim-cfg-tabs { opacity: 0.45; pointer-events: none; }
+.swim-cfg-panel { display: none; }
+.swim-cfg-panel.is-on, .swim-cfg-app.is-search .swim-cfg-panel { display: block; }
+.swim-cfg-app .swim-cfg-panel.is-empty { display: none; }
+.swim-cfg-ptitle { display: none; margin: 12px 0 2px; color: var(--swim-hc-gold); border: 0; font-size: 13px; }
+.swim-cfg-app.is-search .swim-cfg-ptitle { display: block; }
+.swim-cfg-row { display: grid; grid-template-columns: 1fr minmax(200px, 300px); gap: 6px 16px; align-items: center; padding: 8px; border-bottom: 1px solid var(--swim-hc-line); border-left: 3px solid transparent; }
+.swim-cfg-row[hidden], .swim-cfg-none[hidden] { display: none; }
+.swim-cfg-row.is-changed { border-left-color: var(--swim-hc-gold); background: rgba(224, 178, 74, 0.07); }
+.swim-cfg-info small { display: block; margin-top: 2px; color: var(--swim-hc-dim); font-size: 11.5px; line-height: 1.35; }
+.swim-cfg-badge { margin-left: 6px; padding: 0 7px; font-size: 10.5px; color: var(--swim-hc-gold); border: 1px solid rgba(224, 178, 74, 0.5); border-radius: 8px; }
+.swim-cfg-ctl { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
+.swim-cfg-ctl input[type="text"], .swim-cfg-ctl input[type="number"], .swim-cfg-ctl select { flex: 1; min-width: 0; height: 26px; padding: 0 6px; background: var(--swim-hc-bg); color: var(--swim-hc-text); border: 1px solid var(--swim-hc-line); border-radius: 5px; }
+.swim-cfg-ctl input[type="checkbox"] { width: 18px; height: 18px; margin: 0; }
+.swim-cfg-ico { flex: 0 0 auto; padding: 2px 8px; }
+.swim-cfg-reset { flex: 0 0 auto; width: 22px; padding: 0; background: none; border: 0; color: var(--swim-hc-dim); cursor: pointer; }
+.swim-cfg-reset:hover { color: var(--swim-hc-gold); }
+.swim-cfg-reset.is-default { visibility: hidden; }
+.swim-cfg-none { text-align: center; color: var(--swim-hc-dim); padding: 18px; }
+.swim-cfg-donate { text-align: center; padding: 14px 0 4px; font-size: 12px; }
+.swim-cfg-donate img { display: block; margin: 6px auto 0; border: 0; }
+.swim-cfg-count { color: var(--swim-hc-dim); font-size: 12px; }
