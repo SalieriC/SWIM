@@ -6,3 +6,5 @@ img/swim-repository-preview.psd
 img/swim-repository-preview.jpg.bak
 swim/.vscode/launch.json
 swim/PROJECT_SUMMARY.md
+swim/CHANGELOG-unreleased.md
+swim/REGRESSION_CHECKLIST.md
