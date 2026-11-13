@@ -1,12 +1,15 @@
 /*******************************************
  * Ammo Management (Enhanced Version v2)
- * version 6.0.18
+ * version 7.0.0 – window (AmmoApp) instead of a Dialog; reloading takes a number of bullets
  * By SalieriC#8263 & Loofou#7406. (old Dialogue Framework: Kekilla#7036)
  *
  * Makes heavy use of SFX set up on the weapon.
  * Preset:
  * RELOAD|FIRE|AUTOFIRE|SILENCED|SILENCEDAUTOFIRE|EMPTY
  ******************************************/
+import { SwimWindow, t, esc, btn, rate_opt } from "../helpers/swim_window.js"
+
+const SHOTS_PER_ROF = [0, 1, 5, 10, 20, 40, 50]
 
 export async function showWeaponAmmoDialog() {
     const { _, __, ___, token } = await swim.get_macro_variables();
@@ -18,7 +21,7 @@ export async function showWeaponAmmoDialog() {
     const weapons = actor.items.filter(checkWeapon);
     if (weapons.length === 0) return ui.notifications.error(game.i18n.localize("SWIM.notification-noReloadableOrConsumableWeapon"));
 
-    await createDialog(actor, weapons)
+    await SwimWindow.show(new AmmoApp(actor, weapons))
 }
 
 function checkWeapon(item) {
@@ -29,133 +32,138 @@ function checkWeapon(item) {
             || item.flags.swim.config.isConsumable === true);
 }
 
-async function createDialog(actor, weapons) {
-    const shotsPerRof = [0, 1, 5, 10, 20, 40, 50];
+/** Positive whole number from the input, or 0 if it isn't one. */
+export function parse_amount(value) {
+    const n = Math.floor(Number(value))
+    return Number.isFinite(n) && n > 0 ? n : 0
+}
 
-    let defaultWeapon = weapons[0];
-    let defaultShots = shotsPerRof[defaultWeapon.system.rof];
-    let defaultAmmo = defaultWeapon.system.ammo.trim().split('|').filter(a => !!actor.items.getName(a));
-    let loadedAmmo = defaultWeapon.flags.swim.config.loadedAmmo;
-    let currentShots = defaultWeapon.system.currentShots;
-    let currentMaxShots = defaultWeapon.system.shots;
-    let defaultSingleReload = defaultWeapon.system.reloadType === "single" ? " checked" : "";
+/**
+ * Works out what a reload does. Pure.
+ * `amount`: how many bullets the user wants to load. Charge packs ignore it (they always charge the weapon fully).
+ * Returns `{ error }` (a lang key) or `{ load, newCharges, newAmmo, oldRefill }` (`oldRefill` only when the ammo type changes).
+ */
+export function reload_plan({ chgType, isPack, autoReload, current, max, available, oldQty, amount }) {
+    if (isPack) {
+        let oldRefill
+        if (chgType) { oldRefill = current === max ? oldQty + 1 : oldQty }
+        return { load: max, newCharges: max, newAmmo: available - 1, oldRefill }
+    }
+    if (!autoReload && amount < 1) { return { error: "SWIM.ammo.notificationNoAmount" } }
+    if (chgType) {
+        // The old rounds go back into the inventory, the new ammo starts from an empty weapon.
+        const load = autoReload ? 0 : Math.min(amount, max, available)
+        return { load, newCharges: load, newAmmo: available - load, oldRefill: oldQty + current }
+    }
+    const required = max - current
+    if (required <= 0) { return { error: "SWIM.notification-weaponAlreadyFull" } }
+    const load = Math.min(amount, required, available)
+    return { load, newCharges: current + load, newAmmo: available - load }
+}
 
-    await new Dialog({
-        title: game.i18n.localize("SWIM.dialogue-ammoManagement"),
-        content: `
-            <form name="form" xmlns="http://www.w3.org/1999/html">
-                <div class="form-group">
-                    <label for="mode">Select Mode: </label>
-                    <select id="mode" name="mode">
-                        <option value="reload" selected>Reload</option>
-                        <option value="shooting">Shooting</option>
-                    </select>
-                </div>
-                <hr>
-                <h3>Select Weapon</h3>
-                <div class="form-group">
-                    <label for="weapon">Weapon: </label>
-                    <select id="weapon" name="weapon">${weapons.reduce((acc, val) => acc += `<option value="${val.id}" ${val === defaultWeapon ? `selected` : ``}>${val.name}</option>`, ``)}</select>
-                </div>
-                <div class="form-group">
-                    <label for="loaded_ammo">Loaded Ammo: </label>
-                    <b><label id="loaded_ammo bold" name="loaded_ammo">${loadedAmmo} (${currentShots}/${currentMaxShots})</label></b>
-                    <p class="notes">If this is empty, you should probably load some ammo first with the Reload mode above!</p>
-                </div>
-                <hr>
-                <div id="shooting_section">
-                    <h3>Shooting</h3>
-                    <p>Here you can fire precise amount of shots from your weapon, based on the current loaded ammo.</p>
-                    <div class="form-group">
-                        <label for="shots"># of Shots: </label>
-                        <input id="shots", name="shots" type="number" min="0" max="${defaultShots}" value="${defaultShots}">
-                        <p class="notes"><b># of Shots per ROF:</b> ROF 1 = 1 Shot; ROF 2 = 5; ROF 3 = 10; ROF 4 = 20; ROF 5 = 40; ROF 6 = 50</p>
-                    </div>
-                </div>
-                <div id="reload_section">
-                    <h3>Reload and Ammo Switching</h3>
-                    <p>Here you can switch ammo and reload your weapon</p>
-                    <p class="notes">If you change the ammo type you'll get the old ammo back, unless it is a Charge Pack.</p>
-                    <div class="form-group">
-                        <label for="ammo">Ammo to load: </label>
-                        <select id="ammo" name="ammo">${defaultAmmo.reduce((acc, val) => acc += `<option value="${val}" ${val === loadedAmmo ? `selected` : ``}>${val}</option>`, ``)}</select>
-                    </div>
-                    <div class="form-group">
-                        <label for="singleReload">Can only reload one at a time: </label>
-                        <input id="singleReload" name="singleReload" type="checkbox"${defaultSingleReload}>
-                    </div>
-                </div>
-            </form>
-            `,
-        render: ([dialogContent]) => {
-            const modeSwitchLambda = (event) => {
-                const form = event.target.closest("form");
+class AmmoApp extends SwimWindow {
+    #actor
+    #weapons
 
-                const selectedModeForms = form.querySelector('select[name="mode"]');
-                const reloadDiv = form.querySelector("#reload_section");
-                const shootingDiv = form.querySelector("#shooting_section");
+    static get defaultOptions() {
+        return foundry.utils.mergeObject(super.defaultOptions, { id: 'swim-ammo-management', width: 480 })
+    }
 
-                //enable and disable the respective part of the form
-                if (selectedModeForms.selectedIndex === 0) {
-                    reloadDiv.style.display = "block";
-                    shootingDiv.style.display = "none";
-                } else {
-                    reloadDiv.style.display = "none";
-                    shootingDiv.style.display = "block";
-                }
+    get title() { return t('SWIM.dialogue-ammoManagement') }
+
+    constructor(actor, weapons) {
+        super()
+        this.#actor = actor
+        this.#weapons = weapons
+        this.state.mode = 'reload'
+        this.#pick_weapon(weapons[0])
+    }
+
+    get #weapon() { return this.#weapons.find((w) => w.id === this.state.weaponId) }
+
+    #ammo_names(weapon) {
+        return weapon.system.ammo.trim().split('|').filter((a) => !!this.#actor.items.getName(a))
+    }
+
+    /** Sets the weapon and the defaults that depend on it: shots = full ROF, ammo = the loaded one, bullets to load = a full magazine. */
+    #pick_weapon(weapon) {
+        const names = this.#ammo_names(weapon)
+        const loaded = weapon.flags.swim.config.loadedAmmo
+        this.state.weaponId = weapon.id
+        this.state.shots = String(SHOTS_PER_ROF[parseInt(weapon.system.rof)] ?? 0)
+        this.state.ammo = names.includes(loaded) ? loaded : names[0]
+        this.state.amount = String(parseInt(weapon.system.shots) || 1)
+    }
+
+    activateListeners(html) {
+        super.activateListeners(html)
+        // These change what else is shown, so they re-render.
+        html.on('change', 'select[data-field="weaponId"]', () => {
+            this.#pick_weapon(this.#weapon)
+            this.render()
+        })
+        html.on('change', 'select[data-field="ammo"]', () => this.render())
+    }
+
+    async view() {
+        const weapon = this.#weapon
+        const s = this.state
+        const max = parseInt(weapon.system.shots) || 0
+        const current = parseInt(weapon.system.currentShots) || 0
+        const loaded = weapon.flags.swim.config.loadedAmmo
+        const names = this.#ammo_names(weapon)
+        const ammoItem = this.#actor.items.getName(s.ammo)
+        const isPack = ammoItem?.flags?.swim?.config?.isPack === true
+        const isSingle = weapon.system.reloadType === 'single'
+        const reloading = s.mode === 'reload'
+        const maxShots = SHOTS_PER_ROF[parseInt(weapon.system.rof)] ?? 0
+        const opts = (list, sel) => list.map(([v, l]) => `<option value="${esc(v)}" ${v === sel ? 'selected' : ''}>${esc(l)}</option>`).join('')
+
+        let body = `<div class="swim-hc-rate swim-us-two">${rate_opt('mode', 'mode', 'reload', t('SWIM.dialogue-reload'), reloading)}${rate_opt('mode', 'mode', 'shooting', t('SWIM.dialogue-shoot'), !reloading)}</div>
+            <div class="swim-am-row"><label class="swim-hc-lab">${t('SWIM.ammo.weapon')}</label>
+            <select data-field="weaponId">${opts(this.#weapons.map((w) => [w.id, w.name]), weapon.id)}</select></div>
+            <div class="swim-am-row"><label class="swim-hc-lab">${t('SWIM.ammo.loaded')}</label>
+            <b>${esc(loaded ?? '-')} (${current}/${max})</b></div>`
+        if (reloading) {
+            body += `<div class="swim-hc-preview">${t('SWIM.ammo.switchHint')}</div>
+                <div class="swim-am-row"><label class="swim-hc-lab">${t('SWIM.ammo.ammoToLoad')}</label>
+                <select data-field="ammo">${opts(names.map((n) => [n, n]), s.ammo)}</select></div>`
+            if (isPack) {
+                body += `<div class="swim-hc-preview">${t('SWIM.ammo.packHint')}</div>`
+            } else {
+                const amount = parse_amount(s.amount)
+                body += `<div class="swim-am-row"><label class="swim-hc-lab">${t('SWIM.ammo.amount')}</label>
+                    <div class="swim-am-amount"><input type="number" min="1" step="1" data-field="amount" value="${esc(s.amount)}">
+                    <div class="swim-hc-rate swim-us-two">${rate_opt('amount', 'amount', max, t('SWIM.ammo.amountMax', { max }), amount === max)}${rate_opt('amount', 'amount', 1, t('SWIM.ammo.amountOne'), amount === 1 && max !== 1)}</div></div></div>
+                    <div class="swim-hc-preview">${t('SWIM.ammo.amountHint')}${isSingle ? ` ${t('SWIM.ammo.singleHint')}` : ''}</div>`
             }
-
-            const weaponSwitchLambda = (event) => {
-                const form = event.target.closest("form");
-
-                const selectedWeaponForm = form.querySelector('select[name="weapon"]');
-                const selectedAmmoForm = form.querySelector('select[name="ammo"]');
-                const selectedShotsForm = form.querySelector('input[name="shots"]');
-                const selectedLoadedAmmoForm = form.querySelector('label[name="loaded_ammo"]');
-                const selectedsingleReloadForm = form.querySelector('input[name="singleReload"]');
-
-                const selectedWeapon = weapons[selectedWeaponForm.selectedIndex];
-
-                if (defaultWeapon !== selectedWeapon) {
-                    defaultShots = shotsPerRof[parseInt(selectedWeapon.system.rof)];
-                    selectedShotsForm.setAttribute("max", defaultShots);
-                    selectedShotsForm.setAttribute("value", defaultShots);
-
-                    loadedAmmo = selectedWeapon.flags.swim.config.loadedAmmo;
-                    currentShots = selectedWeapon.system.currentShots;
-                    currentMaxShots = selectedWeapon.system.shots;
-                    selectedLoadedAmmoForm.innerHTML = `${loadedAmmo} (${currentShots}/${currentMaxShots})`;
-
-                    defaultAmmo = selectedWeapon.system.ammo.trim().split('|').filter(a => !!actor.items.getName(a));
-                    selectedAmmoForm.innerHTML = defaultAmmo.reduce((acc, val) => acc += `<option value="${val}" ${val === loadedAmmo ? `selected` : ``}>${val}</option>`, ``);
-                    
-                    selectedsingleReloadForm.checked = (selectedWeapon.system.reloadType === 'single');
-
-                    defaultWeapon = selectedWeapon;
-                }
-            }
-
-            dialogContent.querySelector(`select[name="mode"]`).focus();
-            dialogContent.querySelector(`select[name="weapon"]`).addEventListener("input", weaponSwitchLambda);
-            dialogContent.querySelector(`select[name="mode"]`).addEventListener("input", modeSwitchLambda);
-
-            //Set initial mode
-            const reloadDiv = dialogContent.querySelector("#reload_section");
-            const shootingDiv = dialogContent.querySelector("#shooting_section");
-            reloadDiv.style.display = "block";
-            shootingDiv.style.display = "none";
-        },
-        buttons: {
-            shoot: {
-                label: game.i18n.localize("SWIM.dialogue-shoot"),
-                callback: async (html) => await shootButton(html, actor, weapons, defaultAmmo)
-            },
-            reload: {
-                label: game.i18n.localize("SWIM.dialogue-reload"),
-                callback: async (html) => await reloadButton(html, actor, weapons, defaultAmmo)
-            }
+        } else {
+            body += `<div class="swim-hc-preview">${t('SWIM.ammo.shootHint')}</div>
+                <div class="swim-am-row"><label class="swim-hc-lab">${t('SWIM.ammo.shots')}</label>
+                <input type="number" min="0" max="${maxShots}" step="1" data-field="shots" value="${esc(s.shots)}"></div>
+                <div class="swim-hc-preview">${t('SWIM.ammo.shotsHint')}</div>`
         }
-    }).render(true);
+        const go = reloading ? btn('reload', t('SWIM.dialogue-reload'), { go: true }) : btn('shoot', t('SWIM.dialogue-shoot'), { go: true })
+        return { body, foot: `<span class="swim-hc-spacer"></span>${btn('cancel', t('SWIM.picker.cancel'))}${go}` }
+    }
+
+    async onAction(action, el) {
+        if (action === 'cancel') { return this.close() }
+        if (action === 'mode') { this.state.mode = el.dataset.mode; return this.render() }
+        if (action === 'amount') { this.state.amount = String(el.dataset.amount); return this.render() }
+        if (action !== 'shoot' && action !== 'reload') { return }
+        this.busy = true
+        try {
+            if (action === 'shoot') {
+                await shoot(this.#weapon, parse_amount(this.state.shots) || 0, this.#actor)
+            } else {
+                await reload(this.#actor, this.#weapon, this.#actor.items.getName(this.state.ammo), parse_amount(this.state.amount))
+            }
+        } finally {
+            this.busy = false
+        }
+        return this.close()
+    }
 }
 
 async function shoot(selectedWeapon, selectedShots, actor, trait = undefined) {
@@ -199,9 +207,9 @@ async function shoot(selectedWeapon, selectedShots, actor, trait = undefined) {
         const volume = Number(game.settings.get("swim", "defaultVolume"))
         if (selectedWeapon.system.rof === 1) {
             swim.play_sfx(attackSFX, volume, true)
-        } else if (rate_of_fire === 2) {
+        } else if (selectedWeapon.system.rof === 2) {
             swim.play_sfx(frenzySFX, volume, true)
-        } else if (rate_of_fire >= 3) {
+        } else if (selectedWeapon.system.rof >= 3) {
             swim.play_sfx(frenzyImpSFX, volume, true)
         }
     }
@@ -347,24 +355,8 @@ async function shoot(selectedWeapon, selectedShots, actor, trait = undefined) {
     }
 }
 
-async function shootButton(html, actor, weapons, ammo) {
-    const {
-        selectedWeapon,
-        selectedAmmo,
-        selectedShots,
-        selectedSingleReload
-    } = getValues(html, actor, weapons, ammo);
 
-    await shoot(selectedWeapon, selectedShots, actor);
-}
-
-async function reloadButton(html, actor, weapons, ammo) {
-    const {
-        selectedWeapon,
-        selectedAmmo,
-        selectedShots,
-        selectedSingleReload
-    } = getValues(html, actor, weapons, ammo);
+async function reload(actor, selectedWeapon, selectedAmmo, amount) {
     const pronoun = swim.get_pronoun(actor)
 
     //Set up variables
@@ -375,6 +367,12 @@ async function reloadButton(html, actor, weapons, ammo) {
 
     const all_sfx = await swim.get_weapon_sfx(selectedWeapon)
     const sfx_reload = all_sfx.reloadSFX
+    const play_reload = () => {
+        if (sfx_reload) {
+            const volume = Number(game.settings.get("swim", "defaultVolume"))
+            swim.play_sfx(sfx_reload, volume, true)
+        }
+    }
 
     if (!selectedAmmo && (actor.type === 'character' || npcAmmo === true)) {
         return ui.notifications.error(game.i18n.localize("SWIM.notification-outOfAmmo"));
@@ -389,163 +387,75 @@ async function reloadButton(html, actor, weapons, ammo) {
 
         //get current loaded ammo
         const oldAmmoId = selectedWeapon.flags.swim.config.loadedAmmo;
-        let oldAmmo = oldAmmoId ? actor.items.getName(oldAmmoId) : null;
+        const oldAmmo = oldAmmoId ? actor.items.getName(oldAmmoId) : null;
         // We suspect that the ammo to reload is the same as the previously loaded one. If not chgType will tell the code to swap the ammo.
-        let chgType = false;
-        if (oldAmmo !== selectedAmmo) {
-            chgType = true;
-        }
+        const chgType = oldAmmo !== selectedAmmo;
         if (chgType === false && autoReload) { //Stop here if the weapon doesn't need a reloading action and ammo isn't changed.
             ui.notifications.notify(game.i18n.localize("SWIM.notification-noNeedToReload"))
             return;
         }
 
-        // Getting current numbers
-        const currentCharges = parseInt(selectedWeapon.system.currentShots);
-        const maxCharges = parseInt(selectedWeapon.system.shots);
-        const requiredCharges = parseInt(selectedWeapon.system.shots - currentCharges);
-        const availableAmmo = parseInt(selectedAmmo.system.quantity);
-        const oldAmmoQuantity = parseInt(oldAmmo?.system?.quantity) || 0;
-
-        // Variables for recharging procedure
-        let amountToRecharge;
-        let newCharges;
-        let newAmmo;
-        let oldAmmoRefill;
-
-        // Checking if the Ammo is a charge pack. If not or flag is not present run migration. Charge Packs can only refill if curr and max shots are equal.
-        if (!selectedAmmo.flags.swim || !selectedAmmo.flags.swim) {
+        // Checking if the Ammo is a charge pack. If the flag is not present run migration.
+        if (!selectedAmmo.flags.swim) {
             await swim.run_migration(false, selectedAmmo)
         }
-        if (selectedAmmo.flags.swim.config.isPack === true) {
-            // Charge Packs only use 1 Quantity to fully charge the weapon
-            amountToRecharge = parseInt(selectedWeapon.system.shots);
-            newCharges = amountToRecharge;
-            newAmmo = availableAmmo - 1;
-            //Refill old Charge Pack if it is still full (current and max shots are equal)
-            if (chgType) {
-                if (currentCharges === maxCharges) {
-                    oldAmmoRefill = oldAmmoQuantity + 1;
-                } else {
-                    oldAmmoRefill = oldAmmoQuantity;
-                }
-            }
-        }
-        // Checking if user selected to change the ammo type. This is only relevant if not a Charge Pack, if it is, it's already handled above.
-        else if (chgType) {
-            // When changing Ammo type, remaining shots should not become the new Ammo Type.
-            amountToRecharge = parseInt(selectedWeapon.system.shots);
-            //Change the amount to recharge to 1 if singleReload is checked.
-            if (selectedSingleReload) {
-                amountToRecharge = 1
-            }
-            if (autoReload) {
-                amountToRecharge = 0
-            }
-            newCharges = amountToRecharge;
-            newAmmo = availableAmmo - amountToRecharge;
-            oldAmmoRefill = oldAmmoQuantity + currentCharges;
-        } else {
-            // If the quantity of ammo is less than the amount required, use whatever is left.
-            amountToRecharge = Math.min(availableAmmo, requiredCharges);
-            //Change the amount to recharge to 1 if singleReload is checked.
-            if (selectedSingleReload) {
-                amountToRecharge = currentCharges >= maxCharges ? 0 : 1
-                if (amountToRecharge === 0) {
-                    ui.notifications.error(game.i18n.localize("SWIM.notification-weaponAlreadyFull"))
-                    return
-                }
-            }
-            newCharges = currentCharges + amountToRecharge;
-            newAmmo = availableAmmo - amountToRecharge;
-        }
-
         // Check if there is ammo left to reload.
-        if (availableAmmo < 1) {
-            ui.notifications.notify(game.i18n.localize("SWIM.notification-outOfAmmo"))
-        } else if (chgType) {
-            const updates = [
-                {
-                    _id: selectedWeapon.id,
-                    "system.currentShots": newCharges,
-                    "flags.swim.config.loadedAmmo": `${selectedAmmo.name}`
-                },
-                { _id: selectedAmmo.id, "system.quantity": newAmmo },
-            ];
-            if (oldAmmo) { updates.push({ _id: oldAmmo?.id, "system.quantity": oldAmmoRefill }) }
-
-            await actor.updateEmbeddedDocuments("Item", updates);
-            ChatMessage.create({
-                speaker: {
-                    alias: actor.name
-                },
-                content: game.i18n.format("SWIM.chatMessage-reloadWeaponWithAmmoName", {
-                    weaponIMG: weaponImg,
-                    ammoIMG: ammoImg,
-                    name: actor.name,
-                    itemWeaponName: selectedWeapon.name,
-                    itemAmmoName: selectedAmmo.name,
-                    pronoun: pronoun
-                })
-            })
-            if (sfx_reload) {
-                const volume = Number(game.settings.get("swim", "defaultVolume"))
-                swim.play_sfx(sfx_reload, volume, true)
-            }
-
-            await applyActiveEffect(actor, selectedWeapon, selectedAmmo, oldAmmo);
-        } else {
-            const updates = [
-                {
-                    _id: selectedWeapon.id,
-                    "system.currentShots": newCharges,
-                    "flags.swim.config.loadedAmmo": `${selectedAmmo.name}`
-                },
-                { _id: selectedAmmo.id, "system.quantity": newAmmo },
-            ];
-
-            await actor.updateEmbeddedDocuments("Item", updates);
-            ChatMessage.create({
-                speaker: {
-                    alias: actor.name
-                },
-                content: game.i18n.format("SWIM.chatMessage-reloadWeaponWithAmmoName", {
-                    weaponIMG: weaponImg,
-                    ammoIMG: ammoImg,
-                    name: actor.name,
-                    itemWeaponName: selectedWeapon.name,
-                    itemAmmoName: selectedAmmo.name,
-                    pronoun: pronoun
-                })
-            })
-            if (sfx_reload) {
-                const volume = Number(game.settings.get("swim", "defaultVolume"))
-                swim.play_sfx(sfx_reload, volume, true)
-            }
+        if (parseInt(selectedAmmo.system.quantity) < 1) {
+            return ui.notifications.notify(game.i18n.localize("SWIM.notification-outOfAmmo"))
         }
+        const plan = reload_plan({
+            chgType,
+            isPack: selectedAmmo.flags.swim.config.isPack === true,
+            autoReload,
+            current: parseInt(selectedWeapon.system.currentShots),
+            max: parseInt(selectedWeapon.system.shots),
+            available: parseInt(selectedAmmo.system.quantity),
+            oldQty: parseInt(oldAmmo?.system?.quantity) || 0,
+            amount,
+        })
+        if (plan.error) { return ui.notifications.error(game.i18n.localize(plan.error)) }
+
+        const updates = [
+            {
+                _id: selectedWeapon.id,
+                "system.currentShots": plan.newCharges,
+                "flags.swim.config.loadedAmmo": `${selectedAmmo.name}`
+            },
+            { _id: selectedAmmo.id, "system.quantity": plan.newAmmo },
+        ];
+        if (chgType && oldAmmo) { updates.push({ _id: oldAmmo.id, "system.quantity": plan.oldRefill }) }
+
+        await actor.updateEmbeddedDocuments("Item", updates);
+        ChatMessage.create({
+            speaker: {
+                alias: actor.name
+            },
+            content: game.i18n.format("SWIM.chatMessage-reloadWeaponWithAmmoName", {
+                weaponIMG: weaponImg,
+                ammoIMG: ammoImg,
+                name: actor.name,
+                itemWeaponName: selectedWeapon.name,
+                itemAmmoName: selectedAmmo.name,
+                pronoun: pronoun
+            })
+        })
+        play_reload()
+        if (chgType) { await applyActiveEffect(actor, selectedWeapon, selectedAmmo, oldAmmo); }
     } else {
         // If NPCs don't use Ammo from inventory, just reload the weapon:
-        let newCharges;
         const currentCharges = parseInt(selectedWeapon.system.currentShots);
         const maxCharges = parseInt(selectedWeapon.system.shots);
         if (selectedWeapon.flags.swim.config.isConsumable === true) {
             return ui.notifications.error(game.i18n.localize("SWIM.notification-cannotReloadConsumableWeapons"));
         } else if (selectedWeapon.system.reloadType === "none") {
             return ui.notifications.error(game.i18n.localize("SWIM.notification-cannotChangeAmmoTypeIfNPCDontUseAmmoFromInventory"));
-        } else if (currentCharges === maxCharges) {
+        } else if (currentCharges >= maxCharges) {
             return ui.notifications.error(game.i18n.localize("SWIM.notification-weaponAlreadyFull"));
+        } else if (amount < 1) {
+            return ui.notifications.error(game.i18n.localize("SWIM.ammo.notificationNoAmount"));
         }
-        if (selectedSingleReload === true) {
-            //Do single reload
-            newCharges = currentCharges + 1;
-        } else {
-            //Do full reload
-            newCharges = maxCharges;
-        }
-        const updates = [
-            { _id: selectedWeapon.id, "system.currentShots": newCharges }
-        ];
-        await actor.updateEmbeddedDocuments("Item", updates);
+        const newCharges = Math.min(maxCharges, currentCharges + amount);
+        await actor.updateEmbeddedDocuments("Item", [{ _id: selectedWeapon.id, "system.currentShots": newCharges }]);
 
         ChatMessage.create({
             speaker: {
@@ -558,10 +468,7 @@ async function reloadButton(html, actor, weapons, ammo) {
                 pronoun: pronoun
             })
         })
-        if (sfx_reload) {
-            const volume = Number(game.settings.get("swim", "defaultVolume"))
-            swim.play_sfx(sfx_reload, volume, true)
-        }
+        play_reload()
     }
 }
 
@@ -610,27 +517,6 @@ async function applyActiveEffect(actor, selectedWeapon, selectedAmmo, oldAmmo) {
             rendersheet: false,
             parent: actor
         });
-    }
-}
-
-function getValues(html, actor, weapons, ammo) {
-    const form = html.find("[name=form]")[0];
-
-    const selectedWeaponForm = form.querySelector('select[name="weapon"]');
-    const selectedAmmoForm = form.querySelector('select[name="ammo"]');
-    const selectedShotsForm = form.querySelector('input[name="shots"]');
-    const selectedSingleReloadForm = form.querySelector('input[name="singleReload"]');
-
-    const selectedWeapon = weapons[selectedWeaponForm.selectedIndex];
-    const selectedAmmo = actor.items.getName(ammo[selectedAmmoForm.selectedIndex]);
-    const selectedShots = parseInt(selectedShotsForm.value) || 0;
-    const selectedSingleReload = selectedSingleReloadForm.checked;
-
-    return {
-        selectedWeapon,
-        selectedAmmo,
-        selectedShots,
-        selectedSingleReload
     }
 }
 

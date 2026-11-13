@@ -1,4 +1,4 @@
-/* Unshake window (scripts/swim_modules/unshake.js) and Unstun window (unstun.js) and Radiation Centre (radiation_centre.js) and Tester (tester.js), Travel Calculator (travel_calculator.js), Common Bond, Deviation and Dramatic Task Planner (helpers/swim_window.js), same classes `.swim-us*`.
+/* Unshake window (scripts/swim_modules/unshake.js) and Unstun window (unstun.js) and Radiation Centre (radiation_centre.js) and Tester (tester.js), Travel Calculator (travel_calculator.js), Common Bond, Deviation, Dramatic Task Planner, Effect Builder etc. (helpers/swim_window.js), same classes `.swim-us*`.
    Uses the building blocks of styles/health-centre.css (.swim-hc-*: patient card, method cards, preview, result, footer, buttons);
    only what is specific to Unshake is defined here. If the shared parts of HC / Soak / Unshake grow, move them to a common stylesheet. */
 
@@ -53,3 +53,28 @@
 .swim-rc-row input[type="number"] { width: 90px; height: 24px; padding: 0 6px; text-align: center; background: var(--swim-hc-bg); color: var(--swim-hc-text); border: 1px solid var(--swim-hc-line); border-radius: 5px; }
 .swim-rc-result { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--swim-hc-line); }
 .swim-fear-targets { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+
+/* Effect Builder: searchable power list */
+.swim-eb-search, .swim-eb-search:focus { width: 100%; }
+.swim-hc-ctl input.swim-eb-search { width: 100%; }
+.swim-eb-list { max-height: 188px; overflow-y: auto; margin-top: 6px; border: 1px solid var(--swim-hc-line); border-radius: 6px; background: var(--swim-hc-panel); }
+.swim-eb-item { padding: 4px 10px; cursor: pointer; border-left: 3px solid transparent; }
+.swim-eb-item[hidden], .swim-eb-none[hidden] { display: none; }
+.swim-eb-item:hover, .swim-eb-item:focus { background: rgba(255, 255, 255, 0.07); outline: none; }
+.swim-eb-item.is-on { border-left-color: var(--swim-hc-gold); background: rgba(255, 255, 255, 0.12); font-weight: 600; }
+.swim-eb-none { padding: 8px 10px; color: var(--swim-hc-dim); font-style: italic; }
+.swim-eb-options .swim-hc-ctl select, .swim-eb-options .swim-hc-ctl input[type="number"] { max-width: none; }
+.swim-eb-options .swim-hc-ctl select { width: 100%; }
+
+/* Ammo Management + Chase Setup: label | control rows */
+.swim-am-row { display: grid; grid-template-columns: 130px 1fr; gap: 10px; align-items: center; margin-top: 6px; }
+.swim-am-row select, .swim-am-row select:focus { width: 100%; max-width: 100%; height: 24px; background: var(--swim-hc-bg); color: var(--swim-hc-text); border: 1px solid var(--swim-hc-line); border-radius: 5px; }
+.swim-am-row input[type="number"] { width: 80px; height: 24px; padding: 0 6px; text-align: center; background: var(--swim-hc-bg); color: var(--swim-hc-text); border: 1px solid var(--swim-hc-line); border-radius: 5px; }
+.swim-am-amount { display: flex; align-items: center; gap: 10px; }
+.swim-am-amount .swim-hc-rate { flex: 1; margin: 0; }
+.swim-ch-layout { margin-top: 10px; padding: 6px 8px; background: var(--swim-hc-panel); border: 1px solid var(--swim-hc-line); border-radius: 6px; }
+.swim-ch-layout summary { cursor: pointer; font-weight: 600; }
+.swim-ch-layout h5 { margin: 8px 0 0; color: var(--swim-hc-dim); font-weight: 600; }
+.swim-ch-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.swim-ch-pair label { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 6px; }
+.swim-ch-pair input[type="number"] { width: 70px; height: 24px; padding: 0 6px; text-align: center; background: var(--swim-hc-bg); color: var(--swim-hc-text); border: 1px solid var(--swim-hc-line); border-radius: 5px; }
