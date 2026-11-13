@@ -23,11 +23,6 @@ export async function effect_hooks() {
                 else if (condition.flags?.swim?.maintaining === game.i18n.localize("SWIM.power-intangibility")) { await token.document.update({ "alpha": 0.5 }) }
             }
         }
-        // Light
-        if (condition.flags?.succ?.conditionId === "torch" && game.user.id === userID) {
-            if (condition.flags?.succ?.effectOptions?.swim?.activatedFromMacro === true) { return } //Prevent second execution if macro was used.
-            swim.token_vision(condition)
-        }
         // Conviction
         if (condition.name === "Conviction") {
             // This prevents conviction expiration dialogue from core since SWADE handles it by itself.
@@ -118,11 +113,6 @@ export async function effect_hooks() {
                     await swim.wait(`800`);
                 }
             }
-        }
-        // Light
-        if (condition.flags?.succ?.conditionId === "torch" && game.user.id === userID) {
-            if (condition.flags?.swim?.deactivatedFromMacro === true) { return } //Prevent second execution if macro was used.
-            swim.token_vision(condition)
         }
     })
 }
