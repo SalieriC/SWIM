@@ -135,3 +135,9 @@
 .swim-cfg-donate { text-align: center; padding: 14px 0 4px; font-size: 12px; }
 .swim-cfg-donate img { display: block; margin: 6px auto 0; border: 0; }
 .swim-cfg-count { color: var(--swim-hc-dim); font-size: 12px; }
+
+/* SWIM Config of actors and items (scripts/swim_document_config.js) */
+.swim-cfg-doc .swim-hc-body { height: auto; max-height: min(540px, 62vh); }
+.swim-cfg-doc .swim-cfg-ptitle { display: block; }
+.swim-cfg-aestate { flex: 1; text-align: right; color: var(--swim-hc-dim); font-size: 12px; }
+.swim-cfg-eff { color: var(--swim-hc-gold); }

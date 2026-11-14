@@ -1,16 +1,18 @@
 import * as SWIM from "./constants.js";
 import SWIMEffectConfig from "./helpers/custom_effect_config.js";
+import { SwimWindow, t, esc, btn, tokens_header } from "./helpers/swim_window.js";
+import { play_audio } from "./helpers/audio.js";
 
 export async function open_swim_item_config(item) {
     let actor = false
     await swim.run_migration(actor, item)
-    new DocumentConfigForm(item).render(true);
+    SwimWindow.show(new DocumentConfigApp(item));
 }
 
 export async function open_swim_actor_config(actor) {
     let item = false
     await swim.run_migration(actor, item)
-    new DocumentConfigForm(actor).render(true);
+    SwimWindow.show(new DocumentConfigApp(actor));
 }
 
 /*
@@ -296,128 +298,163 @@ function swim_config_options() {
 
 const swimConfigVersion = SWIM.CONFIG_VERSION
 
-class DocumentConfigForm extends FormApplication {
+/** Value as it is stored: Boolean / Number / String (the Active Effect field is a JSON string). */
+function norm(c, v) {
+    if (c.isBoolean) { return !!v }
+    if (c.isNumber) {
+        const n = Number.parseFloat(String(v ?? '').replace(',', '.'))
+        return Number.isFinite(n) ? n : Number(c.value)
+    }
+    return String(v ?? '')
+}
+
+/**
+ * SWIM Config window of an actor or item (weapon, ammo, character, npc ...), built on SwimWindow.
+ * The rows come from `swim_config_options()`; the window works on the SOURCE data of the document: `document.flags` holds the *prepared*
+ * data, i.e. including Active Effects that change flags.swim.config.* (e.g. radiation resistance); writing those back as source would
+ * apply the effect again on every save. Prepared values that differ are only shown as information. Only changed values are written.
+ */
+class DocumentConfigApp extends SwimWindow {
+    constructor(doc) {
+        super({ id: `swim-doc-config-${doc.uuid.replaceAll('.', '-')}`, title: `${t('SWIM.DocumentConfigMenu')}: ${doc.name}`, width: 640 })
+        this.doc = doc
+        const type = doc.type
+        const source = doc._source?.flags?.swim?.config ?? {}
+        const prepared = doc.flags?.swim?.config ?? {}
+        this.sectionList = []
+        let current = null
+        for (const c of swim_config_options()) {
+            if ('showFor' in c && !c.showFor.includes(type)) { continue }
+            if (c.isSectionTitle) { current = { title: c.label, rows: [] }; this.sectionList.push(current); continue }
+            if (!current) { current = { title: null, rows: [] }; this.sectionList.push(current) }
+            const stored = source[c.id]
+            c.saved = norm(c, stored !== undefined && stored !== null ? stored : c.value)
+            const eff = prepared[c.id]
+            if (!c.isAE && eff !== undefined && eff !== null && JSON.stringify(eff) !== JSON.stringify(c.saved)) { c.effective = eff }
+            current.rows.push(c)
+            this.state[c.id] = c.saved
+        }
+        this.rows = this.sectionList.flatMap((sec) => sec.rows)
+        this.sourceVersion = source._version
+    }
 
     static get defaultOptions() {
-        let options = super.defaultOptions;
-        options.id = 'swim-document-config';
-        options.title = "SWIM Config"
-        options.template = "/modules/swim/templates/swim_document_config.hbs";
-        options.width = SWIM.ITEM_CONFIG_WINDOW_WIDTH;
-        options.height = SWIM.ITEM_CONFIG_WINDOW_HEIGHT;
-        options.submitOnClose = true; // This will save the flags even if we close the window without hitting "Save"
-        return options;
+        return foundry.utils.mergeObject(super.defaultOptions, { classes: ['swim-hc-app', 'swim-us-app', 'swim-cfg-app', 'swim-cfg-doc'], resizable: true })
+    }
+
+    #dirty() { return this.rows.filter((c) => norm(c, this.state[c.id]) !== c.saved) }
+
+    #control(c) {
+        const v = this.state[c.id]
+        const f = `data-field="${esc(c.id)}"`
+        const ico = (action, icon, title, extra = '') => `<button type="button" class="swim-hc-btn swim-cfg-ico" data-action="${action}" data-id="${esc(c.id)}" title="${esc(title)}" ${extra}><i class="${icon}"></i></button>`
+        if (c.isBoolean) { return `<input type="checkbox" ${f} ${v ? 'checked' : ''}>` }
+        if (c.isNumber) { return `<input type="number" ${f} value="${esc(v)}" ${c.min !== undefined ? `min="${c.min}"` : ''} ${c.max !== undefined ? `max="${c.max}"` : ''} step="any">` }
+        if (c.isAE) {
+            const embedded = this.doc.isEmbedded
+            return `<span class="swim-cfg-aestate" data-id="${esc(c.id)}"></span>
+                ${ico('ae-edit', 'far fa-pen-to-square', embedded ? t('SWIM.Config_ButtonDisabled') : t('SWIM.configWin.aeEdit'), embedded ? 'disabled' : '')}
+                ${ico('ae-remove', 'far fa-trash', t('SWIM.configWin.aeRemove'))}`
+        }
+        let out = `<input type="text" ${f} value="${esc(v)}">`
+        if (c.useFilePicker) { out += ico('browse', 'fas fa-folder-open', t('SWIM.configWin.browse')) }
+        if (c.useFilePicker && c.filePickerData === 'audio') { out += ico('play', 'fas fa-play', t('SWIM.configWin.play')) }
+        return out
+    }
+
+    #row(c) {
+        const label = t(c.label)
+        const eff = c.effective !== undefined ? `<small class="swim-cfg-eff"><i class="fas fa-bolt"></i> ${esc(t('SWIM.Config_EffectiveValue'))} <b>${esc(c.effective)}</b></small>` : ''
+        return `<div class="swim-cfg-row" data-id="${esc(c.id)}">
+            <div class="swim-cfg-info"><b>${esc(label)}</b><small>${esc(t(c.hint))}</small>${eff}</div>
+            <div class="swim-cfg-ctl">${this.#control(c)}<button type="button" class="swim-cfg-reset" data-action="reset" data-id="${esc(c.id)}" title="${esc(t('SWIM.configWin.reset'))}"><i class="fas fa-undo"></i></button></div></div>`
+    }
+
+    async view() {
+        const head = tokens_header([{ token: { name: this.doc.name, texture: { src: this.doc.img } }, small: this.doc.type }])
+        const body = this.sectionList.map((sec) => `<section>${sec.title ? `<h4 class="swim-cfg-ptitle">${esc(t(sec.title))}</h4>` : ''}${sec.rows.map((c) => this.#row(c)).join('')}</section>`).join('')
+        const foot = `<span class="swim-cfg-count"></span><span class="swim-hc-spacer"></span>${btn('cancel', t('SWIM.picker.cancel'))}${btn('save', t('SWIM.Save'), { go: true })}`
+        return { head, body, foot }
     }
 
     activateListeners(html) {
-        super.activateListeners(html);
-        html = html[0];
-
-        html.querySelectorAll("[data-action]").forEach(button => {
-            button.addEventListener("click", this._onButtonClick.bind(this));
-        });
+        super.activateListeners(html)
+        html.on('change input', '[data-field]', () => this.#refresh())
+        this.#refresh()
     }
 
-    getData() {
-        const configs = swim_config_options()
-        const type = this.object.type;
-        let data = [];
-
-        //The form works on the SOURCE data. `this.object.flags` holds the *prepared* data, i.e. including Active Effects that change
-        //flags.swim.config.* (e.g. radiation resistance); writing those back as source would apply the effect again on every save.
-        const sourceConfig = this.object._source?.flags?.swim?.config ?? {}
-        const preparedConfig = this.object.flags?.swim?.config ?? {}
-
-        for (const c of configs) {
-            //load and merge flags here
-            if ('showFor' in c && !c.showFor.includes(type))
-                continue;
-
-            if (c.id in sourceConfig) {
-                const val = sourceConfig[c.id];
-                if (val !== null && val !== undefined) {
-                    c.value = val;
-                }
-            }
-
-            //Show the effective value if Active Effects change it (informational only, never saved).
-            const effective = preparedConfig[c.id]
-            if (c.id && !c.isAE && effective !== undefined && effective !== null && JSON.stringify(effective) !== JSON.stringify(c.value)) {
-                c.hasEffective = true
-                c.effective = effective
-            }
-
-            data.push(c);
+    #refresh() {
+        const root = this.element
+        if (!root?.length) { return }
+        for (const c of this.rows) {
+            const row = root.find(`.swim-cfg-row[data-id="${c.id}"]`)
+            row.toggleClass('is-changed', norm(c, this.state[c.id]) !== c.saved)
+            row.find('.swim-cfg-reset').toggleClass('is-default', norm(c, this.state[c.id]) === norm(c, c.value))
+            if (c.isAE) { row.find('.swim-cfg-aestate').text(this.state[c.id] ? t('SWIM.configWin.aeSet') : t('SWIM.configWin.aeNone')) }
         }
-
-        return { options: data, isEmbedded: this.object.isEmbedded };
+        const n = this.#dirty().length
+        root.find('.swim-cfg-count').text(n ? t('SWIM.configWin.changes', { count: n }) : t('SWIM.configWin.noChanges'))
+        root.find('[data-action="save"]').prop('disabled', !n)
     }
 
-    async _onButtonClick(event) {
-        event.preventDefault();
-        const action = event.currentTarget.dataset.action;
-        if (this[action])
-            await this[action](event);
+    #set(id, value) {
+        this.state[id] = value
+        const el = this.element.find(`[data-field="${id}"]`)
+        if (el.attr('type') === 'checkbox') { el.prop('checked', !!value) } else { el.val(value) }
+        this.#refresh()
     }
 
-    async _setActiveEffect(event) {
-        let defaults;
-        const id = event.currentTarget.dataset.id;
-        const oldVal = this.form.elements[id].value;
-
-        if (typeof oldVal === 'string' && oldVal.length === 0) {
-            defaults = {
-                name: `Ammo Effect (${this.object.name})`,
-                icon: this.object.img
-            }
-        } else {
-            defaults = JSON.parse(oldVal);
+    async onAction(action, el) {
+        const c = this.rows.find((x) => x.id === el.dataset.id)
+        switch (action) {
+            case 'reset': return this.#set(c.id, c.isBoolean ? !!c.value : c.isAE ? '' : String(c.value ?? ''))
+            case 'browse':
+                return new FilePicker({ type: c.filePickerData, current: this.state[c.id], callback: (path) => this.#set(c.id, path) }).browse()
+            case 'play':
+                if (this.state[c.id]) { play_audio(this.state[c.id], { push: false }).catch((err) => console.warn('SWIM | Could not play sound', err)) }
+                return
+            case 'ae-edit': return this.#edit_effect(c)
+            case 'ae-remove': return this.#set(c.id, '')
+            case 'cancel': return this.close()
+            case 'save': return this.#save()
         }
+    }
 
-        const effect = await CONFIG.ActiveEffect.documentClass.create(defaults, {
-            rendersheet: false,
-            parent: this.object
-        });
+    /** The Active Effect (ammo effect) is edited as a temporary effect on the item; its data is stored as JSON when its sheet is saved. */
+    async #edit_effect(c) {
+        const old = this.state[c.id]
+        const defaults = old ? JSON.parse(old) : { name: `Ammo Effect (${this.doc.name})`, icon: this.doc.img }
+        const effect = await CONFIG.ActiveEffect.documentClass.create(defaults, { rendersheet: false, parent: this.doc })
         //Set a flag to mark effects to be deleted later.
         await effect.setFlag('swim', 'ammoAeTempEff', true)
-
-        await new SWIMEffectConfig(effect, {}, async (e) => {
-            const effect = e.toObject();
-            this.form.elements[id].value = JSON.stringify(effect);
-        }).render(true);
-        
+        await new SWIMEffectConfig(effect, {}, async (e) => { this.#set(c.id, JSON.stringify(e.toObject())) }).render(true)
     }
 
-    async _removeActiveEffect(event) {
-        const id = event.currentTarget.dataset.id;
-        this.form.elements[id].value = '';
-    }
-
-    async _updateObject(_, formData) {
-        //Only write what actually differs from the SOURCE data (see getData()). Fields that were never set and still show their default
-        //are not written either, so Active Effects on these flags can never be turned into permanent values by opening/closing this window.
-        const sourceConfig = this.object._source?.flags?.swim?.config ?? {}
-        const defaults = Object.fromEntries(swim_config_options().filter(c => c.id).map(c => [c.id, c.value]))
+    async #save() {
         const changes = {}
-        for (const [key, value] of Object.entries(formData)) {
-            const stored = sourceConfig[key]
-            const current = stored !== undefined && stored !== null ? stored : defaults[key]
-            if (JSON.stringify(current) !== JSON.stringify(value)) { changes[key] = value }
-        }
-        //Merge in version
-        if (!(sourceConfig._version >= swimConfigVersion)) { changes._version = swimConfigVersion }
-
+        for (const c of this.#dirty()) { changes[c.id] = norm(c, this.state[c.id]) }
+        if (!(this.sourceVersion >= swimConfigVersion)) { changes._version = swimConfigVersion }
+        this.busy = true
         try {
-            if (Object.keys(changes).length > 0) {
-                await this.object.update({ flags: { swim: { config: changes } } });
-            }
-            // Fallback that deletes all AEs that are marked as temporary:
-            for (let eff of this.object.effects) {
+            if (Object.keys(changes).length > 0) { await this.doc.update({ flags: { swim: { config: changes } } }) }
+            console.log(`SWIM | Flags set on ${this.doc.name}.`, this.doc)
+        } catch (err) {
+            console.error('SWIM | Saving the config failed', err)
+            ui.notifications.error(t('SWIM.notification.generalErrorMsg'))
+            this.busy = false
+            return
+        }
+        this.busy = false
+        return this.close()
+    }
+
+    async close(options) {
+        //Delete the temporary effects of the ammo effect editor, whether it was saved or not.
+        try {
+            for (const eff of this.doc.effects) {
                 if (eff.flags?.swim?.ammoAeTempEff === true) { await eff.delete() }
             }
-            console.log(`SWIM | Flags set on ${this.object.name}.`, this.object);
-        } catch (err) {
-            console.log(err)
-        }
+        } catch (err) { console.warn('SWIM | Could not remove temporary effects', err) }
+        return super.close(options)
     }
 }

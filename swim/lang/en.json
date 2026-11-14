@@ -996,5 +996,9 @@
   "SWIM.configWin.noResults": "No setting matches your search.",
   "SWIM.configWin.donate": "Like SWIM? Please consider donating, it would mean the world to me. =)",
   "SWIM.configWin.reloadTitle": "Reload Application?",
-  "SWIM.configWin.reloadBody": "Some of the changed settings only take effect after a reload. Reload now?"
+  "SWIM.configWin.reloadBody": "Some of the changed settings only take effect after a reload. Reload now?",
+  "SWIM.configWin.aeSet": "Effect set",
+  "SWIM.configWin.aeNone": "No effect set",
+  "SWIM.configWin.aeEdit": "Edit effect",
+  "SWIM.configWin.aeRemove": "Remove effect"
 }
