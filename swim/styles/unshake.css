@@ -173,9 +173,10 @@
 /* List editor (sub window of the SWIM Configuration, scripts/helpers/list_editor.js) */
 .swim-cfg-listsum { margin-right: auto; font-size: 11.5px; color: var(--swim-hc-dim, inherit); opacity: 0.85; }
 .swim-le-head, .swim-le-row { display: grid; grid-template-columns: 1fr 210px 36px; gap: 6px; align-items: center; }
+.swim-le-head.has-amount, .swim-le-row.has-amount { grid-template-columns: 1fr 160px 64px 36px; }
 .swim-le-head { margin: 4px 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.75; }
 .swim-le-row { margin-bottom: 5px; }
-.swim-le-row input[type="text"], .swim-le-row select { min-width: 0; height: 26px; padding: 0 6px; background: var(--swim-hc-bg); color: var(--swim-hc-text); border: 1px solid var(--swim-hc-line); border-radius: 5px; }
+.swim-le-row input[type="text"], .swim-le-row input[type="number"], .swim-le-row select { min-width: 0; height: 26px; padding: 0 6px; background: var(--swim-hc-bg); color: var(--swim-hc-text); border: 1px solid var(--swim-hc-line); border-radius: 5px; }
 .swim-le-row .swim-cfg-ico { width: auto; margin: 0; }
 .swim-le-empty { margin: 8px 0; text-align: center; opacity: 0.75; }
 .swim-le-tools { display: flex; gap: 6px; margin-top: 8px; }

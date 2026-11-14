@@ -12,7 +12,7 @@
 import { execute_as_gm } from "../helpers/socket_helper.js"
 import { swimConditions } from '../helpers/conditions.js'
 import { play_audio } from '../helpers/audio.js'
-import { get_list, is_potion_of } from '../helpers/swid_lists.js'
+import { get_list, is_potion_of, potion_amount } from '../helpers/swid_lists.js'
 
 const t = (key, data) => (data ? game.i18n.format(key, data) : game.i18n.localize(key))
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (m) => `&#${m.charCodeAt(0)};`)
@@ -301,7 +301,9 @@ class HealthCentreApp extends Application {
             if (!isSelf && (game.user.isGM || actor.testUserPermission(game.user, 'OBSERVER'))) {
                 for (const item of potions_of(actor, snap.track)) { snap.potions.push({ owner: 'target', item }) }
             }
-            for (const p of snap.potions) { p.value = `${p.owner}:${p.item.id}` }
+            const type = snap.track === 'wounds' ? 'health' : 'fatigue'
+            const entries = get_list('potionSwids')
+            for (const p of snap.potions) { p.value = `${p.owner}:${p.item.id}`; p.amount = potion_amount(p.item, type, entries) }
             if (!snap.potions.some((p) => p.value === st.potion)) { st.potion = snap.potions[0]?.value ?? '' }
         }
 
@@ -315,6 +317,12 @@ class HealthCentreApp extends Application {
         this.#bounds = { min: 1, max: Math.max(1, max) }
         st.amount = Math.min(Math.max(st.amount, this.#bounds.min), this.#bounds.max)
         snap.amount = st.amount
+        // A potion heals what the potion list of the SWIM Configuration says for its SWID (no stepper), but never more than there is to heal.
+        snap.fixedAmount = snap.method === 'potion'
+        if (snap.fixedAmount) {
+            const choice = snap.potions.find((p) => p.value === st.potion)
+            snap.amount = Math.min(Math.max(choice?.amount ?? 1, 1), this.#bounds.max)
+        }
         return snap
     }
 
@@ -371,7 +379,7 @@ class HealthCentreApp extends Application {
             return `<option value="${esc(p.value)}" ${p.value === this.#state.potion ? 'selected' : ''}>${esc(label)}</option>`
         }).join('')
         const unit = t(snap.track === 'wounds' ? 'SWIM.healthCentre.unitWounds' : 'SWIM.healthCentre.unitFatigue')
-        return `<select data-field="potion">${options}</select> ${esc(unit)} ${this.#stepper(snap)}`
+        return `<select data-field="potion">${options}</select> ${esc(unit)} <span class="swim-hc-step"><span class="n">${snap.amount}</span></span>`
     }
 
     #methodList(snap) {
@@ -549,12 +557,12 @@ class HealthCentreApp extends Application {
             const potionSFX = game.settings.get('swim', 'potionSFX')
             const snapshot = { img: choice.item.img, name: choice.item.name }
             await use_potion_item(token.actor, choice.item)
-            await potion_chat({ healer: token, patient: token, item: snapshot, track: snap.track, amount: st.amount, source: 'self' })
+            await potion_chat({ healer: token, patient: token, item: snapshot, track: snap.track, amount: snap.amount, source: 'self' })
             if (potionSFX) {
                 const duration = (await play_audio(potionSFX))?.duration
                 if (duration) { await wait(duration * 1000) }
             }
-            if (wounds) { await heal_wounds(token, st.amount) } else { await cure_fatigue(token, st.amount) }
+            if (wounds) { await heal_wounds(token, snap.amount) } else { await cure_fatigue(token, snap.amount) }
             return
         }
 
@@ -563,7 +571,7 @@ class HealthCentreApp extends Application {
         if (snap.method === 'potion') {
             const choice = snap.potions.find((p) => p.value === st.potion)
             if (!choice) { return }
-            const payload = { tokenID: token.id, targetID: target.id, track: snap.track, amount: st.amount, owner: choice.owner, itemID: choice.item.id }
+            const payload = { tokenID: token.id, targetID: target.id, track: snap.track, amount: snap.amount, owner: choice.owner, itemID: choice.item.id }
             await this.#finish()
             return execute_as_gm("healPotion", payload)
         }

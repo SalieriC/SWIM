@@ -1,5 +1,5 @@
 import { SwimWindow, t, esc, btn } from './swim_window.js'
-import { DEFAULT_LISTS, LIST_TYPES, norm_swid, parse_list, serialize_list } from './swid_lists.js'
+import { DEFAULT_LISTS, LIST_TYPES, MAX_AMOUNT, norm_swid, parse_list, serialize_list } from './swid_lists.js'
 
 /** Texts of the types and the window of each list (the lists themselves are in swid_lists.js). */
 export const LIST_EDITORS = {
@@ -12,6 +12,7 @@ export const LIST_EDITORS = {
         title: 'SWIM.listEditor.potionTitle',
         intro: 'SWIM.listEditor.potionIntro',
         types: { health: 'SWIM.listEditor.typeHealth', fatigue: 'SWIM.listEditor.typeFatigue' },
+        amount: true, // number field: Wounds healed / Fatigue levels cured per use
     },
 }
 
@@ -35,26 +36,29 @@ export class ListEditorApp extends SwimWindow {
 
     #fill(entries) {
         this.#rows = []
-        for (const e of entries) { this.#add_row(e.swid, e.type) }
+        for (const e of entries) { this.#add_row(e.swid, e.type, e.amount) }
     }
 
-    #add_row(swid = '', type = LIST_TYPES[this.#id][0]) {
+    #add_row(swid = '', type = LIST_TYPES[this.#id][0], amount = 1) {
         const rid = this.#next++
         this.#rows.push(rid)
         this.state[`swid:${rid}`] = swid
         this.state[`type:${rid}`] = type
+        this.state[`amount:${rid}`] = amount
         return rid
     }
 
     async view() {
         const def = LIST_EDITORS[this.#id]
         const types = Object.entries(def.types)
-        const rows = this.#rows.map((rid) => `<div class="swim-le-row">
+        const cls = def.amount ? ' has-amount' : ''
+        const rows = this.#rows.map((rid) => `<div class="swim-le-row${cls}">
             <input type="text" data-field="swid:${rid}" value="${esc(this.state[`swid:${rid}`])}" placeholder="${esc(t('SWIM.listEditor.placeholder'))}" spellcheck="false" autocomplete="off">
             <select data-field="type:${rid}">${types.map(([value, key]) => `<option value="${esc(value)}" ${this.state[`type:${rid}`] === value ? 'selected' : ''}>${esc(t(key))}</option>`).join('')}</select>
+            ${def.amount ? `<input type="number" min="1" max="${MAX_AMOUNT}" step="1" data-field="amount:${rid}" value="${esc(this.state[`amount:${rid}`])}" title="${esc(t('SWIM.listEditor.amountTip'))}">` : ''}
             <button type="button" class="swim-hc-btn swim-cfg-ico" data-action="remove" data-rid="${rid}" title="${esc(t('SWIM.listEditor.remove'))}"><i class="fas fa-trash"></i></button></div>`).join('')
         const body = `<div class="swim-hc-result"><p>${esc(t(def.intro))}</p></div>
-            <div class="swim-le-head"><span>${esc(t('SWIM.listEditor.swid'))}</span><span>${esc(t('SWIM.listEditor.type'))}</span><span></span></div>
+            <div class="swim-le-head${cls}"><span>${esc(t('SWIM.listEditor.swid'))}</span><span>${esc(t('SWIM.listEditor.type'))}</span>${def.amount ? `<span title="${esc(t('SWIM.listEditor.amountTip'))}">${esc(t('SWIM.listEditor.amount'))}</span>` : ''}<span></span></div>
             ${rows || `<p class="swim-le-empty">${esc(t('SWIM.listEditor.empty'))}</p>`}
             <div class="swim-le-tools">${btn('add', t('SWIM.listEditor.add'))}${btn('defaults', t('SWIM.listEditor.defaults'))}</div>`
         const foot = `<span class="swim-hc-spacer"></span>${btn('cancel', t('SWIM.picker.cancel'))}${btn('apply', t('SWIM.listEditor.apply'), { go: true })}`
@@ -77,7 +81,7 @@ export class ListEditorApp extends SwimWindow {
                 return this.render(false)
             case 'cancel': return this.close()
             case 'apply': {
-                const entries = this.#rows.map((rid) => ({ swid: norm_swid(this.state[`swid:${rid}`]), type: this.state[`type:${rid}`] }))
+                const entries = this.#rows.map((rid) => ({ swid: norm_swid(this.state[`swid:${rid}`]), type: this.state[`type:${rid}`], amount: this.state[`amount:${rid}`] }))
                 this.onApply(serialize_list(parse_list(entries, this.#id) ?? []))
                 return this.close()
             }

@@ -2,7 +2,7 @@
  * SWID lists: the GM-editable settings that map SWIDs of items to a "type"
  * (SWIM Configuration > Item Options, edited with the list editor window in list_editor.js).
  *  - `visionSwids`: SWID -> vision type (darkvision | infravision | nvd | low-light-vision), used by Token Vision (macro and automatic)
- *  - `potionSwids`: SWID -> potion type (health | fatigue), used by the Personal Health Centre
+ *  - `potionSwids`: SWID -> potion type (health | fatigue) + `amount` (Wounds healed / Fatigue cured per use), used by the Personal Health Centre
  * A list is stored as JSON text: [{"swid": "dwarf", "type": "low-light-vision"}, ...]
  * No UI in here, so it can be imported anywhere (socket guard, Token Vision, Health Centre).
  ******************************************/
@@ -29,7 +29,9 @@ export const LIST_TYPES = {
 
 const OLD_HEALTH_POTIONS = 'Minor Health Potion|Health Potion|Greater Health Potion|Minor Healing Potion|Healing Potion|Greater Healing Potion'
 const OLD_FATIGUE_POTIONS = 'Minor Potion of Well-Being|Potion of Well-Being|Greater Potion of Well-Being|Minor Recreational Potion|Recreational Potion|Greater Recreational Potion'
-const from_names = (names, type) => names.split('|').map((n) => ({ swid: slugify(n), type })).filter((e) => e.swid)
+/** Wounds healed / Fatigue levels cured per use of a potion (`amount` of a potion entry): 1 unless the GM sets more, at most MAX_AMOUNT. */
+export const MAX_AMOUNT = 20
+const from_names = (names, type) => names.split('|').map((n) => ({ swid: slugify(n), type, amount: 1 })).filter((e) => e.swid)
 
 /** What the lists contain before the GM changes anything (the old behaviour). */
 export const DEFAULT_LISTS = {
@@ -42,7 +44,7 @@ export const DEFAULT_LISTS = {
 }
 
 /** Setting value (JSON text) of a list. */
-export const serialize_list = (entries) => JSON.stringify(entries.map((e) => ({ swid: e.swid, type: e.type })))
+export const serialize_list = (entries) => JSON.stringify(entries.map((e) => (e.amount === undefined ? { swid: e.swid, type: e.type } : { swid: e.swid, type: e.type, amount: e.amount })))
 
 /** Entries of a list from its stored text: tidied SWIDs, only known types, no empty or double entries. `null` if the text is no list at all. */
 export function parse_list(text, id) {
@@ -55,7 +57,12 @@ export function parse_list(text, id) {
         const swid = norm_swid(e?.swid)
         if (!swid || !LIST_TYPES[id].includes(e?.type) || seen.has(`${swid}|${e.type}`)) { continue }
         seen.add(`${swid}|${e.type}`)
-        out.push({ swid, type: e.type })
+        if (id === 'potionSwids') {
+            const amount = Math.round(Number(e.amount))
+            out.push({ swid, type: e.type, amount: Number.isFinite(amount) ? Math.min(Math.max(amount, 1), MAX_AMOUNT) : 1 })
+        } else {
+            out.push({ swid, type: e.type })
+        }
     }
     return out
 }
@@ -84,6 +91,12 @@ export function item_swids(item) {
 export function is_potion_of(item, type, entries = get_list('potionSwids')) {
     const swids = swids_for('potionSwids', type, entries)
     return [...item_swids(item)].some((s) => swids.has(s))
+}
+
+/** Wounds / Fatigue levels a potion item heals per use according to the list (the highest of its matching entries; 0 = not a potion of this type). */
+export function potion_amount(item, type, entries = get_list('potionSwids')) {
+    const swids = item_swids(item)
+    return entries.filter((e) => e.type === type && swids.has(e.swid)).reduce((max, e) => Math.max(max, e.amount ?? 1), 0)
 }
 
 /**

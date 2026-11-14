@@ -9,7 +9,7 @@
  * The wrapped handlers themselves are unchanged.
  ******************************************/
 
-import { is_potion_of } from "./swid_lists.js"
+import { is_potion_of, potion_amount } from "./swid_lists.js"
 
 function fail(message) {
     throw new Error(message)
@@ -199,7 +199,9 @@ export const socket_validators = {
         if (data.owner === "target" && !user.isGM && !potionActor.testUserPermission(user, "OBSERVER")) fail(`${user.name} may not use potions of ${target.name}`)
         const item = potionActor.items.get(require_id(data.itemID, "itemID"))
         if (!item) fail("potion item not found")
-        if (!is_potion_of(item, data.track === "wounds" ? "health" : "fatigue")) fail(`'${item.name}' is not a configured potion`)
+        const potionType = data.track === "wounds" ? "health" : "fatigue"
+        if (!is_potion_of(item, potionType)) fail(`'${item.name}' is not a configured potion`)
+        if (data.amount > potion_amount(item, potionType)) fail(`'${item.name}' heals at most ${potion_amount(item, potionType)}`)
     },
 
     commonBond(user, data) {
