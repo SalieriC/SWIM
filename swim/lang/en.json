@@ -1037,5 +1037,8 @@
   "SWIM.combatSetupWin.readyHint": "You can adjust the groups in the Combat Tracker now: drag a combatant onto another one to make it follow, or use the combatant's context menu (Make Group Leader, Group by Name, ...). Then start the combat.",
   "SWIM.combatSetupWin.readyRunning": "The combat is already running. Draw action cards for the new combatants in the Combat Tracker.",
   "SWIM.combatSetupWin.startCombat": "Start Combat",
-  "SWIM.combatSetupWin.failed": "Combat Setup failed, please check the console (F12)."
+  "SWIM.combatSetupWin.failed": "Combat Setup failed, please check the console (F12).",
+  "SWIM.sceneConfig.title": "Scene Illumination",
+  "SWIM.sceneConfig.notSet": "Not set",
+  "SWIM.sceneConfig.hint": "Added by SWIM. Used by Token Vision to set up the vision of tokens on this scene automatically (see the setting Automatic vision adjustments). It does not change the Darkness Level above; the Scene Illumination button of SWIM sets the same value."
 }

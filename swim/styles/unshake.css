@@ -157,3 +157,15 @@
 .swim-cs-row img { flex: 0 0 26px; width: 26px; height: 26px; object-fit: cover; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.28); background: #0e141b; }
 .swim-cs-row b { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
 .swim-cs-row .swim-hc-chip { flex: 0 0 auto; }
+
+/* SWIM section in the scene configuration, Lighting tab (scripts/hooks/scene_config_hooks.js) */
+.swim-sc-illum { margin: 8px 0; padding: 4px 10px 8px; border: 1px solid #b3392f; border-left-width: 4px; border-radius: 6px; background: rgba(179, 57, 47, 0.07); }
+.swim-sc-illum legend { padding: 0 6px; font-weight: 700; }
+.swim-sc-badge { margin-right: 6px; padding: 0 5px; border-radius: 3px; background: #b3392f; color: #fff; font-size: 10px; letter-spacing: 0.06em; }
+.swim-sc-opts { display: flex; flex-wrap: wrap; gap: 4px; }
+.swim-sc-opts label { position: relative; flex: 1 1 auto; margin: 0; padding: 3px 8px; text-align: center; cursor: pointer; border: 1px solid rgba(0, 0, 0, 0.35); border-radius: 4px; background: rgba(0, 0, 0, 0.06); }
+.swim-sc-opts label:hover { background: rgba(0, 0, 0, 0.14); }
+.swim-sc-opts label.is-on { background: #b3392f; border-color: #7d241d; color: #fff; }
+.swim-sc-opts input { position: absolute; opacity: 0; pointer-events: none; }
+.swim-sc-opts label:focus-within { outline: 1px dotted currentColor; }
+.swim-sc-note { margin: 6px 0 0; font-size: 11px; opacity: 0.8; }

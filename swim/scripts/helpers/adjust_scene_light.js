@@ -5,7 +5,7 @@
 import { SwimWindow, t, btn, rate_opt } from "./swim_window.js"
 
 const LEVEL_DARKNESS = { none: 0, dim: 0.5, dark: 0.75, pitch: 1 }
-const LEVELS = [['none', 'SWIM.illuminationType-full'], ['dim', 'SWIM.illuminationType-dim'], ['dark', 'SWIM.illuminationType-dark'], ['pitch', 'SWIM.illuminationType-pitchDarkness']]
+export const LEVELS = [['none', 'SWIM.illuminationType-full'], ['dim', 'SWIM.illuminationType-dim'], ['dark', 'SWIM.illuminationType-dark'], ['pitch', 'SWIM.illuminationType-pitchDarkness']]
 
 /** The level that is preselected: the stored flag, else derived from the scene's darkness. Pure. */
 export function illumination_level(flagLevel, darkness) {
