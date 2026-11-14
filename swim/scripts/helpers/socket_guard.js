@@ -9,6 +9,8 @@
  * The wrapped handlers themselves are unchanged.
  ******************************************/
 
+import { is_potion_of } from "./swid_lists.js"
+
 function fail(message) {
     throw new Error(message)
 }
@@ -197,8 +199,7 @@ export const socket_validators = {
         if (data.owner === "target" && !user.isGM && !potionActor.testUserPermission(user, "OBSERVER")) fail(`${user.name} may not use potions of ${target.name}`)
         const item = potionActor.items.get(require_id(data.itemID, "itemID"))
         if (!item) fail("potion item not found")
-        const names = String(game.settings.get("swim", data.track === "wounds" ? "healthPotionOptions" : "fatiguePotionOptions")).split("|")
-        if (!names.includes(item.name)) fail(`'${item.name}' is not a configured potion`)
+        if (!is_potion_of(item, data.track === "wounds" ? "health" : "fatigue")) fail(`'${item.name}' is not a configured potion`)
     },
 
     commonBond(user, data) {

@@ -1,5 +1,7 @@
 import { SwimWindow, t, esc, btn } from './swim_window.js'
 import { play_audio } from './audio.js'
+import { ListEditorApp } from './list_editor.js'
+import { parse_list, serialize_list } from './swid_lists.js'
 
 /*******************************************
  * SWIM Configuration window (replaces the old FormApplication + customConfig.hbs).
@@ -10,6 +12,7 @@ import { play_audio } from './audio.js'
 
 /** Value of a setting as it is stored: Boolean / Number / String. */
 function norm(s, v) {
+    if (s.editor) { return serialize_list(parse_list(v, s.id) ?? []) } // a list (list editor window): compared in a fixed form
     if (s.config_type === Boolean) { return !!v }
     if (s.config_type === Number) {
         const n = Number.parseFloat(String(v ?? '').replace(',', '.'))
@@ -51,6 +54,9 @@ export class SwimConfigApp extends SwimWindow {
     #control(s) {
         const v = this.state[s.id]
         const f = `data-field="${esc(s.id)}"`
+        if (s.editor) {
+            return `<span class="swim-cfg-listsum" data-sum="${esc(s.id)}"></span><button type="button" class="swim-hc-btn" data-action="editlist" data-id="${esc(s.id)}"><i class="fas fa-list"></i> ${esc(t('SWIM.listEditor.edit'))}</button>`
+        }
         if (s.config_type === Boolean) { return `<input type="checkbox" ${f} ${v ? 'checked' : ''}>` }
         if (Array.isArray(s.options) && s.options.length) {
             const opts = s.options.map((o) => `<option value="${esc(o.value)}" ${String(o.value) === String(v) ? 'selected' : ''}>${esc(o.locaString ? t(o.locaString) : (o.name ?? o.value))}</option>`).join('')
@@ -101,6 +107,7 @@ export class SwimConfigApp extends SwimWindow {
             const row = root.find(`.swim-cfg-row[data-id="${s.id}"]`)
             row.toggleClass('is-changed', norm(s, this.state[s.id]) !== this.#saved(s))
             row.find('.swim-cfg-reset').toggleClass('is-default', norm(s, this.state[s.id]) === norm(s, s.default))
+            if (s.editor) { row.find('.swim-cfg-listsum').text(t('SWIM.listEditor.count', { count: (parse_list(this.state[s.id], s.id) ?? []).length })) }
         }
         const n = this.#dirty().length
         root.find('.swim-cfg-count').text(n ? t('SWIM.configWin.changes', { count: n }) : t('SWIM.configWin.noChanges'))
@@ -135,6 +142,7 @@ export class SwimConfigApp extends SwimWindow {
 
     #set(id, value) {
         this.state[id] = value
+        if (!this.rendered) { return }
         const input = this.element.find(`[data-field="${id}"]`)
         if (input.attr('type') === 'checkbox') { input.prop('checked', !!value) } else { input.val(value) }
         this.#refresh()
@@ -147,6 +155,8 @@ export class SwimConfigApp extends SwimWindow {
             case 'reset': return this.#set(s.id, s.config_type === Boolean ? !!s.default : String(s.default ?? ''))
             case 'browse':
                 return new FilePicker({ type: s.picker, current: this.state[s.id], callback: (path) => this.#set(s.id, path) }).browse()
+            case 'editlist':
+                return SwimWindow.show(new ListEditorApp({ id: s.id, text: this.state[s.id], onApply: (json) => this.#set(s.id, json) }))
             case 'play':
                 if (this.state[s.id]) { play_audio(this.state[s.id], { push: false }).catch((err) => console.warn('SWIM | Could not play sound', err)) }
                 return

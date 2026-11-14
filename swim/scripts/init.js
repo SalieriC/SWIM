@@ -15,6 +15,7 @@ import { brsw_hooks } from "./hooks/brsw_hooks.js"
 import { sfx_hooks } from "./hooks/sfx_hooks.js"
 import { vision_hooks } from "./hooks/vision_hooks.js"
 import { scene_config_hooks } from "./hooks/scene_config_hooks.js"
+import { migrate_potion_names } from "./helpers/swid_lists.js"
 import { brsw_actions_setup } from "./helpers/brsw_actions_setup.js"
 import { raise_calculator } from './helpers/raise-calculator.js'
 import { tester_gm } from './swim_modules/tester.js';
@@ -80,6 +81,9 @@ Hooks.on(`ready`, () => {
     sfx_hooks()
     vision_hooks()
     scene_config_hooks()
+
+    // One time: old potion name settings -> SWID list (GM only)
+    if (swim.is_first_gm()) { migrate_potion_names().catch((err) => console.error('SWIM | Potion migration failed', err)) }
 
     //Setup actions for BRSW:
     if (game.modules.get('betterrolls-swade2')?.active && game.settings.get('swim', 'br2Support') === true) {

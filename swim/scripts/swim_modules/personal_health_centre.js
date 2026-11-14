@@ -12,6 +12,7 @@
 import { execute_as_gm } from "../helpers/socket_helper.js"
 import { swimConditions } from '../helpers/conditions.js'
 import { play_audio } from '../helpers/audio.js'
+import { get_list, is_potion_of } from '../helpers/swid_lists.js'
 
 const t = (key, data) => (data ? game.i18n.format(key, data) : game.i18n.localize(key))
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (m) => `&#${m.charCodeAt(0)};`)
@@ -46,10 +47,11 @@ async function use_potion_item(actor, item) {
     }
 }
 
-/** Potion items of an actor for a track ('wounds' | 'fatigue'): names are matched against the module settings. */
+/** Potion items of an actor for a track ('wounds' | 'fatigue'): their SWIDs are matched against the potion list of the SWIM Configuration. */
 function potions_of(actor, track) {
-    const names = String(game.settings.get('swim', track === 'wounds' ? 'healthPotionOptions' : 'fatiguePotionOptions')).split('|')
-    return actor.items.filter((i) => names.includes(i.name) && is_usable_potion_item(i))
+    const entries = get_list('potionSwids')
+    const type = track === 'wounds' ? 'health' : 'fatigue'
+    return actor.items.filter((i) => is_potion_of(i, type, entries) && is_usable_potion_item(i))
 }
 
 /* ------------------------------------------------------------------------------------------------ */

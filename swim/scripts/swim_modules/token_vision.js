@@ -1,5 +1,6 @@
 import { SwimWindow, t, esc, btn, token_img, tokens_header, rate_opt } from '../helpers/swim_window.js'
 import { illumination_level } from '../helpers/adjust_scene_light.js'
+import { LIST_TYPES, get_list, item_swids, swids_for } from '../helpers/swid_lists.js'
 /*******************************************
  * Token Vision macro for SWADE
  * v. 6.0.0 – window (TokenVisionApp) instead of a Dialog; several tokens at once for the GM; vision from SWIDs;
@@ -9,8 +10,8 @@ import { illumination_level } from '../helpers/adjust_scene_light.js'
  * https://github.com/Sky-Captain-13/foundry
  ******************************************/
 
-/** SWIDs of the vision abilities, strongest first (the first one a token has wins). */
-export const VISION_SWIDS = ['darkvision', 'infravision', 'low-light-vision']
+/** The special vision types, strongest first: if a token matches several, the first one wins (the SWIDs are in the SWIM Configuration > Item Options > Vision SWIDs). */
+export const VISION_TYPES = LIST_TYPES.visionSwids
 const LEVEL_RANGE = { none: 1000, dim: 25, dark: 10, pitch: 0 }
 const LEVELS = ['none', 'dim', 'dark', 'pitch']
 const LEVEL_LANG = { none: 'SWIM.tokenVisionWin.lvlNone', dim: 'SWIM.tokenVisionWin.lvlDim', dark: 'SWIM.tokenVisionWin.lvlDark', pitch: 'SWIM.tokenVisionWin.lvlPitch' }
@@ -36,11 +37,11 @@ export function vision_caps() {
     return { infraMode: !!CONFIG.Canvas?.visionModes?.infraVision, heat: !!CONFIG.Canvas?.detectionModes?.seeHeat }
 }
 
-/** The vision ability a token has (by SWID), or null. */
-export function find_vision_swid(actor) {
+/** The vision type a token has through the SWIDs of its items (list *Vision SWIDs* of the SWIM Configuration), or null. */
+export function find_vision_swid(actor, entries = get_list('visionSwids')) {
     const swids = new Set()
-    for (const i of actor?.items ?? []) { if (i.system?.swid) { swids.add(i.system.swid) } }
-    return VISION_SWIDS.find((s) => swids.has(s)) ?? null
+    for (const i of actor?.items ?? []) { for (const s of item_swids(i)) { swids.add(s) } }
+    return VISION_TYPES.find((type) => [...swids_for('visionSwids', type, entries)].some((s) => swids.has(s))) ?? null
 }
 export const estimate_type = (actor) => find_vision_swid(actor) ?? 'basic'
 

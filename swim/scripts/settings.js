@@ -4,6 +4,7 @@ import * as SWIM from './constants.js'
 import { swim_buttons } from './buttons.js'
 import { SwimConfigApp } from './helpers/swim_config.js'
 import { SwimWindow } from './helpers/swim_window.js'
+import { DEFAULT_LISTS, serialize_list } from './helpers/swid_lists.js'
 
 export const settingVariables = [
     {id: 'swdUnshake', config_type: Boolean, tab: "Setting Rules", default: false, reload: true},
@@ -12,10 +13,9 @@ export const settingVariables = [
     {id: 'natHeal_Time', config_type: String, tab: "Setting Rules", default: 'five days'},
     {id: 'npcAmmo', config_type: Boolean, tab: "Setting Rules",  default: false},
     {id: 'noPowerPoints', config_type: Boolean, tab: "Setting Rules",  default: false},
-    {id: 'healthPotionOptions', config_type: String, tab: "Item Options",
-        default: 'Minor Health Potion|Health Potion|Greater Health Potion|Minor Healing Potion|Healing Potion|Greater Healing Potion'},
-    {id: 'fatiguePotionOptions', config_type: String, tab: "Item Options",
-        default: 'Minor Potion of Well-Being|Potion of Well-Being|Greater Potion of Well-Being|Minor Recreational Potion|Recreational Potion|Greater Recreational Potion'},
+    // SWID lists with their own editor window (helpers/list_editor.js), stored as JSON text (helpers/swid_lists.js)
+    {id: 'potionSwids', config_type: String, tab: "Item Options", editor: true, default: serialize_list(DEFAULT_LISTS.potionSwids)},
+    {id: 'visionSwids', config_type: String, tab: "Item Options", editor: true, default: serialize_list(DEFAULT_LISTS.visionSwids)},
     {id: 'specialAbilitiesPack', config_type: String, tab: "Tables & Playlists", default: 'none', 
         //assigned the function get_compendim_list to options instead of its results. As the function is not called it is not executed yet.
         options: SWIM.get_compendiums_list, type: 'item'
@@ -120,6 +120,10 @@ export const settingVariables = [
 ];
 
 export function register_settings() {
+    // Old potion name lists: not shown and not used any more, only read once to build the SWID list (migrate_potion_names)
+    game.settings.register('swim', 'healthPotionOptions', { type: String, default: 'Minor Health Potion|Health Potion|Greater Health Potion|Minor Healing Potion|Healing Potion|Greater Healing Potion', scope: 'world', config: false });
+    game.settings.register('swim', 'fatiguePotionOptions', { type: String, default: 'Minor Potion of Well-Being|Potion of Well-Being|Greater Potion of Well-Being|Minor Recreational Potion|Recreational Potion|Greater Recreational Potion', scope: 'world', config: false });
+    game.settings.register('swim', 'potionSwidsMigrated', { type: Boolean, default: false, scope: 'world', config: false });
     // Documentation Read
     game.settings.register('swim', 'docReadV1.1.0', {
         name: game.i18n.localize("SWIM.docReadName"),
