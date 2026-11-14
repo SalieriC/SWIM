@@ -52,6 +52,15 @@
 				}
 			},
 			{
+				"id": "ATL",
+				"type": "module",
+				"manifest": "https://github.com/kandashi/Active-Token-Lighting/releases/latest/download/module.json",
+				"compatibility": {
+					"minimum": "0.7.2",
+					"verified": "0.7.2"
+				}
+			},
+			{
 				"id": "portal-lib",
 				"type": "module",
                 "manifest": "https://github.com/theripper93/portal-lib/releases/download/1.0.7/module.json",
