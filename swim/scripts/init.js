@@ -145,7 +145,7 @@ Hooks.on(`ready`, () => {
                 ${additionalText}
                 <hr />
                 <p>Please also consider to donate if you really like SWIM. This is one of the few ways of letting me know that SWIM is actually used and appreciated by some. =)</p>
-                <p><a href="https://ko-fi.com/salieric"><img style="border: 0px; display: block; margin-left: auto; margin-right: auto;" src="https://www.ko-fi.com/img/githubbutton_sm.svg" width="223" height="30" /></a></p>
+                <p><a href="https://ko-fi.com/Q5Q72EE4Z" target="_blank" rel="noopener"><img style="border: 0px; display: block; margin-left: auto; margin-right: auto; height: 36px;" height="36" src="https://storage.ko-fi.com/cdn/kofi2.png?v=6" alt="Buy Me a Coffee at ko-fi.com" /></a></p>
             </form>`,
             buttons: {
                 one: {
@@ -181,7 +181,7 @@ Hooks.on(`ready`, () => {
                 </div>
                 <hr />
                 <p>Please also consider to donate if you really like SWIM. This is one of the few ways of letting me know that SWIM is actually used and appreciated by some. =)</p>
-                <p><a href="https://ko-fi.com/salieric"><img style="border: 0px; display: block; margin-left: auto; margin-right: auto;" src="https://www.ko-fi.com/img/githubbutton_sm.svg" width="223" height="30" /></a></p>
+                <p><a href="https://ko-fi.com/Q5Q72EE4Z" target="_blank" rel="noopener"><img style="border: 0px; display: block; margin-left: auto; margin-right: auto; height: 36px;" height="36" src="https://storage.ko-fi.com/cdn/kofi2.png?v=6" alt="Buy Me a Coffee at ko-fi.com" /></a></p>
             </form>`,
             buttons: {
                 one: {

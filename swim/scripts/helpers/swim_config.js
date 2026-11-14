@@ -79,7 +79,7 @@ export class SwimConfigApp extends SwimWindow {
             <div class="swim-cfg-tabs">${this.tabs.map((tab) => `<div class="swim-hc-rate-opt swim-cfg-tab" data-action="tab" data-tab="${esc(tab)}" tabindex="0" role="tab">${esc(tab)}</div>`).join('')}</div>`
         const panels = this.tabs.map((tab) => `<section class="swim-cfg-panel" data-tab="${esc(tab)}"><h4 class="swim-cfg-ptitle">${esc(tab)}</h4>${this.settings.filter((s) => s.tab === tab).map((s) => this.#row(s)).join('')}</section>`).join('')
         const body = `${panels}<p class="swim-cfg-none" hidden>${esc(t('SWIM.configWin.noResults'))}</p>
-            <div class="swim-cfg-donate"><p><strong>${esc(t('SWIM.configWin.donate'))}</strong></p><a href="https://ko-fi.com/salieric" target="_blank" rel="noopener"><img src="https://www.ko-fi.com/img/githubbutton_sm.svg" width="350" height="30" alt="Ko-fi"></a></div>`
+            <div class="swim-cfg-donate"><p><strong>${esc(t('SWIM.configWin.donate'))}</strong></p><a href="https://ko-fi.com/Q5Q72EE4Z" target="_blank" rel="noopener"><img height="36" style="border:0;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=6" alt="Buy Me a Coffee at ko-fi.com"></a></div>`
         const foot = `<span class="swim-cfg-count"></span><span class="swim-hc-spacer"></span>${btn('cancel', t('SWIM.picker.cancel'))}${btn('save', t('SWIM.Save'), { go: true })}`
         return { head, body, foot }
     }
