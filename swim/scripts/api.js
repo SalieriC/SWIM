@@ -1,6 +1,7 @@
 // Many thanks to honeybadger#2614 for the support on setting up the API.
 
 import { chase_setup_script } from './swim_modules/chase_setup.js'
+import { combat_setup } from './swim_modules/combat_setup.js'
 import { common_bond_script } from './swim_modules/common_bond.js'
 import { craft_campfire_script } from './swim_modules/craft_campfire.js'
 import { deviation_script } from './swim_modules/deviation.js'
@@ -68,6 +69,7 @@ export class api {
       ammo_management: api._ammo_management,
       br2_ammo_management: api._ammo_management_br2,
       chase_setup: api._chase_setup,
+      combat_setup: api._combat_setup,
       common_bond: api._common_bond,
       craft_campfire: api._craft_campfire,
       deviation: api._deviation,
@@ -485,6 +487,10 @@ export class api {
   // Chase Setup
   static async _chase_setup() {
     chase_setup_script()
+  }
+  // Combat Setup
+  static async _combat_setup() {
+    await combat_setup()
   }
   // Common Bond
   static async _common_bond() {

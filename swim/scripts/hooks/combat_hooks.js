@@ -8,13 +8,15 @@ export async function combat_hooks() {
             const combatPlaylist = game.playlists.getName(combatPlaylistName)
             const protectedFolder = game.settings.get("swim", "noStopFolder")
             for (let playlist of game.playlists.playing) {
+                // The combat playlist itself and the playlists of the protected folder keep playing
+                if (playlist.id === combatPlaylist?.id) { continue }
                 if (playlist.folder?.name.toLowerCase() != protectedFolder.toLowerCase()) {
-                    playlist.setFlag('swim', 'resumeAfterCombat', true)
-                    playlist.stopAll()
+                    await playlist.setFlag('swim', 'resumeAfterCombat', true)
+                    await playlist.stopAll()
                 }
             }
-            if (combatPlaylist) {
-                combatPlaylist.playAll()
+            if (combatPlaylist && !combatPlaylist.playing) {
+                await combatPlaylist.playAll()
             }
         }
     })
@@ -28,14 +30,16 @@ export async function combat_hooks() {
                     playlist.unsetFlag('swim', 'resumeAfterCombat')
                 }
             }
-            const combatPlaylist = game.playlists.find(p => p.name.toLowerCase() === "combat") //needs setting
+            // The playlist from the setting (it used to look for one named "Combat", whatever the setting said)
+            const combatPlaylistName = game.settings.get("swim", "combatPlaylist")
+            const combatPlaylist = game.playlists.getName(combatPlaylistName)
             if (combatPlaylist && combatPlaylist.playing === true) {
                 await combatPlaylist.stopAll()
             }
         }
         if (game.settings.get("swim", "deleteEffectsAfterCombat") === true) {
             if (swim.is_first_gm() === false) { return }
-            const sceneId = combat.scene.id
+            const sceneId = combat.scene?.id
             if (sceneId) {
                 swimConditions.remove_temporary_effects(sceneId, false)
             }

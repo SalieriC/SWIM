@@ -1,4 +1,4 @@
-//import { combat_setup } from "./swim_modules/combat_setup.js";
+import { combat_setup } from "./swim_modules/combat_setup.js";
 import { adjust_scene_light } from "./helpers/adjust_scene_light.js";
 import { raise_calculator } from "./helpers/raise-calculator.js";
 
@@ -13,7 +13,6 @@ export function swim_buttons(hudButtons) {
             button: true,
             onClick: async () => raise_calculator()
         });
-        /* Currently a little buggy so taking that out for now.
         if (game.user.isGM) {
             hud.tools.push({
                 name: "SWIM.combatSetupName",
@@ -23,7 +22,6 @@ export function swim_buttons(hudButtons) {
                 onClick: async () => { combat_setup() }
             })
         }
-        */
     }
 
     // Hijack the systems chase setup:
