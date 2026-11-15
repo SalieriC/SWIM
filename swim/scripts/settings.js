@@ -111,6 +111,7 @@ export const settingVariables = [
         ]},
     {id: 'deleteEffectsAfterCombat', config_type: Boolean, tab: "Misc",  default: false},
     {id: 'automaticVision', config_type: Boolean, tab: "Misc",  default: true},
+    {id: 'auraEffects', config_type: Boolean, tab: "Misc",  default: true},
     {id: 'brswBacklash', config_type: String, tab: "Misc", default: "regular",
         options: [
             {value: 'regular', locaString: 'SWIM.Option-regular'},

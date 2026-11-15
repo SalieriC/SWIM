@@ -15,6 +15,7 @@ import { brsw_hooks } from "./hooks/brsw_hooks.js"
 import { sfx_hooks } from "./hooks/sfx_hooks.js"
 import { vision_hooks } from "./hooks/vision_hooks.js"
 import { scene_config_hooks } from "./hooks/scene_config_hooks.js"
+import { aura_hooks, install_aura_suppression } from "./hooks/aura_hooks.js"
 import { migrate_potion_names } from "./helpers/swid_lists.js"
 import { brsw_actions_setup } from "./helpers/brsw_actions_setup.js"
 import { raise_calculator } from './helpers/raise-calculator.js'
@@ -26,6 +27,8 @@ import { guard, socket_validators as v } from './helpers/socket_guard.js'
 })*/
 
 Hooks.on("init", () => {
+    // An aura source must not change its own owner (hooks/aura_hooks.js); has to be in place before the first actor is prepared.
+    install_aura_suppression()
     game.keybindings.register("swim", "raiseCalculator", {
         name: "SWIM.openRaiseCalculatorName",
         hint: "SWIM.openRaiseCalculatorHint",
@@ -81,6 +84,7 @@ Hooks.on(`ready`, () => {
     sfx_hooks()
     vision_hooks()
     scene_config_hooks()
+    aura_hooks()
 
     // One time: old potion name settings -> SWID list (GM only)
     if (swim.is_first_gm()) { migrate_potion_names().catch((err) => console.error('SWIM | Potion migration failed', err)) }

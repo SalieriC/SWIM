@@ -1,0 +1,7 @@
+/* Aura tab in the Active Effect sheet (hooks/aura_hooks.js). Own file on purpose: independent of the dialog stylesheets. */
+.swim-au { padding-top: 4px; }
+.swim-au-intro { margin: 4px 0 10px; padding: 6px 10px; border: 1px solid #b3392f; border-left-width: 4px; border-radius: 6px; background: rgba(179, 57, 47, 0.07); font-size: 12px; }
+.swim-au-badge { margin-right: 6px; padding: 0 5px; border-radius: 3px; background: #b3392f; color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; }
+.swim-au .form-group .hint { flex: 0 0 100%; margin: 2px 0 0; font-size: 11px; opacity: 0.8; }
+.swim-au input[type="number"] { max-width: 6em; }
+.swim-au-note { margin: 10px 0 0; font-size: 11px; opacity: 0.8; }

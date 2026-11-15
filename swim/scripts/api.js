@@ -29,6 +29,7 @@ import { OFFICIAL_MODULES } from './official_modules.js'
 import { showWeaponAmmoDialog, br2_ammo_management_script } from "./swim_modules/ammo_management.js"
 import { tester_script } from './swim_modules/tester.js'
 import { swimConditions } from './helpers/conditions.js'
+import { recalculate_auras } from './helpers/auras.js'
 
 let deck = [...SWIM.DECK_OF_CARDS]
 
@@ -61,6 +62,7 @@ export class api {
       get_folder_content: api._get_folder_content,
       run_migration: api._run_migration,
       migrate_world: migrate_world,
+      recalculate_auras: recalculate_auras,
       get_pronoun: api._get_pronoun,
       generate_id: api._generate_id,
       draw_cards: api._draw_cards,
