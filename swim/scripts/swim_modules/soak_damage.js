@@ -1,4 +1,5 @@
 import { swimConditions } from '../helpers/conditions.js'
+import { absorb_manual_bonus, active_effects } from '../helpers/trait_bonuses.js'
 /*******************************************
  * Soak Damage
  * v. 7.0.0 – one window (SoakApp) instead of a chain of Dialogs.
@@ -46,35 +47,36 @@ export function soak_bonuses(actor, { pp, elan } = {}) {
     const signed = (n) => `${n < 0 ? '-' : '+'} ${Math.abs(n)}`
     const img = (src) => `<img src="${esc(src)}" alt="" width="15" height="15" style="border:0" />`
 
-    // Bonus from Active Effects (and the generic bonus left over after them):
+    // Bonus from Active Effects, also those an Edge or ability brings along on its item (and the generic bonus left over after them):
     const effectNames = []
+    const effectItems = new Set()
     let fromEffects = 0
-    for (const effect of actor.effects) {
-        if (effect.disabled === false && !edgeNames.includes(effect.name)) { // only enabled effects not made by a recognised Edge
-            for (const change of effect.changes) {
-                if (change.key !== "system.attributes.vigor.soakBonus") { continue }
-                const value = parseFloat(change.value)
-                if (!Number.isFinite(value)) { continue }
-                effectNames.push(effect.name.toLowerCase())
-                fromEffects += value
-                total += value
-                lines.push(`${signed(value)} ${img(effect.img)}${esc(effect.name)}`)
-            }
+    for (const effect of active_effects(actor)) { // only enabled effects
+        for (const change of effect.changes) {
+            if (change.key !== "system.attributes.vigor.soakBonus") { continue }
+            const value = parseFloat(change.value)
+            if (!Number.isFinite(value)) { continue }
+            effectNames.push(effect.name.toLowerCase())
+            if (effect.parent?.documentName === 'Item') { effectItems.add(effect.parent.id) }
+            fromEffects += value
+            total += value
+            lines.push(`${signed(value)} ${img(effect.icon ?? effect.img)}${esc(effect.name)}`)
         }
-    }
-    const generic = Number(actor.system.attributes.vigor.soakBonus) || 0
-    if (generic > fromEffects) {
-        total += generic - fromEffects
-        lines.push(`${signed(generic - fromEffects)} ${esc(t('SWIM.soak.genericBonus'))}`)
     }
 
-    // Edges, but not if an Active Effect with the same name covers them already (deliberately not a fuzzy search):
-    const edges = actor.items.filter((i) => edgeNames.includes(i.name.toLowerCase()) && (i.type === "edge" || i.type === "ability"))
+    // Edges, but not if an Active Effect with the same name (or on the Edge itself) covers them already (deliberately not a fuzzy search):
+    const edges = actor.items.filter((i) => edgeNames.includes(i.name.toLowerCase()) && (i.type === "edge" || i.type === "ability")
+        && !effectNames.includes(i.name.toLowerCase()) && !effectItems.has(i.id))
+
+    // The value on the sheet beyond the effects; a bonus typed in for the Edge is not counted twice (helpers/trait_bonuses.js):
+    const generic = absorb_manual_bonus((Number(actor.system.attributes.vigor.soakBonus) || 0) - fromEffects, edges.length, 2, { actor, what: 'Soak' })
+    if (generic > 0) {
+        total += generic
+        lines.push(`${signed(generic)} ${esc(t('SWIM.soak.genericBonus'))}`)
+    }
     for (const edge of edges) {
-        if (!effectNames.includes(edge.name.toLowerCase())) {
-            total += 2
-            lines.push(`+ 2 ${img(edge.img)}${esc(edge.name)}`)
-        }
+        total += 2
+        lines.push(`+ 2 ${img(edge.img)}${esc(edge.name)}`)
     }
 
     // Power Points of (Un)Holy Warrior are a bonus to the roll in the amount of the Power Points spent:

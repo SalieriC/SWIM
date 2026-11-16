@@ -1,4 +1,5 @@
 import { swimConditions } from '../helpers/conditions.js'
+import { absorb_manual_bonus, active_effects, actor_effects, covered_by_edge } from '../helpers/trait_bonuses.js'
 /*******************************************
  * Unshake
  * v. 6.0.0 – one window (UnshakeApp) instead of the Spirit roll followed by a Benny dialog.
@@ -47,8 +48,9 @@ export async function unshake_script(effect = false, options = {}) {
 
 /**
  * The bonuses on the Spirit roll to recover from Shaken: Edges/abilities (+2 each: Combat Reflexes and the like), Active Effects on
- * `unShakeBonus` and whatever generic bonus is left over after them. An Active Effect named like an Edge the actor has is not counted
- * a second time (the Edge already gives the +2).
+ * `unShakeBonus` (also the effects an Edge brings along, which live on the item) and whatever generic bonus is left over after them.
+ * An Active Effect of an Edge, or named like an Edge the actor has, is not counted a second time (the Edge already gives the +2). A bonus typed
+ * into the sheet is taken as the Edge's own if it is big enough (+2 per Edge), see helpers/trait_bonuses.js.
  * @returns {{total: number, lines: string[]}}  `lines` are HTML snippets (icon + name), already escaped.
  */
 export function unshake_bonuses(actor) {
@@ -61,25 +63,23 @@ export function unshake_bonuses(actor) {
         lower("SWIM.ability-amorphous-theAfter"),
     ]
     // 'undead' is looked for literally unless the actor has a disabled Active Effect of that name (as before):
-    const undeadAE = actor.effects.find((ae) => ae.name.toLowerCase() === lower("SWIM.ability-undead"))
+    const undeadAE = actor_effects(actor).find((ae) => ae.name.toLowerCase() === lower("SWIM.ability-undead"))
     if (!undeadAE || undeadAE.disabled === false) { edgeNames.push('undead') }
 
     const signed = (n) => `${n < 0 ? '-' : '+'} ${Math.abs(n)}`
     const img = (src) => (src ? `<img src="${esc(src)}" alt="" width="15" height="15" style="border:0" />` : '')
     const edges = actor.items.filter((i) => edgeNames.includes(i.name.toLowerCase()) && (i.type === "edge" || i.type === "ability"))
-    const edgeOwned = new Set(edges.map((i) => i.name.toLowerCase()))
 
     let total = 0
     let fromEffects = 0
     const lines = []
-    for (const effect of actor.effects) {
-        if (effect.disabled) { continue } // only enabled effects
+    for (const effect of active_effects(actor)) { // only enabled effects, also those of the actor's items
         for (const change of effect.changes) {
             if (change.key !== UNSHAKE_KEY) { continue }
             const value = parseFloat(change.value)
             if (!Number.isFinite(value)) { continue }
             fromEffects += value
-            if (edgeOwned.has(effect.name.toLowerCase())) { continue } // the Edge below already counts
+            if (covered_by_edge(effect, edges)) { continue } // the Edge below already counts
             total += value
             lines.push(`${signed(value)} ${img(effect.icon ?? effect.img)}${esc(effect.name)}`)
         }
@@ -88,7 +88,7 @@ export function unshake_bonuses(actor) {
         total += 2
         lines.push(`+ 2 ${img(edge.img)}${esc(edge.name)}`)
     }
-    const rest = (Number(actor.system.attributes.spirit.unShakeBonus) || 0) - fromEffects
+    const rest = absorb_manual_bonus((Number(actor.system.attributes.spirit.unShakeBonus) || 0) - fromEffects, edges.length, 2, { actor, what: 'Unshake' })
     if (Math.abs(rest) > 1e-9) {
         total += rest
         lines.push(`${signed(rest)} ${esc(t('SWIM.unshake.genericBonus'))}`)

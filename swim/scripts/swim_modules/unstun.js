@@ -1,4 +1,5 @@
 import { swimConditions } from '../helpers/conditions.js'
+import { absorb_manual_bonus, active_effects, covered_by_edge } from '../helpers/trait_bonuses.js'
 /*******************************************
  * Unstun
  * v. 5.0.0 – one window (UnstunApp) instead of the Vigor roll followed by a Benny dialog.
@@ -45,7 +46,7 @@ export async function unstun_script(effect = false) {
 /**
  * The bonuses on the Vigor roll to recover from Stunned: Combat Reflexes (+2), Active Effects on `unStunBonus` (and the legacy key
  * `SWIM.unStunMod`), the generic bonus left over after them, Elan on rerolls (+2). An Active Effect named like an Edge the actor
- * has is not counted a second time.
+ * has (or that belongs to such an Edge, also when it lives on the item) is not counted a second time.
  * @returns {{total: number, lines: string[]}}  `lines` are HTML snippets, already escaped.
  */
 export function unstun_bonuses(actor, { elan = false } = {}) {
@@ -53,19 +54,17 @@ export function unstun_bonuses(actor, { elan = false } = {}) {
     const signed = (n) => `${n < 0 ? '-' : '+'} ${Math.abs(n)}`
     const img = (src) => (src ? `<img src="${esc(src)}" alt="" width="15" height="15" style="border:0" />` : '')
     const edges = actor.items.filter((i) => edgeNames.includes(i.name.toLowerCase()) && (i.type === "edge" || i.type === "ability"))
-    const edgeOwned = new Set(edges.map((i) => i.name.toLowerCase()))
 
     let total = 0
     let fromEffects = 0 // only what ends up in `unStunBonus` (the legacy key does not)
     const lines = []
-    for (const effect of actor.effects) {
-        if (effect.disabled) { continue } // only enabled effects
+    for (const effect of active_effects(actor)) { // only enabled effects, also those of the actor's items
         for (const change of effect.changes) {
             if (change.key !== UNSTUN_KEY && change.key !== LEGACY_KEY) { continue }
             const value = parseFloat(change.value)
             if (!Number.isFinite(value)) { continue }
             if (change.key === UNSTUN_KEY) { fromEffects += value }
-            if (edgeOwned.has(effect.name.toLowerCase())) { continue } // the Edge below already counts
+            if (covered_by_edge(effect, edges)) { continue } // the Edge below already counts
             total += value
             lines.push(`${signed(value)} ${img(effect.icon ?? effect.img)}${esc(effect.name)}`)
         }
@@ -74,7 +73,7 @@ export function unstun_bonuses(actor, { elan = false } = {}) {
         total += 2
         lines.push(`+ 2 ${img(edge.img)}${esc(edge.name)}`)
     }
-    const rest = (Number(actor.system.attributes.vigor.unStunBonus) || 0) - fromEffects
+    const rest = absorb_manual_bonus((Number(actor.system.attributes.vigor.unStunBonus) || 0) - fromEffects, edges.length, 2, { actor, what: 'Unstun' })
     if (Math.abs(rest) > 1e-9) {
         total += rest
         lines.push(`${signed(rest)} ${esc(t('SWIM.unshake.genericBonus'))}`)

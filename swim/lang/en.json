@@ -1059,6 +1059,8 @@
   "SWIM.listEditor.add": "Add entry",
   "SWIM.listEditor.defaults": "Reset to defaults",
   "SWIM.listEditor.apply": "Apply",
+  "SWIM.absorbSheetBonusName": "Sheet value replaces Edge bonus:",
+  "SWIM.absorbSheetBonusHint": "Unshake, Unstun and Soak add +2 for Edges/abilities such as Undead, Combat Reflexes or Iron Jaw. If the matching modifier on the actor sheet (Tweaks) already is that high, it is taken as the same bonus and not counted a second time. Switch this off if a modifier from another source is missing from the total; then the sheet value always shows as \"Other modifier\" in addition to the Edge.",
   "SWIM.auraEffectsName": "Aura effects:",
   "SWIM.auraEffectsHint": "Active Effects that are marked as an aura (Aura tab of the Active Effect) are passed on to the tokens within their radius, e.g. for a command range. The first connected GM keeps this up to date while tokens move. When this is off, no aura is applied and all applied copies are removed.",
   "SWIM.aura.tab": "Aura",
@@ -1066,7 +1068,7 @@
   "SWIM.aura.enabled": "This effect is an aura",
   "SWIM.aura.enabledHint": "Off: a normal effect. On: the effect itself no longer changes its owner, only the copies do.",
   "SWIM.aura.radius": "Radius (squares)",
-  "SWIM.aura.radiusHint": "Measured from the edge of the token. A token that is only touched by the radius is affected, e.g. 5 reaches up to 4 empty squares between the tokens (Command range).",
+  "SWIM.aura.radiusHint": "The same range as the aura of the SWADE system (token configuration > Auras): a circle around the token, counted from its edge. A token that is touched by the circle is affected. 5 = a Command range of 5.",
   "SWIM.aura.affects": "Affects",
   "SWIM.aura.affectsHint": "Compared with the disposition of the owner's token.",
   "SWIM.aura.affects-ally": "Allies (same side as the owner)",
@@ -1078,5 +1080,9 @@
   "SWIM.aura.stackHint": "Off: a token gets an aura of the same name only once, from the nearest source.",
   "SWIM.aura.note": "The aura is inactive while the owner's token is hidden or the owner is Incapacitated, Bleeding Out or Dead. The copies are managed by the GM client; a GM has to be connected for them to update.",
   "SWIM.notification.aurasGMOnly": "Only a GM can update auras.",
-  "SWIM.notification.aurasDone": "Auras of {scene} updated: {created} added, {updated} changed, {deleted} removed."
+  "SWIM.notification.aurasDone": "Auras of {scene} updated: {created} added, {updated} changed, {deleted} removed.",
+  "SWIM.aura.name": "Name on token",
+  "SWIM.aura.nameHint": "The name the effect gets on the affected tokens, e.g. 'Under Command'. Empty: the name of this effect.",
+  "SWIM.aura.wildcards": "Also affects Wild Cards",
+  "SWIM.aura.wildcardsHint": "Off: only Extras are affected (leadership Edges normally do not work on Wild Cards). On: Wild Cards get it too. The owner is not affected by this, see below."
 }

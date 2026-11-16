@@ -46,7 +46,7 @@ export function strip_idle_aura(effect, changes) {
 }
 
 /** Markup of the Aura tab (pure; field names are saved with the form of the sheet). */
-export function aura_tab_html(stored = {}) {
+export function aura_tab_html(stored = {}, app_name = "") {
     const cfg = { ...DEFAULTS, ...stored }
     const disp = DISPOSITIONS.map((d) => `<option value="${d}" ${cfg.disposition === d ? "selected" : ""}>${esc(t(`SWIM.aura.affects-${d}`))}</option>`).join("")
     const row = (label, hint, input) => `<div class="form-group"><label>${esc(t(label))}</label><div class="form-fields">${input}</div><p class="hint">${esc(t(hint))}</p></div>`
@@ -57,6 +57,8 @@ export function aura_tab_html(stored = {}) {
             ${row("SWIM.aura.enabled", "SWIM.aura.enabledHint", `<input type="checkbox" name="flags.swim.aura.enabled" data-dtype="Boolean" ${cfg.enabled ? "checked" : ""}>`)}
             ${row("SWIM.aura.radius", "SWIM.aura.radiusHint", `<input type="number" name="flags.swim.aura.radius" data-dtype="Number" min="0" step="1" value="${esc(cfg.radius)}">`)}
             ${row("SWIM.aura.affects", "SWIM.aura.affectsHint", `<select name="flags.swim.aura.disposition">${disp}</select>`)}
+            ${row("SWIM.aura.name", "SWIM.aura.nameHint", `<input type="text" name="flags.swim.aura.name" value="${esc(cfg.name)}" placeholder="${esc(app_name)}">`)}
+            ${row("SWIM.aura.wildcards", "SWIM.aura.wildcardsHint", `<input type="checkbox" name="flags.swim.aura.wildcards" data-dtype="Boolean" ${cfg.wildcards ? "checked" : ""}>`)}
             ${row("SWIM.aura.self", "SWIM.aura.selfHint", `<input type="checkbox" name="flags.swim.aura.self" data-dtype="Boolean" ${cfg.self ? "checked" : ""}>`)}
             ${row("SWIM.aura.stack", "SWIM.aura.stackHint", `<input type="checkbox" name="flags.swim.aura.stack" data-dtype="Boolean" ${cfg.stack ? "checked" : ""}>`)}
             <p class="swim-au-note">${esc(t("SWIM.aura.note"))}</p></section>`,
@@ -99,7 +101,7 @@ export function aura_hooks() {
         if (!game.user.isGM || app instanceof SWIMEffectConfig) { return }
         const nav = html.find("nav.sheet-tabs")
         if (!nav.length || html.find(`section[data-tab="${TAB}"]`).length) { return }
-        const tab = aura_tab_html(app.document.flags?.swim?.aura)
+        const tab = aura_tab_html(app.document.flags?.swim?.aura, app.document.name)
         nav.append(tab.nav)
         html.find("section.tab").last().after(tab.section)
         // after a re-render Foundry has activated the tab before it existed
