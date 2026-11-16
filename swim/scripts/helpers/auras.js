@@ -20,7 +20,11 @@
  * Everything is done by the first active GM (copies are created and deleted there). The functions up to `plan_scene` are pure.
  ******************************************/
 
-export const DEFAULTS = { enabled: false, radius: 5, disposition: 'ally', self: false, stack: false, wildcards: false, name: '' }
+export const DEFAULTS = { enabled: false, range: 'custom', radius: 5, disposition: 'ally', self: false, stack: false, wildcards: false, name: '' }
+/** Where the radius comes from: the number in the effect, the Command range of the owner (SWIM config of the actor) or one of the SWADE auras of the owner (token configuration > Auras). */
+export const RANGES = ['command', 'aura1', 'aura2', 'custom']
+/** Command range of an actor without a value (SWADE: 5") */
+export const DEFAULT_COMMAND_RANGE = 5
 export const DISPOSITIONS = ['ally', 'enemy', 'any']
 const DOWN_STATUSES = ['incapacitated', 'bleeding-out', 'dead', 'defeated']
 const EPS = 1e-6
@@ -35,6 +39,7 @@ export function aura_config(effect) {
     if (!raw || raw.enabled !== true) { return null }
     const r = raw.radius === undefined || raw.radius === null || raw.radius === '' ? NaN : Number(raw.radius)
     return {
+        range: RANGES.includes(raw.range) ? raw.range : DEFAULTS.range,
         radius: Number.isFinite(r) ? Math.max(0, r) : DEFAULTS.radius,
         disposition: DISPOSITIONS.includes(raw.disposition) ? raw.disposition : DEFAULTS.disposition,
         self: raw.self === true,
@@ -42,6 +47,18 @@ export function aura_config(effect) {
         wildcards: raw.wildcards === true,
         name: typeof raw.name === 'string' ? raw.name.trim() : '',
     }
+}
+
+/** The radius (squares) an aura source really has: its own number, or the range of its owner (prepared data, so Active Effects on the actor can raise it). */
+export function resolve_radius(actor, cfg) {
+    const num = (v, fallback) => { const n = v === undefined || v === null || v === '' ? NaN : Number(v); return Number.isFinite(n) ? Math.max(0, n) : fallback }
+    if (cfg.range === 'command') { return num(actor?.flags?.swim?.config?.commandRange, DEFAULT_COMMAND_RANGE) }
+    if (cfg.range === 'aura1' || cfg.range === 'aura2') {
+        let auras = null
+        try { auras = actor?.auras } catch (err) { auras = null }
+        return num((auras ?? actor?.flags?.swade?.auras)?.[cfg.range]?.radius, DEFAULTS.radius)
+    }
+    return cfg.radius
 }
 
 /** Token in pixels: its square and the circle of an aura around it (SWADE: `token.w`, `token.h`, `token.center`, `token.externalRadius`). */
@@ -99,7 +116,7 @@ export function collect_sources(scene) {
             if (effect.disabled) { continue }
             const cfg = aura_config(effect)
             if (!cfg) { continue }
-            out.push({ id: `${token.id}|${effect.uuid}`, token, actor, effect, cfg, key: String(effect.name ?? '').trim().toLowerCase() })
+            out.push({ id: `${token.id}|${effect.uuid}`, token, actor, effect, cfg: { ...cfg, radius: resolve_radius(actor, cfg) }, key: String(effect.name ?? '').trim().toLowerCase() })
         }
     }
     return out
@@ -261,4 +278,28 @@ export async function recalculate_auras(sceneId) {
     const res = await reconcile_scene(scene)
     ui.notifications.info(game.i18n.format('SWIM.notification.aurasDone', { scene: scene.name, created: res.created, updated: res.updated, deleted: res.deleted }))
     return res
+}
+
+/**
+ * Diagnosis for the console (`swim.aura_debug()`): for every token of the scene and every aura source, the gap in squares, the radius,
+ * the verdict of the rule and the copies the actor carries right now. Nothing is changed.
+ */
+export function aura_debug(sceneId) {
+    const scene = sceneId ? game.scenes.get(sceneId) : (canvas.scene ?? game.scenes.current)
+    if (!scene) { return [] }
+    const grid = scene.grid?.size ?? scene.dimensions?.size ?? 100
+    const rows = []
+    for (const s of collect_sources(scene)) {
+        for (const t of scene.tokens) {
+            if (t.id === s.token.id || !t.actor) { continue }
+            const gap = aura_gap(token_shape(s.token, grid), token_shape(t, grid), grid)
+            rows.push({
+                source: `${s.token.name} (${s.effect.name})`, target: t.name, range: s.cfg.range, radius: s.cfg.radius, gap: Math.round(gap * 1e6) / 1e6,
+                inRange: gap < s.cfg.radius - EPS, wildcardBlocked: !s.cfg.wildcards && is_wildcard(t.actor),
+                copiesOnTarget: copies_of(t.actor, scene.id).map((e) => e.name).join(', '), x: t.x, y: t.y,
+            })
+        }
+    }
+    console.table(rows)
+    return rows
 }

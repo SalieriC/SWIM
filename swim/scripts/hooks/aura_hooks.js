@@ -1,5 +1,5 @@
 import SWIMEffectConfig from "../helpers/custom_effect_config.js"
-import { DEFAULTS, DISPOSITIONS, aura_config, scenes_of_actor, scenes_of_effect, schedule_auras, set_auras_enabled, state } from "../helpers/auras.js"
+import { DEFAULTS, DISPOSITIONS, RANGES, aura_config, scenes_of_actor, scenes_of_effect, schedule_auras, set_auras_enabled, state } from "../helpers/auras.js"
 import { esc, t } from "../helpers/swim_window.js"
 
 /**
@@ -9,7 +9,7 @@ import { esc, t } from "../helpers/swim_window.js"
  */
 
 const TAB = "swimAura"
-const MOVE_KEYS = ["x", "y", "width", "height", "hidden", "disposition", "actorId", "actorLink"]
+const MOVE_KEYS = ["x", "y", "width", "height", "hidden", "disposition", "actorId", "actorLink", "delta", "actorData"]
 
 /**
  * `ActiveEffect#isSuppressed` is "system logic that makes an effect ineligible for application" (Foundry v11, checked lazily when the actor
@@ -49,13 +49,15 @@ export function strip_idle_aura(effect, changes) {
 export function aura_tab_html(stored = {}, app_name = "") {
     const cfg = { ...DEFAULTS, ...stored }
     const disp = DISPOSITIONS.map((d) => `<option value="${d}" ${cfg.disposition === d ? "selected" : ""}>${esc(t(`SWIM.aura.affects-${d}`))}</option>`).join("")
-    const row = (label, hint, input) => `<div class="form-group"><label>${esc(t(label))}</label><div class="form-fields">${input}</div><p class="hint">${esc(t(hint))}</p></div>`
+    const rng = RANGES.map((r) => `<option value="${r}" ${cfg.range === r ? "selected" : ""}>${esc(t(`SWIM.aura.range-${r}`))}</option>`).join("")
+    const row = (label, hint, input, cls = "") => `<div class="form-group ${cls}" ${cls && cfg.range !== "custom" ? 'style="display:none"' : ""}><label>${esc(t(label))}</label><div class="form-fields">${input}</div><p class="hint">${esc(t(hint))}</p></div>`
     return {
         nav: `<a class="item" data-tab="${TAB}"><i class="fa-solid fa-bullseye"></i> ${esc(t("SWIM.aura.tab"))}</a>`,
         section: `<section class="tab swim-au" data-tab="${TAB}">
             <p class="swim-au-intro"><span class="swim-au-badge">SWIM</span>${esc(t("SWIM.aura.intro"))}</p>
             ${row("SWIM.aura.enabled", "SWIM.aura.enabledHint", `<input type="checkbox" name="flags.swim.aura.enabled" data-dtype="Boolean" ${cfg.enabled ? "checked" : ""}>`)}
-            ${row("SWIM.aura.radius", "SWIM.aura.radiusHint", `<input type="number" name="flags.swim.aura.radius" data-dtype="Number" min="0" step="1" value="${esc(cfg.radius)}">`)}
+            ${row("SWIM.aura.range", "SWIM.aura.rangeHint", `<select name="flags.swim.aura.range">${rng}</select>`)}
+            ${row("SWIM.aura.radius", "SWIM.aura.radiusHint", `<input type="number" name="flags.swim.aura.radius" data-dtype="Number" min="0" step="1" value="${esc(cfg.radius)}">`, "swim-au-radius")}
             ${row("SWIM.aura.affects", "SWIM.aura.affectsHint", `<select name="flags.swim.aura.disposition">${disp}</select>`)}
             ${row("SWIM.aura.name", "SWIM.aura.nameHint", `<input type="text" name="flags.swim.aura.name" value="${esc(cfg.name)}" placeholder="${esc(app_name)}">`)}
             ${row("SWIM.aura.wildcards", "SWIM.aura.wildcardsHint", `<input type="checkbox" name="flags.swim.aura.wildcards" data-dtype="Boolean" ${cfg.wildcards ? "checked" : ""}>`)}
@@ -77,6 +79,12 @@ export function aura_hooks() {
     })
     Hooks.on("createToken", (tokenDoc) => { if (works()) { schedule_auras(tokenDoc.parent) } })
     Hooks.on("deleteToken", (tokenDoc) => { if (works()) { schedule_auras(tokenDoc.parent) } })
+
+    // --- the range of a source comes from its actor (Command range in the SWIM config, SWADE auras): changed there -> recalculate ---
+    Hooks.on("updateActor", (actor, changes) => {
+        if (!works() || !(foundry.utils.hasProperty(changes, "flags.swim.config.commandRange") || foundry.utils.hasProperty(changes, "flags.swade.auras"))) { return }
+        tidy(scenes_of_actor(actor))
+    })
 
     // --- effects: aura sources switched on/off/edited/removed, and conditions that put a source out of action (Incapacitated, Dead). Copies are ignored. ---
     const on_effect = (effect) => { if (works() && !effect.flags?.swim?.auraOf) { tidy(scenes_of_effect(effect)) } }
@@ -104,6 +112,9 @@ export function aura_hooks() {
         const tab = aura_tab_html(app.document.flags?.swim?.aura, app.document.name)
         nav.append(tab.nav)
         html.find("section.tab").last().after(tab.section)
+        // the number field only matters for "Custom"
+        const sec = html.find(`section[data-tab="${TAB}"]`)
+        sec.find('select[name="flags.swim.aura.range"]').on("change", (ev) => { sec.find(".swim-au-radius").toggle(ev.currentTarget.value === "custom") })
         // after a re-render Foundry has activated the tab before it existed
         try { const tabs = app._tabs?.[0]; if (tabs?.active === TAB) { tabs.activate(TAB) } } catch (err) { console.warn("SWIM | Aura tab", err) }
     })

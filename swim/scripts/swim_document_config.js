@@ -133,6 +133,15 @@ function swim_config_options() {
         {
             isNumber: true,
             showFor: ['character', 'npc'],
+            id: 'commandRange',
+            label: 'SWIM.Config_CommandRangeName',
+            hint: 'SWIM.Config_CommandRangeHint',
+            value: 5,
+            min: 0,
+        },
+        {
+            isNumber: true,
+            showFor: ['character', 'npc'],
             id: 'radRes',
             label: 'SWIM.Config_RadResName',
             hint: 'SWIM.Config_RadResHint',
