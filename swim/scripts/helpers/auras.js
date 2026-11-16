@@ -8,9 +8,10 @@
  * The source effect itself changes nothing on its owner (hooks/aura_hooks.js suppresses it); "self" adds a copy to the owner like for everybody else.
  *
  * Rules (decided with the user):
- *  - Radius = grid squares ("inches"), measured from the EDGE of the source token to the EDGE of the other token. A token that is only touched
- *    by the radius is affected: the gap between the footprints (empty squares) must be smaller than the radius. Diagonals count as 1 (Chebyshev),
- *    like SWADE counts squares. Walls, elevation and token scale are ignored.
+ *  - Radius = grid squares, calculated EXACTLY like the auras of the SWADE system (Auramancer, token config > Auras): a circle around the CENTRE of the
+ *    source token with the radius `gridSize * radius + externalRadius` (externalRadius = max(token width, height) / 2, i.e. the radius counts from the
+ *    token's edge). A token is affected if that circle covers any part of its square (a token that is only touched, tangent, is not). Walls
+ *    (SWADE's "walls" switch, off by default), elevation and token scale are ignored.
  *  - Disposition is compared between the source token and the other token: ally = same side (equal, or both friendly-ish / both hostile-ish),
  *    enemy = opposed (friendly vs hostile), any = everybody.
  *  - A source is inactive while its token is hidden or its actor is Incapacitated / Bleeding Out / Dead.
@@ -19,7 +20,7 @@
  * Everything is done by the first active GM (copies are created and deleted there). The functions up to `plan_scene` are pure.
  ******************************************/
 
-export const DEFAULTS = { enabled: false, radius: 5, disposition: 'ally', self: false, stack: false }
+export const DEFAULTS = { enabled: false, radius: 5, disposition: 'ally', self: false, stack: false, wildcards: false, name: '' }
 export const DISPOSITIONS = ['ally', 'enemy', 'any']
 const DOWN_STATUSES = ['incapacitated', 'bleeding-out', 'dead', 'defeated']
 const EPS = 1e-6
@@ -38,27 +39,32 @@ export function aura_config(effect) {
         disposition: DISPOSITIONS.includes(raw.disposition) ? raw.disposition : DEFAULTS.disposition,
         self: raw.self === true,
         stack: raw.stack === true,
+        wildcards: raw.wildcards === true,
+        name: typeof raw.name === 'string' ? raw.name.trim() : '',
     }
 }
 
-/** Footprint of a token in grid squares (fractions allowed, tokens need not be snapped). */
-export function token_rect(tokenDoc, gridSize) {
-    const w = Number(tokenDoc.width) || 1
-    const h = Number(tokenDoc.height) || 1
-    const x0 = (Number(tokenDoc.x) || 0) / gridSize
-    const y0 = (Number(tokenDoc.y) || 0) / gridSize
-    return { x0, y0, x1: x0 + w, y1: y0 + h }
+/** Token in pixels: its square and the circle of an aura around it (SWADE: `token.w`, `token.h`, `token.center`, `token.externalRadius`). */
+export function token_shape(tokenDoc, gridSize) {
+    const w = (Number(tokenDoc.width) || 1) * gridSize
+    const h = (Number(tokenDoc.height) || 1) * gridSize
+    const x = Number(tokenDoc.x) || 0
+    const y = Number(tokenDoc.y) || 0
+    return { x0: x, y0: y, x1: x + w, y1: y + h, cx: x + w / 2, cy: y + h / 2, ext: Math.max(w, h) / 2 }
 }
 
-/** Empty squares between two footprints (0 = touching or overlapping), diagonals count as 1. */
-export function rect_gap(a, b) {
-    const dx = Math.max(a.x0 - b.x1, b.x0 - a.x1, 0)
-    const dy = Math.max(a.y0 - b.y1, b.y0 - a.y1, 0)
-    return Math.max(dx, dy)
+/**
+ * How far (in grid squares) the square of token `b` is outside the aura circle of `a` at radius 0: distance from the centre of `a` to the
+ * nearest point of `b`, minus the external radius of `a`, divided by the grid size. The aura reaches `b` if this is smaller than the radius.
+ */
+export function aura_gap(a, b, gridSize) {
+    const dx = Math.max(b.x0 - a.cx, 0, a.cx - b.x1)
+    const dy = Math.max(b.y0 - a.cy, 0, a.cy - b.y1)
+    return (Math.hypot(dx, dy) - a.ext) / gridSize
 }
 
-/** A token is reached if the radius covers at least a part of it: radius 5 reaches up to 4 empty squares between the tokens. */
-export function in_aura_range(a, b, radius) { return rect_gap(a, b) < radius - EPS }
+/** The aura of `a` with the given radius (squares) covers a part of the square of `b`. */
+export function in_aura_range(a, b, radius, gridSize) { return aura_gap(a, b, gridSize) < radius - EPS }
 
 /** Side of token b as seen from token a: 'ally' | 'enemy' | 'other' (neutral against friendly/hostile). */
 export function relation(dispositionA, dispositionB) {
@@ -70,6 +76,10 @@ export function relation(dispositionA, dispositionB) {
 }
 export function disposition_matches(rule, dispositionA, dispositionB) {
     return rule === 'any' || relation(dispositionA, dispositionB) === rule
+}
+
+export function is_wildcard(actor) {
+    return typeof actor?.isWildcard === 'boolean' ? actor.isWildcard : !!actor?.system?.wildcard
 }
 
 export function is_down(actor) {
@@ -96,8 +106,9 @@ export function collect_sources(scene) {
 }
 
 /** Data of the copy a recipient gets (and its signature, to notice when the source changed). */
-export function copy_data(effect, id, sceneId) {
+export function copy_data(effect, id, sceneId, displayName = '') {
     const src = effect.toObject()
+    if (displayName) { src.name = displayName } // 'Name on token'
     const flags = foundry.utils.deepClone(src.flags ?? {})
     if (flags.swim) { delete flags.swim.aura }
     // an aura lasts as long as the token is in range: no turn based expiry
@@ -122,8 +133,8 @@ export function plan_scene(scene) {
     const sources = collect_sources(scene)
     if (!sources.length) { return plan }
     const grid = scene.grid?.size ?? scene.dimensions?.size ?? 100
-    const rect = new Map()
-    const rect_of = (token) => { if (!rect.has(token)) { rect.set(token, token_rect(token, grid)) } return rect.get(token) }
+    const shapes = new Map()
+    const shape_of = (token) => { if (!shapes.has(token)) { shapes.set(token, token_shape(token, grid)) } return shapes.get(token) }
 
     // 1) every (actor, source) pair that is in reach, with the smallest gap
     const reach = new Map()
@@ -136,8 +147,9 @@ export function plan_scene(scene) {
                 if (!s.cfg.self) { continue }
                 gap = 0
             } else {
+                if (!s.cfg.wildcards && is_wildcard(actor)) { continue } // Wild Cards only if the aura says so (the owner's own copy is "Also affects the owner")
                 if (!disposition_matches(s.cfg.disposition, s.token.disposition, target.disposition)) { continue }
-                gap = rect_gap(rect_of(s.token), rect_of(target))
+                gap = aura_gap(shape_of(s.token), shape_of(target), grid)
                 if (!(gap < s.cfg.radius - EPS)) { continue }
             }
             if (!reach.has(actor)) { reach.set(actor, new Map()) }
@@ -158,7 +170,7 @@ export function plan_scene(scene) {
         chosen.push(...best.values())
         const wanted = new Map()
         for (const { s, gap } of chosen) {
-            const { data, sig } = copy_data(s.effect, s.id, scene.id)
+            const { data, sig } = copy_data(s.effect, s.id, scene.id, s.cfg.name)
             wanted.set(s.id, { data, sig, gap })
         }
         if (wanted.size) { plan.set(actor, wanted) }
