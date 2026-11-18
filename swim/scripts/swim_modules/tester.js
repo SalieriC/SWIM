@@ -329,18 +329,9 @@ class TesterApp extends Application {
             if (!st.best || total > st.best.total) { st.best = { total, lines: bonus.lines } }
             st.roll = { total, lines: bonus.lines }
 
-            const { totalBennies } = await swim.check_bennies(token, false)
-            const canReroll = (st.rerolls === 0 && snap.free) || totalBennies > 0
-            // Support is capped by a raise (nothing to improve) and ends when no reroll is left. A Test is opposed by the target, so the
-            // player decides when the roll is high enough: the result view stays open (Apply is always there).
-            if (st.action === 'support') {
-                if (total >= 8) { sendBest = true; break }
-                if (!canReroll) {
-                    ui.notifications.warn(t("SWIM.notification-noBenniesLeft"))
-                    sendBest = true
-                    break
-                }
-            }
+            // Support is capped by a raise (nothing to improve). Otherwise the result view stays open even without Bennies: the free reroll
+            // button (and Apply) are always there. A Test is opposed by the target, so the player decides when the roll is high enough.
+            if (st.action === 'support' && total >= 8) { sendBest = true; break }
             st.phase = 'result'
           } while (false)
         } finally {
@@ -564,13 +555,7 @@ class ResistApp extends Application {
             if (await swim.critFail_check(is_wildcard(actor), r) === true) { outcome = ['crit', roll]; break }
             st.best = Math.max(st.best, total)
             if (total >= testTotal) { outcome = ['resisted', roll]; break }
-            const { totalBennies } = await swim.check_bennies(targetToken, false)
-            if (totalBennies <= 0) {
-                ui.notifications.warn(t("SWIM.notification-noBenniesLeft"))
-                outcome = ['failed', roll]
-                break
-            }
-            st.roll = roll
+            st.roll = roll // the result view stays open without Bennies too: free reroll or accept
             st.phase = 'result'
           } while (false)
         } finally {
