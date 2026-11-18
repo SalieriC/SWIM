@@ -22,7 +22,7 @@ import { execute_as_gm } from "../helpers/socket_helper.js"
 import { SwimWindow, t, esc, btn, token_img, tokens_header, rate_opt, checkbox } from "../helpers/swim_window.js"
 import { EdgePickerApp } from "../helpers/edge_picker.js"
 import { rank_of_actor } from "../helpers/actor_picker.js"
-import { load_combat_edges, edge_item_data, granted_line, affects_block } from "../helpers/combat_edges.js"
+import { load_combat_edges, edge_item_data, granted_line, affects_block, targets_block } from "../helpers/combat_edges.js"
 
 // ============================================================================
 // PART 1: The window (EffectBuilderApp)
@@ -519,6 +519,11 @@ export async function effect_builder_gm(data) {
         }
     }
 
+    // Every effect the caster gets (the maintaining effect, or the caster's own effect when the caster is a target) lists the targets
+    // instead of the power text. (Warrior's Gift adds the Edges, see below.)
+    const targetNames = data.targetIDs.map((id) => playerScene.tokens.get(id)?.name).filter(Boolean)
+    const targets_html = targets_block(game.i18n.localize("SWIM.affectsLine"), targetNames)
+
     // Duration helper
     const getDuration = (target, baseDur) => {
         if (power || noPP) {
@@ -672,6 +677,9 @@ export async function effect_builder_gm(data) {
         if (isCaster && additionalChange.length > 0) {
             effectData.changes = (effectData.changes || []).concat(additionalChange)
         }
+
+        // The caster's own effect lists the targets (Warrior's Gift sets its own text with the Edges)
+        if (isCaster && targets_html && !effectData.flags?.swim?.warriorsGift) { effectData.description = targets_html }
 
         if (isCaster && noPP && effectData.duration) {
             effectData.duration.rounds = Number(999999999999999)
@@ -1295,7 +1303,9 @@ export async function effect_builder_gm(data) {
                 startRound: caster.combatant != null ? game.combat.round : 0,
                 rounds: noPP ? Number(999999999999999) : durationRounds
             },
-            description: affects_block(game.i18n.localize("SWIM.warriorsGiftWin.affectsLine"), grantedEdges) + (power ? power.system.description : ""),
+            description: grantedEdges.length
+                ? affects_block(game.i18n.localize("SWIM.warriorsGiftWin.affectsLine"), grantedEdges) // Warrior's Gift: the targets instead of the power text
+                : (targets_html || (power ? power.system.description : "")),
             flags: {
                 swade: { expiration: 3 },
                 swim: {

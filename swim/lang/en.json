@@ -1113,5 +1113,6 @@
   "SWIM.warriorsGiftWin.edgeName": "{name} ({power})",
   "SWIM.warriorsGiftWin.effectName": "{power}: {edge}",
   "SWIM.warriorsGiftWin.grantedLine": "Granted Edge:",
+  "SWIM.affectsLine": "Affects:",
   "SWIM.warriorsGiftWin.affectsLine": "Affects:"
 }

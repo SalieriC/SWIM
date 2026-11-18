@@ -82,6 +82,12 @@ export function is_improved_edge(swid) {
     return String(swid ?? "").startsWith("improved-")
 }
 
+/** Like `affects_block` for powers without Edges: the plain list of target names. Pure. */
+export function targets_block(label, names) {
+    if (!names?.length) { return "" }
+    return `<p><strong>${esc(label)}</strong></p><ul>${names.map((n) => `<li>${esc(n)}</li>`).join("")}</ul>`
+}
+
 /** Plain entry for the picker and the guard from an Edge document. */
 export function edge_entry(doc, names = []) {
     let requirements = ""
