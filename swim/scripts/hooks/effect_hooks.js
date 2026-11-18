@@ -42,6 +42,19 @@ export async function effect_hooks() {
                 if (originalAlpha) { await token.document.unsetFlag('swim', 'originalAlpha') } //delete flag for original alpha.
             }
         }
+        // Warrior's Gift: the temporary Edge goes away with the effect that granted it (however the effect ended: deleted by hand,
+        // expired, or removed because the caster's maintaining effect ended).
+        const gift = condition.flags?.swim?.warriorsGift
+        if (gift?.itemID && actor?.items && swim.is_first_gm()) {
+            const edge = actor.items.get(gift.itemID)
+            if (edge) {
+                try {
+                    await edge.delete()
+                } catch (err) {
+                    console.warn(`SWIM | Could not remove the Edge '${edge.name}' of Warrior's Gift from ${actor.name}`, err)
+                }
+            }
+        }
         // Cancel maintained power
         if (condition.flags?.swim?.maintainedPower === true && condition.flags?.swim?.owner === true && swim.is_first_gm()) {
             for (let targetID of condition.flags.swim.targets) {

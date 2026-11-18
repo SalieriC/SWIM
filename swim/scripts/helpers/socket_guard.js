@@ -10,6 +10,8 @@
  ******************************************/
 
 import { is_potion_of, potion_amount } from "./swid_lists.js"
+import { load_combat_edges } from "./combat_edges.js"
+import { rank_of_actor } from "./actor_picker.js"
 
 function fail(message) {
     throw new Error(message)
@@ -88,18 +90,44 @@ export function guard(name, handler, validate) {
     }
 }
 
+/**
+ * Warrior's Gift: one Edge per target, each one a Combat Edge of the configured Edge compendium; players only up to the caster's rank
+ * (the picker greys the others out, this stops a hand-made payload).
+ */
+async function validate_warriors_gift(user, data, caster) {
+    if (data.type !== "warriorsGift") fail("edges are only valid for Warrior's Gift")
+    if (!Array.isArray(data.edges) || data.edges.length !== data.targetIDs.length) fail("edges must hold one entry per target")
+    const available = await load_combat_edges(game.settings.get("swim", "edgesPack"))
+    if (!available) fail("no Edge compendium is set")
+    const casterRank = rank_of_actor(caster.actor)
+    const seen = new Set()
+    for (const choice of data.edges) {
+        require_object(choice, "edge entry")
+        require_id(choice.targetID, "edge targetID")
+        require_id(choice.edgeID, "edgeID")
+        if (!data.targetIDs.includes(choice.targetID)) fail(`edge target ${choice.targetID} is not a target`)
+        if (seen.has(choice.targetID)) fail(`two Edges for target ${choice.targetID}`)
+        seen.add(choice.targetID)
+        const edge = available.find((e) => e.id === choice.edgeID)
+        if (!edge) fail(`${choice.edgeID} is not a Combat Edge of the Edge compendium`)
+        if (!user.isGM && edge.rankIdx > casterRank) fail(`${edge.name} is above the caster's rank`)
+    }
+}
+
 /* ---------- validators (one per registered handler) ---------- */
 
 export const socket_validators = {
-    effectBuilder(user, data) {
+    async effectBuilder(user, data) {
         require_object(data)
         const scene = get_scene(require_id(data.sceneID, "sceneID"))
-        require_owned_token(user, get_token(scene, data.casterID, "casterID"), "the caster")
+        const caster = get_token(scene, data.casterID, "casterID")
+        require_owned_token(user, caster, "the caster")
         if (!Array.isArray(data.targetIDs) || data.targetIDs.length === 0 || data.targetIDs.length > 200) fail("targetIDs is not a non-empty array")
         for (const id of data.targetIDs) get_token(scene, id, "target")
         if (typeof data.type !== "string") fail("type is not a string")
         require_id(data.maintenanceID, "maintenanceID")
         if (data.powerID !== undefined && !is_id(data.powerID)) fail("powerID is not an id")
+        if (data.edges !== undefined) await validate_warriors_gift(user, data, caster)
     },
 
     shapeChanger(user, data) {

@@ -1,0 +1,24 @@
+/* Edge picker (scripts/helpers/edge_picker.js): Warrior's Gift in the Effect Builder.
+   The look comes from actor-picker.css (.swim-ap-*, loaded for the Shape Changer and the Summoner); this file only adds what is new. */
+.swim-ep-who { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-bottom: 8px; }
+.swim-ep-targets { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 100%; }
+.swim-ep-target {
+  display: flex; align-items: center; gap: 8px; width: auto; max-width: 100%; margin: 0; line-height: 1.2; text-align: left; cursor: pointer;
+  padding: 4px 12px 4px 5px; border-radius: 24px;
+  background: var(--swim-ap-bg); color: var(--swim-ap-text); border: 1px solid var(--swim-ap-line);
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+.swim-ep-target:hover { background: var(--swim-ap-panel-2); }
+.swim-ep-target .swim-ap-token { flex: 0 0 32px; width: 32px; height: 32px; }
+.swim-ep-target > span { display: flex; flex-direction: column; min-width: 0; }
+.swim-ep-target b { font-size: 13px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.swim-ep-pick { font-size: 11px; color: var(--swim-ap-dim); max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.swim-ep-target.is-done .swim-ep-pick { color: var(--swim-ap-gold); }
+.swim-ep-target.is-active { background: #34506e; border-color: var(--swim-ap-gold); box-shadow: 0 0 0 2px rgba(224, 178, 74, 0.35); }
+.swim-ep-target.is-active .swim-ap-token { border-color: var(--swim-ap-gold); }
+/* who got this Edge: small portraits at the right of the row */
+.swim-ep-by { display: flex; flex: 0 0 auto; gap: 2px; }
+.swim-ep-by img { width: 24px; height: 24px; object-fit: cover; border-radius: 50%; background: #0e141b; border: 1px solid var(--swim-ap-gold); }
+.swim-ep .swim-ap-chip { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* a greyed-out Edge that the GM picked anyway stays readable */
+.swim-ep .swim-ap-row.is-locked.is-selected { filter: grayscale(0.25); opacity: 0.85; }

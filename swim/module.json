@@ -101,6 +101,7 @@
 	"styles": [
 		"styles/actor-picker.css",
 		"styles/aura.css",
+		"styles/edge-picker.css",
 		"styles/health-centre.css",
 		"styles/soak-damage.css",
 		"styles/unshake.css"

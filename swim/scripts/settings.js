@@ -16,6 +16,8 @@ export const settingVariables = [
     // SWID lists with their own editor window (helpers/list_editor.js), stored as JSON text (helpers/swid_lists.js)
     {id: 'potionSwids', config_type: String, tab: "Item Options", editor: true, default: serialize_list(DEFAULT_LISTS.potionSwids)},
     {id: 'visionSwids', config_type: String, tab: "Item Options", editor: true, default: serialize_list(DEFAULT_LISTS.visionSwids)},
+    // The compendium with the Edges (any Item compendium); Warrior's Gift (Effect Builder) offers its Combat Edges (helpers/combat_edges.js)
+    {id: 'edgesPack', config_type: String, tab: "Item Options", default: 'none', options: SWIM.get_compendiums_list, type: 'item'},
     {id: 'specialAbilitiesPack', config_type: String, tab: "Tables & Playlists", default: 'none', 
         //assigned the function get_compendim_list to options instead of its results. As the function is not called it is not executed yet.
         options: SWIM.get_compendiums_list, type: 'item'

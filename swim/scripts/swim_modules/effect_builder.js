@@ -20,6 +20,9 @@
 import * as SWIM from '../constants.js'
 import { execute_as_gm } from "../helpers/socket_helper.js"
 import { SwimWindow, t, esc, btn, token_img, tokens_header, rate_opt, checkbox } from "../helpers/swim_window.js"
+import { EdgePickerApp } from "../helpers/edge_picker.js"
+import { rank_of_actor } from "../helpers/actor_picker.js"
+import { load_combat_edges, edge_item_data, granted_line, affects_block } from "../helpers/combat_edges.js"
 
 // ============================================================================
 // PART 1: The window (EffectBuilderApp)
@@ -314,6 +317,25 @@ class EffectBuilderApp extends SwimWindow {
         return this.#token.actor.items.find((p) => p.name.toLowerCase().includes(powerName.toLowerCase()) && p.type === "power")
     }
 
+    /**
+     * Warrior's Gift: opens the Edge picker with the Combat Edges of the Edge compendium (setting `edgesPack`).
+     * Returns `[{targetID, edgeID}]`, or null (no compendium / no Combat Edges / cancelled) - then nothing is sent and the window stays open.
+     */
+    async #pickEdges() {
+        const token = this.#token
+        const edges = await load_combat_edges(game.settings.get("swim", "edgesPack"))
+        if (edges === null) { ui.notifications.error(t('SWIM.warriorsGiftWin.noPack')); return null }
+        if (!edges.length) { ui.notifications.error(t('SWIM.warriorsGiftWin.noEdges')); return null }
+        const picked = await EdgePickerApp.prompt({
+            title: t('SWIM.warriorsGiftWin.title'),
+            caster: { name: token.name, img: token_img(token), rankIdx: rank_of_actor(token.actor) },
+            targets: this.#targets.map((tg) => ({ id: tg.id, name: tg.name, img: token_img(tg) })),
+            edges,
+            isGM: game.user.isGM,
+        })
+        return picked ?? null
+    }
+
     /** Collects the data (same payload as before) and hands it to the GM. Returns false if the input is invalid. */
     async #submit() {
         const st = this.state
@@ -390,6 +412,14 @@ class EffectBuilderApp extends SwimWindow {
                     data.durationRounds = concentration ? 10 : 5
                 }
                 break
+            case "warriorsGift": {
+                // Before anything is created: one Combat Edge for each target (the GM creates the Edges together with the effects).
+                data.degree = degree()
+                const edges = await this.#pickEdges()
+                if (!edges) { return false }
+                data.edges = edges
+                break
+            }
             default: // all other powers: Raise (if offered) and the Strong modifier
                 data.degree = degree()
                 if (["beastFriend", "invisibility", "relief"].includes(selected)) { data.caster = token.name }
@@ -466,6 +496,25 @@ export async function effect_builder_gm(data) {
         owner: false,
         powerID: power?.id,
         affected: true
+    }
+
+    // ========================================================================
+    // Warrior's Gift: the data of the temporary Edge for each target. Resolved BEFORE anything is created, so a missing Edge
+    // stops the whole thing instead of leaving half of the targets with an effect and no Edge. (Without `data.edges`, e.g. a call
+    // from an old macro, the power works as before: only the effect.)
+    // ========================================================================
+    const edgeGrants = new Map() // targetID -> data of the Edge item
+    const grantedEdges = [] // [{target, edge}] for the description of the maintaining effect
+    if (type === "warriorsGift" && Array.isArray(data.edges)) {
+        const packId = game.settings.get("swim", "edgesPack")
+        for (const targetID of data.targetIDs) {
+            const choice = data.edges.find(e => e.targetID === targetID)
+            const itemData = choice ? await edge_item_data(packId, choice.edgeID, { maintenanceID: data.maintenanceID, casterID }) : null
+            if (!itemData) {
+                throw new Error(game.i18n.format("SWIM.warriorsGiftWin.edgeMissing", { target: playerScene.tokens.get(targetID)?.name ?? targetID }))
+            }
+            edgeGrants.set(targetID, itemData)
+        }
     }
 
     // Duration helper
@@ -1197,6 +1246,25 @@ export async function effect_builder_gm(data) {
                     ]
                 }
 
+                // Warrior's Gift: the target gets the chosen Edge, the effect names it and removes it again when it ends (hooks/effect_hooks.js)
+                const edgeData = edgeGrants.get(targetID)
+                if (edgeData) {
+                    const edgeName = edgeData.flags.swim.warriorsGift.edge
+                    const [edge] = await target.actor.createEmbeddedDocuments('Item', [edgeData])
+                    aeData.name = game.i18n.format("SWIM.warriorsGiftWin.effectName", { power: game.i18n.localize("SWIM.power-warriorsGift"), edge: edgeName })
+                        + (data.degree === "raise" ? ` (${game.i18n.localize("SWIM.raise").toLowerCase()})` : '')
+                    aeData.description = granted_line(game.i18n.localize("SWIM.warriorsGiftWin.grantedLine"), edgeName) + aeData.description
+                    aeData.flags.swim.warriorsGift = { itemID: edge.id, edge: edgeName, maintenanceID: data.maintenanceID }
+                    grantedEdges.push({ target: target.name, edge: edgeName })
+                    try {
+                        await createEffect(targetID, aeData)
+                    } catch (error) {
+                        await edge.delete() // no effect, so nothing would ever remove the Edge
+                        throw error
+                    }
+                    continue
+                }
+
                 await createEffect(targetID, aeData)
             }
         }
@@ -1223,7 +1291,7 @@ export async function effect_builder_gm(data) {
                 startRound: caster.combatant != null ? game.combat.round : 0,
                 rounds: noPP ? Number(999999999999999) : durationRounds
             },
-            description: power ? power.system.description : "",
+            description: affects_block(game.i18n.localize("SWIM.warriorsGiftWin.affectsLine"), grantedEdges) + (power ? power.system.description : ""),
             flags: {
                 swade: { expiration: 3 },
                 swim: {
