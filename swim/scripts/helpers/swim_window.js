@@ -23,6 +23,15 @@ export function tokens_header(tokens, { arrow = false, bennies = null } = {}) {
     return `<div class="swim-hc-who">${who}</div>${track}`
 }
 
+/**
+ * The small free-reroll button (circle arrow, no text, tooltip only) that sits left of the "Reroll with Benny" button: for rerolls
+ * that cost no Benny (e.g. an Edge or a setting granting one). Handled by `onAction(action)` like any other button.
+ */
+export function free_btn(action = 'freeReroll') {
+    const label = esc(t('SWIM.button-freeRerollTip'))
+    return `<button type="button" class="swim-hc-btn swim-hc-btn-free" data-action="${action}" title="${label}" aria-label="${label}"><i class="fas fa-redo-alt"></i></button>`
+}
+
 /** One selectable option of a row (`<div class="swim-hc-rate">`): radio-like, handled by `onAction(action, el)` through `data-action`. */
 export function rate_opt(action, dataKey, value, label, on) {
     return `<div class="swim-hc-rate-opt ${on ? 'is-on' : ''}" data-action="${action}" data-${dataKey}="${esc(value)}" tabindex="0" role="radio" aria-checked="${!!on}">${esc(label)}</div>`

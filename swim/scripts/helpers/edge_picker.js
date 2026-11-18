@@ -12,6 +12,7 @@
  */
 
 import { rank_names } from "./actor_picker.js"
+import { is_improved_edge } from "./combat_edges.js"
 
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (m) => `&#${m.charCodeAt(0)};`)
 const t = (key, data) => (data ? game.i18n.format(key, data) : game.i18n.localize(key))
@@ -40,6 +41,7 @@ export class EdgePickerApp extends Application {
      * @param {Array<{id,name,img}>} data.targets
      * @param {Array} data.edges        from load_combat_edges()
      * @param {boolean} [data.isGM]     the GM can pick Edges above the caster's rank
+     * @param {boolean} [data.raise]    Raise: improved Edges (SWID 'improved-...') are open to everyone
      * @returns {Promise<Array<{targetID:string, edgeID:string}>|null>}
      */
     static prompt(data) {
@@ -59,7 +61,8 @@ export class EdgePickerApp extends Application {
     /* -------------------------------- helpers -------------------------------- */
 
     #rankName = (idx) => String(rank_names()[idx] ?? "?")
-    #locked = (e) => e.rankIdx > (this.#opts.caster.rankIdx ?? 0)
+    // With a Raise the improved versions of Edges ('improved-...') are never locked, whatever the rank (and for everyone).
+    #locked = (e) => e.rankIdx > (this.#opts.caster.rankIdx ?? 0) && !(this.#opts.raise && is_improved_edge(e.swid))
     #blocked = (e) => this.#locked(e) && !this.#opts.isGM
     #entry = (id) => this.#opts.edges.find((e) => e.id === id)
     #targetsOf = (edgeId) => this.#opts.targets.filter((x) => this.#assign.get(x.id) === edgeId)
@@ -135,8 +138,68 @@ export class EdgePickerApp extends Application {
             ev.preventDefault()
             this.#choose(root, row.dataset.id)
         })
+        this.#tooltips(root, list)
         filter.focus()
     }
+
+    /* ------------------------------- tooltip --------------------------------- */
+
+    /** The description of an Edge with its HTML formatting (enriched once, then cached). */
+    async #descriptionHTML(e) {
+        this.#enriched ??= new Map()
+        if (!this.#enriched.has(e.id)) {
+            let html = e.description || ""
+            try { html = await TextEditor.enrichHTML(html, { async: true }) } catch { /* the plain HTML is fine */ }
+            this.#enriched.set(e.id, html)
+        }
+        return this.#enriched.get(e.id)
+    }
+    #enriched
+
+    /** A floating tooltip beside the hovered row: name, why it is locked (if so), the requirements and the description. */
+    #tooltips(root, list) {
+        const tip = document.createElement("div")
+        tip.className = "swim-ep-tip"
+        tip.setAttribute("role", "tooltip")
+        tip.hidden = true
+        document.body.appendChild(tip)
+        this.#tip = tip
+        let current = null
+        const hide = () => { current = null; tip.hidden = true }
+        const place = (row) => {
+            const r = row.getBoundingClientRect()
+            const w = tip.offsetWidth, h = tip.offsetHeight, gap = 10
+            let left = r.right + gap
+            if (left + w > window.innerWidth - 4) { left = Math.max(4, r.left - gap - w) }
+            const top = Math.min(Math.max(4, r.top), Math.max(4, window.innerHeight - h - 4))
+            tip.style.left = `${left}px`
+            tip.style.top = `${top}px`
+        }
+        list.addEventListener("mouseover", async (ev) => {
+            const row = ev.target.closest(".swim-ap-row")
+            if (!row) { return }
+            if (row === current) { return }
+            current = row
+            const e = this.#entry(row.dataset.id)
+            if (!e) { return hide() }
+            const lock = this.#locked(e)
+                ? `<p class="swim-ep-tip-lock">${esc(this.#opts.isGM
+                    ? t("SWIM.warriorsGiftWin.gmOverride", { name: this.#opts.caster.name })
+                    : t("SWIM.warriorsGiftWin.requiresRank", { name: e.name, rank: this.#rankName(e.rankIdx), caster: this.#opts.caster.name }))}</p>`
+                : ""
+            tip.innerHTML = `<h5>${esc(e.name)}</h5>${e.requirements ? `<p class="swim-ep-tip-req">${esc(e.requirements)}</p>` : ""}${lock}<div class="swim-ep-tip-desc">…</div>`
+            tip.hidden = false
+            place(row)
+            const html = await this.#descriptionHTML(e)
+            if (current !== row) { return }
+            tip.querySelector(".swim-ep-tip-desc").innerHTML = html || `<em>${esc(t("SWIM.warriorsGiftWin.noDescription"))}</em>`
+            place(row)
+        })
+        list.addEventListener("mouseleave", hide)
+        list.addEventListener("scroll", hide, { passive: true })
+        list.addEventListener("mouseout", (ev) => { if (!ev.relatedTarget || !list.contains(ev.relatedTarget)) { hide() } })
+    }
+    #tip
 
     /** Gives the Edge to the highlighted target (or takes it back if it already has it) and moves on to the next target without an Edge. */
     #choose(root, id) {
@@ -205,12 +268,9 @@ export class EdgePickerApp extends Application {
 
     #row(e) {
         const locked = this.#locked(e)
-        const chip = (value, title = "") => (value ? `<span class="swim-ap-chip" title="${esc(title || value)}">${esc(value)}</span>` : "")
+        const chip = (value) => (value ? `<span class="swim-ap-chip">${esc(value)}</span>` : "")
         const classes = ["swim-ap-row", locked ? "is-locked" : "", locked && !this.#opts.isGM ? "is-blocked" : ""].join(" ").trim()
-        const title = locked
-            ? t("SWIM.warriorsGiftWin.requiresRank", { name: e.name, rank: this.#rankName(e.rankIdx), caster: this.#opts.caster.name })
-            : [e.name, e.requirements].filter(Boolean).join(" - ")
-        return `<div class="${classes}" data-id="${esc(e.id)}" role="option" tabindex="0" aria-selected="false" ${locked ? `aria-disabled="${String(!this.#opts.isGM)}"` : ""} title="${esc(title)}">
+        return `<div class="${classes}" data-id="${esc(e.id)}" role="option" tabindex="0" aria-selected="false" ${locked ? `aria-disabled="${String(!this.#opts.isGM)}"` : ""}>
       <img class="swim-ap-icon" src="${esc(e.img)}" alt="" draggable="false">
       <span class="swim-ap-name"><span class="swim-ap-nametext">${esc(e.name)}</span><span class="swim-ap-chips">${chip(e.category)}${chip(e.requirements)}</span></span>
       <span class="swim-ep-by"></span>
@@ -224,10 +284,11 @@ export class EdgePickerApp extends Application {
         if (this.#opts.targets.some((x) => !this.#assign.has(x.id))) { return }
         this.#done = true
         this.#resolve(this.#opts.targets.map((x) => ({ targetID: x.id, edgeID: this.#assign.get(x.id) })))
-        super.close()
+        this.close() // (#done is set: no null is sent; removes the tooltip)
     }
 
     async close(options) {
+        this.#tip?.remove()
         if (!this.#done) {
             this.#done = true
             this.#resolve(null)

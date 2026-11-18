@@ -1,3 +1,4 @@
+import { free_btn } from "../helpers/swim_window.js"
 import { swimConditions } from '../helpers/conditions.js'
 import { absorb_manual_bonus, active_effects, covered_by_edge } from '../helpers/trait_bonuses.js'
 /*******************************************
@@ -206,10 +207,11 @@ class UnstunApp extends Application {
                 `${r.total < st.best ? `<p>${esc(t('SWIM.unstun.bestKept', { last: r.total, best: st.best }))}</p>` : ''}<p>${esc(text)}</p>`
         }
         const canReroll = !r.crit && snap.bennies > 0
+        const canFree = !r.crit
         return {
             body: `<div class="swim-hc-result">${top}${canReroll && snap.elan ? `<p>${esc(t('SWIM.soak.elanReroll'))}</p>` : ''}</div>`,
             foot: `<small>${esc(t('SWIM.healthCentre.benniesLeft', { count: snap.bennies }))}</small><span class="swim-hc-spacer"></span>` +
-                `${canReroll ? this.#btn('reroll', t('SWIM.healthCentre.reroll', { count: snap.bennies })) : ''}${this.#btn('cancel', t('SWIM.healthCentre.close'), { go: !canReroll })}`,
+                `${canFree ? free_btn('freeReroll') : ''}${canReroll ? this.#btn('reroll', t('SWIM.healthCentre.reroll', { count: snap.bennies })) : ''}${this.#btn('cancel', t('SWIM.healthCentre.close'), { go: !canReroll })}`,
         }
     }
 
@@ -236,6 +238,7 @@ class UnstunApp extends Application {
             case 'cancel': return this.close()
             case 'roll': return this.#roll(false)
             case 'reroll': return this.#roll(true)
+            case 'freeReroll': return this.#roll(true, true)
             default: return
         }
     }
@@ -262,18 +265,19 @@ class UnstunApp extends Application {
     }
 
     /** The Vigor roll. A Benny for a reroll is spent after the roll was actually made (a cancelled roll costs nothing). */
-    async #roll(isReroll) {
+    /** @param {boolean} free  A free reroll: no Benny, no Elan bonus. */
+    async #roll(isReroll, free = false) {
         const st = this.#state
         const token = this.#token
         const actor = token.actor
         const snap = await this.#snapshot()
-        if (isReroll && snap.bennies < 1) { return ui.notifications.warn(t('SWIM.notification-noBenniesLeft')) }
+        if (isReroll && !free && snap.bennies < 1) { return ui.notifications.warn(t('SWIM.notification-noBenniesLeft')) }
 
         this.#busy = true
         try {
             const r = await actor.rollAttribute('vigor')
             if (!r) { return } // the roll dialog was cancelled: nothing happened, nothing is spent
-            if (isReroll) {
+            if (isReroll && !free) {
                 await swim.spend_benny(token)
                 if (snap.elan) { st.elan = true }
             }

@@ -18,6 +18,7 @@
  * reroll with a Benny and the result is applied (Distracted/Vulnerable, Shaken on a raise, Retort).
  * Look: styles/unshake.css (shared `.swim-us*` classes) on top of styles/health-centre.css.
  ******************************************/
+import { free_btn } from "../helpers/swim_window.js"
 import { execute_as_gm } from "../helpers/socket_helper.js"
 import { swimConditions } from '../helpers/conditions.js'
 
@@ -210,7 +211,7 @@ class TesterApp extends Application {
         return {
             body: `<div class="swim-hc-result"><div class="swim-hc-big">${r.total}</div>${r.lines.length ? `<p class="swim-us-lines">${r.lines.join('<br/>')}</p>` : ''}${notes}</div>`,
             foot: `<small>${esc(t('SWIM.healthCentre.benniesLeft', { count: snap.bennies }))}</small><span class="swim-hc-spacer"></span>` +
-                `${free ? btn('reroll', t('SWIM.button-freeReroll')) : canBenny ? btn('reroll', t('SWIM.healthCentre.reroll', { count: snap.bennies })) : ''}${btn('apply', t('SWIM.dialogue-apply'), { go: true })}`,
+                `${free ? btn('reroll', t('SWIM.button-freeReroll')) : `${free_btn('freeReroll')}${canBenny ? btn('reroll', t('SWIM.healthCentre.reroll', { count: snap.bennies })) : ''}`}${btn('apply', t('SWIM.dialogue-apply'), { go: true })}`,
         }
     }
 
@@ -252,6 +253,7 @@ class TesterApp extends Application {
             case 'cancel': return this.close()
             case 'roll': return this.#roll(false)
             case 'reroll': return this.#roll(true)
+            case 'freeReroll': return this.#roll(true, true)
             case 'apply': return this.#send(false)
             default: return
         }
@@ -290,14 +292,15 @@ class TesterApp extends Application {
     }
 
     /** A Benny for a reroll is spent after the roll was actually made (a cancelled roll costs nothing). */
-    async #roll(isReroll) {
+    /** @param {boolean} forceFree  The free reroll button: no Benny, no Elan (besides the free reroll of an Edge, see `snap.free`). */
+    async #roll(isReroll, forceFree = false) {
         const st = this.#state
         const token = this.#token
         const actor = token.actor
         const skill = this.#skill
         if (!skill) { return }
         const snap = await this.#snapshot()
-        const free = isReroll && snap.free
+        const free = isReroll && (forceFree || snap.free)
         if (isReroll && !free && snap.bennies < 1) { return ui.notifications.warn(t('SWIM.notification-noBenniesLeft')) }
 
         this.#busy = true
@@ -509,7 +512,7 @@ class ResistApp extends Application {
             body = `<div class="swim-hc-result"><div class="swim-hc-big is-bad">${r.total}</div>${r.lines.length ? `<p class="swim-us-lines">${r.lines.join('<br/>')}</p>` : ''}` +
                 `<p>${esc(t('SWIM.testerWin.resistFail', { needed: testTotal }))}</p>${totalBennies > 0 && elan ? `<p>${esc(t('SWIM.soak.elanReroll'))}</p>` : ''}</div>`
             foot = `<small>${esc(t('SWIM.healthCentre.benniesLeft', { count: totalBennies }))}</small><span class="swim-hc-spacer"></span>` +
-                `${totalBennies > 0 ? btn('reroll', t('SWIM.healthCentre.reroll', { count: totalBennies })) : ''}${btn('accept', t('SWIM.testerWin.acceptBtn'), { go: totalBennies < 1 })}`
+                `${free_btn('freeReroll')}${totalBennies > 0 ? btn('reroll', t('SWIM.healthCentre.reroll', { count: totalBennies })) : ''}${btn('accept', t('SWIM.testerWin.acceptBtn'), { go: totalBennies < 1 })}`
         }
         const head = header_html({ title: t('SWIM.testerWin.resistTitle'), bennies: totalBennies, tokens: [{ token: targetToken, small: t('SWIM.testerWin.resistTitle'), on: true }] })
         return $(`<div class="swim-hc swim-us">${head}<div class="swim-hc-body">${body}</div><footer class="swim-hc-foot">${foot}</footer></div>`)
@@ -529,13 +532,14 @@ class ResistApp extends Application {
             case 'cancel': return this.close()
             case 'roll': return this.#roll(false)
             case 'reroll': return this.#roll(true)
+            case 'freeReroll': return this.#roll(true, true)
             case 'accept': return this.#finish('failed', this.#state.roll)
             default: return
         }
     }
 
     /** The resist roll. A Benny of the TARGET for a reroll is spent after the roll was made. */
-    async #roll(isReroll) {
+    async #roll(isReroll, free = false) {
         const st = this.#state
         const { targetToken, attribute, testTotal } = this.#ctx
         const actor = targetToken.actor
@@ -544,15 +548,15 @@ class ResistApp extends Application {
         try {
           do { // `break` = leave to the finish step below (a `return` inside try/finally would skip it)
             const { totalBennies: before } = await swim.check_bennies(targetToken, false)
-            if (isReroll && before < 1) { return ui.notifications.warn(t('SWIM.notification-noBenniesLeft')) }
+            if (isReroll && !free && before < 1) { return ui.notifications.warn(t('SWIM.notification-noBenniesLeft')) }
             const r = await actor.rollAttribute(attribute)
             if (!r) { return } // the roll dialog was cancelled: nothing happened, nothing is spent
             const elanEdge = !!find_edge(actor, "SWIM.edge-elan")
-            if (isReroll) {
+            if (isReroll && !free) {
                 await swim.spend_benny(targetToken, true)
                 if (elanEdge) { st.elan = true }
             }
-            const bonus = resist_bonuses(actor, attribute, { elan: st.elan && isReroll })
+            const bonus = resist_bonuses(actor, attribute, { elan: st.elan && isReroll && !free })
             const total = r.total + bonus.total
             const roll = { total, lines: bonus.lines }
 

@@ -1,3 +1,4 @@
+import { free_btn } from "../helpers/swim_window.js"
 import { swimConditions } from '../helpers/conditions.js'
 /*******************************************
  * Radiation Centre
@@ -240,7 +241,7 @@ class RadiationApp extends Application {
                 `<p>${esc(t(free ? 'SWIM.radiation.failTextFree' : 'SWIM.radiation.failText', { name: snap.name }))}</p><p>${esc(this.#applyNote(snap))}</p>` +
                 `${free ? `<p>${esc(t('SWIM.radiation.freeRerollLeft'))}</p>` : canBenny && snap.elan ? `<p>${esc(t('SWIM.soak.elanReroll'))}</p>` : ''}</div>`,
             foot: `<small>${esc(t('SWIM.healthCentre.benniesLeft', { count: snap.bennies }))}</small><span class="swim-hc-spacer"></span>` +
-                `${free ? this.#btn('freeReroll', t('SWIM.button-freeReroll')) : ''}${canBenny ? this.#btn('reroll', t('SWIM.healthCentre.reroll', { count: snap.bennies })) : ''}` +
+                `${free ? this.#btn('freeReroll', t('SWIM.button-freeReroll')) : free_btn('freeAny')}${canBenny ? this.#btn('reroll', t('SWIM.healthCentre.reroll', { count: snap.bennies })) : ''}` +
                 `${this.#btn('take', t('SWIM.radiation.takeFatigue'), { go: !free && !canBenny })}`,
         }
     }
@@ -276,6 +277,7 @@ class RadiationApp extends Application {
             case 'cancel': return this.close()
             case 'confirm': return st.method === 'apply' ? this.#applyFatigue() : this.#roll(false)
             case 'freeReroll': return this.#roll('free')
+            case 'freeAny': return this.#roll('any')
             case 'reroll': return this.#roll('benny')
             case 'take': return this.#applyFatigue(true)
             default: return
@@ -315,7 +317,7 @@ class RadiationApp extends Application {
 
     /* ------------------------------ Vigor roll ------------------------------ */
 
-    /** @param {false|'free'|'benny'} reroll  A Benny is spent after the roll was actually made (a cancelled roll costs nothing). */
+    /** @param {false|'free'|'any'|'benny'} reroll ('any' = the free reroll button, nothing is used up)  A Benny is spent after the roll was actually made (a cancelled roll costs nothing). */
     async #roll(reroll) {
         const st = this.#state
         const token = this.#token

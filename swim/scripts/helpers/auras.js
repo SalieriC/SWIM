@@ -54,9 +54,9 @@ export function resolve_radius(actor, cfg) {
     const num = (v, fallback) => { const n = v === undefined || v === null || v === '' ? NaN : Number(v); return Number.isFinite(n) ? Math.max(0, n) : fallback }
     if (cfg.range === 'command') { return num(actor?.flags?.swim?.config?.commandRange, DEFAULT_COMMAND_RANGE) }
     if (cfg.range === 'aura1' || cfg.range === 'aura2') {
-        let auras = null
-        try { auras = actor?.auras } catch (err) { auras = null }
-        return num((auras ?? actor?.flags?.swade?.auras)?.[cfg.range]?.radius, DEFAULTS.radius)
+        // Read the (prepared) flag directly. SWADE's `actor.auras` getter writes to the actor's flags as a side effect, which is not
+        // something a read-only reconcile that runs on every token move should trigger.
+        return num(actor?.flags?.swade?.auras?.[cfg.range]?.radius, DEFAULTS.radius)
     }
     return cfg.radius
 }

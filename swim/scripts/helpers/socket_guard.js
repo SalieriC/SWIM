@@ -10,7 +10,7 @@
  ******************************************/
 
 import { is_potion_of, potion_amount } from "./swid_lists.js"
-import { load_combat_edges } from "./combat_edges.js"
+import { load_combat_edges, is_improved_edge } from "./combat_edges.js"
 import { rank_of_actor } from "./actor_picker.js"
 
 function fail(message) {
@@ -110,7 +110,9 @@ async function validate_warriors_gift(user, data, caster) {
         seen.add(choice.targetID)
         const edge = available.find((e) => e.id === choice.edgeID)
         if (!edge) fail(`${choice.edgeID} is not a Combat Edge of the Edge compendium`)
-        if (!user.isGM && edge.rankIdx > casterRank) fail(`${edge.name} is above the caster's rank`)
+        // Above the caster's rank only for the GM - or an improved Edge ('improved-...') with a Raise.
+        const openWithRaise = data.degree === "raise" && is_improved_edge(edge.swid)
+        if (!user.isGM && !openWithRaise && edge.rankIdx > casterRank) fail(`${edge.name} is above the caster's rank`)
     }
 }
 

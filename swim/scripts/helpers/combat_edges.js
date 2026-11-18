@@ -77,6 +77,11 @@ export function affects_block(label, pairs) {
     return `<p><strong>${esc(label)}</strong></p><ul>${pairs.map((p) => `<li>${esc(p.target)}: ${esc(p.edge)}</li>`).join("")}</ul>`
 }
 
+/** Is this an improved version of an Edge (SWID 'improved-...')? With a Raise those are open to everyone. Pure. */
+export function is_improved_edge(swid) {
+    return String(swid ?? "").startsWith("improved-")
+}
+
 /** Plain entry for the picker and the guard from an Edge document. */
 export function edge_entry(doc, names = []) {
     let requirements = ""
@@ -89,6 +94,7 @@ export function edge_entry(doc, names = []) {
         swid: doc.system?.swid ?? "",
         category: String(doc.system?.category ?? ""),
         requirements,
+        description: String(doc.system?.description ?? ""),
         rankIdx: edge_rank_index(doc.system?.requirements, names),
     }
 }
@@ -131,6 +137,7 @@ export async function edge_item_data(packId, edgeID, { maintenanceID, casterID }
     delete data.sort
     delete data.ownership
     data.name = game.i18n.format("SWIM.warriorsGiftWin.edgeName", { name: doc.name, power: game.i18n.localize("SWIM.power-warriorsGift") })
+    if (data.flags?.swade) { delete data.flags.swade.hasGranted } // SWADE sets it when it grants the items of the Edge
     foundry.utils.setProperty(data, "flags.core.sourceId", doc.uuid)
     foundry.utils.setProperty(data, "flags.swim.warriorsGift", { maintenanceID, casterID, edge: doc.name })
     return data

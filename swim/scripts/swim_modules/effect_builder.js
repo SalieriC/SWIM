@@ -332,6 +332,7 @@ class EffectBuilderApp extends SwimWindow {
             targets: this.#targets.map((tg) => ({ id: tg.id, name: tg.name, img: token_img(tg) })),
             edges,
             isGM: game.user.isGM,
+            raise: !!this.state.raise, // with a Raise the improved versions ('improved-...') of Edges are open to everyone
         })
         return picked ?? null
     }
@@ -514,6 +515,7 @@ export async function effect_builder_gm(data) {
                 throw new Error(game.i18n.format("SWIM.warriorsGiftWin.edgeMissing", { target: playerScene.tokens.get(targetID)?.name ?? targetID }))
             }
             edgeGrants.set(targetID, itemData)
+            grantedEdges.push({ target: playerScene.tokens.get(targetID)?.name ?? targetID, edge: itemData.flags.swim.warriorsGift.edge })
         }
     }
 
@@ -1253,9 +1255,11 @@ export async function effect_builder_gm(data) {
                     const [edge] = await target.actor.createEmbeddedDocuments('Item', [edgeData])
                     aeData.name = game.i18n.format("SWIM.warriorsGiftWin.effectName", { power: game.i18n.localize("SWIM.power-warriorsGift"), edge: edgeName })
                         + (data.degree === "raise" ? ` (${game.i18n.localize("SWIM.raise").toLowerCase()})` : '')
-                    aeData.description = granted_line(game.i18n.localize("SWIM.warriorsGiftWin.grantedLine"), edgeName) + aeData.description
+                    // The caster's own effect lists all targets (more useful than the power text, which the maintaining effect keeps);
+                    // the effects of the other targets show their Edge and the power description.
+                    aeData.description = granted_line(game.i18n.localize("SWIM.warriorsGiftWin.grantedLine"), edgeName)
+                        + (isCaster ? affects_block(game.i18n.localize("SWIM.warriorsGiftWin.affectsLine"), grantedEdges) : aeData.description)
                     aeData.flags.swim.warriorsGift = { itemID: edge.id, edge: edgeName, maintenanceID: data.maintenanceID }
-                    grantedEdges.push({ target: target.name, edge: edgeName })
                     try {
                         await createEffect(targetID, aeData)
                     } catch (error) {

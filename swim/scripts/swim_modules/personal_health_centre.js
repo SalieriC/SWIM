@@ -12,6 +12,7 @@
 import { execute_as_gm } from "../helpers/socket_helper.js"
 import { swimConditions } from '../helpers/conditions.js'
 import { play_audio } from '../helpers/audio.js'
+import { free_btn } from "../helpers/swim_window.js"
 import { get_list, is_potion_of, potion_amount } from '../helpers/swid_lists.js'
 
 const t = (key, data) => (data ? game.i18n.format(key, data) : game.i18n.localize(key))
@@ -438,7 +439,8 @@ class HealthCentreApp extends Application {
         if (sim.removeBleed) { lines.push(n('noteBleed')) }
         if (sim.removeInc) { lines.push(n('noteIncap')) }
         lines.push(nat.rounded < 1 ? n('resultNone') : n('noteWounds', { from: snap.wounds, to: sim.newWounds }))
-        const reroll = nat.improvable ? `<button type="button" class="swim-hc-btn" data-action="reroll">${esc(t('SWIM.healthCentre.reroll', { count: nat.bennies }))}</button>` : ''
+        const reroll = (nat.improvable ? free_btn('freeReroll') : '') +
+            (nat.improvable && nat.bennies > 0 ? `<button type="button" class="swim-hc-btn" data-action="reroll">${esc(t('SWIM.healthCentre.reroll', { count: nat.bennies }))}</button>` : '')
         return {
             body: `<div class="swim-hc-result"><div class="swim-hc-lab">${esc(n('naturalName'))}</div><div class="swim-hc-big">${nat.total}</div>${lines.map((l) => `<p>${esc(l)}</p>`).join('')}</div>`,
             foot: `<small>${esc(t('SWIM.healthCentre.benniesLeft', { count: nat.bennies }))}</small><span class="swim-hc-spacer"></span>${reroll}` +
@@ -523,6 +525,7 @@ class HealthCentreApp extends Application {
             case 'confirm': return this.#confirm()
             case 'accept': return this.#accept()
             case 'reroll': return this.#reroll()
+            case 'freeReroll': return this.#reroll(true)
             default: return
         }
         this.render(false)
@@ -613,7 +616,7 @@ class HealthCentreApp extends Application {
             const wounds = actor.system.wounds.value
             const sim = simulate_wounds(wounds, !!(await swimConditions.has('bleeding-out', token)), !!(await swimConditions.has('incapacitated', token)), heal)
             const { totalBennies } = await swim.check_bennies(token, false)
-            st.nat = { total, rounded, heal, extras, sim, bennies: totalBennies, improvable: rounded < 2 && totalBennies > 0 && sim.healed < Math.min(2, wounds) }
+            st.nat = { total, rounded, heal, extras, sim, bennies: totalBennies, improvable: rounded < 2 && sim.healed < Math.min(2, wounds) }
             st.view = 'result'
         } finally {
             this.#busy = false
@@ -621,8 +624,9 @@ class HealthCentreApp extends Application {
         }
     }
 
-    async #reroll() {
+    async #reroll(free = false) {
         const token = this.#token
+        if (free) { return this.#roll() } // free reroll: no Benny, no Elan
         await swim.spend_benny(token, true)
         if (token.actor.items.some((i) => i.name.toLowerCase() === game.i18n.localize("SWIM.edge-elan").toLowerCase() && i.type === "edge")) { this.#state.elanBonus = true }
         return this.#roll()

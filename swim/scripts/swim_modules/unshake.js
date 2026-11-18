@@ -1,3 +1,4 @@
+import { free_btn } from "../helpers/swim_window.js"
 import { swimConditions } from '../helpers/conditions.js'
 import { absorb_manual_bonus, active_effects, actor_effects, covered_by_edge } from '../helpers/trait_bonuses.js'
 /*******************************************
@@ -240,10 +241,11 @@ class UnshakeApp extends Application {
         }
         const canAct = !r.crit && snap.bennies > 0
         const canReroll = !r.crit && r.outcome === 'fail' && st.freeRerolls > 0
+        const canFreeAny = !r.crit && r.outcome === 'fail' && !canReroll
         return {
             body: `<div class="swim-hc-result">${top}${canReroll ? `<p>${esc(t('SWIM.unshake.freeRerollLeft'))}</p>` : ''}</div>`,
             foot: `<small>${esc(t('SWIM.healthCentre.benniesLeft', { count: snap.bennies }))}</small><span class="swim-hc-spacer"></span>` +
-                `${canReroll ? this.#btn('freeReroll', t('SWIM.button-freeReroll')) : ''}` +
+                `${canReroll ? this.#btn('freeReroll', t('SWIM.button-freeReroll')) : canFreeAny ? free_btn('freeAny') : ''}` +
                 `${canAct ? this.#btn('bennyAct', t('SWIM.unshake.bennyActBtn', { count: snap.bennies })) : ''}` +
                 `${this.#btn('cancel', t('SWIM.healthCentre.close'), { go: !canAct && !canReroll })}`,
         }
@@ -280,6 +282,7 @@ class UnshakeApp extends Application {
             case 'cancel': return this.close()
             case 'confirm': return st.method === 'benny' ? this.#spendBenny() : this.#roll(false)
             case 'freeReroll': return this.#roll(true)
+            case 'freeAny': return this.#roll(false) // the free reroll button: nothing is used up
             case 'bennyAct': return this.#spendBenny()
             default: return
         }

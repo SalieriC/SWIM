@@ -22,3 +22,28 @@
 .swim-ep .swim-ap-chip { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 /* a greyed-out Edge that the GM picked anyway stays readable */
 .swim-ep .swim-ap-row.is-locked.is-selected { filter: grayscale(0.25); opacity: 0.85; }
+
+/* Tooltip with the description of the hovered Edge (HTML formatting kept) */
+.swim-ep-tip {
+    position: fixed;
+    z-index: 100000;
+    max-width: 380px;
+    max-height: 70vh;
+    overflow: hidden;
+    padding: .6em .8em;
+    background: #1b1b24;
+    color: #e6e6ee;
+    border: 1px solid #55557a;
+    border-radius: 6px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, .6);
+    font-size: 12px;
+    line-height: 1.4;
+    pointer-events: none;
+}
+.swim-ep-tip[hidden] { display: none; }
+.swim-ep-tip h5 { margin: 0 0 .25em; font-size: 14px; color: #fff; border: 0; }
+.swim-ep-tip p { margin: 0 0 .4em; }
+.swim-ep-tip ul, .swim-ep-tip ol { margin: 0 0 .4em 1.2em; padding: 0; }
+.swim-ep-tip-req { opacity: .75; font-style: italic; }
+.swim-ep-tip-lock { color: #ffb86c; }
+.swim-ep-tip-desc a, .swim-ep-tip-desc .content-link { color: inherit; text-decoration: none; }

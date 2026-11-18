@@ -31,6 +31,29 @@ export async function effect_hooks() {
             await condition.update(updates);
         }
     })
+    // Warrior's Gift: items an Edge grants (SWADE item grants) are named like the Edge ("<Item> (Warrior's Gift)") and flagged. SWADE creates them
+    // after the Edge and remembers them in `flags.swade.hasGranted`; it removes them again when the Edge is deleted (so they go away with the effect).
+    // Only the items listed there (created just now for this Edge) are touched - nothing that already existed on the actor.
+    Hooks.on(`updateItem`, async (item, changed, _options, userID) => {
+        if (userID !== game.user.id) { return }
+        const gift = item.flags?.swim?.warriorsGift
+        const granted = foundry.utils.getProperty(changed, "flags.swade.hasGranted")
+        if (!gift || !Array.isArray(granted) || !item.parent) { return }
+        const power = game.i18n.localize("SWIM.power-warriorsGift")
+        const updates = []
+        for (const id of granted) {
+            const child = item.parent.items.get(id)
+            if (!child || child.id === item.id || child.flags?.swim?.warriorsGiftGrant) { continue }
+            updates.push({
+                _id: child.id,
+                name: game.i18n.format("SWIM.warriorsGiftWin.edgeName", { name: child.name, power }),
+                "flags.swim.warriorsGiftGrant": { edgeID: item.id, maintenanceID: gift.maintenanceID }
+            })
+        }
+        if (updates.length) {
+            try { await item.parent.updateEmbeddedDocuments("Item", updates) } catch (err) { console.warn("SWIM | Could not mark the items granted by a Warrior's Gift Edge", err) }
+        }
+    })
     Hooks.on(`deleteActiveEffect`, async (condition, _, userID) => {
         const actor = condition.parent
         // Invisible

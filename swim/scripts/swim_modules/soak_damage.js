@@ -1,3 +1,4 @@
+import { free_btn } from "../helpers/swim_window.js"
 import { swimConditions } from '../helpers/conditions.js'
 import { absorb_manual_bonus, active_effects } from '../helpers/trait_bonuses.js'
 /*******************************************
@@ -435,7 +436,7 @@ class SoakApp extends Application {
             lines.push(s.best < 1 ? t('SWIM.soak.resultNone') : t('SWIM.soak.resultSome', { best: s.best, n: st.wounds }))
             top = `<div class="swim-hc-big">${s.last}</div>${s.lines.length ? `<p class="swim-sd-lines">${s.lines.join('<br/>')}</p>` : ''}${lines.map((l) => `<p>${esc(l)}</p>`).join('')}`
         }
-        const reroll = !s.crit && snap.bennies > 0 ? this.#btn('reroll', t('SWIM.healthCentre.reroll', { count: snap.bennies })) : ''
+        const reroll = !s.crit ? free_btn('freeReroll') + (snap.bennies > 0 ? this.#btn('reroll', t('SWIM.healthCentre.reroll', { count: snap.bennies })) : '') : ''
         return {
             body: `<div class="swim-hc-result">${top}</div>${this.#applyBlock(snap, st.apply)}`,
             foot: `<small>${esc(t('SWIM.healthCentre.benniesLeft', { count: snap.bennies }))}</small><span class="swim-hc-spacer"></span>${reroll}${this.#btn('applyResult', st.apply === 0 ? t('SWIM.soak.applyShaken') : t('SWIM.soak.applyBtn', { n: st.apply }), { go: true })}`,
@@ -462,7 +463,7 @@ class SoakApp extends Application {
             body: `<div class="swim-hc-result"><div class="swim-hc-lab">${esc(this.#vigorTitle(v.kind))}</div><div class="swim-hc-big ${bad ? 'is-bad' : ''}">${v.best}</div>
               ${v.bestLines.length ? `<p class="swim-sd-lines">${v.bestLines.join('<br/>')}</p>` : ''}${lines.filter(Boolean).map((l) => `<p>${esc(l)}</p>`).join('')}</div>`,
             foot: `<small>${esc(t('SWIM.healthCentre.benniesLeft', { count: snap.bennies }))}</small><span class="swim-hc-spacer"></span>` +
-                `${this.#btn('vigorReroll', t('SWIM.healthCentre.reroll', { count: snap.bennies }))}${this.#btn('vigorApply', t('SWIM.soak.applyResult'), { go: true })}`,
+                `${free_btn('vigorFreeReroll')}${snap.bennies > 0 ? this.#btn('vigorReroll', t('SWIM.healthCentre.reroll', { count: snap.bennies })) : ''}${this.#btn('vigorApply', t('SWIM.soak.applyResult'), { go: true })}`,
         }
     }
 
@@ -509,9 +510,11 @@ class SoakApp extends Application {
             case 'cancel': return this.close()
             case 'confirm': return this.#confirm()
             case 'reroll': return this.#soakRoll(true)
+            case 'freeReroll': return this.#soakRoll(true, true)
             case 'applyResult': return this.#applyFromResult()
             case 'vigorRoll': return this.#vigorRoll(false)
             case 'vigorReroll': return this.#vigorRoll(true)
+            case 'vigorFreeReroll': return this.#vigorRoll(true, true)
             case 'vigorApply': return this.#vigorResolve()
             default: return
         }
@@ -532,14 +535,15 @@ class SoakApp extends Application {
     /* ------------------------------ Soak roll ------------------------------- */
 
     /** The Vigor roll to soak Wounds. The Benny (and the Power Points) are spent after the roll was actually made. */
-    async #soakRoll(isReroll) {
+    /** @param {boolean} free  A free reroll: no Benny, no Elan bonus. */
+    async #soakRoll(isReroll, free = false) {
         const st = this.#state
         const token = this.#token
         const actor = token.actor
         const snap = await this.#snapshot()
-        if (snap.bennies < 1) { return ui.notifications.warn(t('SWIM.notification-noBenniesLeft')) }
+        if (!free && snap.bennies < 1) { return ui.notifications.warn(t('SWIM.notification-noBenniesLeft')) }
         const s = st.soak ?? (st.soak = { best: 0, bestTotal: 0, bestLines: [], ppSpent: false, elan: false })
-        if (isReroll && snap.elan) { s.elan = true }
+        if (isReroll && !free && snap.elan) { s.elan = true }
         const pp = !s.ppSpent && snap.holy ? st.pp : 0
         if (pp > snap.pp) { return ui.notifications.notify(t('SWIM.dialogue-insufficientPowerPoints')) }
         if (pp > 4) { return ui.notifications.error(t('SWIM.dialogue-cannotUseMoreThanFourPP')) }
@@ -548,7 +552,7 @@ class SoakApp extends Application {
         try {
             const r = await actor.rollAttribute('vigor')
             if (!r) { return } // the roll dialog was cancelled: nothing is spent
-            await swim.spend_benny(token, true)
+            if (!free) { await swim.spend_benny(token, true) }
             if (pp > 0) {
                 await actor.update({ "system.powerPoints.general.value": snap.pp - pp })
                 s.ppSpent = true
@@ -644,21 +648,21 @@ class SoakApp extends Application {
 
     /* ----------------------- Incapacitation / Bleeding Out ------------------ */
 
-    async #vigorRoll(isReroll) {
+    async #vigorRoll(isReroll, free = false) {
         const st = this.#state
         const v = st.vigor
         const token = this.#token
         const actor = token.actor
         const snap = await this.#snapshot()
         if (isReroll) {
-            if (snap.bennies < 1) { return ui.notifications.warn(t('SWIM.notification-noBenniesLeft')) }
-            if (snap.elan) { v.elan = true }
+            if (!free && snap.bennies < 1) { return ui.notifications.warn(t('SWIM.notification-noBenniesLeft')) }
+            if (!free && snap.elan) { v.elan = true }
         }
         this.#busy = true
         try {
             const r = await actor.rollAttribute('vigor')
             if (!r) { return }
-            if (isReroll) { await swim.spend_benny(token, true) }
+            if (isReroll && !free) { await swim.spend_benny(token, true) }
             let total = r.total
             const lines = []
             if (v.kind === 'incap' && snap.hardToKill) {
