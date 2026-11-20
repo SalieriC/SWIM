@@ -1,3 +1,4 @@
+import { LegacyApp } from "./legacy_app.js"
 /**
  * The actor picker dialog, used by the Mighty Summoner and the Shape Changer.
  *
@@ -63,7 +64,7 @@ export function picker_entry(actor, extra = {}) {
         name: actor.name,
         img: actor.img,
         size,
-        pace: stats.speed?.adjusted ?? stats.speed?.value,
+        pace: actor.system.pace?.default ?? 0,
         parry: stats.parry?.value,
         toughness: stats.toughness?.value,
         armor: stats.toughness?.armor,
@@ -73,7 +74,7 @@ export function picker_entry(actor, extra = {}) {
     };
 }
 
-export class ActorPickerApp extends Application {
+export class ActorPickerApp extends LegacyApp {
     #opts;
     #selected = null;
     #resolve;
@@ -115,7 +116,7 @@ export class ActorPickerApp extends Application {
         super();
         this.#opts = data;
         this.#resolve = resolve;
-        this.options.title = data.title;
+        this.options.window.title = data.title;
     }
 
     get title() {

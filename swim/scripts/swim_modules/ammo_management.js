@@ -8,6 +8,7 @@
  * RELOAD|FIRE|AUTOFIRE|SILENCED|SILENCEDAUTOFIRE|EMPTY
  ******************************************/
 import { SwimWindow, t, esc, btn, rate_opt } from "../helpers/swim_window.js"
+import { effect_data } from "../helpers/effect_data.js"
 
 const SHOTS_PER_ROF = [0, 1, 5, 10, 20, 40, 50]
 
@@ -483,14 +484,15 @@ async function applyActiveEffect(actor, selectedWeapon, selectedAmmo, oldAmmo) {
 
     if (selectedAmmo.flags?.swim?.config?.ammoActiveEffect !== undefined
         && selectedAmmo.flags?.swim?.config?.ammoActiveEffect?.trim() !== "") {
-        let effectObj = JSON.parse(selectedAmmo.flags.swim.config.ammoActiveEffect);
+        let effectObj = effect_data(JSON.parse(selectedAmmo.flags.swim.config.ammoActiveEffect));
 
         //Adjust effect to work with items
         delete effectObj._id; //We want a unique ID for this one
+        delete effectObj.start; //Foundry sets the start of the effect itself
         // Effect JSON saved by the user may still use the pre-v11 `label` key:
         effectObj.name = `${effectObj.name ?? effectObj.label ?? ""} [${selectedWeapon.name}]`;
         delete effectObj.label;
-        for (let change of effectObj.changes) {
+        for (let change of effectObj.system?.changes ?? []) {
             const oldKey = change.key;
             change.key = `@${selectedWeapon.type}{${selectedWeapon.name}}[${oldKey}]`;
 
@@ -498,17 +500,17 @@ async function applyActiveEffect(actor, selectedWeapon, selectedAmmo, oldAmmo) {
             if (oldKey === "system.range" && selectedWeapon.system.range.includes("/")) {
                 const oldRange = selectedWeapon.system.range;
                 let rangeNums = oldRange.split("/");
-                if (change.mode === CONST.ACTIVE_EFFECT_MODES.ADD) {
+                if (change.type === 'add') {
                     rangeNums[0] += change.value;
                     rangeNums[1] += change.value * 2;
                     rangeNums[2] += change.value * 4;
-                } else if (change.mode === CONST.ACTIVE_EFFECT_MODES.MULTIPLY) {
+                } else if (change.type === 'multiply') {
                     rangeNums[0] *= change.value;
                     rangeNums[1] *= change.value;
                     rangeNums[2] *= change.value;
                 }
                 change.value = `${rangeNums[0]}/${rangeNums[1]}/${rangeNums[2]}`;
-                change.mode = CONST.ACTIVE_EFFECT_MODES.OVERRIDE;
+                change.type = 'override';
             }
         }
         effectObj.flags = { ...effectObj.flags, ...{ swim: { ammoEffectFor: selectedWeapon.id } } };
@@ -590,19 +592,20 @@ export async function br2_ammo_management_script(br_card, actor, item) {
     if (brswAmmoMgm === 'disabled') { return } //Failsafe as disabled shouldn't lead anyone here in the first place.
 
     //Don't execute the macro on a reroll by checking if the old_rolls is empty:
-    if (br_card.trait_roll.old_rolls.length >= 1) {
+    if (br_card.traitRoll.old_rolls.length >= 1) {
         return;
     }
 
     //If the weapon is not compatible, return early
     if (!checkWeapon(item)) return;
 
-    const traitDice = br_card.trait_roll.current_roll.dice;
+    const traitDice = br_card.traitRoll.currentRoll.dice;
     let rate_of_fire = traitDice.length;
     if (actor.system.wildcard === true) {
         rate_of_fire = rate_of_fire - 1;
     }
-    let shots = br_card.render_data.used_shots;
+    // BRSW 5.x keeps the number of shots (or the rate of fire's bullets) in `render_data.ammoUsed`
+    let shots = br_card.render_data.ammoUsed ?? br_card.render_data.used_shots;
     //failsafe to guss amount of shots in case BR2 return zero or undefined:
     if (shots === 0 || !shots) {
         if (rate_of_fire === 1) {
@@ -624,7 +627,8 @@ export async function br2_ammo_management_script(br_card, actor, item) {
             shots = 50;
         }
     }
-    let traitId = br_card.render_data.trait_id
+    // BRSW 5.x: `render_data.trait` is the trait item (or its data)
+    let traitId = br_card.render_data.trait?.id ?? br_card.render_data.trait_id
     let trait = actor.items.find(i => i.id === traitId)
 
     if (brswAmmoMgm === 'sfx') { //If the user only want the SFX, play them, otherwise go to ammo management:

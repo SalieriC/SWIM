@@ -102,7 +102,7 @@ export function is_wildcard(actor) {
 export function is_down(actor) {
     const st = actor?.statuses
     if (st && DOWN_STATUSES.some((id) => st.has(id))) { return true }
-    return actor?.system?.isIncapacitated === true
+    return actor?.system?.status?.isIncapacitated === true
 }
 
 /** All active aura sources of the scene: [{ id, token, actor, effect, cfg, key }]. */
@@ -129,11 +129,12 @@ export function copy_data(effect, id, sceneId, displayName = '') {
     const flags = foundry.utils.deepClone(src.flags ?? {})
     if (flags.swim) { delete flags.swim.aura }
     // an aura lasts as long as the token is in range: no turn based expiry
-    if (flags.swade) { delete flags.swade.expiration; delete flags.swade.loseTurnOnHold }
-    const sig = JSON.stringify([src.name, src.icon, src.tint, src.changes, src.statuses, src.description ?? '', flags])
+    const system = foundry.utils.deepClone(src.system ?? {})
+    delete system.loseTurnOnHold
+    const sig = JSON.stringify([src.name, src.img, src.tint, system, src.statuses, src.description ?? '', flags])
     flags.swim = { ...(flags.swim ?? {}), auraOf: { id, source: effect.uuid, scene: sceneId, sig } }
     const data = {
-        name: src.name, icon: src.icon, tint: src.tint, changes: src.changes, statuses: src.statuses,
+        name: src.name, img: src.img, tint: src.tint, system, statuses: src.statuses,
         disabled: false, transfer: false, origin: effect.uuid, flags,
     }
     if ('description' in src) { data.description = src.description }

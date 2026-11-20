@@ -1,6 +1,8 @@
+import { LegacyApp } from "../helpers/legacy_app.js"
 import { free_btn } from "../helpers/swim_window.js"
 import { swimConditions } from '../helpers/conditions.js'
 import { absorb_manual_bonus, active_effects, actor_effects, covered_by_edge } from '../helpers/trait_bonuses.js'
+import { changes_of } from "../helpers/effect_data.js"
 /*******************************************
  * Unshake
  * v. 6.0.0 – one window (UnshakeApp) instead of the Spirit roll followed by a Benny dialog.
@@ -75,14 +77,14 @@ export function unshake_bonuses(actor) {
     let fromEffects = 0
     const lines = []
     for (const effect of active_effects(actor)) { // only enabled effects, also those of the actor's items
-        for (const change of effect.changes) {
+        for (const change of changes_of(effect)) {
             if (change.key !== UNSHAKE_KEY) { continue }
             const value = parseFloat(change.value)
             if (!Number.isFinite(value)) { continue }
             fromEffects += value
             if (covered_by_edge(effect, edges)) { continue } // the Edge below already counts
             total += value
-            lines.push(`${signed(value)} ${img(effect.icon ?? effect.img)}${esc(effect.name)}`)
+            lines.push(`${signed(value)} ${img(effect.img)}${esc(effect.name)}`)
         }
     }
     for (const edge of edges) {
@@ -121,7 +123,7 @@ function condition_name(id) {
 /* The window                                                                                       */
 /* ------------------------------------------------------------------------------------------------ */
 
-class UnshakeApp extends Application {
+class UnshakeApp extends LegacyApp {
     #token
     #alias
     #version

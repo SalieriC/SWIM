@@ -1,3 +1,4 @@
+import { change, changes_of } from "./helpers/effect_data.js"
 import { api } from './api.js';
 import { register_settings } from './settings.js'
 import { swim_buttons } from './buttons.js'
@@ -104,20 +105,21 @@ Hooks.on(`ready`, () => {
             ui.notifications.notify(game.i18n.localize("SWIM.notification-adjustPaceDisabled"))
         }
     }
-    // SWD: Shaken halves Pace. Done idempotently on both places SUCC builds the effect from (its condition map and CONFIG.statusEffects):
-    // first drop any existing copy of this change (it may already be there, e.g. if the condition map was saved with it), then add exactly one if SWD Unshake is on.
+    // SWD: Shaken halves Pace. Added to the shaken entry of CONFIG.statusEffects (the status effect is built from it, also by SUCC).
+    // Idempotent: any existing copy of this change is dropped first, then exactly one is added if SWD Unshake is on.
+    // `system.pace` is the SWADE 6 pace object; a multiply change on it applies to all pace types.
     const swdShaken = version === "SWD"
-    const isSwdPaceChange = (c) => c.key === "system.stats.speed.value" && c.mode === 1 && Number(c.value) === 0.5
-    const withSwdPaceChange = (changes) => {
-        const kept = (changes ?? []).filter(c => !isSwdPaceChange(c))
-        if (swdShaken) kept.push({ key: "system.stats.speed.value", mode: 1, priority: undefined, value: "0.5" })
-        return kept
+    const isSwdPaceChange = (c) => c.key === "system.pace" && (c.type === 'multiply') && Number(c.value) === 0.5
+    const withSwdPaceChange = (statusEffect) => {
+        const kept = changes_of(statusEffect).filter(c => !isSwdPaceChange(c))
+        if (swdShaken) kept.push(change("system.pace", "multiply", 0.5))
+        statusEffect.system ??= {}
+        statusEffect.system.changes = kept
+        delete statusEffect.changes
     }
-    Hooks.once('succReady', (api) => {
-        const status = api.conditions.find(c => c.id === 'shaken')
-        if (status?.activeEffect) { status.activeEffect.changes = withSwdPaceChange(status.activeEffect.changes) }
+    Hooks.once('succReady', () => {
         for (const statusEffect of CONFIG.statusEffects) {
-            if (statusEffect.id === 'shaken' || statusEffect.statuses?.includes?.('shaken')) { statusEffect.changes = withSwdPaceChange(statusEffect.changes) }
+            if (statusEffect.id === 'shaken' || statusEffect.statuses?.includes?.('shaken')) { withSwdPaceChange(statusEffect) }
         }
     })
     const callbackMode = game.settings.get("swim", "callbackMode")
@@ -138,9 +140,9 @@ Hooks.on(`ready`, () => {
         let additionalText = ""
         let unshakeWarning = "<p><strong>If you have used SWIM before: Please note that you have to replace your unshake macro with the new version in the compendium. The SWD (old) unshaken rules can now be activated in the settings.</strong></p><hr />"
         if (!game.settings.get("swade", "tocBlockList")["swim.swim-roll-tables"]) {additionalText = "<p><strong>Please note:</strong> To make some adjustments to properly use SWIM, the world will be reloaded after closing this dialogue.<p>"}
-        new Dialog({
-            title: 'Welcome to SWIM',
-            content: `<form>
+        new foundry.applications.api.DialogV2({
+            window: { title: 'Welcome to SWIM' },
+            content: `<div>
                 <h1>Welcome to SWIM</h1>
                 ${unshakeWarning}
                 <p>SWIM means SWADE Immersive Macros and that's exactly what you get.</p>
@@ -156,12 +158,13 @@ Hooks.on(`ready`, () => {
                 <hr />
                 <p>Please also consider to donate if you really like SWIM. This is one of the few ways of letting me know that SWIM is actually used and appreciated by some. =)</p>
                 <p><a href="https://ko-fi.com/Q5Q72EE4Z" target="_blank" rel="noopener"><img style="border: 0px; display: block; margin-left: auto; margin-right: auto; height: 36px;" height="36" src="https://storage.ko-fi.com/cdn/kofi2.png?v=6" alt="Buy Me a Coffee at ko-fi.com" /></a></p>
-            </form>`,
-            buttons: {
-                one: {
+            </div>`,
+            buttons: [{
+                    action: "one",
                     label: "Let me play already!",
-                    callback: async (html) => {
-                        let readIt = html.find("#readIt")[0].checked
+                    default: true,
+                    callback: async (event, button, dialog) => {
+                        let readIt = dialog.element.querySelector("#readIt").checked
                         if (readIt === true) {
                             game.settings.set('swim', 'docReadV1.1.0', true)
                             let blockedTOCPacks = game.settings.get("swade", "tocBlockList")
@@ -174,13 +177,12 @@ Hooks.on(`ready`, () => {
                             }
                         }
                     }
-                }
-            },
-        }).render(true);
+                }],
+        }).render({ force: true });
     } else if (game.settings.get('swim', 'br2Message') === false && game.modules.get('betterrolls-swade2')?.active && game.user.isGM === true) {
-        new Dialog({
-            title: 'Better Rolls 2 support for SWIM.',
-            content: `<form>
+        new foundry.applications.api.DialogV2({
+            window: { title: 'Better Rolls 2 support for SWIM.' },
+            content: `<div>
                 <h1>Better Rolls 2 support for SWIM.</h1>
                 <p>Good news everyone!<p>
                 <p>As of SWIM version 0.17.0, SWIM natively offers Better Rolls 2 support. That means you can now enable all those immersive SWIM sound effects when applying damage, soaking and unshaking from the BR2 messages.</p>
@@ -192,12 +194,13 @@ Hooks.on(`ready`, () => {
                 <hr />
                 <p>Please also consider to donate if you really like SWIM. This is one of the few ways of letting me know that SWIM is actually used and appreciated by some. =)</p>
                 <p><a href="https://ko-fi.com/Q5Q72EE4Z" target="_blank" rel="noopener"><img style="border: 0px; display: block; margin-left: auto; margin-right: auto; height: 36px;" height="36" src="https://storage.ko-fi.com/cdn/kofi2.png?v=6" alt="Buy Me a Coffee at ko-fi.com" /></a></p>
-            </form>`,
-            buttons: {
-                one: {
+            </div>`,
+            buttons: [{
+                    action: "one",
                     label: "Damn you Sal! Let. Me. Play. NOW!",
-                    callback: async (html) => {
-                        let activate = html.find("#activate")[0].checked
+                    default: true,
+                    callback: async (event, button, dialog) => {
+                        let activate = dialog.element.querySelector("#activate").checked
                         if (activate === true) {
                             game.settings.set('swim', 'br2Support', true)
                         }
@@ -205,28 +208,20 @@ Hooks.on(`ready`, () => {
                         await swim.wait('20')
                         window.location.reload();
                     }
-                }
-            },
-        }).render(true);
+                }],
+        }).render({ force: true });
     }
 
     //SWIM per-actor/item config header button
     if (game.user.isGM || game.settings.get('swim', 'allowUserConfig')) {
-        Hooks.on('getItemSheetHeaderButtons', function (sheet, buttons) {
-            buttons.unshift({
-                class: 'swim_config_button',
-                label: 'SWIM',
-                icon: 'fas fa-swimmer',
-                onclick: () => open_swim_item_config(sheet.item)
-            });
-        });
-        Hooks.on('getActorSheetHeaderButtons', function (sheet, buttons) {
-            buttons.unshift({
-                class: 'swim_config_button',
-                label: 'SWIM',
-                icon: 'fas fa-swimmer',
-                onclick: () => open_swim_actor_config(sheet.actor)
-            });
+        // v14: the sheets are ApplicationV2; their header buttons are `controls` (shown in the window menu) of the `getHeaderControls...` hook
+        Hooks.on('getHeaderControlsDocumentSheetV2', function (sheet, controls) {
+            const doc = sheet.document
+            if (doc?.documentName === 'Item') {
+                controls.unshift({ action: 'swimConfig', label: 'SWIM', icon: 'fa-solid fa-person-swimming', onClick: () => open_swim_item_config(doc) })
+            } else if (doc?.documentName === 'Actor') {
+                controls.unshift({ action: 'swimConfig', label: 'SWIM', icon: 'fa-solid fa-person-swimming', onClick: () => open_swim_actor_config(doc) })
+            }
         });
     }
 

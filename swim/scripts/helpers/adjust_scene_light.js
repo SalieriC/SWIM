@@ -34,7 +34,7 @@ class SceneLightApp extends SwimWindow {
     constructor(scene) {
         super()
         this.#scene = scene
-        this.state = { level: illumination_level(scene.flags?.swim?.config?.illuminationLevel, scene.darkness) }
+        this.state = { level: illumination_level(scene.flags?.swim?.config?.illuminationLevel, scene.environment?.darknessLevel ?? 0) }
     }
 
     async view() {

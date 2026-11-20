@@ -2,6 +2,7 @@ import * as SWIM from "./constants.js";
 import SWIMEffectConfig from "./helpers/custom_effect_config.js";
 import { SwimWindow, t, esc, btn, tokens_header } from "./helpers/swim_window.js";
 import { play_audio } from "./helpers/audio.js";
+import { effect_data } from "./helpers/effect_data.js"
 
 export async function open_swim_item_config(item) {
     let actor = false
@@ -393,7 +394,7 @@ class DocumentConfigApp extends SwimWindow {
     }
 
     #refresh() {
-        const root = this.element
+        const root = $(this.element)
         if (!root?.length) { return }
         for (const c of this.rows) {
             const row = root.find(`.swim-cfg-row[data-id="${c.id}"]`)
@@ -408,7 +409,7 @@ class DocumentConfigApp extends SwimWindow {
 
     #set(id, value) {
         this.state[id] = value
-        const el = this.element.find(`[data-field="${id}"]`)
+        const el = $(this.element).find(`[data-field="${id}"]`)
         if (el.attr('type') === 'checkbox') { el.prop('checked', !!value) } else { el.val(value) }
         this.#refresh()
     }
@@ -418,7 +419,7 @@ class DocumentConfigApp extends SwimWindow {
         switch (action) {
             case 'reset': return this.#set(c.id, c.isBoolean ? !!c.value : c.isAE ? '' : String(c.value ?? ''))
             case 'browse':
-                return new FilePicker({ type: c.filePickerData, current: this.state[c.id], callback: (path) => this.#set(c.id, path) }).browse()
+                return new foundry.applications.apps.FilePicker.implementation({ type: c.filePickerData, current: this.state[c.id], callback: (path) => this.#set(c.id, path) }).browse()
             case 'play':
                 if (this.state[c.id]) { play_audio(this.state[c.id], { push: false }).catch((err) => console.warn('SWIM | Could not play sound', err)) }
                 return
@@ -432,7 +433,7 @@ class DocumentConfigApp extends SwimWindow {
     /** The Active Effect (ammo effect) is edited as a temporary effect on the item; its data is stored as JSON when its sheet is saved. */
     async #edit_effect(c) {
         const old = this.state[c.id]
-        const defaults = old ? JSON.parse(old) : { name: `Ammo Effect (${this.doc.name})`, icon: this.doc.img }
+        const defaults = old ? effect_data(JSON.parse(old)) : { name: `Ammo Effect (${this.doc.name})`, img: this.doc.img }
         const effect = await CONFIG.ActiveEffect.documentClass.create(defaults, { rendersheet: false, parent: this.doc })
         //Set a flag to mark effects to be deleted later.
         await effect.setFlag('swim', 'ammoAeTempEff', true)

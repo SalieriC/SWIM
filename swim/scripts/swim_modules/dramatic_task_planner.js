@@ -52,7 +52,7 @@ class DramaticTaskApp extends SwimWindow {
     async view() {
         const st = this.state
         const { challengeTrackerInstalled, link } = this.#ctx
-        const intro = await TextEditor.enrichHTML(`<p>${link}</p>`, { async: true })
+        const intro = await foundry.applications.ux.TextEditor.implementation.enrichHTML(`<p>${link}</p>`)
         const diff = (id, label) => rate_opt('difficulty', 'value', id, label, st.difficulty === id)
         const num = (field, value) => `<input type="number" min="0" max="100" data-field="${field}" value="${esc(value)}">`
         let checks = ''
@@ -115,7 +115,7 @@ class DramaticTaskApp extends SwimWindow {
         }
 
         await ChatMessage.create({
-            content: await TextEditor.enrichHTML(officialClass + message + '</div>'),
+            content: await foundry.applications.ux.TextEditor.implementation.enrichHTML(officialClass + message + '</div>'),
             whisper: ChatMessage.getWhisperRecipients("GM"),
         })
         if (st.playSfx) { swim.play_sfx(SFX, game.settings.get("swim", "defaultVolume"), true) }

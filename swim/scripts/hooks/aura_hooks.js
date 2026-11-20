@@ -52,9 +52,7 @@ export function aura_tab_html(stored = {}, app_name = "") {
     const rng = RANGES.map((r) => `<option value="${r}" ${cfg.range === r ? "selected" : ""}>${esc(t(`SWIM.aura.range-${r}`))}</option>`).join("")
     const row = (label, hint, input, cls = "") => `<div class="form-group ${cls}" ${cls && cfg.range !== "custom" ? 'style="display:none"' : ""}><label>${esc(t(label))}</label><div class="form-fields">${input}</div><p class="hint">${esc(t(hint))}</p></div>`
     return {
-        nav: `<a class="item" data-tab="${TAB}"><i class="fa-solid fa-bullseye"></i> ${esc(t("SWIM.aura.tab"))}</a>`,
-        section: `<section class="tab swim-au" data-tab="${TAB}">
-            <p class="swim-au-intro"><span class="swim-au-badge">SWIM</span>${esc(t("SWIM.aura.intro"))}</p>
+        section: `<p class="swim-au-intro"><span class="swim-au-badge">SWIM</span>${esc(t("SWIM.aura.intro"))}</p>
             ${row("SWIM.aura.enabled", "SWIM.aura.enabledHint", `<input type="checkbox" name="flags.swim.aura.enabled" data-dtype="Boolean" ${cfg.enabled ? "checked" : ""}>`)}
             ${row("SWIM.aura.range", "SWIM.aura.rangeHint", `<select name="flags.swim.aura.range">${rng}</select>`)}
             ${row("SWIM.aura.radius", "SWIM.aura.radiusHint", `<input type="number" name="flags.swim.aura.radius" data-dtype="Number" min="0" step="1" value="${esc(cfg.radius)}">`, "swim-au-radius")}
@@ -63,7 +61,7 @@ export function aura_tab_html(stored = {}, app_name = "") {
             ${row("SWIM.aura.wildcards", "SWIM.aura.wildcardsHint", `<input type="checkbox" name="flags.swim.aura.wildcards" data-dtype="Boolean" ${cfg.wildcards ? "checked" : ""}>`)}
             ${row("SWIM.aura.self", "SWIM.aura.selfHint", `<input type="checkbox" name="flags.swim.aura.self" data-dtype="Boolean" ${cfg.self ? "checked" : ""}>`)}
             ${row("SWIM.aura.stack", "SWIM.aura.stackHint", `<input type="checkbox" name="flags.swim.aura.stack" data-dtype="Boolean" ${cfg.stack ? "checked" : ""}>`)}
-            <p class="swim-au-note">${esc(t("SWIM.aura.note"))}</p></section>`,
+            <p class="swim-au-note">${esc(t("SWIM.aura.note"))}</p>`,
     }
 }
 
@@ -107,16 +105,35 @@ export function aura_hooks() {
     Hooks.on("preUpdateActiveEffect", (effect, changes) => { strip_idle_aura(effect, changes) })
     Hooks.on("renderActiveEffectConfig", (app, html) => {
         if (!game.user.isGM || app instanceof SWIMEffectConfig) { return }
-        const nav = html.find("nav.sheet-tabs")
-        if (!nav.length || html.find(`section[data-tab="${TAB}"]`).length) { return }
+        // v14: ApplicationV2 sheet. Tab buttons are `.tabs [data-group][data-tab]` (data-action="tab"), tab contents `.tab[data-group][data-tab]`.
+        // The sheet re-renders single parts, so nav and section are checked on their own.
+        const group = "sheet"
+        const navButton = html.querySelector(`.tabs [data-group="${group}"][data-tab]:last-of-type, .tabs [data-group="${group}"][data-tab]`)
+        const last_section = [...html.querySelectorAll(`.tab[data-group="${group}"]`)].at(-1)
+        if (!navButton || !last_section) { return }
         const tab = aura_tab_html(app.document.flags?.swim?.aura, app.document.name)
-        nav.append(tab.nav)
-        html.find("section.tab").last().after(tab.section)
-        // the number field only matters for "Custom"
-        const sec = html.find(`section[data-tab="${TAB}"]`)
-        sec.find('select[name="flags.swim.aura.range"]').on("change", (ev) => { sec.find(".swim-au-radius").toggle(ev.currentTarget.value === "custom") })
+        if (!html.querySelector(`.tabs [data-tab="${TAB}"]`)) {
+            const nav = [...html.querySelectorAll(`.tabs [data-group="${group}"][data-tab]`)].at(-1).cloneNode(false)
+            nav.classList.remove("active")
+            nav.dataset.tab = TAB
+            nav.dataset.tooltip = t("SWIM.aura.tab")
+            nav.setAttribute("aria-label", t("SWIM.aura.tab"))
+            nav.innerHTML = `<i class="fa-solid fa-bullseye"></i>`
+            navButton.parentElement.append(nav)
+        }
+        if (!html.querySelector(`.tab[data-tab="${TAB}"]`)) {
+            const section = document.createElement("section")
+            section.className = "tab swim-au"
+            section.dataset.group = group
+            section.dataset.tab = TAB
+            section.innerHTML = tab.section
+            last_section.after(section)
+            // the number field only matters for "Custom"
+            const radius = section.querySelector(".swim-au-radius")
+            section.querySelector('select[name="flags.swim.aura.range"]')?.addEventListener("change", (ev) => { if (radius) { radius.style.display = ev.currentTarget.value === "custom" ? "" : "none" } })
+        }
         // after a re-render Foundry has activated the tab before it existed
-        try { const tabs = app._tabs?.[0]; if (tabs?.active === TAB) { tabs.activate(TAB) } } catch (err) { console.warn("SWIM | Aura tab", err) }
+        if (app.tabGroups?.[group] === TAB) { app.changeTab(TAB, group, { force: true, updatePosition: false }) }
     })
 
     // --- catch up: the GM who loads the world brings the scene he is looking at in line ---

@@ -1,3 +1,5 @@
+import { slow_changes } from "../helpers/pace.js"
+import { effect_data, changes_of } from "../helpers/effect_data.js";
 import { backlasher } from "../swim_modules/backlasher.js";
 
 export async function brsw_hooks() {
@@ -16,7 +18,7 @@ export async function brsw_hooks() {
     Hooks.on("BRSW-InjuryAEApplied", async (message, effects, type) => {
         if (game.settings.get("swim", "br2Support") === true) {
             if (swim.is_first_gm() === false) { return } //Let the GM user handle things.
-            for (let effect of effects) {
+            for (let effect of effects ?? []) {
                 await update_brsw_injury(effect, type)
             }
         }
@@ -24,7 +26,7 @@ export async function brsw_hooks() {
     Hooks.on('BRSW-RollItem', (card, _) => {
         const backlashSetting = game.settings.get('swim', 'brswBacklash')
         if (backlashSetting === 'disabled' || !game.settings.get("swim", "br2Support")) { return }
-        if (card.trait_roll?.current_roll?.is_fumble && card.item.type === 'power' && swim.is_first_gm()) {
+        if (card.traitRoll?.currentRoll?.isCritFail && card.item.type === 'power' && swim.is_first_gm()) {
         backlasher(card, backlashSetting)
         }
     })
@@ -112,64 +114,12 @@ async function update_brsw_injury(effect, type) {
                     item.type === "hindrance";
             });
             if (!slow) {
-                //Actor isn't slow, create AE with minor slow effect = system.stats.speed.runningDie -2 && system.stats.speed.value -1
-                if (actor.system.stats.speed.runningDie === 4) {
-                    //Running die is a d4 already, alter AE like so: system.stats.speed.runningDie.modifier -1 && system.stats.speed.value -1
-                    newChanges = {
-                        key: 'system.stats.speed.runningDie.modifier',
-                        mode: 2,
-                        value: -1
-                    }, {
-                        key: 'system.stats.speed.value',
-                        mode: 2,
-                        value: -1
-                    }
-                } else {
-                    //AE as above
-                    newChanges = {
-                        key: 'system.stats.speed.runningDie',
-                        mode: 2,
-                        value: -2
-                    }, {
-                        key: 'system.stats.speed.value',
-                        mode: 2,
-                        value: -1
-                    }
-                }
+                //Actor isn't slow, create AE with minor slow effect
+                newChanges = slow_changes(actor, false)
             } else if (slow.system.major === false) {
-                //Actor is minor slow, create AE with major slow effect = system.stats.speed.runningDie -2 && system.stats.speed.value -2 && @Skill{Athletics}[system.die.modifier] -2
+                //Actor is minor slow, create AE with major slow effect
                 newLabel = game.i18n.localize("SWIM.injury-legSlowMajor")
-                if (actor.system.stats.speed.runningDie === 4) {
-                    //Running die is a d4 already, alter AE like so: system.stats.speed.runningDie.modifier -1 && system.stats.speed.value -2
-                    newChanges = {
-                        key: 'system.stats.speed.runningDie.modifier',
-                        mode: 2,
-                        value: -1
-                    }, {
-                        key: 'system.stats.speed.value',
-                        mode: 2,
-                        value: -2
-                    }, {
-                        key: `@Skill{${game.i18n.localize("SWIM.skill-athletics")}}[system.die.modifier]`,
-                        mode: 2,
-                        value: -2
-                    }
-                } else {
-                    //AE as above
-                    newChanges = {
-                        key: 'system.stats.speed.runningDie',
-                        mode: 2,
-                        value: -2
-                    }, {
-                        key: 'system.stats.speed.value',
-                        mode: 2,
-                        value: -2
-                    }, {
-                        key: `@Skill{${game.i18n.localize("SWIM.skill-athletics")}}[system.die.modifier]`,
-                        mode: 2,
-                        value: -2
-                    }
-                }
+                newChanges = slow_changes(actor, true)
             } //Do nothing if actor is major slow already.
             break;
         default:
@@ -184,7 +134,7 @@ async function update_brsw_injury(effect, type) {
     let updateData = {
         icon: img,
         name: newLabel,
-        changes: newChanges ? [newChanges] : effect.changes,
+        changes: newChanges ? [].concat(newChanges) : changes_of(effect),
         flags: {
             swim: {
                 isCombatInjury: type === "gritty" ? true : false,
@@ -192,5 +142,5 @@ async function update_brsw_injury(effect, type) {
             }
         }
     }
-    await effect.update(updateData)
+    await effect.update(effect_data(updateData))
 }

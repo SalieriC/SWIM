@@ -28,7 +28,7 @@ export async function spawn_token(actor, center, { scene = canvas.scene, updates
         return null
     }
     // Make sure the texture is loaded so the token doesn't pop in blank.
-    try { await loadTexture(tokenDoc.texture.src) } catch (e) { console.warn("SWIM | spawn_token: could not preload texture.", e) }
+    try { await foundry.canvas.loadTexture(tokenDoc.texture.src) } catch (e) { console.warn("SWIM | spawn_token: could not preload texture.", e) }
 
     // Warp Gate positioned by centre: offset by half the token size (in grid units).
     const gridSize = scene.grid.size

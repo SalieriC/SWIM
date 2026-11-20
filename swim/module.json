@@ -3,10 +3,10 @@
 	"title": "SWADE Immersion Module",
 	"description": "<p>A module providing immersion friendly macros and functionalities to enhance the gameplay experience of the SWADE System on Foundry VTT and automate some things in a non-intrusive way. <a href='https://ko-fi.com/salieric'>Please consider donating.</a> </p>",
 	"compatibility": {
-		"minimum": 11,
-		"verified": "11.315"
+		"minimum": 14,
+		"verified": "14.370"
 	},
-	"version": "2.7.0",
+	"version": "4.0.0",
 	"authors": [
 		{
 			"name": "SalieriC",
@@ -27,8 +27,8 @@
 				"type": "system",
 				"manifest": "https://gitlab.com/api/v4/projects/16269883/packages/generic/swade/latest/system.json",
 				"compatibility": {
-					"minimum": "3.3.8",
-					"verified": "3.3.11"
+					"minimum": "6.0.4",
+					"verified": "6.0.4"
 				}
 			}
 		],
@@ -36,37 +36,28 @@
 			{
 				"id": "succ",
 				"type": "module",
-				"manifest": "https://raw.githubusercontent.com/SalieriC/SUCC/main/succ/module.json",
+				"manifest": "https://github.com/SalieriC/SUCC/releases/latest/download/module.json",
 				"compatibility": {
-					"minimum": "3.3.0",
-					"verified": "3.3.0"
+					"minimum": "8.4.1",
+					"verified": "8.4.1"
 				}
 			},
 			{
 				"id": "socketlib",
 				"type": "module",
-				"manifest": "https://raw.githubusercontent.com/manuelVo/foundryvtt-socketlib/master/module.json",
+				"manifest": "https://github.com/farling42/foundryvtt-socketlib/releases/latest/download/module.json",
 				"compatibility": {
-					"minimum": "1.0.13",
-					"verified": "1.0.13"
-				}
-			},
-			{
-				"id": "ATL",
-				"type": "module",
-				"manifest": "https://github.com/kandashi/Active-Token-Lighting/releases/latest/download/module.json",
-				"compatibility": {
-					"minimum": "0.7.2",
-					"verified": "0.7.2"
+					"minimum": "1.1.4",
+					"verified": "1.1.4"
 				}
 			},
 			{
 				"id": "portal-lib",
 				"type": "module",
-                "manifest": "https://github.com/theripper93/portal-lib/releases/download/1.0.7/module.json",
-                "compatibility": {
-					"minimum": "1.0.7",
-                    "verified": "1.0.7"
+                "manifest": "https://github.com/theripper93/portal-lib/releases/latest/download/module.json",
+				"compatibility": {
+					"minimum": "4.0.0",
+					"verified": "4.0.0"
 				}
 			}
 		]
@@ -115,7 +106,7 @@
 			"name": "swade-immersive-macros",
 			"label": "SWADE Immersive Macros",
 			"system": "swade",
-			"path": "packs/swade-immersive-macros.db",
+			"path": "packs/swade-immersive-macros",
 			"module": "swim",
 			"type": "Macro",
 			"ownership": {
@@ -128,7 +119,7 @@
 			"name": "chase-layouts",
 			"label": "Chase Layouts",
 			"system": "swade",
-			"path": "packs/chase-layouts.db",
+			"path": "packs/chase-layouts",
 			"module": "swim",
 			"type": "Scene",
 			"ownership": {
@@ -140,7 +131,7 @@
 		{
 			"label": "SWIM Actor Folders",
 			"name": "swim-actor-folders",
-			"path": "packs/swim-actor-folders.db",
+			"path": "packs/swim-actor-folders",
 			"system": "swade",
 			"module": "swim",
 			"type": "Actor",
@@ -153,7 +144,7 @@
 		{
 			"label": "SWIM Chase Cards",
 			"name": "swim-chase-cards",
-			"path": "packs/swim-chase-cards.db",
+			"path": "packs/swim-chase-cards",
 			"system": "swade",
 			"module": "swim",
 			"type": "JournalEntry",
@@ -166,7 +157,7 @@
 		{
 			"label": "SWIM Roll Tables",
 			"name": "swim-roll-tables",
-			"path": "packs/swim-roll-tables.db",
+			"path": "packs/swim-roll-tables",
 			"system": "swade",
 			"module": "swim",
 			"type": "RollTable",

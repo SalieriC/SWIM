@@ -1,6 +1,9 @@
+import { LegacyApp } from "../helpers/legacy_app.js"
 import { free_btn } from "../helpers/swim_window.js"
 import { swimConditions } from '../helpers/conditions.js'
 import { absorb_manual_bonus, active_effects } from '../helpers/trait_bonuses.js'
+import { effect_data, changes_of } from "../helpers/effect_data.js"
+import { slow_changes } from "../helpers/pace.js"
 /*******************************************
  * Soak Damage
  * v. 7.0.0 – one window (SoakApp) instead of a chain of Dialogs.
@@ -53,7 +56,7 @@ export function soak_bonuses(actor, { pp, elan } = {}) {
     const effectItems = new Set()
     let fromEffects = 0
     for (const effect of active_effects(actor)) { // only enabled effects
-        for (const change of effect.changes) {
+        for (const change of changes_of(effect)) {
             if (change.key !== "system.attributes.vigor.soakBonus") { continue }
             const value = parseFloat(change.value)
             if (!Number.isFinite(value)) { continue }
@@ -61,7 +64,7 @@ export function soak_bonuses(actor, { pp, elan } = {}) {
             if (effect.parent?.documentName === 'Item') { effectItems.add(effect.parent.id) }
             fromEffects += value
             total += value
-            lines.push(`${signed(value)} ${img(effect.icon ?? effect.img)}${esc(effect.name)}`)
+            lines.push(`${signed(value)} ${img(effect.img)}${esc(effect.name)}`)
         }
     }
 
@@ -143,7 +146,7 @@ async function apply_injury(token, permanent, combat) {
                 }
             }
         };
-        injuryData.icon = img; // ActiveEffect icon field in Foundry v11 (`img` is v12+ and is ignored)
+        injuryData.img = img;
         if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-unmentionables").toLowerCase())) {
             //unmentionables; create dummy AE without actual effect
             injuryData.name = game.i18n.localize("SWIM.injury-unmentionables");
@@ -158,66 +161,13 @@ async function apply_injury(token, permanent, combat) {
                     item.type === "hindrance";
             });
             if (!slow) {
-                //Actor isn't slow, create AE with minor slow effect = system.stats.speed.runningDie -2 && system.stats.speed.value -1
+                //Actor isn't slow, create AE with minor slow effect
                 injuryData.name = game.i18n.localize("SWIM.injury-legSlow");
-                if (token.actor.system.stats.speed.runningDie === 4) {
-                    //Running die is a d4 already, alter AE like so: system.stats.speed.runningDie.modifier -1 && system.stats.speed.value -1
-                    injuryData.changes.push({
-                        key: 'system.stats.speed.runningDie.modifier',
-                        mode: 2,
-                        value: -1
-                    }, {
-                        key: 'system.stats.speed.value',
-                        mode: 2,
-                        value: -1
-                    }
-                    )
-                } else {
-                    //AE as above
-                    injuryData.changes.push({
-                        key: 'system.stats.speed.runningDie',
-                        mode: 2,
-                        value: -2
-                    }, {
-                        key: 'system.stats.speed.value',
-                        mode: 2,
-                        value: -1
-                    })
-                }
+                injuryData.changes.push(...slow_changes(token.actor, false));
             } else if (slow.system.major === false) {
-                //Actor is minor slow, create AE with major slow effect = system.stats.speed.runningDie -2 && system.stats.speed.value -2 && @Skill{Athletics}[system.die.modifier] -2
+                //Actor is minor slow, create AE with major slow effect
                 injuryData.name = game.i18n.localize("SWIM.injury-legSlow");
-                if (token.actor.system.stats.speed.runningDie === 4) {
-                    //Running die is a d4 already, alter AE like so: system.stats.speed.runningDie.modifier -1 && system.stats.speed.value -2
-                    injuryData.changes.push({
-                        key: 'system.stats.speed.runningDie.modifier',
-                        mode: 2,
-                        value: -1
-                    }, {
-                        key: 'system.stats.speed.value',
-                        mode: 2,
-                        value: -2
-                    }, {
-                        key: `@Skill{${game.i18n.localize("SWIM.skill-athletics")}}[system.die.modifier]`,
-                        mode: 2,
-                        value: -2
-                    })
-                } else {
-                    //AE as above
-                    injuryData.changes.push({
-                        key: 'system.stats.speed.runningDie',
-                        mode: 2,
-                        value: -2
-                    }, {
-                        key: 'system.stats.speed.value',
-                        mode: 2,
-                        value: -2
-                    }, {
-                        key: `@Skill{${game.i18n.localize("SWIM.skill-athletics")}}[system.die.modifier]`,
-                        mode: 2,
-                        value: -2
-                    })
-                }
+                injuryData.changes.push(...slow_changes(token.actor, true));
                 //Do nothing if actor is major slow already.
             }
         } else if (text.toLowerCase().includes(game.i18n.localize("SWIM.injuryTable-guts").toLowerCase())) {
@@ -276,14 +226,14 @@ async function apply_injury(token, permanent, combat) {
             injuryData.name += `${game.i18n.localize("swim.injury-permanent")}`;
         }
         //Create the AE:
-        await actor.createEmbeddedDocuments('ActiveEffect', [injuryData]);
+        await actor.createEmbeddedDocuments('ActiveEffect', [effect_data(injuryData)]);
 }
 
 /* ------------------------------------------------------------------------------------------------ */
 /* The window                                                                                       */
 /* ------------------------------------------------------------------------------------------------ */
 
-class SoakApp extends Application {
+class SoakApp extends LegacyApp {
     #token
     #alias
     #state

@@ -1,3 +1,4 @@
+import { LegacyApp } from "../helpers/legacy_app.js"
 /*******************************************
  * Personal Health Centre
  * // v.8.0.0 – one dialog (HealthCentreApp) instead of a chain of Dialogs.
@@ -23,7 +24,8 @@ const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 export function is_usable_potion_item(item) {
     if (item.type === "gear") { return Number(item.system.quantity) > 0 }
     if (item.type === "consumable") {
-        const { quantity, charges } = item.system
+        const { quantity } = item.system
+        const charges = item.system.charges.default
         return ((Number(quantity) - 1) * Number(charges.max) + Number(charges.value)) > 0
     }
     return false
@@ -32,7 +34,8 @@ export function is_usable_potion_item(item) {
 /** How many potions are left on this item (gear: quantity, consumable: charges over the whole stack). */
 function potion_count(item) {
     if (item.type === "consumable") {
-        const { quantity, charges } = item.system
+        const { quantity } = item.system
+        const charges = item.system.charges.default
         return (Number(quantity) - 1) * Number(charges.max) + Number(charges.value)
     }
     return Number(item.system.quantity)
@@ -233,7 +236,7 @@ function condition_name(id) {
     return name ? game.i18n.localize(name) : id
 }
 
-class HealthCentreApp extends Application {
+class HealthCentreApp extends LegacyApp {
     #token
     #target
     #speaker

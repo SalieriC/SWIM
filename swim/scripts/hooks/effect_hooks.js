@@ -23,13 +23,6 @@ export async function effect_hooks() {
                 else if (condition.flags?.swim?.maintaining === game.i18n.localize("SWIM.power-intangibility")) { await token.document.update({ "alpha": 0.5 }) }
             }
         }
-        // Conviction
-        if (condition.name === "Conviction") {
-            // This prevents conviction expiration dialogue from core since SWADE handles it by itself.
-            let updates = condition.toObject();
-            updates.flags.swade.expiration = null;
-            await condition.update(updates);
-        }
     })
     // Warrior's Gift: items an Edge grants (SWADE item grants) are named like the Edge ("<Item> (Warrior's Gift)") and flagged. SWADE creates them
     // after the Edge and remembers them in `flags.swade.hasGranted`; it removes them again when the Edge is deleted (so they go away with the effect).

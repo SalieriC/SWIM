@@ -1,5 +1,7 @@
 import { swimConditions } from '../helpers/conditions.js'
 import { SwimWindow, t, esc, btn, token_img, tokens_header } from '../helpers/swim_window.js'
+import { effect_data } from "../helpers/effect_data.js"
+import { pace_of, running_die_of, running_mod_of } from "../helpers/pace.js"
 /*******************************************
  * Fear Table Macro.
  * v. 4.0.0 – window (FearApp) instead of a Dialog
@@ -102,7 +104,7 @@ export async function fear_table_script() {
                     }
                 }
             }
-            await actor.createEmbeddedDocuments('ActiveEffect', [effData]);
+            await actor.createEmbeddedDocuments('ActiveEffect', [effect_data(effData)]);
         } else if (total >= 4 && total <= 6) {
             //Distracted
             await swimConditions.add('distracted', actor);
@@ -143,10 +145,10 @@ export async function fear_table_script() {
             await swimConditions.add('frightened', actor);
         } else if (total >= 16 && total <= 17) {
             //Panicked: Move full pace + Running die away + Shaken
-            const runningDie = `1d${actor.system.stats.speed.runningDie}`
-            let runningMod = actor.system.stats.speed.runningMod
+            const runningDie = `1d${running_die_of(actor)}`
+            let runningMod = running_mod_of(actor)
             if (runningMod >= 0) { runningMod = `+ ${runningMod}` }
-            const pace = actor.system.stats.speed.adjusted
+            const pace = pace_of(actor)
             let rollPace = await new Roll(`${pace} + ${runningDie} ${runningMod}`).evaluate({ async: false });
             let totalPace = rollPace.total;
             const chatData = `${officialClass}<p>${game.i18n.format("SWIM.chatMessage-panickedRollMessage", { name: token.name, pace: totalPace })}</p></div>`
@@ -269,7 +271,7 @@ async function gain_phobia(actor, major, total) {
             "major": major,
             "source": ""
         },
-        "effects": [effData],
+        "effects": [effect_data(effData)],
         "flags": {
             swim: {
                 fearResult: `Phobia, ${major ? "major" : "minor"}`,

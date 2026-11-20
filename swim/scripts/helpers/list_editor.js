@@ -70,7 +70,7 @@ export class ListEditorApp extends SwimWindow {
             case 'add': {
                 this.#add_row()
                 await this.render(false)
-                this.element?.find('input[type="text"]').last().trigger('focus')
+                $(this.element).find('input[type="text"]').last().trigger('focus')
                 return
             }
             case 'remove':

@@ -15,7 +15,7 @@
  * - Illusion (want something in conjunction with WarpGate similar to the summoner but need to check how exactly that could work out first.
  * - Telekinesis (because of the unwilling targets problem)
  * 
- * The Light power uses Active Token Effects which is not updated to v14 and might need a replacement.
+ * The Light and Darksight powers use Foundry's token effects (`token.*` changes, see helpers/token_effects.js).
  ******************************************************/
 import * as SWIM from '../constants.js'
 import { execute_as_gm } from "../helpers/socket_helper.js"
@@ -23,6 +23,8 @@ import { SwimWindow, t, esc, btn, token_img, tokens_header, rate_opt, checkbox }
 import { EdgePickerApp } from "../helpers/edge_picker.js"
 import { rank_of_actor } from "../helpers/actor_picker.js"
 import { load_combat_edges, edge_item_data, granted_line, affects_block, targets_block } from "../helpers/combat_edges.js"
+import { effect_data } from "../helpers/effect_data.js"
+import { darksight_changes, light_power_changes } from "../helpers/token_effects.js"
 
 // ============================================================================
 // PART 1: The window (EffectBuilderApp)
@@ -688,7 +690,7 @@ export async function effect_builder_gm(data) {
             }
         }
 
-        await target.actor.createEmbeddedDocuments('ActiveEffect', [effectData])
+        await target.actor.createEmbeddedDocuments('ActiveEffect', [effect_data(effectData)])
     }
 
     // ========================================================================
@@ -1027,9 +1029,9 @@ export async function effect_builder_gm(data) {
 
                 let aeData = {
                     changes: [{
-                        key: `system.stats.speed.value`,
-                        mode: 5,
-                        value: target.actor.system.stats.speed.value * change
+                        key: `system.pace`,
+                        mode: 1,
+                        value: change
                     }],
                     icon: data.quickness ? (data.icon || ICONS.quickness) : (data.icon || ICONS.speed),
                     name: data.quickness
@@ -1068,9 +1070,9 @@ export async function effect_builder_gm(data) {
 
                 let aeData = {
                     changes: [{
-                        key: `system.stats.speed.value`,
-                        mode: 5,
-                        value: Math.round(target.actor.system.stats.speed.value * change)
+                        key: `system.pace`,
+                        mode: 1,
+                        value: change
                     }],
                     icon: data.icon || ICONS.sloth,
                     name: game.i18n.localize("SWIM.power-sloth"),
@@ -1084,7 +1086,7 @@ export async function effect_builder_gm(data) {
                         }
                     }
                 }
-                await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData])
+                await target.actor.createEmbeddedDocuments('ActiveEffect', [effect_data(aeData)])
             }
         },
 
@@ -1191,7 +1193,7 @@ export async function effect_builder_gm(data) {
                         }
                     }
                 }
-                await target.actor.createEmbeddedDocuments('ActiveEffect', [aeData])
+                await target.actor.createEmbeddedDocuments('ActiveEffect', [effect_data(aeData)])
             }
         },
 
@@ -1236,24 +1238,13 @@ export async function effect_builder_gm(data) {
                         : `${game.i18n.localize("SWIM.power-damageField")} (2d4)`
                 }
                 if (type === "darksight") {
-                    aeData.changes = [
-                        {"key": "ATL.sight.range", "value": "1000", "mode": 2, "priority": null},
-                        {"key": "ATL.sight.visionMode", "value": "darkvision", "mode": 5, "priority": null}
-                    ]
+                    aeData.changes = darksight_changes()
                 }
                 if (type === "puppet") {
                     aeData.name = `${data.casterName}'s ${game.i18n.localize("SWIM.power-puppet")}${data.degree === "raise" ? ` (${game.i18n.localize("SWIM.raise").toLowerCase()})` : ''}`
                 }
                 if (type === "light") {
-                    const brightness = data.degree === "raise" ? "5" : "3"
-                    const angle = data.degree === "raise" ? "52.5" : "360"
-                    aeData.changes = [
-                        {"key": "ATL.light.bright", "value": brightness, "mode": 5, "priority": null},
-                        {"key": "ATL.light.animation", "value": "{type: \"sunburst\", speed: 1, intensity: 1}", "mode": 5, "priority": null},
-                        {"key": "ATL.light.color", "value": "#fffa61", "mode": 5, "priority": null},
-                        {"key": "ATL.light.alpha", "value": "0.25", "mode": 5, "priority": null},
-                        {"key": "ATL.light.angle", "value": angle, "mode": 5, "priority": null}
-                    ]
+                    aeData.changes = light_power_changes(data.degree === "raise")
                 }
 
                 // Warrior's Gift: the target gets the chosen Edge, the effect names it and removes it again when it ends (hooks/effect_hooks.js)
@@ -1334,6 +1325,6 @@ export async function effect_builder_gm(data) {
             })
         }
 
-        await caster.actor.createEmbeddedDocuments('ActiveEffect', [aeData])
+        await caster.actor.createEmbeddedDocuments('ActiveEffect', [effect_data(aeData)])
     }
 }

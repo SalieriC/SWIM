@@ -1,3 +1,4 @@
+import { LegacyApp } from "./legacy_app.js"
 /**
  * The Edge picker for Warrior's Gift (Effect Builder): one Combat Edge for each target.
  *
@@ -17,7 +18,7 @@ import { is_improved_edge } from "./combat_edges.js"
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (m) => `&#${m.charCodeAt(0)};`)
 const t = (key, data) => (data ? game.i18n.format(key, data) : game.i18n.localize(key))
 
-export class EdgePickerApp extends Application {
+export class EdgePickerApp extends LegacyApp {
     #opts
     #assign = new Map() // targetID -> edge id
     #active
@@ -53,7 +54,7 @@ export class EdgePickerApp extends Application {
         this.#opts = data
         this.#resolve = resolve
         this.#active = data.targets[0]?.id
-        this.options.title = data.title
+        this.options.window.title = data.title
     }
 
     get title() { return this.#opts.title }
@@ -149,7 +150,7 @@ export class EdgePickerApp extends Application {
         this.#enriched ??= new Map()
         if (!this.#enriched.has(e.id)) {
             let html = e.description || ""
-            try { html = await TextEditor.enrichHTML(html, { async: true }) } catch { /* the plain HTML is fine */ }
+            try { html = await foundry.applications.ux.TextEditor.implementation.enrichHTML(html) } catch { /* the plain HTML is fine */ }
             this.#enriched.set(e.id, html)
         }
         return this.#enriched.get(e.id)

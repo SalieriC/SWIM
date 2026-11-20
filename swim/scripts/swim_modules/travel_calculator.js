@@ -1,3 +1,4 @@
+import { LegacyApp } from "../helpers/legacy_app.js"
 /*******************************************
  * Travel Calculator Macro
  * version v.4.0.0 – one window (TravelApp) instead of three dialogs: the form, the encounter table selection and
@@ -51,7 +52,7 @@ function btn(action, label, { go = false, disabled = false } = {}) {
     return `<button type="button" class="swim-hc-btn ${go ? 'is-go' : ''}" data-action="${action}" ${disabled ? 'disabled' : ''}>${esc(label)}</button>`
 }
 
-class TravelApp extends Application {
+class TravelApp extends LegacyApp {
     #state
     #options
     static #current = null
@@ -214,7 +215,7 @@ class TravelApp extends Application {
             st.view = 'result'
             st.busy = false
             await this.render(false)
-            this.bringToTop()
+            this.bringToFront()
         } finally {
             st.busy = false
         }
@@ -282,7 +283,7 @@ async function create_journey(distance, unit, option, times, stealthMode, totalO
     show_travel_image(option, stealthMode)
     await swim.wait('250')
     const pageID = journalEntry.pages.find(j => j.type === "text")?.id
-    journalEntry.sheet.render(true, { pageId: pageID, sheetMode: JournalSheet.VIEW_MODES.SINGLE });
+    journalEntry.sheet.render(true, { pageId: pageID, mode: journalEntry.sheet.constructor.VIEW_MODES.SINGLE });
 }
 
 function evaluateCards(cards, replaceJokers = false, useAllCards = false) {

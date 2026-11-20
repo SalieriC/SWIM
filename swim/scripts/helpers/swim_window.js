@@ -7,6 +7,8 @@
  * dropdown); checkboxes give booleans, number inputs strings.
  ******************************************/
 
+import { LegacyApp } from './legacy_app.js'
+
 export const t = (key, data) => (data ? game.i18n.format(key, data) : game.i18n.localize(key))
 export const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (m) => `&#${m.charCodeAt(0)};`)
 export const token_img = (token) => (token.document ?? token).texture?.src ?? token.texture?.src ?? ''
@@ -41,7 +43,7 @@ export function checkbox(field, label, checked) {
     return `<label class="swim-hc-check"><input type="checkbox" data-field="${field}" ${checked ? 'checked' : ''}> <span>${esc(label)}</span></label>`
 }
 
-export class SwimWindow extends Application {
+export class SwimWindow extends LegacyApp {
     static #open = new Map()
 
     static get defaultOptions() {

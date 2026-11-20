@@ -36,7 +36,7 @@ export function has_condition(actor, ids) {
 export function token_info(td) {
     const actor = td.actor
     const size = td.parent?.grid?.size || 100
-    const defeated = has_condition(actor, DEFEATED) || !!actor?.system?.isIncapacitated
+    const defeated = has_condition(actor, DEFEATED) || !!actor?.system?.status?.isIncapacitated
         || !!td.flags?.healthEstimate?.dead || !!actor?.flags?.healthEstimate?.dead
     return {
         id: td.id,
@@ -291,7 +291,7 @@ class CombatSetupApp extends SwimWindow {
     }
 
     #refresh() {
-        const root = this.element?.[0]
+        const root = this.element
         if (!root || this.state.view !== 'setup') { return }
         const sum = this.#summary()
         const preview = root.querySelector('[data-cs-preview]')
@@ -304,7 +304,7 @@ class CombatSetupApp extends SwimWindow {
         if (action === 'cancel') { return this.close() }
         if (action === 'all' || action === 'none') {
             const on = action === 'all'
-            const root = this.element?.[0]
+            const root = this.element
             for (const info of this.#infos.filter((i) => String(i.disposition) === el.dataset.disp)) {
                 this.state[`sel:${info.id}`] = on
                 const box = root?.querySelector(`input[data-field="sel:${info.id}"]`)

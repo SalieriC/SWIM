@@ -1,15 +1,9 @@
 /**
- * Single place where SWIM talks to Foundry's core audio API.
- * - Foundry v11: the global class `AudioHelper` (reachable by its bare name only, not via `globalThis`)
- * - Foundry v12+: `foundry.audio.AudioHelper` (the global alias is deprecated in v12 and removed in v14)
+ * Single place where SWIM talks to Foundry's core audio API (`foundry.audio.AudioHelper`).
  * The class offers everything SWIM needs (volume, broadcasting to all clients, the returned Sound with its `duration`),
  * so no additional module (e.g. Sequencer) is required for SFX.
  */
-function audio_helper() {
-    if (foundry.audio?.AudioHelper) { return foundry.audio.AudioHelper }
-    //v11: `AudioHelper` is a top-level class of a classic script, i.e. a global binding that is NOT a property of globalThis/window.
-    return AudioHelper
-}
+function audio_helper() { return foundry.audio.AudioHelper }
 
 /**
  * Plays a sound file with the core audio API.

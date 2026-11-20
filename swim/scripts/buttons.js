@@ -2,52 +2,35 @@ import { combat_setup } from "./swim_modules/combat_setup.js";
 import { adjust_scene_light } from "./helpers/adjust_scene_light.js";
 import { raise_calculator } from "./helpers/raise-calculator.js";
 
-export function swim_buttons(hudButtons) {
-    // Add Raise Calculator Button
-    let hud = hudButtons.find(val => { return val.name == "token"; })
-    if (hud) {
-        hud.tools.push({
-            name: "SWIM.openRaiseCalculatorName",
-            title: "SWIM.openRaiseCalculatorHint",
-            icon: "fas fa-plus-square",
-            button: true,
-            onClick: async () => raise_calculator()
-        });
-        if (game.user.isGM) {
-            hud.tools.push({
-                name: "SWIM.combatSetupName",
-                title: "SWIM.combatSetupHint",
-                icon: "fas fa-fist-raised",
-                button: true,
-                onClick: async () => { combat_setup() }
-            })
-        }
-    }
+/**
+ * Foundry v14: `controls` is an object (`controls.tokens`, `controls.tiles`, `controls.lighting`, ...), `controls.<id>.tools` an object keyed by tool name.
+ * A tool with `button: true` calls `onChange` when clicked.
+ */
+function add_tool(control, name, { title, icon, visible = true, onChange }) {
+    if (!control) { return }
+    control.tools[name] = { name, title, icon, order: Object.keys(control.tools).length, button: true, visible, onChange }
+}
 
-    // Hijack the systems chase setup:
-    let tilesButton = hudButtons.find(val => { return val.name == "tiles"; })
-    let chaseButtonIndex = tilesButton.tools.findIndex(object => { return object.name === "clear-chase-cards" })
-    if (chaseButtonIndex !== -1) {
-        tilesButton.tools.splice(chaseButtonIndex, 1)
-    }
-    tilesButton.tools.push({
-        name: 'chase-setup',
-        title: game.i18n.localize("SWIM.ChaseSetup"),
-        icon: "fas fa-shipping-fast",
-        button: true,
-        onClick: async () => { swim.chase_setup() }
+export function swim_buttons(controls) {
+    // Raise Calculator (everyone), Combat Setup (GM)
+    add_tool(controls.tokens, "swim-raise-calculator", {
+        title: "SWIM.openRaiseCalculatorHint", icon: "fa-solid fa-plus-square",
+        onChange: () => raise_calculator(),
+    })
+    add_tool(controls.tokens, "swim-combat-setup", {
+        title: "SWIM.combatSetupHint", icon: "fa-solid fa-fist-raised", visible: game.user.isGM,
+        onChange: () => combat_setup(),
     })
 
-    let lightHud = hudButtons.find(val => { return val.name == "lighting"; })
-    if (lightHud) {
-        if (game.user.isGM) {
-            lightHud.tools.push({
-                name: "SWIM.sceneIlluminationName",
-                title: "SWIM.sceneIlluminationName",
-                icon: "far fa-adjust",
-                button: true,
-                onClick: async () => { adjust_scene_light() }
-            })
-        }
-    }
+    // SWIM's chase setup (SWADE 6 no longer has its own chase button in the Tile controls)
+    add_tool(controls.tiles, "chase-setup", {
+        title: "SWIM.ChaseSetup", icon: "fa-solid fa-truck-fast",
+        onChange: () => swim.chase_setup(),
+    })
+
+    // Scene Illumination (GM)
+    add_tool(controls.lighting, "swim-scene-illumination", {
+        title: "SWIM.sceneIlluminationName", icon: "fa-solid fa-circle-half-stroke", visible: game.user.isGM,
+        onChange: () => adjust_scene_light(),
+    })
 }

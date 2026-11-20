@@ -1,10 +1,13 @@
 import { SwimWindow, t, esc, btn, token_img, tokens_header, rate_opt } from '../helpers/swim_window.js'
 import { illumination_level } from '../helpers/adjust_scene_light.js'
 import { LIST_TYPES, get_list, item_swids, swids_for } from '../helpers/swid_lists.js'
+import { effect_data, changes_of } from "../helpers/effect_data.js"
+import { light_changes } from "../helpers/token_effects.js"
 /*******************************************
  * Token Vision macro for SWADE
  * v. 6.0.0 – window (TokenVisionApp) instead of a Dialog; several tokens at once for the GM; vision from SWIDs;
- *            light sources are Active Token Effects (ATL) instead of the SUCC torch condition.
+ *            light sources are token effects (`token.light.*` changes of an Active Effect) instead of the SUCC torch condition.
+ * v. 7.0.0 (Foundry v14) – no Active Token Effects module needed; Foundry's own token effects.
  * v. 5.2.1 by SalieriC#8263
  * Inspired by @Sky#9453:
  * https://github.com/Sky-Captain-13/foundry
@@ -46,7 +49,7 @@ export function find_vision_swid(actor, entries = get_list('visionSwids')) {
 export const estimate_type = (actor) => find_vision_swid(actor) ?? 'basic'
 
 /** Illumination level of a scene: SWIM flag, else derived from the darkness (same rule as Scene Illumination). */
-export const scene_level = (scene) => illumination_level(scene?.flags?.swim?.config?.illuminationLevel, scene?.darkness ?? 0)
+export const scene_level = (scene) => illumination_level(scene?.flags?.swim?.config?.illuminationLevel, scene?.environment?.darknessLevel ?? 0)
 
 /** How far a special vision type sees in the dark (none: not usable in pitch darkness). */
 const SPECIAL = {
@@ -86,9 +89,11 @@ export function auto_vision_update(td, level, caps = vision_caps()) {
     const cfg = vision_preset(estimate_type(td.actor), level, caps)
     if (!CONFIG.Canvas?.visionModes?.[cfg.mode]) { cfg.mode = 'basic' }
     cfg.enabled = true
-    const upd = vision_update({ mode: td.sight.visionMode, detectionModes: td.detectionModes }, cfg)
-    const same = td.sight.visionMode === cfg.mode && td.sight.range === cfg.range && td.sight.angle === cfg.angle
-        && JSON.stringify(upd.detectionModes) === JSON.stringify((td.detectionModes ?? []).map((d) => ({ id: d.id, enabled: !!d.enabled, range: d.range ?? 0 })))
+    // the stored data, not the prepared one: token effects (`token.sight.*`) change the prepared data only
+    const src = td._source
+    const upd = vision_update({ mode: src.sight.visionMode, detectionModes: src.detectionModes }, cfg)
+    const same = src.sight.visionMode === cfg.mode && src.sight.range === cfg.range && src.sight.angle === cfg.angle
+        && JSON.stringify(upd.detectionModes) === JSON.stringify(merge_detection(src.detectionModes, {}))
     return same ? null : upd
 }
 
@@ -109,14 +114,16 @@ export async function auto_vision_scene(scene, tokenDocs = scene.tokens, { manua
     return updates.length
 }
 
-/** Existing detection modes of a token with the wanted ones merged in (other modes stay untouched). */
+/**
+ * Existing detection modes of a token with the wanted ones merged in (other modes stay untouched).
+ * v14: `detectionModes` is an object keyed by mode id ({ basicSight: { enabled, range } }), older data was an array of {id, enabled, range}; both are read.
+ */
 export function merge_detection(existing, wanted) {
-    const list = (existing ?? []).map((d) => ({ id: d.id, enabled: !!d.enabled, range: d.range ?? 0 }))
-    for (const [id, d] of Object.entries(wanted ?? {})) {
-        const e = list.find((x) => x.id === id)
-        if (e) { e.enabled = !!d.enabled; e.range = d.range } else { list.push({ id, enabled: !!d.enabled, range: d.range }) }
-    }
-    return list
+    const src = Array.isArray(existing) ? Object.fromEntries(existing.map((d) => [d.id, d])) : (existing ?? {})
+    const out = {}
+    for (const [id, d] of Object.entries(src)) { out[id] = { enabled: !!d.enabled, range: d.range ?? 0 } }
+    for (const [id, d] of Object.entries(wanted ?? {})) { out[id] = { enabled: !!d.enabled, range: d.range } }
+    return out
 }
 
 /** Defaults a vision mode brings along (Foundry's token config copies them into the sight fields on a mode change). */
@@ -169,21 +176,8 @@ export function read_light(state) {
     }
 }
 
-/** ATL changes of a light. `full` (custom) writes every light field, a preset only radius, angle and colour. */
-export function light_changes(cfg, full) {
-    const ch = (key, value) => ({ key: `ATL.light.${key}`, mode: 5, value: String(value), priority: null })
-    const out = [ch('bright', cfg.bright), ch('dim', cfg.dim), ch('angle', cfg.angle), ch('color', cfg.color)]
-    if (full) {
-        out.push(ch('alpha', cfg.alpha), ch('coloration', cfg.coloration), ch('luminosity', cfg.luminosity), ch('attenuation', cfg.attenuation),
-            ch('saturation', cfg.saturation), ch('contrast', cfg.contrast), ch('shadows', cfg.shadows),
-            ch('darkness.min', cfg.darkMin), ch('darkness.max', cfg.darkMax))
-    }
-    if (cfg.animType) { out.push(ch('animation', JSON.stringify({ type: cfg.animType, speed: cfg.animSpeed, intensity: cfg.animIntensity, reverse: !!cfg.animReverse }))) }
-    return out
-}
-const signature = (changes) => JSON.stringify(changes.map((c) => [c.key, String(c.value), c.mode]))
+const signature = (changes) => JSON.stringify(changes.map((c) => [c.key, String(c.value), c.type]))
 
-export const atl_active = () => !!game.modules.get('ATL')?.active
 const light_name = (key) => (LIGHT_PRESETS[key] ? t(LIGHT_PRESETS[key].lang) : t('SWIM.tokenVisionWin.customLight'))
 const light_icon = (key) => `modules/swim/assets/icons/effects/light-${LIGHT_PRESETS[key] ? key : 'custom'}.svg`
 
@@ -195,24 +189,23 @@ export function current_light(actor) {
 }
 
 /**
- * Sets (`light` = {key, cfg}) or removes (`light` = null) the SWIM light effect of an actor; also removes the legacy SUCC torch effect.
+ * Sets (`light` = {key, cfg}) or removes (`light` = null) the SWIM light effect of an actor.
  * @returns {Promise<boolean>} whether something changed
  */
 export async function apply_light(actor, light) {
     const ours = actor.effects.filter((e) => e.flags?.swim?.tokenVision)
-    const legacy = actor.effects.filter((e) => e.flags?.succ?.conditionId === 'torch')
     let changed = false
-    const remove = [...legacy.map((e) => e.id), ...ours.slice(light ? 1 : 0).map((e) => e.id)]
+    const remove = ours.slice(light ? 1 : 0).map((e) => e.id)
     if (remove.length) { await actor.deleteEmbeddedDocuments('ActiveEffect', remove); changed = true }
     if (!light) { return changed }
     const changes = light_changes(light.cfg, light.key === 'custom')
-    const data = { name: light_name(light.key), icon: light_icon(light.key), changes, flags: { swim: { tokenVision: { light: light.key, cfg: light.cfg } } } }
+    const data = { name: light_name(light.key), img: light_icon(light.key), changes, flags: { swim: { tokenVision: { light: light.key, cfg: light.cfg } } } }
     const existing = ours[0]
     if (existing) {
-        if (signature(existing.changes) === signature(changes) && existing.name === data.name) { return changed }
-        await existing.update(data)
+        if (signature(changes_of(existing)) === signature(changes) && existing.name === data.name) { return changed }
+        await existing.update(effect_data(data))
     } else {
-        await actor.createEmbeddedDocuments('ActiveEffect', [data])
+        await actor.createEmbeddedDocuments('ActiveEffect', [effect_data(data)])
     }
     return true
 }
@@ -267,7 +260,6 @@ class TokenVisionApp extends SwimWindow {
         this.multi = tokens.length > 1
         this.sceneLevel = scene_level(tokens[0].document.parent ?? canvas.scene)
         this.caps = vision_caps()
-        this.atl = atl_active()
         const cur = this.multi ? null : current_light(tokens[0].actor)
         Object.assign(this.state, { vision: 'auto', illumination: 'scene', light: cur ? cur.light : (this.multi ? 'keep' : 'none'), open_vision: false, open_light: false })
         Object.assign(this.state, light_state(cur?.cfg ?? default_light_cfg('torch')))
@@ -307,9 +299,9 @@ class TokenVisionApp extends SwimWindow {
         s.v_mode = cfg.mode
         s.v_range = String(cfg.range)
         s.v_angle = String(cfg.angle)
-        const merged = merge_detection(td.detectionModes, cfg.detection)
+        const merged = merge_detection(td._source.detectionModes, cfg.detection)
         for (const id of detection_ids()) {
-            const d = merged.find((x) => x.id === id)
+            const d = merged[id]
             s[`dm_${id}_on`] = !!d?.enabled
             s[`dm_${id}_range`] = String(d?.range ?? 0)
         }
@@ -428,8 +420,7 @@ class TokenVisionApp extends SwimWindow {
         // Light
         const lit = s.light !== 'keep' && s.light !== 'none'
         body += `<div class="swim-hc-lab swim-hc-lab2">${esc(t('SWIM.tokenVision-lightSource'))}</div>
-            <div class="swim-hc-rate">${LIGHT_OPTS.map(([k, icon, lang]) => this.#opt('light', k, icon, lang, s.light === k, !this.atl && k !== 'none' && k !== 'keep')).join('')}</div>`
-        if (!this.atl) { body += `<div class="swim-hc-preview swim-tv-warn">${esc(t('SWIM.tokenVisionWin.atlMissing'))}</div>` }
+            <div class="swim-hc-rate">${LIGHT_OPTS.map(([k, icon, lang]) => this.#opt('light', k, icon, lang, s.light === k)).join('')}</div>`
         body += `<div class="swim-hc-preview swim-tv-preview" data-kind="light">${this.#light_preview()}</div>`
         if (lit) {
             const sw = Object.entries(LIGHT_COLOURS).map(([k, hex]) => `<span class="swim-tv-swatch ${String(s.l_color).toLowerCase() === hex ? 'is-on' : ''}" data-action="swatch" data-colour="${hex}" title="${esc(t(COLOUR_LANG[k]))}" style="background:${hex}" tabindex="0" role="button"></span>`).join('')
@@ -492,27 +483,23 @@ class TokenVisionApp extends SwimWindow {
             for (const p of this.#plan()) {
                 if (p.type === 'keep' || p.skip) { continue }
                 const td = p.token.document
-                const cur = td.sight.visionMode
+                const cur = td._source.sight.visionMode
                 if (p.cfg.mode === 'lightAmplification' && cur !== 'lightAmplification') { nvdOn = true }
                 if (cur === 'lightAmplification' && p.cfg.mode !== 'lightAmplification') { nvdOff = true }
                 const cfg = this.caps && CONFIG.Canvas?.visionModes?.[p.cfg.mode] ? p.cfg : { ...p.cfg, mode: 'basic' }
-                updates.push({ _id: td.id, ...vision_update({ mode: cur, detectionModes: td.detectionModes }, cfg) })
+                updates.push({ _id: td.id, ...vision_update({ mode: cur, detectionModes: td._source.detectionModes }, cfg) })
             }
             if (updates.length) { await scene.updateEmbeddedDocuments('Token', updates) }
 
             let lightChanged = false
             if (s.light !== 'keep') {
                 const wanted = s.light === 'none' ? null : { key: s.light, cfg: read_light(s) }
-                if (wanted && !this.atl) {
-                    ui.notifications.warn(t('SWIM.tokenVisionWin.atlMissing'))
-                } else {
-                    const done = new Set()
-                    for (const token of this.tokens) {
-                        const actor = token.actor
-                        if (!actor || done.has(actor.uuid)) { continue }
-                        done.add(actor.uuid)
-                        if (await apply_light(actor, wanted)) { lightChanged = true }
-                    }
+                const done = new Set()
+                for (const token of this.tokens) {
+                    const actor = token.actor
+                    if (!actor || done.has(actor.uuid)) { continue }
+                    done.add(actor.uuid)
+                    if (await apply_light(actor, wanted)) { lightChanged = true }
                 }
             }
 

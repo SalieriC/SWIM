@@ -19,6 +19,7 @@
 import { execute_as_gm } from "../helpers/socket_helper.js"
 import { ActorPickerApp, picker_entry, rank_of_actor } from "../helpers/actor_picker.js"
 import { confirm_window } from "../helpers/swim_window.js"
+import { effect_data } from "../helpers/effect_data.js"
 
 // Rank needed for Mirror Self (0 Novice ... 4 Legendary): the only summon option with a rank requirement.
 const MIRROR_SELF_RANK = 2
@@ -198,7 +199,7 @@ export async function summoner_script(data) {
         if (actor.system.additionalStats?.maintainedPowers) {
             aeData.changes.push({ key: `system.additionalStats.maintainedPowers.value`, mode: 2, priority: undefined, value: 1 })
         }
-        await actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+        await actor.createEmbeddedDocuments('ActiveEffect', [effect_data(aeData)]);
 
         const data = {
             summonerID: token.id,
@@ -429,7 +430,7 @@ export async function summoner_gm(data) {
         aeData.duration.startRound = game.combat.round
     }
     // Apply AE
-    await newToken.actor.createEmbeddedDocuments('ActiveEffect', [aeData]);
+    await newToken.actor.createEmbeddedDocuments('ActiveEffect', [effect_data(aeData)]);
 
     //Apply leadership AEs:
     let commandAeData = {
@@ -476,7 +477,7 @@ export async function summoner_gm(data) {
         )
     }
     if (fervor || command) {
-        await newToken.actor.createEmbeddedDocuments('ActiveEffect', [commandAeData]);
+        await newToken.actor.createEmbeddedDocuments('ActiveEffect', [effect_data(commandAeData)]);
     }
 }
 

@@ -1,5 +1,7 @@
+import { LegacyApp } from "../helpers/legacy_app.js"
 import { free_btn } from "../helpers/swim_window.js"
 import { swimConditions } from '../helpers/conditions.js'
+import { effect_data } from "../helpers/effect_data.js"
 /*******************************************
  * Radiation Centre
  * v. 4.0.0 – one window (RadiationApp) instead of the main dialog followed by reroll dialogs.
@@ -92,7 +94,7 @@ async function apply_disease_effect(actor) {
             }
         }
     }
-    await actor.createEmbeddedDocuments('ActiveEffect', [effectData]);
+    await actor.createEmbeddedDocuments('ActiveEffect', [effect_data(effectData)]);
     ui.notifications.warn(game.i18n.localize("SWIM.notification.diseaseWarning"))
     //Chat Message to let the everyone know what happened:
     let diseaseLink = await swim.get_official_journal_link('disease_categories')
@@ -116,7 +118,7 @@ async function apply_disease_effect(actor) {
 /* The window                                                                                       */
 /* ------------------------------------------------------------------------------------------------ */
 
-class RadiationApp extends Application {
+class RadiationApp extends LegacyApp {
     #token
     #alias
     #state
@@ -218,7 +220,7 @@ class RadiationApp extends Application {
     async #chooseView(snap) {
         const st = this.#state
         const source = t("SWIM.hazard-radiation")
-        const intro = await TextEditor.enrichHTML(`<p><i class="fas fa-radiation"></i> ${t('SWIM.radiation.intro', { hazard: this.#hazard })}</p>`, { async: true })
+        const intro = await foundry.applications.ux.TextEditor.implementation.enrichHTML(`<p><i class="fas fa-radiation"></i> ${t('SWIM.radiation.intro', { hazard: this.#hazard })}</p>`)
         const roll = this.#card('roll', 'fas fa-dice-d20', t('SWIM.dialogue-rollToResistSource', { source }), t('SWIM.radiation.rollHint'), st.method === 'roll')
         const apply = this.#card('apply', 'fas fa-radiation', t('SWIM.dialogue-applyFatigue'), t('SWIM.radiation.applyHint'), st.method === 'apply')
         const lines = snap.bonus.lines

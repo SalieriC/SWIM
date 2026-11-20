@@ -153,9 +153,8 @@ export function register_settings() {
         scope: "world",
         config: true,
         onChange: (value) => {
-            if (value) Hooks.on("getSceneControlButtons", swim_buttons);
-            else Hooks.off("getSceneControlButtons", swim_buttons);
-            ui.controls.initialize();
+            // the getSceneControlButtons hook (init.js) checks the setting itself
+            ui.controls.render({ reset: true });
         },
     });
     game.settings.register('swim', 'br2Message', {
@@ -192,8 +191,8 @@ export function register_settings() {
     }
 }
 
-/** The settings menu has to be a FormApplication for Foundry; it only opens the SWIM window (SwimConfigApp). */
-class SwimConfigMenu extends FormApplication {
+/** The settings menu has to be an ApplicationV2 for Foundry; it only opens the SWIM window (SwimConfigApp) and never renders itself. */
+class SwimConfigMenu extends foundry.applications.api.ApplicationV2 {
     render() {
         SwimWindow.show(new SwimConfigApp(settingVariables))
         return this

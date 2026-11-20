@@ -23,8 +23,9 @@ function norm(s, v) {
 
 /** Foundry's own "reload" dialog (falls back to a plain confirm if the core helper is missing). */
 export async function reload_confirm() {
-    if (typeof SettingsConfig !== 'undefined' && typeof SettingsConfig.reloadConfirm === 'function') { return SettingsConfig.reloadConfirm({ world: true }) }
-    const yes = await Dialog.confirm({ title: t('SWIM.configWin.reloadTitle'), content: `<p>${esc(t('SWIM.configWin.reloadBody'))}</p>` })
+    const settings_config = foundry.applications.settings?.SettingsConfig
+    if (typeof settings_config?.reloadConfirm === 'function') { return settings_config.reloadConfirm({ world: true }) }
+    const yes = await foundry.applications.api.DialogV2.confirm({ window: { title: t('SWIM.configWin.reloadTitle') }, content: `<p>${esc(t('SWIM.configWin.reloadBody'))}</p>` })
     if (yes) {
         if (game.user.isGM) { game.socket.emit('reload') }
         window.location.reload()
@@ -101,7 +102,7 @@ export class SwimConfigApp extends SwimWindow {
 
     /** Highlights changed rows, shows reset buttons for non-default values, updates the counter and the save button. */
     #refresh() {
-        const root = this.element
+        const root = $(this.element)
         if (!root?.length) { return }
         for (const s of this.settings) {
             const row = root.find(`.swim-cfg-row[data-id="${s.id}"]`)
@@ -116,14 +117,14 @@ export class SwimConfigApp extends SwimWindow {
 
     #show_tab(tab) {
         this.state.tab = tab
-        const root = this.element
+        const root = $(this.element)
         root.find('.swim-cfg-tab').each((_, el) => { el.classList.toggle('is-on', el.dataset.tab === tab) })
         root.find('.swim-cfg-panel').each((_, el) => { el.classList.toggle('is-on', el.dataset.tab === tab) })
     }
 
     /** Live search over all tabs: while something is typed all matching rows of every tab are shown. */
     #filter() {
-        const root = this.element
+        const root = $(this.element)
         const q = this.state.q.trim().toLowerCase()
         root.toggleClass('is-search', !!q)
         let any = false
@@ -143,7 +144,7 @@ export class SwimConfigApp extends SwimWindow {
     #set(id, value) {
         this.state[id] = value
         if (!this.rendered) { return }
-        const input = this.element.find(`[data-field="${id}"]`)
+        const input = $(this.element).find(`[data-field="${id}"]`)
         if (input.attr('type') === 'checkbox') { input.prop('checked', !!value) } else { input.val(value) }
         this.#refresh()
     }
@@ -154,7 +155,7 @@ export class SwimConfigApp extends SwimWindow {
             case 'tab': return this.#show_tab(el.dataset.tab)
             case 'reset': return this.#set(s.id, s.config_type === Boolean ? !!s.default : String(s.default ?? ''))
             case 'browse':
-                return new FilePicker({ type: s.picker, current: this.state[s.id], callback: (path) => this.#set(s.id, path) }).browse()
+                return new foundry.applications.apps.FilePicker.implementation({ type: s.picker, current: this.state[s.id], callback: (path) => this.#set(s.id, path) }).browse()
             case 'editlist':
                 return SwimWindow.show(new ListEditorApp({ id: s.id, text: this.state[s.id], onApply: (json) => this.#set(s.id, json) }))
             case 'play':

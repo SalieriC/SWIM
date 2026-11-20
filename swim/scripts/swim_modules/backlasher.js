@@ -67,7 +67,7 @@ export async function backlasher(card, backlashSetting) {
     //message += `.</p></div>`
     message += game.i18n.localize("SWIM.Backlasher.Message-6")
     let chatData = {
-        content: await TextEditor.enrichHTML(message)
+        content: await foundry.applications.ux.TextEditor.implementation.enrichHTML(message)
     };
     ChatMessage.create(chatData, {});
 }
@@ -89,7 +89,7 @@ async function dynamic_backlash(card) {
     const resultText = tableDraw.results[0].text
     message += resultText
     let chatData = {
-        content: await TextEditor.enrichHTML(message)
+        content: await foundry.applications.ux.TextEditor.implementation.enrichHTML(message)
     };
     ChatMessage.create(chatData, {});
 }

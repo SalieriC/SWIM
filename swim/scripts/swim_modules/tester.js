@@ -1,3 +1,4 @@
+import { LegacyApp } from "../helpers/legacy_app.js"
 /*******************************************
  * Test and Support Macro
  * v. 1.0.2 – one window for the player (TesterApp) and one for the resist roll on the GM side (ResistApp)
@@ -21,6 +22,7 @@
 import { free_btn } from "../helpers/swim_window.js"
 import { execute_as_gm } from "../helpers/socket_helper.js"
 import { swimConditions } from '../helpers/conditions.js'
+import { effect_data, changes_of } from "../helpers/effect_data.js"
 
 const t = (key, data) => (data ? game.i18n.format(key, data) : game.i18n.localize(key))
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (m) => `&#${m.charCodeAt(0)};`)
@@ -92,7 +94,7 @@ export async function tester_script() {
     await TesterApp.open(token, targets[0])
 }
 
-class TesterApp extends Application {
+class TesterApp extends LegacyApp {
     #token
     #target
     #state
@@ -173,7 +175,7 @@ class TesterApp extends Application {
         const st = this.#state
         const actor = this.#token.actor
         const skills = actor.items.filter((i) => i.type === "skill").map((i) => [i.id, i.name]).sort(by_label)
-        const intro = await TextEditor.enrichHTML(`<p>${this.#links}</p>`, { async: true })
+        const intro = await foundry.applications.ux.TextEditor.implementation.enrichHTML(`<p>${this.#links}</p>`)
         const cards = card('support', 'fas fa-handshake', t('SWIM.gameTerm-Support'), t('SWIM.testerWin.supportHint'), st.action === 'support') +
             card('test', 'fas fa-comments', t('SWIM.gameTerm-Test'), t('SWIM.testerWin.testHint'), st.action === 'test')
         let fields = `<div class="swim-hc-lab">${esc(t('SWIM.dialogue-selectSkill'))}</div><div class="swim-hc-ctl"><select data-field="skillId">${this.#options(skills, st.skillId)}</select></div>`
@@ -383,33 +385,25 @@ export async function tester_gm(data) {
             const supportKey = isAttribute ? `system.attributes.${supportedId}.die.modifier` : `@Skill{${supportedSkill.name}}[system.die.modifier]`
             const supportEffect = targetActor.effects.find((e) => e.flags?.swim?.isSupportEffect)
             if (supportEffect) {
-                const changes = foundry.utils.deepClone(supportEffect.changes)
+                const changes = changes_of(supportEffect)
                 const index = changes.findIndex((c) => c.key === supportKey)
                 if (index >= 0) {
                     changes[index].value = Math.min(Number(changes[index].value) + supportValue, 4) //add support value but max out at 4
                 } else {
-                    changes.push({ key: supportKey, value: supportValue, mode: 2 })
+                    changes.push({ key: supportKey, value: supportValue, type: 'add' })
                 }
-                await supportEffect.update({ changes })
+                await supportEffect.update({ 'system.changes': changes })
             } else {
-                await targetActor.createEmbeddedDocuments("ActiveEffect", [{
+                await targetActor.createEmbeddedDocuments("ActiveEffect", [effect_data({
                     name: t("SWIM.gameTerm-Support"),
                     icon: "icons/skills/social/diplomacy-handshake.webp",
-                    duration: {
-                        "startTime": game.time.worldTime,
-                        "seconds": null,
-                        "rounds": 1,
-                        "turns": null,
-                        "startRound": game.combats.active ? game.combats.active.round : null,
-                        "startTurn": null,
-                        "type": "turns"
-                    },
+                    duration: { rounds: 1 },
                     changes: [{ key: supportKey, value: supportValue, mode: 2 }],
                     flags: {
                         swim: { isSupportEffect: true },
                         swade: { "expiration": 2, "loseTurnOnHold": false }
                     },
-                }])
+                })])
             }
             chat += critFail ? t("SWIM.chatMessage-supportResult-2-critFail") : t("SWIM.chatMessage-supportResult-2-success", { supportValue })
         } else {
@@ -444,7 +438,7 @@ export function resist_bonuses(actor, attribute, { elan = false } = {}) {
     return { total, lines }
 }
 
-class ResistApp extends Application {
+class ResistApp extends LegacyApp {
     #ctx
     #state
     #hooks = []
