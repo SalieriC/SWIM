@@ -6,10 +6,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ☮️ Peace in the world, or the world in pieces. 🕊️
+### Changed
+- Requires Foundry VTT v14 and SWADE 6.x.
+- Active Effects are created in Foundry v14 / SWADE 6 format (changes with a type, image, duration with expiry). All of SWIM's effects (powers, injuries, fear, conditions, ammo, auras) are written this way.
+- Movement uses SWADE 6's new pace (`system.pace`): Speed/Sloth now multiply the pace instead of setting a fixed value, Shaken with SWD Unshake halves it, leg injuries and Panicked read the new running die and modifier.
+- All SWIM windows run on Foundry's current window framework (ApplicationV2); the welcome and Better Rolls dialogs use Foundry's new dialog class. Look and behaviour stay the same.
+- Uses Foundry v14's own APIs for sound, text enrichment, file picking and textures.
+
+### Fixed
+- Automatic vision no longer copies the values of a Darksight/Light effect into the token itself.
+- Better Rolls 2: Backlash on a critical failure and the BR2 ammo usage read the current Better Rolls card data again (they used field names that no longer exist).
+- The Raise Calculator / Combat Setup buttons were added twice if the setting was switched on again.
+- Leg injuries from Better Rolls: the Slow effect now gets all its changes (previously only the last one was applied).
+- SWIM's settings (Scene Illumination, Auras) are added to Foundry v14's scene and effect sheets, the toolbar buttons and the "SWIM" button of actor and item sheets use v14's new interfaces (the SWIM button is now in the sheet's window menu).
+
+### Removed
+- Active Token Effects (ATL) is no longer needed; light and vision effects use Foundry's own token effects.
+
+
+## [3.0.0] - 2026-11-20
 ### Added
-- Added an illusion actor to be summoned using the Mighty Summoner. This actor serve both, as a template for GMs and as an actual illusion to be summoned when using the Illusion power.
+- Added an illusion actor to be summoned using the Mighty Summoner. This actor serves both as a template for GMs and as an actual illusion to be summoned when using the Illusion power.
 - Added macro variable support for Effect Builder (EB), Mighty Summoner (MS), Personal Health Centre (PHC) and Shape Changer (SC).
-- - To use any of these as macro actions on items you can use the macro UUIDs from the compendium (recommended) or from the world (I strongly advise againts that option unless you know what you're doing).
+- - To use any of these as macro actions on items you can use the macro UUIDs from the compendium (recommended) or from the world (I strongly advise against that option unless you know what you're doing).
 - - You should also import these macros into your world anew, just in case. But if you use the UUID of the compendium ones this is not strictly necessary.
 - - Set the actor option in the action to `Self`, **this is very important!** This way the macro always knows who the caster is.
 - - The MS, PHC and SC will then use the passed token as the caster, instead of the selected token.
@@ -17,17 +36,195 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - - All of the former functionality should be accessible if you keep using what you have and/or not using item actions.
 - - This change allowed me to set the duration of the *zombie* power to one hour. It only works if executed from the chat card and the items swid is 'zombie' though.
 - Added an option for the *light* power in the EB. This requires [Active Token Effects](https://github.com/kandashi/Active-Token-Lighting) by Kandashi to function. The module is optional however, without it the AE won't have any effect.
-- Added socketlib and Portal ad requirements.
+- Added socketlib and Portal as requirements.
+- Added the API call `swim.migrate_world()` (GM only). It migrates the SWIM data of all actors and items in the world in one go. Please make a backup first. Compendiums are not covered.
+- Added a setting for the Geiger Counter SFX played by the Radiation Centre (SWIM Configuration > SFX & VFX Options). Leave it empty for no sound.
+- Added support for SWADE consumables as potions in the Personal Health Centre (uses one charge per potion). Regular gear items work as before.
+- Added sound effects for Shaken, Stunned, Incapacitated / Bleeding Out / Dead, Wounds and Fatigue that play whenever these change, no matter how (SWIM macros, Better Rolls 2, the SWADE damage dialog, the character sheet or other modules). Sounds of the same actor that happen at the same time are merged into one.
+- Added a notice if no GM is connected when a macro needs the GM (e.g. Heal Other, Shape Changer, Summoner), instead of failing silently.
+- Added a clear error message for players if the Shape Changer has no presets they can see, and if the Mighty Summoner is used without the *Create Tokens* permission.
+- Added a line to the SWIM config window that shows the currently effective value if an Active Effect changes a setting (e.g. Radiation Resistance).
+- Added validation of all requests that players send to the GM (socketlib). A player can only trigger these for actors they own.
+- Added a new selection dialog for the Mighty Summoner and the Shape Changer: a filterable list of cards (image, name, Size, Pace, Parry, Toughness) grouped by the rank required for the creature's Size.
+- - Novice: Size -4 to -1, Seasoned: Size 0, Veteran: Size 1 to 2, Heroic: Size 3 to 4, Legendary: Size 5 and up. The rank is shown as a letter in the circle on the right.
+- - Creatures above your rank are greyed out. Players can't pick them, the GM still can. Creatures you have no permission for are not shown.
+- - Click to select, double-click to select and confirm. Raise, duration and skill are part of the same dialog, "Revert form" is a button in the Shape Changer dialog.
+- - The Mighty Summoner version of the dialog has its own look: a pentagram instead of the paw, a link between summoner and creature, and the creatures are grouped by their parent folder (sorted by name) instead of by rank, without the rank circle.
+- Rebuilt the Personal Health Centre as one window instead of a chain of dialogs (heal self, heal other, potion, fatigue, reroll).
+- - A switch at the top lets you heal yourself or the targeted token (healing yourself is no longer excluded by a target). The Wounds and Fatigue blocks are the tabs, with a short preview of what will happen.
+- - Yourself: Natural Healing, Direct healing or a Potion. Someone else: the result of your Healing roll or a Potion. Natural Healing shows its roll inside the window with *Accept* or *Reroll with Benny*.
+- - Potions of the healer **and** of the target can be used on the target (e.g. to help an unconscious ally with their own potion). For other characters' potions you need at least `observer` permission on them. The GM client does the work, so no ownership of the target is needed.
+- - The texts of the old dialogs were moved to the language file (English only for now).
+- Rebuilt Soak Damage as one window instead of a chain of dialogs (main dialog, Holy/Unholy Warrior Power Points, reroll, apply wounds, Incapacitation roll, Bleeding Out roll).
+- - Set the incoming Wounds with a stepper (the pips show them as hatched ghosts), then either *Soak roll* (spends a Benny) or *Take the damage*. A preview line tells you what will happen.
+- - The Soak roll, the best result and the *Reroll with Benny* option stay inside the window. Holy/Unholy Warrior Power Points are a stepper in the same window.
+- - If the damage exceeds your maximum Wounds, the Incapacitation Vigor roll follows in the same window; if you are Incapacitated or Bleeding Out, the window opens directly on that roll (also when triggered by the Bleeding Out effect). Rerolls with Bennies and Elan are inline.
+- Rebuilt Unshake and Unstun as one window each instead of a roll followed by a Benny dialog.
+- - Unshake: choose between the Spirit roll and spending a Benny right away; the result, a Benny to act and the free reroll (Old Ways Oath) are in the same window. Follows the "Use SWD unshake rules" setting.
+- - Unstun: the Vigor roll with the bonuses listed beforehand, the result and *Reroll with Benny* (Elan +2) in the same window. A reroll only changes anything if it is better than the best result so far.
+- - Both show the die, the bonus on the roll (Edges, effects) and your Bennies, and look like the Personal Health Centre and Soak Damage windows. The texts of Unstun were moved to the language file (English only for now).
+- Rebuilt the Radiation Centre as one window instead of a main dialog followed by reroll dialogs.
+- - Roll Vigor to resist Radiation or take the Level of Fatigue right away; the window shows your Fatigue, Rad Resistance and Bennies and previews what will happen (including the Incapacitation and Radiation Poisoning if the maximum Fatigue is exceeded).
+- - After a failed roll the free reroll (Soldier) or the reroll with a Benny (Elan +2) are offered in the same window. The Geiger counter still plays only for the user who opened it.
+- Rebuilt the Tester as one window instead of a chain of dialogs.
+- - Choose *Support* or *Test*, the skill (and the supported skill), and for a Test the desired result (Distracted / Vulnerable). The roll, the bonuses (Elan, Menacing), the reroll with a Benny or the free reroll (Reliable for Support, Humiliate and Taunt for Tests) and *Apply* are all in the same window. The best result is kept.
+- - For a Test the target's resist roll now opens as one window for the GM (Strong Willed and Elan of the *target*, reroll with a Benny of the target, result and conditions in one chat message). A Critical Failure on the resist roll no longer costs the target another Benny.
+- Rebuilt the Travel Calculator as one window instead of three dialogs.
+- - Distance, unit, method of travel, random encounters and stealth mode are in the window; the *Encounter tables* selection is a second view of the same window (no extra dialog) and the result (without encounters) is shown in it as well. With encounters the journey journal is created and opened as before.
+- - Distances may now contain decimals (a comma works too).
+- Rebuilt Common Bond, Deviation and the Dramatic Task Planner as windows in the same look as the other rebuilt dialogs.
+- - Common Bond shows who gives the Benny to whom (portraits, arrow, your Bennies) and asks for confirmation in the same window.
+- - Deviation: pick the weapon type and range with one click each and roll. Calling `swim.deviation(weaponType, range)` with both arguments still rolls without any window.
+- - Dramatic Task Planner: players, difficulty, custom tokens/turns and the options in one window.
+- Rebuilt the Effect Builder as a window with a **searchable power list** (type to filter, Enter picks the first match, arrow keys move through the list).
+- - The power of the item the macro was started from is preselected if the Effect Builder supports it (by its SWID); any other power item opens *Other* with that power selected. Without an item *Boost Trait* is preselected.
+- - Trait lists are sorted: Attributes A-Z, then Skills A-Z. The window no longer depends on the SUCC module's translations.
+- Rebuilt the Fear Table dialog, the Raise Calculator, the Scene Illumination setting and the Mighty Summoner *Dismiss* confirmation as windows (same look as the other rebuilt dialogs).
+- - Fear Table: shows the source of fear, the detected modifier (editable, Enter rolls) and the targets as chips. Wrong or missing table settings keep the window open.
+- - Raise Calculator: result updates while you type; there is a *Close* button now.
+- - Scene Illumination: the four levels are one-click options.
+- - Dismiss: confirmation window with the creature's name; all texts translatable.
+- Rebuilt Falling Damage and Loot-o-Mat as windows (same look as the other rebuilt dialogs).
+- - Falling Damage: one card per selected/targeted token with depth, snow and water; everything is checked before anything is rolled.
+- - Loot-o-Mat: all texts (window and chat message) are now translatable; amounts per treasure type in one window. Entering no enemies at all shows a notice instead of rolling 0.
+- Tester: the trait dropdowns are sorted alphabetically (Attributes A-Z first, then Skills A-Z in the Support dropdown).
+- Tester: the roll of a *Test* no longer closes the window by itself (not on a raise, not when no reroll is left): the target opposes it, so you decide when the roll is high enough and press *Apply*. *Support* still ends at once on a raise or when no reroll is left (a raise is the ceiling). A Critical Failure still ends immediately with a chat message only.
+- Links to Foundry documents (journal entries etc.) inside the SWIM windows are now shown as red underlined text instead of Foundry's grey box.
+- Rebuilt Chase Setup and Ammo Management as windows in the same look as the other SWIM windows.
+- - Ammo Management, Reload: new field **Bullets to load**. It defaults to a full magazine; *Max (n)* and *Just 1* set it with one click. The number is limited to what fits into the weapon and what you have left. Charge Packs ignore it (always a full charge). This replaces the old "Can only reload one at a time" checkbox. Also works for NPCs that don't use ammo from the inventory.
+- - Chase Setup: Tables/Cards switch, selects, number of cards and the layout options in one window. Only as many tiles are placed as cards were actually drawn (a deck that runs out no longer causes errors), and the texts are translatable now.
+- Rebuilt Token Vision as a window (same look as the other SWIM windows) with all the vision and light options Foundry offers.
+- - **Vision:** *Automatic* (default), Basic sight, Low Light Vision, Darkvision, Infravision, Night Vision Device, *Custom* or *No change*. Everybody has basic sight (Full light 1000, Dim 25, Dark 10, Pitch darkness 1). Special vision is only applied where it beats that (e.g. Darkvision only in Pitch darkness, Low Light Vision from Dark on), so nobody gets tinted or grey vision without a benefit; Infravision keeps basic sight and adds heat detection. Automatic looks for the abilities by SWID (`darkvision`, `infravision`, `low-light-vision`, the strongest wins; names and languages no longer matter) and uses the scene illumination (`SWIM Scene Illumination` flag, else the scene darkness) for the basic range. The advanced section shows and edits vision mode, range, angle and every detection mode.
+- - **Several tokens (GM):** with more than one token selected every token gets the vision of its own abilities; a choice in the window applies to all of them. Players still use one token.
+- - **Scene illumination:** changing a scene's illumination (Scene Illumination button) sets Automatic vision on all tokens of that scene, and a token created on a scene with an illumination level gets it too (GM side, light sources untouched, tokens with vision disabled are skipped).
+- - **Light:** None, Candle, Torch, Lantern, Lantern (Bullseye), Flashlight, Custom (every Foundry light setting incl. animation) or *No change*. A light source is now an Active Effect for [Active Token Effects](https://github.com/kandashi/Active-Token-Lighting) on the actor, so it is removed again with the effect (the token's own light comes back). Light sources need ATL, which is now a requirement.
+- - A light now has a sensible colour by default (it used to be black unless you picked one).
+- Added the setting *Automatic vision adjustments* (SWIM Configuration > Misc, on by default). While it is on, changing a scene's Scene Illumination and placing a token on a scene with an illumination level set up the vision of the tokens automatically. Tokens with *Vision enabled* switched off are never touched. The Automatic option of the Token Vision macro still works when you start it yourself (it also skips tokens without vision).
+- Rebuilt Combat Setup as a window and made it available again (GM only: button in the token controls, or `swim.combat_setup()`).
+- - Pick the tokens of the scene that join the combat, sorted by disposition (Friendly, Neutral, Hostile, Secret) with *All* / *None* per section. Defeated NPCs are listed but not preselected; tokens already in the combat are not listed.
+- - **Group Extras of the same kind** (same creature, disposition and visibility; Wild Cards never) so they share one action card. Optionally only Extras that are within a number of squares of each other. The first one becomes the group leader, you can still change the groups in the Combat Tracker before starting.
+- - *Add to Combat* creates the combat if needed and then lets you adjust the groups and press *Start Combat*; *Start the combat right away* does both. If SWADE's Automatic Initiative is off you can let it draw the action cards when the combat starts.
+- Added a **SWIM Scene Illumination** section to the Lighting tab of the scene configuration (GM only, marked with a SWIM badge and a red frame). Choose Full light, Dim, Dark or Pitch Darkness while you set up the scene's lighting; it is saved with the scene and is the same value the Scene Illumination button sets. *Not set* removes it again (Token Vision then follows the scene's Darkness Level).
+- Added two list settings to the **Item Options** tab of the SWIM Configuration: **Vision SWIDs** and **Potion SWIDs**. Each has an *Edit list* button that opens a small window where you add and remove entries (SWID + a selector for the type) and press *Apply*; *Reset to defaults* restores the standard entries.
+- - **Vision SWIDs:** pick which SWID gives which vision type (Darkvision, Infravision, Night Vision Device, Low Light Vision), e.g. `dwarf` = Low Light Vision when your Dwarf ancestry has it built in and there is no separate ability on the sheet. The Token Vision macro and the automatic vision both use the list. The defaults are the old SWIDs (`darkvision`, `infravision`, `low-light-vision`), so nothing changes until you edit it. If a token matches several types the first of Darkvision, Infravision, Night Vision Device, Low Light Vision applies.
+- - **Potion SWIDs:** one list for the Health Centre potions, each entry marked as *Health potion* or *Fatigue potion* and with a number *Per use*: how many Wounds it heals or Fatigue levels it cures (default 1, 1-20). The Health Centre uses that number when the potion is selected and no longer shows the + / - buttons for potions (it never heals more than there is to heal). This replaces the two settings with potion names; your old names are converted to SWIDs automatically once (the GM's first login), so custom potions keep working. Items without a SWID are still recognised by the SWID derived from their name. Potions are now found by SWID, so renamed or translated potions work as long as the SWID matches.
+
+- Added **auras** (e.g. a Command range): an Active Effect can be passed on to every token within a radius around the token of its owner. Open an Active Effect (GM), tab **Aura**, and tick *This effect is an aura*.
+- - The effect can sit on the actor or on one of its items (e.g. the Command Edge, with *transfer* on). Its changes, icon and conditions are what the others receive, as a copy that lasts as long as they are in range. The effect itself no longer changes its owner, unless you tick *Also affects the owner*.
+- - **Radius** in squares, calculated exactly like the auras of the SWADE system (token configuration > Auras): a circle around the token, counted from its edge. A token the circle covers any part of is affected, so a radius of 5 is the same range as an aura of 5. **Affects:** allies (same side as the owner), enemies or everybody.
+- - **Range:** *Command range* (the value of the new **Command range** field at the top of the actor's SWIM config, default 5), *Aura 1* / *Aura 2* (the radii set in the SWADE aura settings of the token) or *Custom* (the radius field, only shown then). Change the range on an actor that gets an Edge/ability to raise it and every aura effect of that actor follows.
+- - **Name on token** is the name the copy gets on the affected tokens (e.g. *Command* -> *Under Command*). **Also affects Wild Cards** is off by default: leadership Edges normally work on Extras only; switch it on for an Edge that includes Wild Cards. The owner is not affected by this option, see *Also affects the owner*.
+- - The aura is inactive while the owner's token is hidden or the owner is Incapacitated, Bleeding Out or Dead. By default several owners of the aura with the same effect name do not stack: the nearest one counts (option *Stacks with the same aura of other tokens*).
+- - The first connected GM keeps the copies up to date while tokens move, are placed or removed, and when effects change. Switch the whole feature off with the setting *Aura effects* (SWIM Configuration > Misc); `swim.recalculate_auras()` (GM) updates the scene you are viewing by hand.
+- Warrior's Gift in the Effect Builder now grants a Combat Edge to each target. Before the effects are created a window opens (same look as the Shape Changer list): pick one Edge for every target, the Edges are grouped by rank and sorted by name. Edges above the caster's rank are greyed out, only the GM can still pick them.
+- - The Edge is a copy from your Edge compendium (keeps its SWID and everything else), named *Edge (Warrior's Gift)*. The effect is named *Warrior's Gift: Edge* and shows the granted Edge in its description. If the caster is not a target, the maintaining effect lists every target with its Edge.
+- - The Edge is removed again when its effect ends or is deleted (also when the caster's maintaining effect ends).
+- - Which Edges are offered: all Edges of the compendium whose category contains *combat* (any case).
+- Effect Builder: every effect the caster gets (the maintaining effect, or the caster's own effect if the caster is a target) now lists all targets in its description instead of the power text. This applies to all powers; for Warrior's Gift the list also shows each target's Edge. The effects of the other targets are unchanged.
+- Warrior's Gift: with *Raise* checked before the Edge window opens, all improved Edges (SWID starts with `improved-`) can be picked regardless of rank and GM status.
+- Warrior's Gift: hovering an Edge in the window shows its description with the original formatting.
+- Warrior's Gift: items an Edge grants are named *Item (Warrior's Gift)* and are removed together with the Edge. Nothing that already exists on the actor is changed.
+- Added a small *free reroll* button (circle arrow, tooltip only) left of the *Reroll with Benny* button in Natural Healing, Soak Damage, Unstun, Unshake, Radiation Centre and the Tester windows, for Edges or settings that grant a free reroll. It costs no Benny and gives no Elan bonus. The Tester's Support and Resist windows no longer close on their own when no Benny is left, so the free reroll stays available.
+- Added a setting *Edge Compendium* (SWIM Configuration > Item Options). Choose any Item compendium; Warrior's Gift needs it.
+
 ### Fixed
+- Fixed drop-down lists (`<select>`) being white with unreadable text in Chromium-based browsers in SWIM windows.
+- Fixed the aura radius lookup calling a SWADE getter that changes the actor's flags while only reading. (A report of double-clicking a token opening a wrong actor could not be traced to SWIM so far; if it happens again, please check with SWIM disabled.)
+- Fixed bonuses that were counted twice in the **Unshake**, **Unstun** and **Soak** windows. Effects that an Edge or ability brings along (they live on the item, not on the actor) were overlooked, so their bonus showed up as an "Other modifier" / "Generic Bonus" and the Edge was added once more. They are now found, and a bonus that is typed into the actor sheet is no longer added on top of an Edge that gives the same +2 (e.g. a Skeleton with Unshake +2 on the sheet and the Undead ability now gets +2, not +4). Other values on the sheet still show as "Other modifier". The rule can be switched off with the new setting *Sheet value replaces Edge bonus* (SWIM settings > Misc, on by default); whenever it takes effect, a console warning says so.
+- Replaced the Ko-fi button image (it was no longer available) in the SWIM Configuration and the SWIM chat messages with the current Ko-fi button.
+- Fixed the SWIM Configuration saving the number 0 or an unchecked box as an empty value.
 - Various bugs in Fear table function.
+- - Heart Attack (failed Vigor roll) crashed with `effects is not defined`.
+- - *Adrenaline Surge* now uses SWADE's global modifiers (+2 to all traits and damage), so it also covers attribute rolls and items added later.
 - Fixed a bug in the migration that overwrote existing data on actors and items.
+- Fixed the migration crashing on actors and items that already had a SWIM configuration, and documents without a version needing two runs (and two popups) to be migrated.
+- Fixed Shape Changer, Tester (critical failure) and `swim.revert_shape_change()` doing nothing, because they still relied on Warpgate events.
+- Fixed Effect Builder and Shape Changer refusing to run without Warpgate.
+- Fixed Boost Trait / Lower Trait not finding the attribute name.
+- Fixed the Mighty Summoner ignoring its updates when spawning: the creature is now named `<Summoner>'s <Creature>`, copies the disposition, is unlinked and gets the extra wound on a raise.
+- Fixed several Mighty Summoner issues for players: summoned tokens could not be controlled, the maintenance effect was not created, and dismissing a summon only played the SFX but not the VFX. A GM summoning for a player-owned token now also gives the player control.
+- Fixed the sheet of a dismissed summon staying open.
+- Fixed the Mighty Summoner skill dropdown listing options multiple times (no Power Points mode).
+- Fixed several Soak Damage issues (while rebuilding it):
+- - A Benny (and Power Points) were spent before the roll, even if the roll was cancelled. They are now spent after the roll.
+- - Soak bonuses from Active Effects were added as text instead of numbers.
+- - The Gritty Damage injury was rolled even if no new Wound was taken.
+- - The Incapacitated overlay was removed instead of added in one branch.
+- - A critical failure on the Bleeding Out / Incapacitation roll with *Harder To Kill* left the character Bleeding Out when they survived.
+- - Marking an NPC or vehicle as dead used the controlled tokens and toggled; it now acts on the right token.
+- Removed leftover debug output from `swim.check_bennies()`.
+- Fixed Soak failing with a condition mapping error (`defeated` was renamed to `dead` in SUCC).
+- Fixed Soak with (Un)Holy Warrior reading and writing the wrong Power Points path.
+- Fixed Soak injury effects having the default icon.
+- Fixed the Soak reroll dialog showing only the last roll. It now shows the last roll, the best result and the Wounds you will receive.
+- Fixed the Shape Changer using the wrong Power Points paths (SWADE 3.3 has Power Point pools).
+- Fixed texts showing "undefined" in the Heal Other and Personal Health Centre dialogs (fatigue text, potion list) and some wrong language keys.
+- Fixed the Personal Health Centre crashing when drinking a Fatigue potion.
+- Fixed the SWD Unshake setting halving the Pace of a Shaken character twice.
+- Fixed the missing space in the name of the Ammo Management effect.
+- Fixed the Travel Calculator failing to update the encounter tables if there is no *[SWIM] Encounter Tables* folder. (After saving other tables the old dialog also kept using the previous names until the next start; the new window reads them fresh.)
+- Fixed Craft Campfire not working with the current Portal version.
+- Fixed the SWIM config window (actors and items) applying Active Effects on its values again every time it was saved, so e.g. Radiation Resistance grew with each save. It now shows and saves only the real stored values and writes only what you changed.
+- Fixed several Unshake and Unstun issues (while rebuilding them):
+- - Unshake: the Benny button was offered without any Bennies (when only a free reroll was left) and removed Shaken for free.
+- - Unshake and Unstun: cancelling the roll dialog caused an error, and a Benny was spent before the roll.
+- - Unshake and Unstun: a bonus from an Active Effect named like the Edge it belongs to (e.g. Combat Reflexes) was counted twice; a bonus that no effect explains was dropped when the actor had other effects; Unstun added bonus values of several effects as text.
+- - Unshake (SWD): the free reroll is only offered while the character is still Shaken. Unstun: a worse reroll after a 4-7 result no longer says "remains Stunned" while the condition was already removed.
+- Fixed several Radiation Centre issues (while rebuilding it):
+- - The Radiation Poisoning effect was created with the old `label` / `img` properties, so it had no name and the default icon.
+- - Fatigue beyond the maximum toggled Incapacitated on the *selected* token (and removed it if it was already there); it now adds it to the right token (NPCs and vehicles die).
+- - The Fatigue was calculated from the value at the time the macro was opened, and a Benny was spent before the roll, even if the roll was cancelled. Cancelling the roll dialog also caused an error.
+- Fixed the Unshake sound not playing if the Shaken condition was removed with a Benny after a failed roll.
+- Fixed the Mark Dead macro playing the death sound when reviving a token. It plays the Soak sound now, as does anything else that removes Incapacitated or Dead.
+- Fixed several Tester issues (while rebuilding it):
+- - A Benny was spent before the reroll was made, and with no Bennies left a Reliable / Humiliate free reroll was blocked. Cancelling the roll dialog caused an error.
+- - Support: the Support effect on the target was not found again reliably (a second Support on the same trait now updates the same effect, capped at +4) and its time stamp / name used old properties.
+- - Test: the Retort Edge was checked on the wrong actor (the tester instead of the target) and Strong Willed was applied to the tester instead of the target.
+- Fixed the Deviation dialog's weapon type / range radio buttons being broken by unterminated HTML (the first options were not reliably pre-selected).
+- Fixed the *One task per player* option of the Dramatic Task Planner being ignored when Challenge Tracker is not installed.
+- Fixed the Effect Builder failing with an error on *Proceed* for Conceal Arcana, Slumber, Environmental Protection and Intangibility.
+- Fixed the *Damage Field* option of the Effect Builder (Damage Modifier, 2d6 instead of 2d4) never being applied, and Smite failing if a target has no weapon.
+- Fixed the Effect Builder switching away from the preselected *Other* power when changing the power and the power item being linked although another power was chosen.
+- Fixed the Fear Table's "table name missing" notice showing no table type (wrong localisation call).
+- Fixed Mighty Summoner *Dismiss* throwing an error when the summon's maintenance effect was already gone.
+- Fixed Falling Damage showing negative damage when snow was deeper than the rolled damage (it is 0 now), and an error with water *and* snow on one token aborting the roll halfway (nothing is rolled any more in that case).
+- Loot-o-Mat: an invalid "per x" in the treasure stat (not a positive number) counts as one enemy instead of producing an invalid roll.
+- Fixed the Radiation Resistance being shown as "--2" in the Radiation Centre chat message for negative values.
+- Fixed various deprecation warnings (`skill` -> `trait`, `label` -> `name`, `actorData`, `permission`, global `duplicate()` / `randomID()`).
+- Fixed Chase Setup placing wrong images in Cards mode when the pile wasn't empty, and mentioning the table name after resetting a deck.
+- Fixed the melee sound in Ammo Management throwing an error for weapons with RoF 2 or more.
+- Fixed Ammo Management giving more ammo than you own when changing the ammo type.
+- Fixed the Effect Builder throwing `ATTRIBUTE_LANG_KEYS is not defined` when applying Boost Trait or Lower Trait on an attribute (introduced by the window rebuild).
+- Fixed the Travel Calculator's Joker replacement (it referenced an undefined variable and never used the new card).
+- Fixed the Chase Setup window not growing / scrolling when the layout options are unfolded.
+- The trait dropdowns of the Effect Builder now show "| Attribute | Agility" and "| Skill | Fighting".
+- Fixed the combat playlist not being stopped when a combat ends if your *Combat Playlist* setting was not named "Combat". The combat playlist is also no longer stopped and restarted when a combat starts while it is already playing.
+
 ### Changed
+- Rebuilt the SWIM Config of actors and items in the new dialog style: grouped sections, hint per option, reset button per option, changed options highlighted, file pickers with a **play button for sound options**, and the Active Effect of ammo shown as *Effect set / No effect set*. Closing the window with the X or *Cancel* now discards your changes instead of saving them; use *Save*.
+- Rebuilt the SWIM Configuration window in the new dialog style: tabs, a search over all settings, a short hint per setting, changed settings highlighted, a reset button per setting, file pickers (sound settings with a play button) and a counter of unsaved changes. Only the settings you changed are saved.
+- Saving the SWIM Configuration no longer reloads the page. Foundry's reload dialog appears only if you changed a setting that needs a reload (Condition Roll Mode, SWD Unshake, Better Rolls 2 support, Ammo Management with BR2); those are marked *Reload needed*.
+- Radiation Centre wording: *Gain Fatigue* instead of *Take the Fatigue*, and a failed roll now says "takes a Level of Fatigue. You may spend a Benny to reroll." instead of suggesting a reroll always helps.
+- The Mighty Summoner has no Size limit. It lists every creature you have at least `limited` permission for (the GM sees all). Only *Mirror Self* needs the rank Veteran (greyed out below, the GM can still pick it). The Shape Changer shows forms above your rank greyed out instead of hiding them.
+- **[BREAKING]** SWIM now requires Foundry v11 and SWADE 3.3.8 or newer (verified with 3.3.11), SUCC 3.3.0 or newer, socketlib and Portal (portal-lib 1.0.7).
 - **[BREAKING]** Mighty Summoner only shows summonable actors for which the user has *at least* `limited` permission.
 - **[BREAKING]** Shape Changer only shows actor presets for which the user has *at least* `limited` permission.
-- Changed `icon` property to `icon` when creating Active Effects.
+- Changed `img` property to `icon` when creating Active Effects.
+- Changed the Active Effects created by SWIM to use `name` instead of `label`. Ammo effects stored with `label` are converted automatically.
+- The Shape Changer now creates the new token itself and the Mighty Summoner uses Portal. Players need the *Create Tokens* permission to summon.
+- All sound effects now go through one place and respect the *Default Volume* setting (some used to ignore it). SWIM uses Foundry's core audio API (`foundry.audio.AudioHelper` as soon as available), no additional module needed.
+- The sounds for Shaken, Wounds, Fatigue, Incapacitated etc. are no longer played by the individual macros and by Better Rolls 2 hooks, but by one central set of hooks (see Added). Better Rolls 2 still plays the Soak sound. These sounds no longer need the Better Rolls 2 support setting.
+- The Mighty Summoner now plays its VFX/SFX at the chosen location before the token appears.
+- Lazy migration of actors and items is now done in one go. The world migration dialogs were replaced by `swim.migrate_world()`.
 ### Removed
+- Removed the SUCC *Torch* condition as the light source of Token Vision (the light is an ATL effect now). Torch effects that are still on tokens are removed the next time you set a light with Token Vision.
 - Removed Warpgate requirement as it is no longer maintained.
 - Removed systems key from the manifest because Foundry was bitching about that for no reason at all.
+- Removed the settings-extender and lib-wrapper requirements. Neither is needed by SWIM.
+- Removed the Conviction maintenance dialog at the start of a round (it did not work and SUCC adds that functionality).
+- Removed the disabled Hold feature (SWADE handles Hold natively).
+- Removed the unfinished Power Point Management script.
+- Removed the world migration dialogs and their settings.
 
 ## [2.6.1] - 2024-05-12
 ### Fixed
