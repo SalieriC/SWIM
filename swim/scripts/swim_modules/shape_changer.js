@@ -268,7 +268,11 @@ export async function shape_changer_gm(data) {
             "system.powerPoints.general.value": general_pp(pc).value,
             "system.powerPoints.general.max": general_pp(pc).max,
             "name": `${scCopy.name} (${pc.name})`,
-            "type": pc.type
+        }
+
+        // v14: a type change must replace the whole `system` (ForcedReplacement) so the new type's data model is applied, and cannot be mixed with other system changes.
+        if (scCopy.type !== pc.type) {
+            await scCopy.update({ type: pc.type, system: foundry.data.operators.ForcedReplacement.create(scCopy.system.toObject()) })
         }
 
         let srcUpdates = {

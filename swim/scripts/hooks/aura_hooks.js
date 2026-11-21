@@ -113,12 +113,16 @@ export function aura_hooks() {
         if (!navButton || !last_section) { return }
         const tab = aura_tab_html(app.document.flags?.swim?.aura, app.document.name)
         if (!html.querySelector(`.tabs [data-tab="${TAB}"]`)) {
-            const nav = [...html.querySelectorAll(`.tabs [data-group="${group}"][data-tab]`)].at(-1).cloneNode(false)
+            // copy the last tab button completely (icon + label markup, classes) and change icon, text and tab id
+            const nav = [...html.querySelectorAll(`.tabs [data-group="${group}"][data-tab]`)].at(-1).cloneNode(true)
             nav.classList.remove("active")
+            nav.removeAttribute("data-tooltip")
             nav.dataset.tab = TAB
-            nav.dataset.tooltip = t("SWIM.aura.tab")
-            nav.setAttribute("aria-label", t("SWIM.aura.tab"))
-            nav.innerHTML = `<i class="fa-solid fa-bullseye"></i>`
+            const icon = nav.querySelector("i") ?? nav.insertBefore(document.createElement("i"), nav.firstChild)
+            icon.className = "fa-solid fa-bullseye"
+            let label = nav.querySelector("span")
+            if (!label) { label = document.createElement("span"); nav.append(" ", label) }
+            label.textContent = t("SWIM.aura.tab")
             navButton.parentElement.append(nav)
         }
         if (!html.querySelector(`.tab[data-tab="${TAB}"]`)) {

@@ -120,25 +120,32 @@ export async function create_combat(scene) {
     return combat
 }
 
-/** Creates the combatants and sets the group flags (leader: `isGroupLeader`, followers: `groupId` = leader's combatant id, like SWADE's tracker does). */
+/** Creates the combatants and, like SWADE 6's tracker, one CombatantGroup per plan group (combatant `group` = group id, group `system.leader` = leader's combatant id). */
 export async function add_to_combat(combat, scene, infos, plan) {
-    const data = infos.map((i) => ({ tokenId: i.id, sceneId: scene.id, actorId: i.actorId, hidden: i.hidden }))
+    const icon = CONFIG.SWADE?.combat?.group?.icon
+    const groupDocs = plan.groups.length
+        ? await combat.createEmbeddedDocuments('CombatantGroup', plan.groups.map((g) => ({ name: g.label, ...(icon ? { img: icon } : {}) })))
+        : []
+    const groupOf = new Map()
+    plan.groups.forEach((g, i) => {
+        const doc = groupDocs[i]
+        if (!doc) { return }
+        groupOf.set(g.leader, doc.id)
+        g.followers.forEach((f) => groupOf.set(f, doc.id))
+    })
+    const data = infos.map((i) => ({ tokenId: i.id, sceneId: scene.id, actorId: i.actorId, hidden: i.hidden, ...(groupOf.has(i.id) ? { group: groupOf.get(i.id) } : {}) }))
     const created = await combat.createEmbeddedDocuments('Combatant', data)
     const byToken = new Map(created.map((c) => [c.tokenId, c.id]))
-    const updates = []
+    const leaderUpdates = []
     let followers = 0
-    for (const g of plan.groups) {
+    plan.groups.forEach((g, i) => {
+        const doc = groupDocs[i]
         const leaderId = byToken.get(g.leader)
-        if (!leaderId) { continue }
-        updates.push({ _id: leaderId, 'flags.swade.isGroupLeader': true })
-        for (const f of g.followers) {
-            const id = byToken.get(f)
-            if (!id) { continue }
-            updates.push({ _id: id, 'flags.swade.groupId': leaderId })
-            followers++
-        }
-    }
-    if (updates.length) { await combat.updateEmbeddedDocuments('Combatant', updates) }
+        if (!doc || !leaderId) { return }
+        leaderUpdates.push({ _id: doc.id, 'system.leader': leaderId })
+        followers += g.followers.filter((f) => byToken.has(f)).length
+    })
+    if (leaderUpdates.length) { await combat.updateEmbeddedDocuments('CombatantGroup', leaderUpdates) }
     return { created: created.length, groups: plan.groups.length, followers }
 }
 

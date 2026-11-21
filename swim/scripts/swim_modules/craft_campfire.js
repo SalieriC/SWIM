@@ -170,24 +170,23 @@ export async function craft_campfire_gm(data) {
             "scaleY": 1,
             "offsetX": 0,
             "offsetY": 0,
+            "anchorX": 0, //v14: tile textures are centre anchored by default, x/y below are the top left corner
+            "anchorY": 0,
             "rotation": Math.floor(Math.random() * (360 - 0 + 1) + 0), //random rotation
             "tint": null
         },
-        "x": data.position.x - (size / 2), //need to subtract half the grid size as the tile placement is measured from the top left instead of center.
-        "y": data.position.y - (size / 2),
+        "x": Math.round(data.position.x - (size / 2)), //need to subtract half the grid size as the tile placement is measured from the top left instead of center.
+        "y": Math.round(data.position.y - (size / 2)),
         "width": size,
         "height": size,
-        "overhead": false,
-        "z": 100,
+        "sort": 100,
         "rotation": Math.floor(Math.random() * (360 - 0 + 1) + 0), //random rotation,
         "alpha": 1,
         "hidden": false,
         "locked": false,
-        "roof": false,
         "occlusion": {
-            "mode": 1,
-            "alpha": 0,
-            "radius": null
+            "modes": [],
+            "alpha": 0
         },
         "video": {
             "loop": true,

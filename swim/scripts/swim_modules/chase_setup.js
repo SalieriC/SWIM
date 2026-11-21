@@ -161,11 +161,12 @@ class ChaseApp extends SwimWindow {
 
         // Only as many tiles as cards were actually drawn (a deck can run out).
         const tiles = images.map((img, i) => ({
-            texture: { src: img },
+            // v14: tile textures are anchored in the centre by default; x/y are the upper left corner of the card
+            texture: { src: img, anchorX: 0, anchorY: 0 },
             width: cfg.cardWidth,
             height: cfg.cardHeight,
             ...card_position(i, cfg),
-            'flags.swim.isChaseCard': true,
+            flags: { swim: { isChaseCard: true } },
         }))
         await TileDocument.createDocuments(tiles, { parent: canvas.scene })
         return true

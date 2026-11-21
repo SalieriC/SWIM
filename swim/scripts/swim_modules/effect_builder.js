@@ -545,10 +545,10 @@ export async function effect_builder_gm(data) {
     // Icon mapping
     // ========================================================================
     const ICONS = {
-        boost: "modules/swim/assets/icons/effects/m-boost.svg",
-        lower: "modules/swim/assets/icons/effects/m-lower.svg",
-        protection: "modules/swim/assets/icons/effects/m-protection.svg",
-        smite: "modules/swim/assets/icons/effects/m-smite.svg",
+        boost: "modules/succ/assets/icons/m-boost.svg",
+        lower: "modules/succ/assets/icons/m-lower.svg",
+        protection: "modules/succ/assets/icons/m-protection.svg",
+        smite: "modules/succ/assets/icons/m-smite.svg",
         growth: "modules/swim/assets/icons/effects/m-growth.svg",
         shrink: "modules/swim/assets/icons/effects/m-shrink.svg",
         sloth: "modules/swim/assets/icons/effects/m-sloth.svg",
@@ -570,10 +570,10 @@ export async function effect_builder_gm(data) {
         empathy: "modules/swim/assets/icons/effects/m-empathy.svg",
         environmentalProtection: "modules/swim/assets/icons/effects/m-environmentalProtection.svg",
         farsight: "modules/swim/assets/icons/effects/m-farsight.svg",
-        fly: "modules/swim/assets/icons/effects/m-fly.svg",
+        fly: "modules/succ/assets/icons/1-flying.svg",
         intangibility: "modules/swim/assets/icons/effects/m-intangibility.svg",
         invisibility: "modules/succ/assets/icons/m-invisible.svg",
-        light: "modules/swim/assets/icons/effects/m-light.svg",
+        light: "modules/swim/assets/icons/effects/light-lantern.svg",
         mindLink: "modules/swim/assets/icons/effects/m-mindLink.svg",
         puppet: "modules/swim/assets/icons/effects/m-puppet.svg",
         relief: "modules/swim/assets/icons/effects/m-reliefNumb.svg",
