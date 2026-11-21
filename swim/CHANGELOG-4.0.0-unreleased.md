@@ -30,3 +30,8 @@
 - Combat Setup: grouped tokens are now put into real SWADE 6 Combatant Groups (leader set on the group).
 - Effect Builder: missing icons (boost, lower, protection, smite, fly, light) now use SUCC / SWIM assets that exist.
 - Shape Changer: changing the actor type works in v14 (ForcedReplacement of `system`).
+- Craft Campfire: texture rotation removed (it pivoted around the top-left anchor and shifted the image); the tile's own random rotation stays.
+- Craft Campfire: tile is now centre anchored (x/y = picked point), so it sits exactly on the cursor and rotates around its centre.
+- BRSW support: uses `game.brsw.addActions` (BRSW 5.19+; `add_actions` was only a deprecated alias that is gone in 5.33).
+- Unshake / Unstun / Soak callbacks: SWIM re-registers them after BRSW's ready hook, so SWIM's macros run at turn start instead of BRSW's card.
+- Fix: BRSW's API only exists after its ready hook; SWIM now waits for `brswReady` before adding its actions / callbacks.

@@ -170,13 +170,13 @@ export async function craft_campfire_gm(data) {
             "scaleY": 1,
             "offsetX": 0,
             "offsetY": 0,
-            "anchorX": 0, //v14: tile textures are centre anchored by default, x/y below are the top left corner
-            "anchorY": 0,
-            "rotation": Math.floor(Math.random() * (360 - 0 + 1) + 0), //random rotation
+            "anchorX": 0.5, //v14: x/y is the anchor point, which is the centre of the tile (also the pivot of its rotation)
+            "anchorY": 0.5,
+            "rotation": 0, // the tile's own `rotation` below does the random turn (a texture rotation would pivot around the top left anchor and shift the image)
             "tint": null
         },
-        "x": Math.round(data.position.x - (size / 2)), //need to subtract half the grid size as the tile placement is measured from the top left instead of center.
-        "y": Math.round(data.position.y - (size / 2)),
+        "x": Math.round(data.position.x),
+        "y": Math.round(data.position.y),
         "width": size,
         "height": size,
         "sort": 100,

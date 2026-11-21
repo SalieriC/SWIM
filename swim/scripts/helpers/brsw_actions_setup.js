@@ -636,5 +636,6 @@ export async function brsw_actions_setup() {
         )
     }
 
-    game.brsw.add_actions(SWIM_ACTIONS)
+    // BRSW 5.19+: addActions (add_actions is the deprecated name)
+    ;(game.brsw.addActions ?? game.brsw.add_actions)?.(SWIM_ACTIONS)
 }

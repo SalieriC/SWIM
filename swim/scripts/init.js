@@ -92,7 +92,8 @@ Hooks.on(`ready`, () => {
 
     //Setup actions for BRSW:
     if (game.modules.get('betterrolls-swade2')?.active && game.settings.get('swim', 'br2Support') === true) {
-        brsw_actions_setup()
+        // BRSW exposes its API (addActions) in its own ready hook and then fires `brswReady`; SWIM's ready hook may run before that.
+        if (game.brsw?.addActions) { brsw_actions_setup() } else { Hooks.once('brswReady', () => brsw_actions_setup()) }
     }
 
     // Registering SWIM functions to effect callbacks of SWIM:
@@ -124,9 +125,17 @@ Hooks.on(`ready`, () => {
     })
     const callbackMode = game.settings.get("swim", "callbackMode")
     if (callbackMode === "manual" || callbackMode === "automatic") {
-        game.swade.effectCallbacks.set("shaken", swim.unshake)
-        game.swade.effectCallbacks.set("stunned", swim.unstun)
-        game.swade.effectCallbacks.set("bleeding-out", swim.soak_damage)
+        const set_callbacks = () => {
+            game.swade.effectCallbacks.set("shaken", swim.unshake)
+            game.swade.effectCallbacks.set("stunned", swim.unstun)
+            game.swade.effectCallbacks.set("bleeding-out", swim.soak_damage)
+        }
+        set_callbacks()
+        // BRSW registers its own (card based) callbacks in its async ready hook, which may run after this one. SWIM's must win, so set them again once all ready hooks had their chance.
+        if (game.modules.get('betterrolls-swade2')?.active) {
+            Hooks.once('brswReady', set_callbacks) // fired right after BRSW registered its own
+            setTimeout(set_callbacks, 2000) // safety net in case brswReady already fired
+        }
     }
 
     // Set Health Estimate up
